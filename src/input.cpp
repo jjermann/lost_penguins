@@ -6,9 +6,7 @@
 #include "gfxeng.h"
 #include "sfxeng.h"
 #include "objectpools.h"
-///\todo The player calls should be in anim.cpp
 #include "objects_common.h"
-#include "players_common.h"
 
 
 InputHandler::InputHandler():
@@ -38,32 +36,32 @@ void InputHandler::pollEvents() {
             case SDL_KEYUP: {
                 switch(event.key.keysym.sym) {
                     case SDLK_LEFT: {
-                        if (state&INPUT_LEFT) player->in_left(-1);
+                        if (state&INPUT_LEFT) setState(INPUTR_LEFT);
                         state&=~INPUT_LEFT;
                         break;
                     }
                     case SDLK_RIGHT: {
-                        if (state&INPUT_RIGHT) player->in_right(-1);
+                        if (state&INPUT_RIGHT) state|=INPUTR_RIGHT;
                         state&=~INPUT_RIGHT;
                         break;
                     }
                     case SDLK_UP: {
-                        if (state&INPUT_UP) player->in_up(-1);
+                        if (state&INPUT_UP) setState(INPUTR_UP);
                         state&=~INPUT_UP;
                         break;
                     }
                     case SDLK_DOWN: {
-                        if (state&INPUT_DOWN) player->in_down(-1);
+                        if (state&INPUT_DOWN) setState(INPUTR_DOWN);
                         state&=~INPUT_DOWN;
                         break;
                     }
                     case SDLK_SPACE: {
-                        if (state&INPUT_SP1) player->in_sp1(-1);
+                        if (state&INPUT_SP1) setState(INPUTR_SP1);
                         state&=~INPUT_SP1;
                         break;
                     }
                     case SDLK_LSHIFT: {
-                        if (state&INPUT_SP2) player->in_sp2(-1);
+                        if (state&INPUT_SP2) setState(INPUTR_SP2);
                         state&=~INPUT_SP2;
                         break;
                     }
@@ -72,16 +70,17 @@ void InputHandler::pollEvents() {
                         break;
                     }
                     case SDLK_RETURN: {
-                        if (state&INPUT_ACT) player->in_act(-1);
+                        if (state&INPUT_ACT) setState(INPUTR_ACT);
                         state&=~INPUT_ACT;
                         break;
                     }
                     case SDLK_INSERT: {
-                        if (state&INPUT_USE) player->in_use(-1);
+                        if (state&INPUT_USE) setState(INPUTR_USE);
                         state&=~INPUT_USE;
                         break;
                     }
                     case SDLK_DELETE: {
+                        if (state&INPUT_DEL) setState(INPUTR_DEL);
                         state&=~INPUT_DEL;
                         break;
                     }

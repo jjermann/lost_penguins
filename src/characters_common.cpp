@@ -79,7 +79,7 @@ void Character::idle(Uint16) {
     hitobj=checkMove(pos,false,true);
 
     //are we falling?
-    if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0)) {
+    if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0) || (speed<0)) {
         setState(STATE_FALL);
     }
 }

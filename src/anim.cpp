@@ -87,6 +87,26 @@ void AnimHandler::runAnims() {
     tcurrent=SDL_GetTicks();
 
     if (!paused) {
+        //released keys of player
+        if (player != NULL) {
+            if (input->getState(INPUTR_USE)) player->in_use(-1);
+            input->unsetState(INPUTR_USE);
+            if (input->getState(INPUTR_ACT)) player->in_act(-1);
+            input->unsetState(INPUTR_ACT);
+            if (input->getState(INPUTR_RIGHT)) player->in_right(-1);
+            input->unsetState(INPUTR_RIGHT);
+            if (input->getState(INPUTR_LEFT)) player->in_left(-1);
+            input->unsetState(INPUTR_LEFT);
+            if (input->getState(INPUTR_SP1)) player->in_sp1(-1);
+            input->unsetState(INPUTR_SP1);
+            if (input->getState(INPUTR_SP2)) player->in_sp2(-1);
+            input->unsetState(INPUTR_SP2);
+            if (input->getState(INPUTR_UP)) player->in_up(-1);
+            input->unsetState(INPUTR_UP);
+            if (input->getState(INPUTR_DOWN)) player->in_down(-1);
+            input->unsetState(INPUTR_DOWN);
+            input->unsetState(INPUTR_DEL);
+        }
         object_iterator obit=pool->objectspool.begin();
         while (obit!=pool->objectspool.end()) {
             //remove marked objects
@@ -100,7 +120,7 @@ void AnimHandler::runAnims() {
             (*obit)->updateEvents(dt);
             ++obit;
         }
-        //handle current player
+        //handle current (new) player
         if ((player!=NULL) && (!(player->getState(ESTATE_BUSY)))) {
             if (input->getState(INPUT_USE)) player->in_use(dt);
             if (input->getState(INPUT_ACT)) player->in_act(dt);

@@ -103,6 +103,8 @@ class Player : public Character {
         //@}
         /// \brief Called when crashing into a dense object (default: ground)
         /// \param dir Direction of the crash
+        /// \bug crash is called _after_ addEnter/etc, so if one of those sets
+        ///   an event, it will be canceled by crash!
         virtual void crash(Uint16 dir=DIR_DOWN);
         /// \brief Called when this player dies
         virtual void die();

@@ -11,6 +11,15 @@
 #define INPUT_ACT       0x00000040
 #define INPUT_USE       0x00000080
 #define INPUT_DEL       0x00000100
+#define INPUTR_LEFT     0x00010000
+#define INPUTR_RIGHT    0x00020000
+#define INPUTR_UP       0x00040000
+#define INPUTR_DOWN     0x00080000
+#define INPUTR_SP1      0x00100000
+#define INPUTR_SP2      0x00200000
+#define INPUTR_ACT      0x00400000
+#define INPUTR_USE      0x00800000
+#define INPUTR_DEL      0x01000000
 #define INPUT_PAUSE     0x10000000
 
 /** \brief Handels keyboard events
@@ -22,18 +31,18 @@ class InputHandler {
         ~InputHandler();
         /// Check for keyboard events
         void pollEvents();
-        bool getState(Uint16 cstate) {
+        bool getState(Uint32 cstate) {
             return (state&cstate);
         }
-        void setState(Uint16 cstate) {
+        void setState(Uint32 cstate) {
             state|=cstate;
         }
-        void unsetState(Uint16 cstate) {
+        void unsetState(Uint32 cstate) {
             state&=~cstate;
         }
     private:
         /// Information about which buttons are pressed
-        Uint16 state;
+        Uint32 state;
         /// Sound: When the game is paused
         Mix_Chunk* au_pause;
 };

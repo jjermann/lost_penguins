@@ -57,7 +57,7 @@ AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchsta
   anim(runanim),
   del(delanim),
   sound(asound) {
-    state|=ESTATE_ANIM;
+    if (anim) state|=ESTATE_ANIM;
     if (anim!=NULL) duration=30000;
 }
 Uint16 AnimEvent::update(Uint16 dt) {
@@ -96,7 +96,7 @@ CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 swit
   anim(runanim),
   del(delanim),
   sound(asound) {
-    state|=ESTATE_ANIM;
+    if (anim) state|=ESTATE_ANIM;
     if (anim!=NULL) duration=30000;
 }
 Uint16 CAnimEvent::update(Uint16 dt) {

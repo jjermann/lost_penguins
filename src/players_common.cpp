@@ -353,8 +353,8 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
             case W_TOUCH: {
                 //TODO: play animations (make new Event for this)
                 if (direction&(DIR_UP|DIR_DOWN)) sfxeng->playWAV(aud_hit);
-                if (direction&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-100,-DSTRIKE,0,ESTATE_BUSY,aud_hit));
-                else setEvent(new ESpeed(this,TSTRIKE,-100,DSTRIKE,0,ESTATE_BUSY,aud_hit));
+                if (direction&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-200,-DSTRIKE,0,ESTATE_BUSY,aud_hit));
+                else setEvent(new ESpeed(this,TSTRIKE,-200,DSTRIKE,0,ESTATE_BUSY,aud_hit));
                 break;
             }
             case W_WATER: {
