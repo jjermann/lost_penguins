@@ -15,7 +15,7 @@ Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string pname)
     maxspeedx=300;
     maxspeedy=0;
     speed=hspeed=0;
-    gravity=100;
+    gravity=900;
     speedmod=100;
     Dgrav=0;
     state=STATE_FALL;
