@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
         exit(-1);
     }
     SDL_ShowCursor(SDL_DISABLE);
-    SDL_SetEventFilter(filterEvents);
     system(config.datadir.c_str());
 
     cout << "ImageCache...\n";
@@ -57,13 +56,19 @@ int main(int argc, char* argv[]) {
     while (true) {
         if (menu) {
             gfxeng->drawMenu();
+            //Check menu input
             input->pollMEvents();
         } else if (running) {
-            gfxeng->renderScene();
-            //Check input
-            input->pollEvents();
-            //Run Animations
-            scenario->physic->update();
+            if (paused) {
+                //Check pause input
+                input->pollPEvents();
+            } else {
+                gfxeng->renderScene();
+                //Check normal input
+                input->pollEvents();
+                //Run Animations
+                scenario->physic->update();
+            }
         } else {
             quitGame(-6);
         }

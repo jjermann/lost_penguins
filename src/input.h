@@ -20,8 +20,6 @@
 #define INPUTR_ACT      0x00400000
 #define INPUTR_USE      0x00800000
 #define INPUTR_DEL      0x01000000
-#define INPUT_PAUSE     0x10000000
-#define INPUT_MENU      0x20000000
 
 /** \brief Handels keyboard events
 
@@ -35,6 +33,8 @@ class InputHandler {
         ~InputHandler();
         /// Check for keyboard events in game
         void pollEvents();
+        /// Check for keyboard events in paused game
+        void pollPEvents();
         /// Check for keyboard events in menu
         void pollMEvents();
         bool getState(Uint32 cstate) {
@@ -55,9 +55,5 @@ class InputHandler {
         /// Sound: When the game is paused
         Mix_Chunk* au_pause;
 };
-
-/// \obsolete This isn't used at the moment
-/// \brief SDL event filter
-int filterEvents(const SDL_Event *event);
 
 #endif
