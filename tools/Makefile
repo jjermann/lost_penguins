@@ -4,14 +4,18 @@ CC_DEBUG   = -g #-fno-inline
 CC_OPT     = -O2 -march=pentium4 -ffast-math
 CC_LVL     = `Magick-config --ldflags --libs`
 
-SLV        = lvlextract
+SLV        = slvextract
 SLV_OBJS   = slvextract.o
 LVL        = lvl2magick
 LVL_OBJS   = lvl2magick.o
+OLD        = lvlextract
 
 default: $(SLV) $(LVL)
 
-all: $(SLV) $(LVL)
+all: $(SLV) $(LVL) $(OLD)
+
+$(OLD):
+	$(MAKE) -C old/
 
 $(SLV): $(SLV_OBJS)
 	$(CC) $(SLV_OBJS) -o $(SLV)
@@ -25,7 +29,10 @@ $(LVL): $(LVL_OBJS)
 clean:
 	rm -f $(SLV)
 	rm -f $(LVL)
+	rm -f $(OLD)
 	rm -f *.o *.a
+	$(MAKE) -C old/ clean
 
 distclean: clean
 	rm -f *~
+	$(MAKE) -C old/ distclean
