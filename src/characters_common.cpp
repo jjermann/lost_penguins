@@ -92,17 +92,6 @@ void Character::idle(Uint16) {
 }
 
 Hit Character::move(Uint16 dt, bool check) {
-    //checks if we already have a critical speed
-    //add accelerations for each player in player.cpp!
-    if (!check) {
-        if (state&STATE_FALL) {
-            if (speed>V_KRIT) {
-                speed=V_KRIT;
-                setState(STATE_FALL2);
-            } else unsetState(STATE_FALL2);
-        }
-    }
-
     SDL_Rect dest=pos;
     dest.x+=Sint16((hspeed*speedmod*dt)/100000);
     dest.y+=Sint16((speed*speedmod*dt)/100000);
@@ -135,27 +124,22 @@ void Character::fall(Uint16 dt) {
 }
 
 void Character::crash(Uint16 dir) {
-    if (event && (!(state&ESTATE_BUSY))) event->cancel();
     switch (dir) {
         case DIR_LEFT: {
-            unsetState(STATE_MLEFT);
             hspeed=0;
             break;
         }
         case DIR_RIGHT: {
-            unsetState(STATE_MRIGHT);
             hspeed=0;
             break;
         }
         case DIR_UP: {
-            unsetState(STATE_MUP);
             speed=0;
             break;
         }
         //if unsure, land on ground...
         case DIR_DOWN: default : {
             unsetState(STATE_FALL);
-            unsetState(STATE_MDOWN);
             speed=0;
             Dgrav=0;
             break;

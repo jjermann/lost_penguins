@@ -5,23 +5,12 @@
 
 #define MAX_ITEMS       3
    
-//Character/Player states
-//facing: either left or right (not left)
-#define STATE_LEFT      0x00000001
+//Player states
 //movement (while up/down/left/right key is pressed)
 #define STATE_MLEFT     0x00000004
 #define STATE_MRIGHT    0x00000008
 #define STATE_MUP       0x00000010
 #define STATE_MDOWN     0x00000020
-//in water
-#define STATE_WATER     0x00000040
-//falling (normal and fast)
-#define STATE_FALL      0x00000080
-#define STATE_FALL2     0x00000100
-//Common Triggers
-#define STATE_ACT_1     0x00000200
-#define STATE_ACT_2     0x00000400
-#define STATE_ACT_3     0x00000800
 
 //TODO: somehow differentiate between characters, players and AI players or objects
 class Player : public Character {

@@ -140,7 +140,7 @@ void Player::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_LEFT) {
         if (state&STATE_FALL) {
-            if (state&STATE_FALL2) {
+            if (speed>V_KRIT) {
                 animation=im_krit_left;
             } else {
                 animation=im_fall_left;
@@ -150,7 +150,7 @@ void Player::updateAnimState(bool change) {
         }
     } else {
         if (state&STATE_FALL) {
-            if (state&STATE_FALL2) {
+            if (speed>V_KRIT) {
                 animation=im_krit_right;
             } else {
                 animation=im_fall_right;
@@ -240,19 +240,36 @@ void Player::fall(Uint16 dt) {
 }
 
 void Player::crash(Uint16 dir) {
-    Character::crash(dir);
+    if (event) event->cancel();
     switch (dir) {
-        case DIR_DOWN: {
-            clearStates(true);
-
-            if (state&STATE_FALL2) {
-                unsetState(STATE_FALL2);
-                Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
-                hit(DIR_UP,tmpweap);
-            }
+        case DIR_LEFT: {
+            unsetState(STATE_MLEFT);
+            hspeed=0;
             break;
         }
-        default: { }
+        case DIR_RIGHT: {
+            unsetState(STATE_MRIGHT);
+            hspeed=0;
+            break;
+        }
+        case DIR_UP: {
+            unsetState(STATE_MUP);
+            speed=0;
+            break;
+        }
+        //if unsure, land on ground...
+        case DIR_DOWN: default : {
+            clearStates(true);
+            unsetState(STATE_FALL);
+            unsetState(STATE_MDOWN);
+            Dgrav=0;
+            if (speed>V_KRIT) {
+                speed=0;
+                Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
+                hit(DIR_UP,tmpweap);
+            } else speed=0;
+            break;
+        }
     }
 }
 

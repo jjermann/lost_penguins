@@ -9,7 +9,6 @@ Code
 
  o General:
     o pointers => references where possible
-    o cleanup the files (move out objects, separate .h, etc)
 
  o Animations/Events:
      o Make all events quite short, ie. almost all events become animation

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "anim.h"
 #include "weapons.h"
+#include "events.h"
 #include "monsters_common.h"
 //shouldn't be here...
 #include "players_common.h"
@@ -105,7 +106,7 @@ void Monster::fall(Uint16 dt) {
 }
 
 void Monster::crash(Uint16 dir) {
-    Character::crash(dir);
+    if (event) event->cancel();
     switch (dir) {
         case DIR_DOWN: {
             unsetState(STATE_ACT_1);
@@ -116,6 +117,7 @@ void Monster::crash(Uint16 dir) {
         }
         default: { }
     }
+    Character::crash(dir);
 }
 
 void Monster::die() {
