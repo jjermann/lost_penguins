@@ -79,22 +79,6 @@ int quitGame(int errorcode=0) {
     exit(errorcode);
 }
 
-//PRE:  wav filename in the data directory
-//POST: pointer to Mix_Chunk of the loaded WAV
-Mix_Chunk* loadWAV(string wavname) {
-#ifdef SDL_MIXER
-    string loadfile=config.datadir+wavname;
-    Mix_Chunk* tmpwav=NULL;
-    if ((tmpwav=Mix_LoadWAV(loadfile.c_str())) == NULL) {
-        cout << "Couldn't load the wav file: " << wavname << " (" << Mix_GetError() << ")" << endl;
-        quitGame(3);
-    }
-    return tmpwav;
-#else
-    return NULL;
-#endif
-}
-
 //PRE:  file name of configuration file
 //ACT:  sets default values and reads the configuration file
 //POST: 1 if the file was found 0 otherwise

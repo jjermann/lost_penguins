@@ -723,8 +723,6 @@ class Map {
 
 //cleanup
 int quitGame(int);
-//wav loading
-Mix_Chunk* loadWAV(string wavname);
 //parse command line arguments and config files
 int readConfig(const string& filename);
 void parseInput(int argc,char* argv[]);
