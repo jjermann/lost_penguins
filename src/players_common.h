@@ -121,6 +121,7 @@ class Player : public Character {
         Mix_Chunk*  au_hit;
         Mix_Chunk*  au_land;
         Mix_Chunk*  au_act;
+        Mix_Chunk*  au_useerror;
         Mix_Chunk*  au_newitem;
         Mix_Chunk*  au_die;
         Mix_Chunk*  au_elec;

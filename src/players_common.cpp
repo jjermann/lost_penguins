@@ -34,6 +34,7 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_land_right=animation;
     au_land=sndcache->loadWAV("dizzy.wav");
     au_act=sndcache->loadWAV("button.wav");
+    au_useerror=sndcache->loadWAV("useerror.wav");
     au_newitem=sndcache->loadWAV("pickup.wav");
     au_hit=sndcache->loadWAV("vikhit.wav");
     au_elec=sndcache->loadWAV("elecdth.wav");
@@ -186,7 +187,9 @@ void Player::in_act(Sint16 dt) {
 void Player::in_use(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_USE);
-    if (items[currentitem]) items[currentitem]->act(this);
+    if (items[currentitem]) {
+        if (!(items[currentitem]->act(this))) sfxeng->playWAV(au_useerror);
+    }
 }
 
 void Player::in_right(Sint16 dt) {
