@@ -20,11 +20,20 @@ bool Teleporter::act(Object* obj) {
     SDL_Rect newpos=exit;
     //checks if obj is a player...
     if(Player* ptr = dynamic_cast<Player*>(obj)) {
-        sfxeng->playWAV(au_tele);
         newpos.x-=(Uint16)((obj->getPos()->w)/2);
         newpos.y-=pos.h;
         //try teleporting (otherwise, the position stays the same)
-        if (ptr->checkMove(newpos,true).enter==NOTHING) obj->setPos(newpos.x, newpos.y);
-        return true;
+        SDL_Rect testpos=newpos;
+        if (((ptr->checkMove(newpos,true).enter)&DIR_ALL)==NOTHING) {
+            sfxeng->playWAV(au_tele);
+            obj->setPos(newpos.x, newpos.y);
+            return true;
+        } else {
+            //TODO: catch this better
+            cout << "Teleporter malfunction!!\n";
+            sfxeng->playWAV(au_tele);
+            obj->setPos(newpos.x, newpos.y);
+            return true;
+        }
     } else return false;
 }

@@ -167,7 +167,7 @@ void Olaf::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(graplity*Dgrav/1000));
+            addSpeed(Sint16(gravity*Dgrav/1000));
             if ((state&STATE_SMALL) && (speed > V_SMALLCHANGE)) trySmall(false);
             if ((state&STATE_SHIELD) && (speed > V_SHIELD)) setSpeed(V_SHIELD);
         }

@@ -5,7 +5,6 @@ Bugs
  o zombie attacks too often if nearby
  o in short: rewrite zombie
  o memleaks, segfaults?
- o teleporter!!!
 
 
 Code

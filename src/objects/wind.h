@@ -10,5 +10,5 @@ class Wind : public Object {
         virtual void enter(Object* obj);
         virtual void leave(Object* obj);
     private:
-        Sint16 graplitymod;
+        Sint16 gravitymod;
 };

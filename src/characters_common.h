@@ -49,11 +49,11 @@ class Character : public Object {
         Sint16 addHSpeed(Sint16 dspeed) {
             return hspeed+=dspeed;
         }
-        void setGraplity(Sint16 setgraplity) {
-            graplity=setgraplity;
+        void setGravity(Sint16 setgravity) {
+            gravity=setgravity;
         }
-        void addGraplity(Sint16 addgraplity) {
-            graplity+=addgraplity;
+        void addGravity(Sint16 addgravity) {
+            gravity+=addgravity;
         }
         void applySpeedMod(Uint16 speedm) {
             speedmod=Uint16(speedmod*speedm/100);
@@ -109,8 +109,8 @@ class Character : public Object {
         Sint16 hspeed;
         //current permanent speed (y direction)
         Sint16 speed;
-        //current graplity
-        Sint16 graplity;
+        //current gravity
+        Sint16 gravity;
         //current speedmod
         Uint16 speedmod;
         //temporary attributes

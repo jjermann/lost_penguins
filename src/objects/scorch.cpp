@@ -39,7 +39,7 @@ void Scorch::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(graplity*Dgrav/1000));
+            addSpeed(Sint16(gravity*Dgrav/1000));
             if ((state&STATE_GLIDE) && (speed > V_GLIDE)) speed=V_GLIDE;;
         }
         Hit hit=move(Dgrav);

@@ -15,7 +15,7 @@ Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string pname)
     maxspeedx=300;
     maxspeedy=0;
     speed=hspeed=0;
-    graplity=900;
+    gravity=100;
     speedmod=100;
     Dgrav=0;
     state=STATE_FALL;
@@ -95,7 +95,7 @@ void Character::idle(Uint16 dt) {
     } else Dwater=0;
 
     //are we falling?
-    if ((!(hitobj.touch&DIR_DOWN)) || (graplity<0)) {
+    if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0)) {
         setState(STATE_FALL);
     }
 }
@@ -136,7 +136,7 @@ void Character::fall(Uint16 dt) {
     Dgrav+=dt;  
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(graplity*Dgrav/1000));
+            addSpeed(Sint16(gravity*Dgrav/1000));
         }
         Hit hit=move(Dgrav);
         if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
