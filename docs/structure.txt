@@ -46,27 +46,7 @@ Effects:
    controlled by the triggering object?
    
 
-
-Weapons:
-========
-
-weapon chooses enemies!!!!????
-
-attack(dest,weappool["Fireball"])
-attack(obj,weappoll["Fireball"]) {
-    
-}
-
-
-Character:
-virtual void attack()
-weaponspool
-
-Objects:
-virtual void hit(Weapon* weap)
-
-
-type:
+hit types? (old):
   - touch (run speedanims):
       o plant
       o tomator

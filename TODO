@@ -1,67 +1,68 @@
-TODO:
-=====
+Bugs
+====
+ o the zombie doesn't turn from a wall
+ o hit event
+ o zombie attacks too often if nearby
+ o in short: rewrite zombie
+ o memleaks, segfaults?
+
+
+Code
+====
+
+ o General:
+    o pointers => references where possible
+    o cleanup the files (move out objects, separate .h, etc)
+
+ o Animations/Events:
+     o Maybe: Improve the (very simple) image format:
+        - All frame in one sprite sheet for each character (image matrices
+          using two description vectors or even more general: offset matrices)
+        - store rects in an array/vector/whatever or use offset matrices
+        - do some column/row logics to easy the access
+        - eg. set offsets for left, right, mleft, mright...
+     o IDEA: change Animation* pointers to Animation (or references), leave only
+       animation as a pointer and get the address each time...
+     o introduce animation events that play an animation and end when it's
+       finnished (always ESTATE_BUSY or abort animation?)
+     o allow an event length depending on animation length, or: relate events more
+       with animations!!!
+
+ o Placement code:
+     o IDEA: allow moves from NULL and/or to NULL
+     o units should be placed in a way they won't give conflicts, examples:
+        - teleport should really teleport (above ground if possible)
+        - if a unit's position is too low and it dies the dead corps is
+          illegaly placed!
+        - the placement should somehow involve checkPlace...
+
+ o Plugins:
+     o move object creation code (addObjectByName) to the objects
+     o create dynamical plugins for all objects (or compile all in)
+
+ o Ideas/Improvements:
+     o IMPROVE?: cleanup set_difference stuff => targets should be updated if
+       an object dies in an intelligent way...
+     o IDEA: merge otype and ctype and make all moves/etc depend on it
+     o IDEA (old): Add attributes:
+        - crushable (ie. weapon fart, jump, run destroys them?)
+        - bombable (ie. bomb destroys them)
+        - multistates? => bridges, door, stone block
+
+
+Progress
+========
+
+ o DONE?: fall logic including gravity!!
+ o DONE?: viking, object, item, ai, weapons, character
+ o PART DONE: effect management (periodic events, permanent effects, etc)
+ o DONE: hitlogic
+
+
+Features/Ideas
+==============
 
  o Make water movements possible (eric)
-
- o IDEA: change Animation* pointers to Animation (or references), leave only
-   animation as a pointer and get the address each time...
-
- o cleanup the files (move out objects, separate .h, etc)
-
- o introduce animation events that play an animation and end when it's
-   finnished (always ESTATE_BUSY or abort animation?)
-
- o allow an event length depending on animation length, or: relate events more
-   with animations!!!
-
- o change hit to play the right death animation/sound, change water to hit
-   characters...
-
- o PROPER PLACEMENT CODE (and IDEA: allow moves from NULL and/or to NULL),
-   units should be placed in a way they won't give conflicts, examples:
-     - teleport should really teleport (above ground if possible)
-     - if a unit's position is too low and it dies the dead corps is
-       illegaly placed!
-     - the placement should somehow involve checkPlace...
-
- o FIX ALL BUGS! hahaha:
-     - the zombie doesn't turn from a wall
-     - hit event
-     - zombie attacks too often if nearby
-     - in short: rewrite zombie
-
- o IDEA: add horizontal gravity that slows objects down??
-
- o move object creation code (addObjectByName) to the objects
-
- o create dynamical plugins for all objects (or compile all in)
-
- o IMPROVE?: cleanup set_difference stuff => targets should be updated if
-   an object dies in an intelligent way...
-
- o Structure/Cleanup:  
-     - DONE?: fall logic including gravity!!
-     - DONE?: viking, object, item, ai, weapons, character
-     - PART DONE: effect management (periodic events, permanent effects, etc)
-     - DONE: hitlogic
-     - IDEA: merge otype and ctype and make all moves/etc depend on it
-
- o Add attributes:
-     - crushable (ie. weapon fart, jump, run destroys them?)
-     - bombable (ie. bomb destroys them)
-     - multistates? => bridges, door, stone block
-
- o Maybe: Improve the (very simple) image format:
-     - All frame in one sprite sheet for each character (image matrices
-       using two description vectors or even more general: offset matrices)
-     - store rects in an array/vector/whatever or use offset matrices
-     - do some column/row logics to easy the access
-     - eg. set offsets for left, right, mleft, mright...
-
--------------------------------------------------------------------------------
-
- o DONE? Fix Memleaks
- o pointers => references where possible
  o Improve viking bar management
  o Add better graphics
  o finnish the map editor
@@ -99,3 +100,6 @@ TODO:
 
  o Items?:
     - special items
+
+ o IDEA: add horizontal gravity that slows objects down??
+
