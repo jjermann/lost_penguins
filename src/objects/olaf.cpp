@@ -11,23 +11,23 @@
 Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   fart(V_FART) {
-    im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
-    im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
-    im_run_left=new Animation(imgcache->loadImage("olaf-run_left.png"),8,1000);
-    im_run_right=new Animation(imgcache->loadImage("olaf-run_right.png"),8,1000);
+    im_left=new Animation(imgcache->loadImage("olaf1_left.bmp"));
+    im_right=new Animation(imgcache->loadImage("olaf1_right.bmp"));
+    im_run_left=new Animation(imgcache->loadImage("olaf1-run_left.png"),8,1000);
+    im_run_right=new Animation(imgcache->loadImage("olaf1-run_right.png"),8,1000);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land_left.bmp"),1,T_IRR,true);
-    im_land_right=new Animation(imgcache->loadImage("olaf_land_right.bmp"),1,T_IRR,true);
+    im_land_left=new Animation(imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
 
-    im_small_left=new Animation(imgcache->loadImage("gun.bmp"),9,1000);
-    im_small_right=im_small_left;
-    im_run_small_left=im_small_left;
-    im_run_small_right=im_small_right;
-    im_shield_right=new Animation(imgcache->loadImage("olaf_fall_shield_right.bmp"));
-    im_shield_left=new Animation(imgcache->loadImage("olaf_fall_shield_left.bmp"));
+    im_small_left=new Animation(imgcache->loadImage("Olaf_Small_Walk_left.png"),7,0);
+    im_small_right=new Animation(imgcache->loadImage("Olaf_Small_Walk_right.png"),7,0);
+    im_run_small_left=new Animation(imgcache->loadImage("Olaf_Small_Walk_left.png"),7,500);
+    im_run_small_right=new Animation(imgcache->loadImage("Olaf_Small_Walk_right.png"),7,500);
+    im_shield_right=new Animation(imgcache->loadImage("olaf1_fall_shield_right.bmp"));
+    im_shield_left=new Animation(imgcache->loadImage("olaf1_fall_shield_left.bmp"));
     im_run_shield_right=im_shield_right;
     im_run_shield_left=im_shield_left;
     im_fall_shield_left=im_shield_left;
@@ -46,6 +46,9 @@ Olaf::~Olaf() {
     delete im_land_left;
     delete im_land_right;
     delete im_small_left;
+    delete im_small_right;
+    delete im_run_small_left;
+    delete im_run_small_right;
     delete im_shield_right;
     delete im_shield_left;
 }
@@ -121,9 +124,11 @@ inline bool Olaf::trySmall(bool small) {
             //as we don't fall most states are off anyway
             unsetState(STATE_SHIELD);
             setState(STATE_SMALL);
+            maxspeedx/=4;
         } else {
             sfxeng->playWAV(au_big);
             unsetState(STATE_SMALL);
+            maxspeedx*=4;
         }
         return true;
     } else return false;

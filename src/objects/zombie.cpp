@@ -15,8 +15,8 @@ Zombie::Zombie(string imagename, Sint16 xcord, Sint16 ycord, string mname):
   au_attack(sndcache->loadWAV("clang.wav")),
   T_Attack_Bite(1500) {
     maxspeedx=100;
-    im_left=new Animation(imgcache->loadImage("olaf_left.bmp"),2,1000);
-    im_right=new Animation(imgcache->loadImage("olaf_right.bmp"),2,1000);
+    im_left=new Animation(imgcache->loadImage("olaf1_left.bmp"),2,1000);
+    im_right=new Animation(imgcache->loadImage("olaf1_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
 }
 
