@@ -20,16 +20,17 @@ GraphicsEngine::GraphicsEngine():
         cout << "Couldn't set VideoMode: " << SDL_GetError() << endl;
         quitGame(-1);
     }
-    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
+    //player bar
+    bar.w=screen->w;
+    if (show_bar) bar.h=BAR_HEIGHT;
+    else bar.h=0;
+    bar.x=0;
+    bar.y=screen->h-bar.h;
     vis_map.x=0;
     vis_map.y=0;
     vis_map.w=screen->w;
-    vis_map.h=screen->h-BAR_HEIGHT;
-    //player bar
-    bar.x=0;
-    bar.y=vis_map.y+vis_map.h;
-    bar.w=screen->w;
-    bar.h=BAR_HEIGHT;
+    vis_map.h=screen->h-bar.h;
+    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
 }
 
 GraphicsEngine::~GraphicsEngine() {
@@ -192,11 +193,13 @@ void GraphicsEngine::togglePlayerBar() {
     //on  -> off
     if (show_bar) {
         show_bar=false;
-        vis_map.h+=BAR_HEIGHT;
+        bar.h=0;
+        vis_map.h=screen->h-bar.h;
     //off -> on
     } else {
         show_bar=true;
-        vis_map.h-=BAR_HEIGHT;
+        bar.h=BAR_HEIGHT;
+        vis_map.h=screen->h-bar.h;
     }
 }
 
