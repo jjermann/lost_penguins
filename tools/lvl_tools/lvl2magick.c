@@ -43,7 +43,7 @@ typedef struct {
 typedef struct {
     unsigned int start_num;
     unsigned int size;
-    char name[32];
+    char name[50];
     Rectangle* geometry;
 } LVLAnim;
 
@@ -285,7 +285,7 @@ int parse(int argc, char* argv[]) {
 void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
     unsigned int i;
     for (i=0; i< size; i++) {
-        if (lvlanims[i].geometry!=NULL) free(lvlanims[i].geometry);
+        free(lvlanims[i].geometry);
     }
     free(lvlanims);
 }
@@ -312,7 +312,7 @@ void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
 unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
     const char data_id[]="LVLDATA";
     unsigned int start_num, size, data_size=0;
-    char name[32], line[80];
+    char name[50], line[80];
     int match=0;
     unsigned int i=0;
 
@@ -351,13 +351,15 @@ unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
         return 0;
     }
 
+    /* parse the file */
     i=0;
     while (fgets(line,80,data_file)) {
+        /* TODO: ignore lines starting with: # */
         match=sscanf(line, "%u %u %s\n", &start_num, &size, name);
         if (match!=3) continue;
         (*lvlanims)[i].start_num=start_num;
         (*lvlanims)[i].size=size;
-        strncpy((*lvlanims)[i].name,name,32);
+        strncpy((*lvlanims)[i].name,name,50);
 
         (*lvlanims)[i].geometry=NULL;
         i++;
@@ -463,25 +465,13 @@ int main(int argc, char *argv[]) {
       (buf[2] != 'T') && (buf[3] != 'A')) {
         printf("Invalid file\n");
         fclose(lvl_file);
+        lvl_file=NULL;
         EXIT(errno_invalid)
     }
 
     /* get file size */
     fstat(fileno(lvl_file), &sb);
     data_size = (unsigned int)(sb.st_size);
-
-    /* Check data_file */
-    lvlanim_size=parseDataFile(config.data_file, &lvlanims);
-
-    /* Change to the base directory */
-    mkdir(config.basename, 0777);
-    chdir(config.basename);
-    printf("Directory: %s\n", config.basename);
-
-    /* Create file for image informations */
-    snprintf(buf,16,"%s.txt",config.basename);
-    geom_file = fopen(buf,"w");
-    geom_file = freopen(buf,"a",geom_file);
 
     /* Map the entire file into process memory space */
     if ((data = mmap(NULL, data_size, PROT_READ, MAP_PRIVATE, fileno(lvl_file), 0)) == MAP_FAILED) {
@@ -528,6 +518,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    /* Check data_file */
+    lvlanim_size=parseDataFile(config.data_file, &lvlanims);
+
     if (lvlanims==NULL) {
         if ( (lvlanims=(LVLAnim*)malloc(sizeof(LVLAnim))) == NULL) {
             printf("Memory allocation of LVLAnim* failed!\n");
@@ -536,12 +529,17 @@ int main(int argc, char *argv[]) {
         } else {
             lvlanims->start_num=0;
             lvlanims->size=tot_entries;
-            strncpy(lvlanims->name,config.basename,32);
+            strncpy(lvlanims->name,config.basename,50);
             lvlanims->geometry=NULL;
         }
         lvlanim_size=1;
     }
     if (lvlanim_size<=1) config.write&=~2;
+
+    /* Change to the base directory */
+    mkdir(config.basename, 0777);
+    chdir(config.basename);
+    printf("Directory: %s\n", config.basename);
 
     /* ImageMagick: global stuff */
     if (config.write!=0) {
@@ -596,7 +594,7 @@ int main(int argc, char *argv[]) {
             if (config.write!=0) {
                 tmp_image=getFrame(img_offsets[j]+12,image_info,width,height);
                 if (config.write&4) {
-                    snprintf(buf, 32, "%s_%04u.%s",lvlanims[i].name,(j-lvlanims[i].start_num)+1,config.format);
+                    snprintf(buf, 80, "%s_%04u.%s",lvlanims[i].name,(j-lvlanims[i].start_num)+1,config.format);
                     strcpy(tmp_image->filename,buf);
                     (void)WriteImage(image_info,tmp_image);
                 }
@@ -615,7 +613,7 @@ int main(int argc, char *argv[]) {
                 DestroyImageList(anim_list);
                 anim_list=NULL;
                 if (config.write&2) {
-                    snprintf(buf, 32, "%s.%s",lvlanims[i].name,config.format);
+                    snprintf(buf, 80, "%s.%s",lvlanims[i].name,config.format);
                     strcpy(anim_image->filename,buf);
                     (void)WriteImage(image_info,anim_image);
                 }
@@ -644,6 +642,10 @@ int main(int argc, char *argv[]) {
     }
 
     /* Create the geometry file */
+    snprintf(buf,16,"%s.txt",config.basename);
+    geom_file = fopen(buf,"w");
+    geom_file = freopen(buf,"a",geom_file);
+
     fprintf(geom_file,"LVLGEOM\n");
     fprintf(geom_file,"Size %u %u\n\n",lvlanim_size,num_entries);
     for (i=0; i<lvlanim_size; i++) {
@@ -678,7 +680,7 @@ int main(int argc, char *argv[]) {
 
     if (data)            munmap(data, data_size);
                          free(img_offsets);
-    if (lvlanims)        freeLVLAnimList(lvlanims,lvlanim_size);
+    if (lvlanims && lvlanim_size)        freeLVLAnimList(lvlanims,lvlanim_size);
     if (lvl_file!=NULL)  fclose(lvl_file);
     if (geom_file!=NULL) fclose(geom_file);
 
