@@ -13,7 +13,15 @@ class GraphicsEngine {
     public:
         GraphicsEngine();
         ~GraphicsEngine();
+        /// Runs SDL_SetVideoMode with the new parameters.
         void resize(Uint16 width, Uint16 height);
+        ///\brief update the scene
+        ///
+        /// Draws the background and all objects in the pool if the game isn't
+        /// paused. Optionally also the player bar and/or the current frames per
+        /// second.
+        /// \param insist True if the objects should be drawn even if the game
+        ///        is paused
         void renderScene(bool insist=true);
         void togglePlayerBar();
         void toggleFPS();

@@ -9,6 +9,8 @@ Code
 
  o General:
     o pointers => references where possible
+    o Describe everything using Doxygen styles, move the documentation from
+      *.cpp to the headers...
 
  o Animations/Events:
      o Make all events quite short, ie. almost all events become animation

@@ -8,12 +8,23 @@
 */
 class Animation {
     public:
+        /// \param image Image used for the animation
+        /// \param max_num Number of frames (will devide the image horizontally accordingly)
+        /// \param total_time Duration of the animation, if set to 0 assume it's one still image
+        /// \param once If true it run the animation only once when called by \fn start()
         Animation(SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool once=false);
-        Animation(Uint16 width, SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool an_once=false);
+        /// \param width Image width used from the left side
+        /// \param image Image used for the animation
+        /// \param max_num Number of frames (will devide the image horizontally accordingly)
+        /// \param total_time Duration of the animation, if set to 0 assume it's one still image
+        /// \param once If true: Run the animation only once when called by \fn start()
+        Animation(Uint16 width, SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool once=false);
         ~Animation();
-        /// Updates a running animation.
+        /// Updates a running animation and stops it if necessary
+        /// return True if the animation is still running
         bool updateAnim(Uint16 dt);
         /// Updates the frame status of a frame series (usually when not running)
+        /// return Current frame
         const Frame& setFrame(Uint16 nr);
         /// Starts an (usually non running) animation
         void start() {
@@ -35,6 +46,7 @@ class Animation {
         Uint16 getHeight() const {
             return h;
         }
+        /// return True if the animation is running
         bool isRunning() const {
             return running;
         }
@@ -58,11 +70,14 @@ class Animation {
         bool once;
 };
 
+/** \brief Updates all game states and animations
+
+*/
 class AnimHandler {
     public:
         AnimHandler();
         ~AnimHandler();
-        /// run animations
+        /// Updates all game states and animations
         void runAnims();
         Uint16 resetTime();
     private:

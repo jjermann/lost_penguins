@@ -10,11 +10,14 @@ class SoundsEngine {
     public:
         SoundsEngine();
         ~SoundsEngine();
+        /// Play the specified sound
         void playWAV(Mix_Chunk* wav);
         void pauseMusic();
         void resumeMusic();
     private:
+        /// Music: Theme of the current map
         Mix_Music* theme;
+        /// True if sound support is disabled
         bool disabled;
 };
 

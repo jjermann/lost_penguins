@@ -31,6 +31,7 @@ class Character : public Object {
         Character(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Character");
         virtual ~Character();
         Uint8 getHealth();
+        //@{
         Sint16 getSpeed() const {
             return speed;
         }
@@ -43,19 +44,32 @@ class Character : public Object {
         Sint16 addHSpeed(Sint16 dspeed) {
             return hspeed+=dspeed;
         }
+        //@}
+        //@{
         void setGravity(Sint16 setgravity) {
             gravity=setgravity;
         }
         void addGravity(Sint16 addgravity) {
             gravity+=addgravity;
         }
-        /// Changes the general movement of the character by a supplied percentage value.
+        //@}
+        //@{
         void applySpeedMod(Uint16 speedm) {
             speedmod=Uint16(speedmod*speedm/100);
         }
         void setSpeedMod(Uint16 speedm) {
             speedmod=speedm;
         }
+        //@}
+        //@{
+        ///\brief Collision detection
+        ///
+        /// Checks and correspondingly updates a movement and the regions the character is in.
+        /// The destination parameter is changed to be before any dense obstacles in the way
+        /// \param dest Designated movement position of the object
+        /// \param tele True if it's not a smooth movement but an instant jump
+        /// \param check True if no region updates should be performed
+        /// \return Hit type of the movement
         Hit checkMove(SDL_Rect& dest, bool tele=false, bool check=false);
         const std::set<Object *>& getEnter() const {
             return enter;
@@ -63,9 +77,18 @@ class Character : public Object {
         const std::set<Object *>& getTouch() const {
             return touch;
         }
+        //@}
         //VIRTUAL METHODS
+        //@{
+        ///\brief Remove the specified object from all internal accountings
+        ///
+        /// Clean up the internal accountings of the specified object. Usually called
+        /// when an object leaves the map (dies).
         virtual void removedObject(Object*);
-        //updates the current animation state
+        ///\brief Updates the current animation
+        ///
+        /// Checks the state and changes the animation and curpos correpspondingly
+        /// \param change False if only the curpos should be changed and not the animation.
         virtual void updateAnimState(bool change=true);
         virtual void resetAnimState() {
             Object::resetAnimState();
@@ -76,8 +99,15 @@ class Character : public Object {
         virtual void fall(Uint16);
         //when it dies...
         virtual void die();
-        //gets hit by a weapon
+        ///\brief Weapon hits
+        ///
+        /// Called when hit by a weapon. Depending on the direction and weapon used,
+        /// certain effects/events are run.
+        /// \param direction Direction from which the weapon deals damage
+        /// \param weap Weapon used in the attack/hit
+        /// \return New health of the character
         virtual Uint16 hit(Uint16 direction, Weapon& weap);
+        //@}
     protected:
         //add places
         virtual void addTouch(std::set<Object *>&);

@@ -57,11 +57,17 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define DIR_DWL         0x0000000A
 #define DIR_LR          0x00000003
 
+/**\brief Collision type
+
+*/
 struct Hit {
    Uint16 enter;
    Uint16 touch;
 };
 
+/**\brief Game configuration structure
+
+*/
 struct Config {
     Uint16 width;
     Uint16 height;
@@ -73,6 +79,9 @@ struct Config {
     string map;
 };
 
+/**\brief Frame format
+
+*/
 struct Frame {
     SDL_Surface* image;
     //Frame position (Source Rectangle)
@@ -80,29 +89,54 @@ struct Frame {
 };
 
 //global functions
+//@{
+/// Quits the game with a error code
+/// \return Error code, 0 if successfull
 int quitGame(int);
+/// Parse the configuration file
 int readConfig(const string& filename);
+/// Parse the command line options
 void parseInput(int argc,char* argv[]);
+/// Print the usage
 void usage();
+/// Helper function that converts an integer to a string
 string itos(int);
+//@}
 
 //global variables
+//@{
+/// Game configuration
 extern Config config;
+/// Size of the background (map area)
 extern SDL_Rect* maparea;
+/// Image Cache
 extern ImageCache* imgcache;
+/// Sound Cache
 extern SoundCache* sndcache;
+/// Graphics Engine
 extern GraphicsEngine* gfxeng;
+/// Sounds Engine
 extern SoundsEngine* sfxeng;
+/// Object pool
 extern ObjectsPool* pool;
+/// Current player
 extern Player* player;
+/// Background
 extern Background* background;
+/// Current map
 extern Map* curmap;
+/// Input Handler
 extern InputHandler* input;
+/// Animation Handler
 extern AnimHandler* anim;
+/// Font1
 extern Font* font;
+/// Font2
 extern Font* font2;
+/// True if the game is paused
 extern bool paused;
+/// True if the mission failed
 extern bool failed;
-extern bool fps;
+//@}
 
 #endif

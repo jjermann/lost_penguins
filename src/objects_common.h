@@ -37,7 +37,9 @@ class Object {
     public:
         Object(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Object");
         virtual ~Object();
-        //uper-left
+        /// Sets the new position. If the coordinates are not in the map area
+        /// they are corrected to fit into it.
+        /// \return True if no correction was needed
         bool setPos(Sint16 xcord,Sint16 ycord) {
             bool ok=true;
             //Did we hit a maparea?
@@ -56,7 +58,7 @@ class Object {
 
             return ok;
         }
-        //center
+        /// \return Center position of the object
         SDL_Rect getCenter() {
             SDL_Rect tmprect;
             tmprect.x=pos.x+Uint16(pos.w/2);
@@ -65,10 +67,12 @@ class Object {
             tmprect.h=0;
             return tmprect;
         }
-        //is the Object in the rectangle rect
-        //touch: a touch (partially entered) is enough
+        /// Checks whether this object is partially inside a certain map area.
+        /// \param rect Map area
+        /// \param touch If true an overlapping region is enough, if false
+        ///        the object center has to be inside the specified area.
+        /// \return True if the object is inside
         bool isIn(const SDL_Rect& rect, bool touch=false);
-        //uper-left
         SDL_Rect* getPos() {
             return &pos;
         }
@@ -78,7 +82,7 @@ class Object {
             return &curpos;
         }
         const Frame& getFrame() const;
-        //object type
+        //@{
         Uint16 getType() const {
             return otype;
         }
@@ -91,28 +95,55 @@ class Object {
         void switchType(Uint16 newtype) {
             otype^=newtype;
         }
+        //@}
         string getName() {
             return name;
         }
-        //update the actual Animation
+        //@{
+        /// Updates the current animation
+        /// \return True if the animation is still running
         bool updateAnim(Uint16 dt);
-        //not to be used with updateAnimState (used eg. with ESTATE_ANIM)
+        /// Specifies the animation to be run (usually a one time animation)
+        /// and starts it right away. Should not be used with updateAnimState,
+        /// set ESTATE_ANIM to deactivate an updateAnimState. This is usually
+        /// controlled by an AnimationEvent
         void setAnim(Animation* anim);
+        /// Sets the animation back to the default one.
         virtual void resetAnimState();
         bool isRunning() const;
+        //@}
+        //@{
+        /// Mark an object for deletion.
         void mark_delete() {
             delete_flag=true;
         }
         bool isDeleted() {
             return delete_flag;
         }
+        virtual void destroy() {
+            delete this;
+        }
+        //@}
         //Events (triggered animations/effects)
+        //@{
+        /// Clears the event field (sets it to NULL). This should only be used by
+        /// the event destructor.
+        /// \todo Is there a way to solve this better?
         void clearEvents();
+        /// Schedules a new event and cancels any currently running event
+        /// \param ev New event
         void setEvent(Event* ev);
+        /// Updates the event (run by the AnimHandler) and react on the new event
+        /// state (start, end or cancel an event).
+        /// \return New event state
         Uint16 updateEvents(Uint16 dt);
+        /// Cancel the current event
         void cancelEvent();
+        /// End the current event
         void stopEvent();
+        //@}
         //states
+        //@{
         bool getState(Uint32 cstate) const {
             return (state&cstate);
         }
@@ -125,31 +156,39 @@ class Object {
         void unsetState(Uint32 cstate) {
             state&=~cstate;
         }
+        //@}
         //VIRTUAL METHODS
-        //When activated by an object
+        //@{
+        /// Try to activate any objects in the current position
+        /// \return True if an object could be activated
         virtual bool act(Object*) { return false; }
-        //When touched by an object
+        /// Touch an object, called when the object position overlaps with the position
+        /// of another object for the first time.
         virtual void touch(Object*) { }
-        //When entered by an object
+        /// Enter an object, called when the object center enters another object
+        /// position for the first time.
         virtual void enter(Object*) { }
-        //When it isn't touched anymore
+        /// Untouch a touched object, called when the object no longer overlaps with
+        /// another object.
         virtual void untouch(Object*) { }
-        //When an object leaves it
+        /// Leave an object, called when the object center no longer is inside another
+        /// object.
         virtual void leave(Object*) { }
-        //permanent effects this base function must be run by all derived classes
+        /// What should the object do all the time? This should be called by all derived
+        /// classes.
         virtual void idle(Uint16) { }
-        virtual void destroy() {
-            delete this;
-        }
+        //@}
     protected:
         Uint16 tbirth;
         Uint32 state;
         Event* event;
         Animation* im_orig;
         Animation* animation;
+        ///\todo Document this!
         //temporary information about where to _draw_ the animation frame:
         //curpos.wh <= pos.wh, curpos.xy = positive dxy
         SDL_Rect curpos;
+        /// Upper left logical position of the object (used for decisions)
         SDL_Rect pos;
         //Object type
         Uint16 otype;
@@ -169,6 +208,7 @@ class Item : public Object {
         Item(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Item");
         virtual ~Item();
         virtual bool act(Object*) { return false; }
+        /// Assigns the item a new (player) owner
         void setOwner(Player* plr) {
             owner=plr;
         }

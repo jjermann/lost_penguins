@@ -19,7 +19,12 @@
 */
 class Event {
     public:
+        /// \param obj Object that controls the event
+        /// \param length Time after start until the event ends
+        /// \param edelay Time until the event starts
+        /// \param switchstate State changes between start and end/cancel
         Event(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING);
+        /// \brief Resets the event state of \variable owner
         virtual ~Event();
         virtual Uint16 update(Uint16 dt);   
         virtual void cancel();
@@ -52,7 +57,15 @@ class CEvent : public Event {
 */
 class AnimEvent : public Event {
     public:
-        AnimEvent(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING, Mix_Chunk* asound=NULL, Animation* runanim=NULL, bool delanim=false);
+        /// \param asound Sound (Mix_Chunk) to be played when the event starts
+        /// \param runanim Animation to be run when the event starts
+        /// \todo Get rid of the delanim parameter
+        /// \param delanim True if the animation should be deleted
+        AnimEvent(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING,
+          Mix_Chunk* asound=NULL, Animation* runanim=NULL, bool delanim=false);
+        /// \brief Updates the events
+        /// \return Event state: either delayed (EV_DELAY), starting (EV_START),
+        ///         running (EV_RUN), stopping (EV_END) or canceled (EV_CANCEL)
         virtual Uint16 update(Uint16 dt);
         virtual void start();
         virtual void end();  
@@ -69,7 +82,8 @@ class AnimEvent : public Event {
 */
 class CAnimEvent : public CEvent {
     public:
-        CAnimEvent(Character* chr, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING, Mix_Chunk* asound=NULL, Animation* runanim=NULL, bool delanim=false);
+        CAnimEvent(Character* chr, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING,
+          Mix_Chunk* asound=NULL, Animation* runanim=NULL, bool delanim=false);
         virtual Uint16 update(Uint16 dt);
         virtual void start();
         virtual void end();  
@@ -83,11 +97,18 @@ class CAnimEvent : public CEvent {
 /** \brief Attack event
 
     Describes a full attack including weapons used, direction of attack, weapon range,
-    targets to (try to) hit.
+    target types to (try to) hit.
 */
 class EAttack : public CAnimEvent {
     public:
-        EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0, Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
+        /// \param atweapon Weapon to be used for the attack
+        /// \param dir Directions to attack
+        /// \param weapon_range Range of the weapon starting from the
+        ///        character into all specified directions
+        /// \param target_mask Mask for the object type of the targets to be hit
+        EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0,
+          Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL,
+          Animation* runanim=NULL, bool delanim=false);
         virtual void end();
     protected:
         Weapon* weapon;
@@ -102,7 +123,10 @@ class EAttack : public CAnimEvent {
 */
 class ESpeed : public CAnimEvent {
     public:
-        ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed=0, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
+        /// \param avspeed Vertical speed to be add when the event starts
+        /// \param ahspeed Horizontal speed to be add when the event starts
+        ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed=0, Uint16 edelay=0,
+          Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
         virtual void start();
         virtual void end();  
         virtual void cancel();
@@ -118,9 +142,15 @@ class ESpeed : public CAnimEvent {
 */
 class ERun : public ESpeed {
     public:
-        ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
+        /// Adds the initial speed
+        /// \param inispeed Initial horizontal speed to be added
+        /// \param ahspeed Horizontal speed to be added when the event starts
+        ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay=0,
+          Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
         virtual ~ERun();
+        /// Forces the event to continue
         virtual void reset(); 
+        /// If the event wasn't forced to continue it will shortly end
         virtual Uint16 update(Uint16 dt);
     protected:
         Sint16 ispeed;

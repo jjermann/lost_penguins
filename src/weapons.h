@@ -44,9 +44,20 @@ class Weapon {
             return damage;  
         }
     private:
+        /// \brief Weapon type
+        ///
+        /// Determines how the weapon affects other characters (logically).
         Uint16 wtype;
+        /// \brief Weapon sub type
+        ///
+        /// Determines the kind of the weapon. It has no influence on the damage
+        /// or the logical reaction and is just used to determine the visual/audio
+        /// response of the target.
         Uint16 stype;
-        Uint16 damage;
+        /// \brief Weapon damage
+        ///
+        /// Damage the weapon deals if it reaches it isn't prevented.
+        Sint16 damage;
 };
 
 #endif

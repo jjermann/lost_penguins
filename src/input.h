@@ -20,7 +20,7 @@ class InputHandler {
     public:
         InputHandler();
         ~InputHandler();
-        //check for keyboard events
+        /// Check for keyboard events
         void pollEvents();
         bool getState(Uint16 cstate) {
             return (state&cstate);
@@ -32,12 +32,14 @@ class InputHandler {
             state&=~cstate;
         }
     private:
-        int filterEvents(const SDL_Event *event);
+        /// Information about which buttons are pressed
         Uint16 state;
+        /// Sound: When the game is paused
         Mix_Chunk* au_pause;
 };
 
-//filter events
+/// \obsolete This isn't used at the moment
+/// \brief Filter events
 int filterEvents(const SDL_Event *event);
 
 #endif
