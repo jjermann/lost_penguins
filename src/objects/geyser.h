@@ -4,6 +4,9 @@
 #define T_GEYSIR_DUR  1000
 
 
+/** \brief Geyser
+
+*/
 class Geyser : public Object {
     public:
         Geyser(string imagename, Sint16 xpos=0, Sint16 ypos=0, Sint16 yAdd=0, string name="Geyser");

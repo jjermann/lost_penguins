@@ -1,5 +1,5 @@
 DOXYGEN = doxygen
-TARGETS = html latex
+TARGETS = html
 
 default:
 	$(DOXYGEN)

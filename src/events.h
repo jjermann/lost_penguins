@@ -24,7 +24,7 @@ class Event {
         /// \param edelay Time until the event starts
         /// \param switchstate State changes between start and end/cancel
         Event(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING);
-        /// \brief Resets the event state of \variable owner
+        /// \brief Resets the event state of owner
         virtual ~Event();
         virtual Uint16 update(Uint16 dt);   
         virtual void cancel();

@@ -20,8 +20,10 @@ class Player : public Character {
         Player(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Player");
         virtual ~Player();
         //@{
+        /// \brief Returns the icon of this Player
         /// \return Single icon frame of this player (used for the player bar)
         Frame getIcon() const;
+        /// \brief Returns the current icon number
         /// \return Current icon number
         Uint8 getItemNum() {
             return currentitem;

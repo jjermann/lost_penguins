@@ -58,7 +58,8 @@ class Object {
 
             return ok;
         }
-        /// \return Center position of the object
+        /// \brief Returns the center of an object
+        /// \return Center position of the object with width=height=0
         SDL_Rect getCenter() {
             SDL_Rect tmprect;
             tmprect.x=pos.x+Uint16(pos.w/2);
@@ -216,6 +217,9 @@ class Item : public Object {
         Player* owner;
 };
 
+/** \brief Background
+
+*/
 class Background : public Object {
     public:
         Background(string imagename);

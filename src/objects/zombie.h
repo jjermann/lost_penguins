@@ -3,6 +3,9 @@
 #define DE_ATT1        400
 
  
+/** \brief Zombie
+
+*/
 class Zombie : public Monster {
     public:
         Zombie(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Zombie");

@@ -9,6 +9,9 @@
 #define DE_WING        300
 
  
+/** \brief Scorch (Viking)
+
+*/
 class Scorch : public Player {
     public:
         Scorch(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Scorch");

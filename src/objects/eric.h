@@ -5,6 +5,9 @@
 #define V_JUMP2       -500
 #define DE_JUMP        200
 
+/** \brief Eric (Viking)
+
+*/
 class Eric : public Player {
     public:
         Eric(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Eric");
@@ -13,7 +16,7 @@ class Eric : public Player {
         virtual void in_sp2(Sint16);
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);
-        virtual Uint16 hit(Uint16,Weapon&);
+        virtual Uint16 hit(Uint16 direction,Weapon& weap);
     private:
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;

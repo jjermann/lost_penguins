@@ -15,6 +15,9 @@
 #define DE_JUMP        200
 
  
+/** \brief Fang (Viking)
+
+*/
 class Fang : public Player {
     public:
         Fang(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Fang");

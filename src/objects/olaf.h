@@ -9,6 +9,9 @@
 #define DE_JUMP        200
 
  
+/** \brief Olaf (Viking)
+
+*/
 class Olaf : public Player {
     public:
         Olaf(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Olaf");
@@ -21,17 +24,21 @@ class Olaf : public Player {
         virtual void fall(Uint16);
         virtual void in_sp1(Sint16);
         virtual void in_sp2(Sint16);
-        virtual Uint16 hit(Uint16,Weapon&);
+        virtual Uint16 hit(Uint16 direction,Weapon& weap);
     private:
         inline bool trySmall(bool small);
+        //@{
         Animation* im_small_left;
         Animation* im_small_right;
         Animation* im_shield_left;
         Animation* im_shield_right;
         Animation* im_fall_shield_left;
         Animation* im_fall_shield_right;
+        //@}
+        //@{
         Mix_Chunk* au_small;
         Mix_Chunk* au_big;
         Mix_Chunk* au_fart;
+        //@}
         Sint16 fart;
 };

@@ -1,5 +1,8 @@
 #include "objects_common.h"
 
+/** \brief Teleporter
+
+*/
 class Teleporter : public Object {
     public:
         Teleporter(string imagename, Sint16 xpos=0, Sint16 ypos=0, Sint16 xExit=0, Sint16 yExit=0, string name="Teleporter");
