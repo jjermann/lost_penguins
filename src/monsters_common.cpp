@@ -5,7 +5,6 @@
 //shouldn't be here...
 #include "vikings_common.h"
 
-using namespace std;
 
 
 /*==================

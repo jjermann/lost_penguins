@@ -5,8 +5,6 @@
 #include "vikings_common.h"
 #include "anim.h"
 
-using namespace std;
-
 
 //Initialize an animation: animation image, number of frames,
 //time intervall for the animation, if (total_time==0) it is considered a frames series

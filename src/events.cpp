@@ -5,8 +5,6 @@
 #include "sfxeng.h"
 #include "characters_common.h"
 
-using namespace std;
-
 
 //Common Events (basically sets the events idle for length)
 Event::Event(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate):

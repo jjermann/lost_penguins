@@ -2,12 +2,28 @@
 #include "map.h"
 #include "sfxeng.h"
 #include "sndcache.h"
-#include "objects.h"
 #ifndef _OBJECTPOOLS_H_
     #include "objectpools.h"
 #endif
-
-using namespace std;
+//HACK!!!!!!
+#include "objects/baleog.h"
+#include "objects/bomb.h"
+#include "objects/door.h"
+#include "objects/eric.h"
+#include "objects/exit.h"
+#include "objects/fang.h"
+#include "objects/geyser.h"
+#include "objects/heart.h"
+#include "objects/key.h"
+#include "objects/olaf.h"
+#include "objects/scorch.h"
+#include "objects/teleport.h"
+#include "objects/trigger.h"
+#include "objects/triggered_bomb.h"
+#include "objects/wall.h"
+#include "objects/water.h"
+#include "objects/wind.h"
+#include "objects/zombie.h"
 
 
 /*==================
@@ -31,7 +47,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
     string name=obj;
     if (arg1!="0") {
         //one additional parameter
-        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Geysir" || name=="Wind") {
+        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Geyser" || name=="Wind") {
             if (arg2!="0") name=arg2;
         //two additional parameter
         } else if (name=="Teleporter") {
@@ -47,7 +63,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
     else if (obj=="Water")   return (addObject(new Water(image,x,y,name)));
     else if (obj=="Teleporter") return (addObject(new Teleporter(image,x,y,atoi(arg1.c_str()),atoi(arg2.c_str()),name)));
     else if (obj=="Wind")    return (addObject(new Wind(image,x,y,atoi(arg1.c_str()),name)));
-    else if (obj=="Geysir")  return (addObject(new Geysir(image,x,y,atoi(arg1.c_str()),name)));
+    else if (obj=="Geyser")  return (addObject(new Geyser(image,x,y,atoi(arg1.c_str()),name)));
     else if (obj=="Trigger") return (addObject(new Trigger(image,x,y,arg1,name,arg3)));
     else if (obj=="Door")    return (addObject(new Door(image,x,y,arg1,name)));
     //Items

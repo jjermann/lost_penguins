@@ -11,7 +11,6 @@
 #include "objectpools.h"
 #include "vikings_common.h"
 
-using namespace std;
 
 int main(int argc, char* argv[]) {
     cout << "Starting Lost Vikings!\n";

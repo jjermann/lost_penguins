@@ -15,6 +15,8 @@ Code
     o cleanup the files (move out objects, separate .h, etc)
 
  o Animations/Events:
+     o Make all events quite short, ie. almost all events become animation
+       events
      o Maybe: Improve the (very simple) image format:
         - All frame in one sprite sheet for each character (image matrices
           using two description vectors or even more general: offset matrices)

@@ -1,3 +1,5 @@
+BINS = lost_vikings slvextract
+
 default:
 	+$(MAKE) -C src
 	+$(MAKE) -C tools
@@ -9,10 +11,11 @@ tools:
 	+$(MAKE) -C tools
 
 clean:
+	rm -f $(BINS)
 	+$(MAKE) -C src clean
 	+$(MAKE) -C tools clean
 
-distclean:
+distclean: clean
 	+$(MAKE) -C src distclean
 	+$(MAKE) -C tools distclean
 	rm -f *~

@@ -3,7 +3,6 @@
 #include "vikings_common.h"
 #include "map.h"
 
-using namespace std;
 
 //TODO: load map from a file
 Map::Map(string mapname) {

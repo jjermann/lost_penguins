@@ -6,8 +6,6 @@
 #include "objectpools.h"
 #include "characters_common.h"
 
-using namespace std;
-
 
 //CHARACTER (Object)
 Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname):

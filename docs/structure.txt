@@ -1,3 +1,24 @@
+States
+======
+
+menu,pause,switch level,continue dialogue,dialogue mode (eg. at start)
+
+STATE_FALL
+  no ground below us...
+STATE_WATER
+  in water
+STATE_LADDER?
+  on ladder
+STATE_SWING (only Baleog)
+  baleog swinging
+
+animation states:
+  ESTATE_*
+trigger states:
+  STATE_LEFT, STATE_ACT*, STATE_M*, STATE_SHIELD, STATE_CLIMB, etc
+
+
+
 Objects (pool):
 ===============
 

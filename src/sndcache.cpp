@@ -1,8 +1,6 @@
 #include "common.h"
 #include "sndcache.h"
 
-using namespace std;
-
 
 SoundCache::SoundCache() { }
 SoundCache::~SoundCache() {

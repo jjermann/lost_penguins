@@ -9,8 +9,6 @@
 #include "objectpools.h"
 #include "vikings_common.h"
 
-using namespace std;
-
 
 //VIKING (Character)
 Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):

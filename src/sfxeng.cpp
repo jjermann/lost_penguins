@@ -1,8 +1,6 @@
 #include "common.h"
 #include "sfxeng.h"
 
-using namespace std;
-
 
 SoundsEngine::SoundsEngine() {
 #ifdef SDL_MIXER

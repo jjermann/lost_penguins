@@ -1,8 +1,6 @@
 #include "common.h"
 #include "imgcache.h"
 
-using namespace std;
-
 
 ImageCache::ImageCache() { }
 ImageCache::~ImageCache() {

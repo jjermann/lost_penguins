@@ -6,8 +6,6 @@
 #include "imgcache.h"
 #include "gfxeng.h"
 
-using namespace std;
-
 
 GraphicsEngine::GraphicsEngine() {
     if ((screen=SDL_SetVideoMode(config.width,config.height,16,SDL_HWSURFACE|SDL_DOUBLEBUF|config.full)) != NULL) {

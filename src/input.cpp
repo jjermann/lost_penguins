@@ -10,8 +10,6 @@
 #include "objects_common.h"
 #include "vikings_common.h"
 
-using namespace std;
-
 
 InputHandler::InputHandler() {
     paused=false;

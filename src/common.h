@@ -10,6 +10,7 @@
 #include <map>
 #include <math.h>
 #include <string>
+#include <dlfcn.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
 #ifdef SDL_IMAGE
@@ -17,6 +18,7 @@
 #endif
 
 using std::string;
+using namespace std;
 
 class Object;
 class Character;
@@ -44,6 +46,8 @@ typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
 typedef std::set<Viking *>::iterator viking_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
+typedef Object* (*pCreate)(string);
+typedef Object* (*pDestroy)(string);
 
 //General definitions
 #define NOTHING         0x00000000

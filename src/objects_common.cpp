@@ -4,7 +4,6 @@
 #include "events.h"
 #include "objects_common.h"
 
-using namespace std;
 
 Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname) {
     im_orig=new Animation(imgcache->loadImage(imagename));
@@ -95,12 +94,15 @@ void Object::stopEvent() {
 }
 
 
-/*==================
-    Item (Object)
-==================*/
-
 Item::Item(string imagename, Uint16 xcord, Uint16 ycord, string iname):
   Object(imagename,xcord,ycord,iname), owner(NULL) {
     otype|=OTYPE_ITEM;
 }
 Item::~Item() { }
+
+
+Background::Background(string imagename):
+  Object(imagename,0,0,"Background") {
+    otype=NOTHING;
+}
+Background::~Background() { }
