@@ -57,8 +57,8 @@ void Eric::in_sp2(Sint16 dt) {
         if (state&STATE_RUN) cancelEvent();
         return;
     }
-    if ((state&STATE_RUN) && (state&STATE_FALL)) {
-        cancelEvent();
+    if (state&STATE_RUN) {
+        if (state&STATE_FALL) cancelEvent();
     } else if (state&STATE_MLEFT) {
         sfxeng->playWAV(au_run);
         setEvent(new ERun(this,10000,Sint16(-1/2*maxspeedx),-maxspeedx,500,ESTATE_ABORT,au_run));
