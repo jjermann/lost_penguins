@@ -22,7 +22,6 @@
 #define WS_PRESSURE      0x00000010
 #define WS_HEAL          0x00000020
 
-#define DSTRIKE          200
 #define TSTRIKE          600
 
 /** \brief Weapons

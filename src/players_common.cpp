@@ -22,7 +22,6 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     }
     state=STATE_FALL;
     otype|=OTYPE_PLAYER;
-    dense_types|=OTYPE_MONSTER;
     enemy_types|=OTYPE_MONSTER;
     im_left=animation;
     im_right=animation;
@@ -353,8 +352,8 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
             case W_TOUCH: {
                 //TODO: play animations (make new Event for this)
                 if (direction&(DIR_UP|DIR_DOWN)) sfxeng->playWAV(aud_hit);
-                if (direction&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-200,-DSTRIKE,0,ESTATE_BUSY,aud_hit));
-                else setEvent(new ESpeed(this,TSTRIKE,-200,DSTRIKE,0,ESTATE_BUSY,aud_hit));
+                if (direction&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-200,-400,0,ESTATE_BUSY,aud_hit));
+                else setEvent(new ESpeed(this,TSTRIKE,-200,400,0,ESTATE_BUSY,aud_hit));
                 break;
             }
             case W_WATER: {

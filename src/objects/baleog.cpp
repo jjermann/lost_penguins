@@ -34,5 +34,5 @@ void Baleog::in_sp1(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_SP1);
 
-    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,5,enemy_types,0,0,au_sword,(state&STATE_LEFT) ? im_sword_left : im_sword_right));
+    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_sword,(state&STATE_LEFT) ? im_sword_left : im_sword_right));
 }

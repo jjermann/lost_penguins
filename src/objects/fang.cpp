@@ -84,7 +84,7 @@ void Fang::in_sp2(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_SP2);
 
-    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,5,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? im_claw_left : im_claw_right));
+    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? im_claw_left : im_claw_right));
 }
 
 void Fang::crash(Uint16 dir) {

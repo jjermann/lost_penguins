@@ -18,7 +18,6 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     maxspeedy=0;
     state=STATE_FALL;
     otype|=OTYPE_MONSTER;
-    dense_types|=OTYPE_PLAYER;
     enemy_types|=OTYPE_PLAYER;
     im_left=animation;
     im_right=animation;

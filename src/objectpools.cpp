@@ -4,6 +4,7 @@
 #include "sndcache.h"
 #include "objectpools.h"
 //HACK!!!!!!
+#include "monsters_common.h"
 #include "objects/baleog.h"
 #include "objects/bomb.h"
 #include "objects/door.h"
@@ -18,6 +19,7 @@
 #include "objects/teleport.h"
 #include "objects/trigger.h"
 #include "objects/triggered_bomb.h"
+#include "objects/plant.h"
 #include "objects/wall.h"
 #include "objects/water.h"
 #include "objects/wind.h"
@@ -37,7 +39,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sin
     string name=obj;
     if (arg1!="0") {
         //one additional parameter
-        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Geyser" || name=="Wind") {
+        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Plant" || name=="Geyser" || name=="Wind") {
             if (arg2!="0") name=arg2;
         //two additional parameter
         } else if (name=="Teleporter") {
@@ -63,6 +65,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sin
 
     //normal characters
     else if (obj=="TriggeredBomb") return (addCharacter(new TriggeredBomb(image,x,y,atoi(arg1.c_str()),name)));
+
     //Players
     else if (obj=="Eric")    return (addPlayer(new Eric(image,x,y,name)));
     else if (obj=="Olaf")    return (addPlayer(new Olaf(image,x,y,name)));
@@ -71,6 +74,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sin
     else if (obj=="Scorch")  return (addPlayer(new Scorch(image,x,y,name)));
 
     //Monsters
+    else if (obj=="Plant")   return (addMonster(new Plant(image,x,y,atoi(arg1.c_str()),name)));
     else if (obj=="Zombie")  return (addMonster(new Zombie(image,x,y,name)));
 
     //not recognized
