@@ -28,14 +28,6 @@ Scorch::~Scorch() {
     delete im_land_left;
 }
 
-void Scorch::idle(Uint16 dt) {
-    Player::idle(dt);
-    if (!(input->getState(INPUT_SP1))) {
-        unsetState(STATE_ACT_1);
-        unsetState(STATE_GLIDE);
-    }
-}
-
 void Scorch::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
@@ -51,6 +43,8 @@ void Scorch::fall(Uint16 dt) {
 
 void Scorch::in_sp1(Sint16 dt) {
     if (dt < 0) {
+        unsetState(STATE_ACT_1);
+        unsetState(STATE_GLIDE);
         input->unsetState(INPUT_SP1);
         return;
     }
@@ -58,21 +52,18 @@ void Scorch::in_sp1(Sint16 dt) {
     //if not exhausted -> glide
     if (!(state&STATE_ACT_2)) {
         setState(STATE_GLIDE);
-    } else {
-    //TODO: add glide2?
     }
     //Can't fly anymore
-    if (state&STATE_ACT_2) {
+    if ((state&STATE_ACT_1)||(state&STATE_ACT_2)) {
     } else if (left_wings<=0) {
-        left_wings--;
+        setState(STATE_ACT_1);
         setState(STATE_ACT_2);
         unsetState(STATE_GLIDE);
-        setState(STATE_ACT_1);
         setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,au_tired));
     //Use Wings
-    } else if (!(state&STATE_ACT_1)){
-        left_wings--;
+    } else {
         setState(STATE_ACT_1);
+        left_wings--;
         setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,au_swing));
     }
 }

@@ -11,14 +11,13 @@
  
 /** \brief Scorch (Viking)
 
-    Act1: Gliding\n
+    Act1: Wings used (key still down)\n
     Act2: Exhausted
 */
 class Scorch : public Player {
     public:
         Scorch(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Scorch");
         virtual ~Scorch();
-        virtual void idle(Uint16);
         virtual void fall(Uint16);
         /// \brief Scorch uses his wings
         virtual void in_sp1(Sint16);
