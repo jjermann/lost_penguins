@@ -76,7 +76,7 @@ void Character::updateAnimState(bool change) {
 void Character::idle(Uint16) {
     //check if we have ground below us...
     Hit hitobj;
-    hitobj=checkMove(pos);
+    hitobj=checkMove(pos,false,true);
 
     //are we falling?
     if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0)) {
@@ -111,7 +111,7 @@ void Character::fall(Uint16 dt) {
             addSpeed(Sint16(gravity*Dgrav/1000));
         }
         Hit hit=move(Dgrav);
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
+        if ((hit.enter&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }
