@@ -65,15 +65,6 @@ void CharacterEvent::cancel() {
 }
 
 
-ELand::ELand(Character* chr, Uint16 length, Mix_Chunk* esound):
-  CharacterEvent(chr,length,0,(STATE_IRR|ESTATE_BUSY),esound) { }
-void ELand::start() {
-    Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
-    charowner->hit(DIR_UP,tmpweap);
-    CharacterEvent::start();
-}
-
-
 ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
   CharacterEvent(chr,length,edelay,switchstate,esound),vspeed(avspeed),hspeed(ahspeed) { }
 void ESpeed::start() {

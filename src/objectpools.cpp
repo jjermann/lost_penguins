@@ -90,6 +90,8 @@ Object* ObjectsPool::addObject(Object* object) {
     }
 }
 
+//yeah, a pyramide... ;) serious, this is _NOT_ good
+//hmm, but it can be used as a bad example on how "_not_ to do things"... ;-)
 object_iterator ObjectsPool::removeObject(object_iterator it) {
     if (it!=objectspool.end()) {
         objectspool.erase(*it);
@@ -98,8 +100,10 @@ object_iterator ObjectsPool::removeObject(object_iterator it) {
             if(Viking* ptrv = dynamic_cast<Viking*>(*it)) {
                 if (vikingspool.erase(ptrv)) {
                     currentviking=vikingspool.begin();
-                    if (currentviking!=vikingspool.end()) viking=*currentviking;
-                    else viking=NULL;
+                    if (currentviking!=vikingspool.end()) {
+                        if (viking) viking->clearStates(false);
+                        viking=*currentviking;
+                    } else viking=NULL;
                 }
             } else if (Monster* ptrm = dynamic_cast<Monster*>(*it)) monsterspool.erase(ptrm);
         }
@@ -120,8 +124,10 @@ Object* ObjectsPool::moveObject(Object* object) {
         if(Viking* ptrv = dynamic_cast<Viking*>(object)) {
             if (vikingspool.erase(ptrv)) {
                 currentviking=vikingspool.begin();
-                if (currentviking!=vikingspool.end()) viking=*currentviking;
-                else viking=NULL;
+                if (currentviking!=vikingspool.end()) {
+                    if (viking) viking->clearStates(false);
+                    viking=*currentviking;
+                } else viking=NULL;
             }
         } else if (Monster* ptrm = dynamic_cast<Monster*>(object)) monsterspool.erase(ptrm);
     }
@@ -160,8 +166,12 @@ Viking* ObjectsPool::switchViking() {
         sfxeng->playWAV(au_switch);
         ++currentviking;
         if (currentviking == vikingspool.end()) currentviking=vikingspool.begin();
-        if (currentviking != vikingspool.end()) return (viking=*currentviking);
-        else return (viking=NULL);
+        if (currentviking != vikingspool.end()) {
+            if (viking) viking->clearStates(false);
+            viking=*currentviking;
+        }
+        else viking=NULL;
+        return viking;
     } else return (viking=NULL);
 }
 

@@ -1,4 +1,4 @@
-//Continued list of states
+//Viking specific states...
 #define STATE_SWIM_S     0x00010000
 #define STATE_CLIMB_L    0x00010000
 #define STATE_SWIM_F     0x00020000
@@ -121,8 +121,9 @@ class Fang : public Viking {
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);
         virtual void in_sp1(Sint16);
+        virtual void clearStates(bool reset=false);
     private:
-        virtual void land();
+        virtual void crash(Uint16 dir=DIR_DOWN);
         Mix_Chunk* au_jump;
         Sint16 jump;
 };
@@ -134,8 +135,8 @@ class Scorch : public Viking {
         virtual void idle(Uint16);
         virtual void fall(Uint16);
         virtual void in_sp1(Sint16);
+        virtual void clearStates(bool reset=false);
     private:
-        virtual void land();
         Uint8 left_wings;
         Mix_Chunk* au_swing;
         Mix_Chunk* au_tired;

@@ -30,51 +30,48 @@ typedef std::set<Viking *>::iterator viking_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
 
 //General
-#define BAR_HEIGHT     138
-#define MAX_ITEMS      3
-#define MAX_HEALTH     4
-#define ICON_SIZE      46
-#define NOTHING        0x00000000
-#define ALL            0xFFFFFFFF
+#define BAR_HEIGHT      138
+#define MAX_ITEMS       3
+#define MAX_HEALTH      4
+#define ICON_SIZE       46
+#define NOTHING         0x00000000
+#define ALL             0xFFFFFFFF
    
 //Falling, Landing
-#define T_IRR          2000
-#define V_KRIT         1000
-#define T_GRAV_EFFECT  10
-#define T_AI_EFFECT    20
+#define T_IRR           2000
+#define V_KRIT          1000
+#define T_GRAV_EFFECT   10
+#define T_AI_EFFECT     20
  
 //Input events
-#define INPUT_LEFT     0x00000001
-#define INPUT_RIGHT    0x00000002
-#define INPUT_UP       0x00000004
-#define INPUT_DOWN     0x00000008
-#define INPUT_SP1      0x00000010
-#define INPUT_SP2      0x00000020
-#define INPUT_ACT      0x00000040
-#define INPUT_USE      0x00000080
-#define INPUT_DEL      0x00000100
-#define INPUT_PAUSE    0x10000000
+#define INPUT_LEFT      0x00000001
+#define INPUT_RIGHT     0x00000002
+#define INPUT_UP        0x00000004
+#define INPUT_DOWN      0x00000008
+#define INPUT_SP1       0x00000010
+#define INPUT_SP2       0x00000020
+#define INPUT_ACT       0x00000040
+#define INPUT_USE       0x00000080
+#define INPUT_DEL       0x00000100
+#define INPUT_PAUSE     0x10000000
 
-//Viking states, used for animations as well
+//Character/Viking states
 //facing: either left or right (not left)
-#define STATE_LEFT     0x00000001
-//movement: left, right or none
-#define STATE_MLEFT    0x00000004
-#define STATE_MRIGHT   0x00000008
-//basically any state in air
-#define STATE_FALL     0x00000010
-//fast falling
-#define STATE_FALL2    0x00000020
-//Triggers
-#define STATE_ACT_1     0x00000040
-#define STATE_ACT_2     0x00000080
-#define STATE_ACT_3     0x00000100
+#define STATE_LEFT      0x00000001
+//movement (while up/down/left/right key is pressed)
+#define STATE_MLEFT     0x00000004
+#define STATE_MRIGHT    0x00000008
+#define STATE_MUP       0x00000010
+#define STATE_MDOWN     0x00000020
 //in water
-#define STATE_WATER     0x00000200
-//irritated (landed fast or run into wall)
-#define STATE_IRR       0x00000400
-//attack anim
-#define STATE_ATTACK    0x00000800
+#define STATE_WATER     0x00000040
+//falling (normal and fast)
+#define STATE_FALL      0x00000080
+#define STATE_FALL2     0x00000100
+//Common Triggers
+#define STATE_ACT_1     0x00000200
+#define STATE_ACT_2     0x00000400
+#define STATE_ACT_3     0x00000800
 
 //Event states
 //busy:  can't do anything interactively
@@ -85,6 +82,9 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define ESTATE_RUN      0x00004000
 //anim: an animation is beeing played, don't run updateAnimState...
 #define ESTATE_ANIM     0x00008000
+
+//OBSOLETE: attack anim (remove this once the attack anim is done)
+#define STATE_ATTACK    0x10000000
 
 //Directions
 #define DIR_RIGHT       0x00000001
@@ -418,8 +418,8 @@ class Character : public Object {
         //health
         Uint8 setHealth(Uint8);
         Uint8 addHealth(Sint8);
-        //fall -> not fall, run into wall
-        virtual void land();
+        //crash into another object (default: ground)
+        virtual void crash(Uint16 dir=DIR_DOWN);
         //move
         virtual Hit move(Uint16 dt, bool check=false);
         Uint8 health;
@@ -498,6 +498,8 @@ class Viking : public Character {
         virtual void in_use(Sint16);
         //gets hit by a weapon
         virtual Uint16 hit(Uint16 direction, Weapon& weap);
+        //removes all interactively initiated events/states, optionally reset states/etc...
+        virtual void clearStates(bool reset=false);
     protected:
         //add places
         virtual void addTouch(std::set<Object *>&);
@@ -509,8 +511,8 @@ class Viking : public Character {
         void removeItem(Uint8 num);
         Item* moveItem(Uint8 num);
         Object* dropItem(Uint8 num, bool right=true);
-        //fall -> not fall, run into wall
-        virtual void land();
+        //crash into another object (default: ground)  
+        virtual void crash(Uint16 dir=DIR_DOWN);
         //when it dies...
         virtual void die();
         //move
@@ -560,8 +562,8 @@ class Monster : public Character {
         //remove places
         virtual void removeTouch(std::set<Object *>&);
         virtual void removeEnter(std::set<Object *>&);
-        //fall -> not fall, run into wall
-        virtual void land();
+        //crash into another object (default: ground)  
+        virtual void crash(Uint16 dir=DIR_DOWN);
         //when it dies...
         virtual void die();
         //ai functions

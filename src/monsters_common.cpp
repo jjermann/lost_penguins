@@ -87,29 +87,33 @@ void Monster::updateAnimState(bool change) {
     curpos.y=(pos.h-curpos.h);
 }
 
-//first thing to do
 void Monster::idle(Uint16 dt) {
     Character::idle(dt);
     runAI(dt);
 }
 
-//moving (help function)
 Hit Monster::move(Uint16 dt, bool check) {
     return Character::move(dt,check);
 }
 
-
-//falling
 void Monster::fall(Uint16 dt) {
     Character::fall(dt);
 }
 
-//landing
-void Monster::land() {
-    Character::land();
+void Monster::crash(Uint16 dir) {
+    Character::crash(dir);
+    switch (dir) {
+        case DIR_DOWN: {
+            unsetState(STATE_ACT_1);
+            unsetState(STATE_ACT_2);
+            unsetState(STATE_ACT_3);
+            //should they be hit as well??
+            break;
+        }
+        default: { }
+    }
 }
 
-//dying
 void Monster::die() {
     Character::die();
 }

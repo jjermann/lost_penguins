@@ -83,38 +83,40 @@ void Eric::in_sp1(Sint16 dt) {
 
 //TODO: change this to a horizontal gravitiy modifier
 void Eric::in_sp2(Sint16 dt) {
-    if (state&STATE_RUN) {
-        if ((dt < 0) || (state&STATE_FALL)) cancelEvent();
-    } else {
-        if ((dt < 0) || (state&STATE_FALL)) {
-        } else if (state&STATE_MLEFT) {
-            setEvent(new ERun(this,10000,Sint16(-1/2*maxspeedx),-maxspeedx,500,ESTATE_ABORT,au_run));
-        } else if (state&STATE_MRIGHT) {
-            setEvent(new ERun(this,10000,Sint16(1/2*maxspeedx),maxspeedx,500,ESTATE_ABORT,au_run));
-        }
+    if (dt < 0) {
+        input->unsetState(INPUT_SP2);
+        if (state&STATE_RUN) cancelEvent();
+        return;
+    }
+    if ((state&STATE_RUN) && (state&STATE_FALL)) {
+        cancelEvent();
+    } else if (state&STATE_MLEFT) {
+        setEvent(new ERun(this,10000,Sint16(-1/2*maxspeedx),-maxspeedx,500,ESTATE_ABORT,au_run));
+    } else if (state&STATE_MRIGHT) {
+        setEvent(new ERun(this,10000,Sint16(1/2*maxspeedx),maxspeedx,500,ESTATE_ABORT,au_run));
     }
 }
 
 void Eric::in_left(Sint16 dt) {
-    if (state&STATE_RUN) {
-        if (dt < 0) {
-            cancelEvent();
-        } else {
-            if (state&STATE_LEFT) event->reset();
-            else cancelEvent();
-        }
+    if (dt < 0) {
+        //TODO: play decelerate animation (setEvent instead)
+        if (state&STATE_RUN) cancelEvent();
+    } else if (state&STATE_RUN) {
+        if (state&STATE_LEFT) event->reset();
+        //changed directions, TODO: play decelerate animation
+        else cancelEvent();
     }
     Viking::in_left(dt);
 }
 
 void Eric::in_right(Sint16 dt) {
-    if (state&STATE_RUN) {
-        if (dt < 0) {
-            cancelEvent();
-        } else {
-            if (state&STATE_LEFT) cancelEvent();
-            else event->reset();
-        }
+    if (dt < 0) {
+        //TODO: play decelerate animation (setEvent instead)
+        if (state&STATE_RUN) cancelEvent();
+    } else if (state&STATE_RUN) {
+        if (!(state&STATE_LEFT)) event->reset();
+        //changed directions, TODO: play decelerate animation
+        else cancelEvent();
     }
     Viking::in_right(dt);
 }
@@ -185,22 +187,14 @@ void Olaf::updateAnimState(bool change) {
 }
 
 void Olaf::in_left(Sint16 dt) {
-    if (dt < 0) {
-        Viking::in_left(dt);
-        return;
-    }
-    //No navigation while farting from ground
-    if (!(state&STATE_ACT_2)) {
+    //No navigation while farting from ground (replace this by a busy event)
+    if ((dt < 0) || (!(state&STATE_ACT_2))) {
         Viking::in_left(dt);
     }
 }
 void Olaf::in_right(Sint16 dt) {
-    if (dt < 0) {
-        Viking::in_right(dt);
-        return;
-    }
-    //No navigation while farting from ground
-    if (!(state&STATE_ACT_2)) {
+    //No navigation while farting from ground (replace this by a busy event)
+    if ((dt < 0) || (!(state&STATE_ACT_2))) {
         Viking::in_right(dt);
     }
 }
@@ -237,24 +231,24 @@ inline bool Olaf::trySmall(bool small) {
 
 void Olaf::in_down(Sint16 dt) {
     if (dt < 0) return;
-    //no ladder (TODO: ladder)
     input->unsetState(INPUT_DOWN);
+    //TODO: ladder
     if (!(state&STATE_FALL)) trySmall(true);
 }
 
 void Olaf::in_up(Sint16 dt) {
     if (dt < 0) return;
-    //no ladder (TODO: ladder)
     input->unsetState(INPUT_UP);
+    //TODO: ladder
     if (!(state&STATE_FALL)) trySmall(false);
 }
 
 //Olaf1: Shield
 void Olaf::in_sp1(Sint16 dt) {
     if (dt < 0) return;
+    input->unsetState(INPUT_SP1);
     //no specials while small
     if (!(state&STATE_SMALL)) {
-        input->unsetState(INPUT_SP1);
         switchState(STATE_SHIELD);
     }
 }
@@ -293,7 +287,7 @@ void Olaf::fall(Uint16 dt) {
             if ((state&STATE_SHIELD) && (speed > V_SHIELD)) setSpeed(V_SHIELD);
         }
         Hit hit=move(Dgrav);
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
+        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }
@@ -352,7 +346,7 @@ void Scorch::fall(Uint16 dt) {
             if ((state&STATE_GLIDE) && (speed > V_GLIDE)) speed=V_GLIDE;;
         }
         Hit hit=move(Dgrav);
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
+        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }
@@ -361,7 +355,10 @@ void Scorch::fall(Uint16 dt) {
 //Act1: no wings, but key down
 //Act2: exhausted
 void Scorch::in_sp1(Sint16 dt) {
-    if (dt < 0) return;
+    if (dt < 0) {
+        input->unsetState(INPUT_SP1);
+        return;
+    }
     setState(STATE_FALL);
     //if not exhausted -> glide
     if (!(state&STATE_ACT_2)) {
@@ -384,13 +381,14 @@ void Scorch::in_sp1(Sint16 dt) {
     }
 }
 
-void Scorch::land() {
-    unsetState(STATE_GLIDE);
-    input->unsetState(INPUT_SP1);
-    left_wings=SCORCH_MAX_WINGS;
-    Viking::land();
+void Scorch::clearStates(bool reset) {
+    Viking::clearStates(reset);
+    if (reset) {
+        unsetState(STATE_GLIDE);
+        input->unsetState(INPUT_SP1);
+        left_wings=SCORCH_MAX_WINGS;
+    }
 }
-
 
 //FANG (Viking)
 Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string vname):
@@ -430,15 +428,12 @@ void Fang::fall(Uint16 dt) {
         }
         Hit hit=move(Dgrav);
         if (state&STATE_FALL) {
-            //Did we hit the wall?
-            if (hit.enter&DIR_LEFT) {
-                setState(STATE_CLIMB_L);
-            } else if (!(hit.touch&DIR_LEFT)) unsetState(STATE_CLIMB_L);
-            if (hit.enter&DIR_RIGHT) {
-                setState(STATE_CLIMB_R);
-            } else if (!(hit.touch&DIR_RIGHT)) unsetState(STATE_CLIMB_R);
+            //TODO: clean this up
+            //Did we left the wall?
+            if (!(hit.touch&DIR_LEFT)) unsetState(STATE_CLIMB_L);
+            if (!(hit.touch&DIR_RIGHT)) unsetState(STATE_CLIMB_R);
         }
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
+        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }
@@ -465,12 +460,28 @@ void Fang::in_sp1(Sint16 dt) {
     }
 }
 
-void Fang::land() {
-    unsetState(STATE_CLIMB_R);
-    unsetState(STATE_CLIMB_L);
-    Viking::land();
+void Fang::crash(Uint16 dir) {
+    Viking::crash(dir);
+    switch (dir) {
+        case DIR_LEFT: {
+            setState(STATE_CLIMB_L);
+            break;
+        }
+        case DIR_RIGHT: {
+            setState(STATE_CLIMB_R);
+            break;
+        }
+        default: { }
+    }
 }
 
+void Fang::clearStates(bool reset) {
+    Viking::clearStates(reset);
+    if (reset) {
+        unsetState(STATE_CLIMB_R);
+        unsetState(STATE_CLIMB_L);
+    }
+}
 
 //BALEOG (Viking)
 Baleog::Baleog(string imagename, Uint16 xcord, Uint16 ycord, string vname):

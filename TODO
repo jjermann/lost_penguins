@@ -1,6 +1,8 @@
 TODO:
 =====
 
+ o Make water movements possible (eric)
+
  o IDEA: change Animation* pointers to Animation (or references), leave only
    animation as a pointer and get the address each time...
 
@@ -23,14 +25,10 @@ TODO:
      - the placement should somehow involve checkPlace...
 
  o FIX ALL BUGS! hahaha:
-     - the right/left movement stays when a busy animation starts!
      - the zombie doesn't turn from a wall
      - hit event
      - zombie attacks too often if nearby
      - in short: rewrite zombie
-     - the new speed system doesn't always work (eg right move, ctrl before
-       release, etc, very buggy :()
-     - segfaults when doing sthg while the current viking is dying...
 
  o IDEA: add horizontal gravity that slows objects down??
 

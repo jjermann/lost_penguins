@@ -133,9 +133,7 @@ Object* Viking::dropItem(Uint8 num, bool right) {
 void Viking::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_LEFT) {
-        if (state&STATE_IRR) {
-            animation=im_land_left;
-        } else if (state&STATE_FALL) {
+        if (state&STATE_FALL) {
             if (state&STATE_FALL2) {
                 animation=im_krit_left;
             } else {
@@ -145,9 +143,7 @@ void Viking::updateAnimState(bool change) {
             animation=im_left;
         }
     } else {
-        if (state&STATE_IRR) {
-            animation=im_land_right;
-        } else if (state&STATE_FALL) {
+        if (state&STATE_FALL) {
             if (state&STATE_FALL2) {
                 animation=im_krit_right;
             } else {
@@ -229,37 +225,49 @@ void Viking::in_sp1(Sint16) { }
 //input: special2 key (SHIFT)
 void Viking::in_sp2(Sint16) { }
 
-//moving (help function)
 Hit Viking::move(Uint16 dt, bool check) {
     return Character::move(dt,check);
 }
 
-
-//falling
 void Viking::fall(Uint16 dt) {
     Character::fall(dt);
 }
 
-//landing
-void Viking::land() {
-    Character::land();
-    unsetState(STATE_ACT_1);
-    unsetState(STATE_ACT_2);
+void Viking::crash(Uint16 dir) {
+    Character::crash(dir);
+    switch (dir) {
+        case DIR_DOWN: {
+            clearStates(true);
 
-    if (state&STATE_FALL2) {
-        unsetState(STATE_FALL2);
-        Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
-        hit(DIR_UP,tmpweap);
+            if (state&STATE_FALL2) {
+                unsetState(STATE_FALL2);
+                Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
+                hit(DIR_UP,tmpweap);
+            }
+            break;
+        }
+        default: { }
     }
 }
 
-//dying
 void Viking::die() {
     failed=true;
     Character::die();
 }
 
-//hit
+//unset all interactivity
+void Viking::clearStates(bool reset) {
+    if (getState(STATE_MLEFT)) in_left(-1);
+    if (getState(STATE_MRIGHT)) in_right(-1);
+    if (getState(STATE_MUP)) in_up(-1);
+    if (getState(STATE_MDOWN)) in_down(-1);
+    if (reset) {
+        unsetState(STATE_ACT_1);
+        unsetState(STATE_ACT_2);
+        unsetState(STATE_ACT_3);
+    }
+}
+
 Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
     Uint16 newhealth;
     if (weap.getType()&W_WATER) newhealth=setHealth(0);
@@ -285,7 +293,6 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
             default: {
                 if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_die));
                 else sfxeng->playWAV(au_die);
-                break;
             }
         }
     //damaged or healed...
@@ -314,7 +321,6 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
             }
             default: {
                 aud_hit=au_hit;
-                break;
             }
         }
         switch(weap.getType()) {
@@ -323,7 +329,7 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
                 break;
             }
             case W_PRESSURE: {
-                setEvent(new EAnim(this,anim_hit,false,0,STATE_IRR|ESTATE_BUSY,aud_hit));
+                setEvent(new EAnim(this,anim_hit,false,0,ESTATE_BUSY,aud_hit));
                 break;
             }
             case W_TOUCH: {
@@ -342,9 +348,7 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
                 sfxeng->playWAV(aud_hit);
                 break;
             }
-            default: {
-                break;
-            }
+            default: { }
         }
     }
     return newhealth;

@@ -75,7 +75,6 @@ void Character::updateAnimState(bool change) {
     curpos.y=(pos.h-curpos.h);
 }
 
-//first thing to do
 void Character::idle(Uint16 dt) {
     //check if we have ground below us...
     Hit hitobj;
@@ -97,7 +96,6 @@ void Character::idle(Uint16 dt) {
     }
 }
 
-//moving (help function)
 Hit Character::move(Uint16 dt, bool check) {
     //checks if we already have a critical speed
     //add accelerations for each viking in viking.cpp!
@@ -121,23 +119,15 @@ Hit Character::move(Uint16 dt, bool check) {
         pos.x=dest.x; 
         pos.y=dest.y; 
 
-        if ((hit.enter&DIR_LEFT) || (hit.enter&DIR_RIGHT)) {
-            if (event && (!(state&ESTATE_BUSY))) event->cancel();
-            unsetState(STATE_MLEFT);
-            unsetState(STATE_MRIGHT);
-            hspeed=0;     
-        }
-        if (hit.enter&DIR_UP) {
-            if (event && (!(state&ESTATE_BUSY))) event->cancel();
-            speed=0;
-        }
+        if ((hit.enter&DIR_LEFT)) crash(DIR_LEFT);
+        if ((hit.enter&DIR_RIGHT)) crash(DIR_RIGHT);
+        if (hit.enter&DIR_UP) crash(DIR_UP);
     }
     
     return hit;
 }
 
 
-//falling
 void Character::fall(Uint16 dt) {
     Dgrav+=dt;  
     if (Dgrav>T_GRAV_EFFECT) {
@@ -145,17 +135,38 @@ void Character::fall(Uint16 dt) {
             addSpeed(Sint16(gravity*Dgrav/1000));
         }
         Hit hit=move(Dgrav);
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
+        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }
 
-//landing
-void Character::land() {
+void Character::crash(Uint16 dir) {
     if (event && (!(state&ESTATE_BUSY))) event->cancel();
-    speed=0;
-    unsetState(STATE_FALL);
-    Dgrav=0;
+    switch (dir) {
+        case DIR_LEFT: {
+            unsetState(STATE_MLEFT);
+            hspeed=0;
+            break;
+        }
+        case DIR_RIGHT: {
+            unsetState(STATE_MRIGHT);
+            hspeed=0;
+            break;
+        }
+        case DIR_UP: {
+            unsetState(STATE_MUP);
+            speed=0;
+            break;
+        }
+        //if unsure, land on ground...
+        case DIR_DOWN: default : {
+            unsetState(STATE_FALL);
+            unsetState(STATE_MDOWN);
+            speed=0;
+            Dgrav=0;
+            break;
+        }
+    }
 }
 
 void Character::die() {
@@ -306,7 +317,7 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
         ++obit;
     }
 
-    //Check map boundary (i=0)
+    //Check map boundary
     hit=curmap->checkPlace(dest,(*maparea));
     if (hit.enter&DIR_RIGHT) {
         colltype.enter|=DIR_RIGHT;
@@ -326,7 +337,7 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     if (hit.enter&DIR_DOWN) {
         colltype.enter|=DIR_DOWN;
         colltype.touch|=DIR_DOWN;
-       dest.y=maparea->y+maparea->h-dest.h;
+        dest.y=maparea->y+maparea->h-dest.h;
     } else if (hit.touch&DIR_DOWN) {
         colltype.touch|=DIR_DOWN;
     }
@@ -386,6 +397,6 @@ inline void Character::updateRegions(std::set<Object *>& newtouch, std::set<Obje
 
 
 //gets hit by a weapon
-Uint16 Character::hit(Uint16 dir, Weapon& weap) {
+Uint16 Character::hit(Uint16, Weapon& weap) {
     return addHealth(weap.getDamage());
 }
