@@ -97,18 +97,20 @@ void AnimHandler::runAnims() {
         }
         obit=pool->objectspool.begin();
         while (obit!=pool->objectspool.end()) {
-            (*obit)->updateEvents(dt);
             (*obit)->idle(dt);
+            (*obit)->updateEvents(dt);
             ++obit;
         }
         //handle current viking
-        if ((viking!=NULL) && (!(viking->getState(STATE_IRR)))) {
+        if ((viking!=NULL) && (!(viking->getState(ESTATE_BUSY)))) {
             if (input->getState(INPUT_USE)) viking->in_use(dt);
             if (input->getState(INPUT_ACT)) viking->in_act(dt);
             if (input->getState(INPUT_RIGHT)) viking->in_right(dt);
             if (input->getState(INPUT_LEFT)) viking->in_left(dt);
-            if (input->getState(INPUT_SP1)) viking->in_sp1(dt);
-            if (input->getState(INPUT_SP2)) viking->in_sp2(dt);
+            if ((!(viking->getState(ESTATE_RUN)))||viking->getState(ESTATE_ABORT)) {
+                if (input->getState(INPUT_SP1)) viking->in_sp1(dt);
+                if (input->getState(INPUT_SP2)) viking->in_sp2(dt);
+            }
             if (input->getState(INPUT_UP)) viking->in_up(dt);
             if (input->getState(INPUT_DOWN)) viking->in_down(dt);
         }

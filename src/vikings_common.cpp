@@ -8,8 +8,8 @@ using namespace std;
 Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Character(imagename,xcord,ycord,vname) {
     health=3;
-    maxspeed.x=300;
-    maxspeed.y=200;
+    maxspeedx=300;
+    maxspeedy=200;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         items[i]=NULL;
     }
@@ -182,14 +182,14 @@ void Viking::in_use(Uint16) {
 void Viking::in_right(Uint16) {
     unsetState(STATE_LEFT);
     setState(STATE_MRIGHT);
-    tmpspeed.x+=maxspeed.x;
+    hspeed+=maxspeedx;
 }
 
 //input: left key
 void Viking::in_left(Uint16) {
     setState(STATE_LEFT);
     setState(STATE_MLEFT);
-    tmpspeed.x-=maxspeed.x;
+    hspeed-=maxspeedx;
 }
 //input: up key
 void Viking::in_up(Uint16) { }
@@ -218,11 +218,8 @@ void Viking::land() {
     unsetState(STATE_ACT_2);
 
     if (state&STATE_FALL2) {
-        sfxeng->playWAV(au_land);
-//        setEvent(new CharacterEvent(this,T_IRR,STATE_IRR));
         unsetState(STATE_FALL2);
-        cout << "Autsch!\n";
-        addHealth(-1);
+        setEvent(new ELand(this,T_IRR,au_land));
     }
 }
 

@@ -10,8 +10,8 @@ using namespace std;
 Monster::Monster(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Character(imagename,xcord,ycord,vname) {
     health=1;
-    maxspeed.x=50;
-    maxspeed.y=0;
+    maxspeedx=50;
+    maxspeedy=0;
     state=STATE_FALL;
     otype|=OTYPE_MONSTER;
     dense_types|=OTYPE_VIKING;

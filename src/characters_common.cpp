@@ -1,5 +1,6 @@
 #include "lost_vikings.h"
 #include "weapons.h"
+#include "events.h"
 
 using namespace std;
 
@@ -8,13 +9,10 @@ using namespace std;
 Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Object(imagename,xcord,ycord,vname) {
     health=1;
-    maxspeed.x=300;
-    maxspeed.y=0;
-    speed.x=0;
-    speed.y=0;
-    tmpspeed=speed;
-    gravity.x=0;
-    gravity.y=900;
+    maxspeedx=300;
+    maxspeedy=0;
+    speed=hspeed=vspeed=0;
+    gravity=900;
     Dgrav=0;
     state=STATE_FALL;
     otype|=OTYPE_CHARACTER;
@@ -67,22 +65,6 @@ void Character::removedObject(Object* obj) {
     enter.erase(obj);
 }
 
-const Speed& Character::updateSpeedAnims(Uint16 dt) {
-    std::vector<SpeedAnim>::iterator it=speedanims.begin();
-    while (it!=speedanims.end()) {
-        (*it).t_left-=dt;
-        if ((*it).t_left<0) {
-            it=speedanims.erase(it);
-        } else {
-            tmpspeed.x+=(*it).aspeed.x;
-            tmpspeed.y+=(*it).aspeed.y;
-            ++it;
-        }
-    }
-    return tmpspeed;
-}
-
-
 //check the states and change the image correspondingly
 //TODO: add left, right, up, down, etc movement animations
 void Character::updateAnimState() { }
@@ -92,8 +74,7 @@ void Character::idle(Uint16 dt) {
     //reset/update stuff
     unsetState(STATE_MLEFT);  
     unsetState(STATE_MRIGHT); 
-    tmpspeed.x=0;
-    tmpspeed.y=0;
+    hspeed=vspeed=0;
     //check if we have ground below us...
     Hit hit;
     hit=checkMove(pos);
@@ -108,7 +89,7 @@ void Character::idle(Uint16 dt) {
     } else Dwater=0;
 
     //are we falling?
-    if ((!(hit.touch&DIR_DOWN)) || (gravity.y<0)) {
+    if ((!(hit.touch&DIR_DOWN)) || (gravity<0)) {
         setState(STATE_FALL);
     }
 }
@@ -119,32 +100,29 @@ Hit Character::move(Uint16 dt, bool check) {
     //add accelerations for each viking in viking.cpp!
     if (!check) {
         if (state&STATE_FALL) {
-            if (speed.y>V_KRIT) {
-                speed.y=V_KRIT;
+            if (speed>V_KRIT) {
+                speed=V_KRIT;
                 setState(STATE_FALL2);
             } else unsetState(STATE_FALL2);
         }
     }
 
     SDL_Rect dest=pos;
-    if (!check) updateSpeedAnims(dt);
-    dest.x+=Sint16(((speed.x+tmpspeed.x)*dt)/1000);
-    dest.y+=Sint16(((speed.y+tmpspeed.y)*dt)/1000);
+    dest.x+=Sint16((hspeed*dt)/1000);
+    dest.y+=Sint16(((speed+vspeed)*dt)/1000);
     
     Hit hit=checkMove(dest,check);
     
     if (!check) {
-        //temporary changes (changes tmpspeed)
+        //temporary changes (changes hspeed)
         pos.x=dest.x; 
         pos.y=dest.y; 
 
         if ((hit.enter&DIR_LEFT) || (hit.enter&DIR_RIGHT)) {
-            speed.x=0;
-            tmpspeed.x=0;     
+            hspeed=0;     
         }
         if (hit.enter&DIR_UP) {
-            speed.y=0;
-            tmpspeed.y=0;
+            speed=vspeed=0;
         }
     }
     
@@ -156,9 +134,8 @@ Hit Character::move(Uint16 dt, bool check) {
 void Character::fall(Uint16 dt) {
     Dgrav+=dt;  
     if (Dgrav>T_GRAV_EFFECT) {
-        speed.x+=Sint16(gravity.x*Dgrav/1000);
         if (state&STATE_FALL) {
-            speed.y+=Sint16(gravity.y*Dgrav/1000);
+            addSpeed(Sint16(gravity*Dgrav/1000));
         }
         Hit hit=move(Dgrav);
         if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
@@ -169,8 +146,7 @@ void Character::fall(Uint16 dt) {
 //landing
 void Character::land() {
     if (event) event->cancel();
-    if (speed.y>0) speed.y=0;
-    if (tmpspeed.y>0) tmpspeed.y=0;
+    speed=hspeed=vspeed=0;
     unsetState(STATE_FALL);
     Dgrav=0;
 }
@@ -407,16 +383,9 @@ Sint16 Character::hit(Uint16 dir, Weapon& weap) {
     Sint16 dhealth=addHealth(weap.getDamage());
     switch (weap.getType()) {
         case W_STRIKE: {
-            Speed upspeed;
-            upspeed.x=0;
-            upspeed.y=-60;
-            SpeedAnim hspeed;
-            hspeed.aspeed.x=hspeed.aspeed.y=0;
-            if (dir&DIR_RIGHT) hspeed.aspeed.x+=DSTRIKE;
-            if (dir&DIR_LEFT)  hspeed.aspeed.x-=DSTRIKE;
-            hspeed.t_left=TSTRIKE;
-            addSpeed(upspeed);
-            addSpeedAnim(hspeed);
+            addSpeed(-60);
+            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-DSTRIKE,0,0,0,NULL));
             break;
         }
         default: {

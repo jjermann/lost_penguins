@@ -52,10 +52,8 @@ Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     au_jump=loadWAV("eric_jump.wav");
     au_run=NULL;
     t_water=60000;
-    jump.x=0;
-    jump.y=V_JUMP;
-    jump2.x=0;
-    jump2.y=V_JUMP2;
+    jump=V_JUMP;
+    jump2=V_JUMP2;
 }
 Eric::~Eric() {
     delete im_left;
@@ -64,24 +62,20 @@ Eric::~Eric() {
     if (au_run) Mix_FreeChunk(au_run);
 }
 
-void Eric::updateTouch() { }
-
 //Eric1: Jump
 //Act1: first jump
 //Act2: 2nd jump
 void Eric::in_sp1(Uint16) {
     input->unsetState(INPUT_SP1);
-    if (event) return; else {
-       if (state&STATE_FALL) setState(STATE_ACT_1);
+    if (state&STATE_FALL) setState(STATE_ACT_1);
 
-       if (state&STATE_ACT_2) {
-       } else if (state&STATE_ACT_1) {
-           setState(STATE_ACT_2);
-           setEvent(new EJump(this,DE_JUMP,jump2,0,0,au_jump));
-       } else {
-           setState(STATE_ACT_1);
-           setEvent(new EJump(this,DE_JUMP,jump));
-       }
+    if (state&STATE_ACT_2) {
+    } else if (state&STATE_ACT_1) {
+        setState(STATE_ACT_2);
+        setEvent(new EJump(this,DE_JUMP,jump2,0,0,au_jump));
+    } else {
+        setState(STATE_ACT_1);
+        setEvent(new EJump(this,DE_JUMP,jump));
     }
 }
 
@@ -91,9 +85,9 @@ void Eric::in_sp2(Uint16) {
         setState(STATE_RUN);
         sfxeng->playWAV(au_run);
         if (state&STATE_MLEFT) {
-            tmpspeed.x-=2*maxspeed.x;
+            hspeed-=2*maxspeedx;
         } else if (state&STATE_MRIGHT) {
-            tmpspeed.x+=2*maxspeed.x;
+            hspeed+=2*maxspeedx;
         }
     }
 }
@@ -119,8 +113,7 @@ Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     au_small=NULL;
     au_big=NULL;
     au_fart=NULL;
-    fart.x=0;
-    fart.y=V_FART;
+    fart=V_FART;
 }
 Olaf::~Olaf() {
     delete im_left;
@@ -236,9 +229,8 @@ void Olaf::in_sp1(Uint16) {
 //Act2: no left, right movement (farting from ground)
 void Olaf::in_sp2(Uint16) {
     input->unsetState(INPUT_SP2);
-    if (event) return;
     //no specials while small
-    else if (!(state&STATE_SMALL)) {
+    if (!(state&STATE_SMALL)) {
         //Don't fart while falling without shield
         if ((state&STATE_FALL) && (!(state&STATE_SHIELD)) ) return;
         //farting from ground
@@ -259,11 +251,10 @@ void Olaf::in_sp2(Uint16) {
 void Olaf::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
-        speed.x+=Sint16(gravity.x*Dgrav/1000);
         if (state&STATE_FALL) {
-            speed.y+=Sint16(gravity.y*Dgrav/1000);
-            if ((state&STATE_SMALL) && (speed.y > V_SMALLCHANGE)) trySmall(false);
-            if ((state&STATE_SHIELD) && (speed.y>V_SHIELD)) speed.y=V_SHIELD;
+            addSpeed(Sint16(gravity*Dgrav/1000));
+            if ((state&STATE_SMALL) && (speed > V_SMALLCHANGE)) trySmall(false);
+            if ((state&STATE_SHIELD) && (speed > V_SHIELD)) setSpeed(V_SHIELD);
         }
         Hit hit=move(Dgrav);
         if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
@@ -283,16 +274,9 @@ Sint16 Olaf::hit(Uint16 dir, Weapon& weap) {
     
     switch (weap.getType()) {   
         case W_STRIKE: {
-            Speed upspeed;
-            upspeed.x=0;
-            upspeed.y=-60;
-            SpeedAnim hspeed;
-            hspeed.aspeed.x=hspeed.aspeed.y=0;
-            if (dir&DIR_RIGHT) hspeed.aspeed.x+=DSTRIKE;
-            if (dir&DIR_LEFT)  hspeed.aspeed.x-=DSTRIKE;
-            hspeed.t_left=TSTRIKE;
-            addSpeed(upspeed);
-            addSpeedAnim(hspeed);
+            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-DSTRIKE,0,0,0,NULL));
+            addSpeed(-60);
             break;
         }
         default: {
@@ -317,8 +301,7 @@ Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     au_swing=NULL;
     au_tired=NULL;
     left_wings=SCORCH_MAX_WINGS;
-    wing.x=0;
-    wing.y=V_FLY;
+    wing=V_FLY;
 }
 Scorch::~Scorch() {
     delete im_left;
@@ -337,10 +320,9 @@ void Scorch::idle(Uint16 dt) {
 void Scorch::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
-        speed.x+=Sint16(gravity.x*Dgrav/1000);
         if (state&STATE_FALL) {
-            speed.y+=Sint16(gravity.y*Dgrav/1000);
-            if ((state&STATE_GLIDE) && (speed.y > V_GLIDE)) speed.y=V_GLIDE;;
+            addSpeed(Sint16(gravity*Dgrav/1000));
+            if ((state&STATE_GLIDE) && (speed > V_GLIDE)) speed=V_GLIDE;;
         }
         Hit hit=move(Dgrav);
         if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) land();
@@ -362,22 +344,15 @@ void Scorch::in_sp1(Uint16) {
     //Can't fly anymore
     if (state&STATE_ACT_2) {
     } else if (left_wings<=0) {
-        if (event) return;
-        else setEvent(new Event(this,DE_WING));
         left_wings--;
-        sfxeng->playWAV(au_tired);
         setState(STATE_ACT_2);
         unsetState(STATE_GLIDE);
         setState(STATE_ACT_1);
-        speed.y+=V_FLY;
     //Use Wings
     } else if (!(state&STATE_ACT_1)){
-        if (event) return;
-        else setEvent(new Event(this,DE_WING));
-        sfxeng->playWAV(au_swing);
         left_wings--;
         setState(STATE_ACT_1);
-        speed.y+=V_FLY;
+        setEvent(new EJump(this,DE_WING,V_FLY,0,0,au_swing));
     }
 }
 
@@ -401,8 +376,7 @@ Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_land_left=new Animation(loadImage("olaf_land.bmp"));
     im_land_right=im_land_left;
     au_jump=NULL;
-    jump.x=0;
-    jump.y=V_JUMP;
+    jump=V_JUMP;
 }
 Fang::~Fang() {
     delete im_left;
@@ -415,22 +389,21 @@ void Fang::in_left(Uint16) {
     unsetState(STATE_CLIMB_R);
     setState(STATE_LEFT);
     setState(STATE_MLEFT);
-    tmpspeed.x-=maxspeed.x;
+    hspeed-=maxspeedx;
 }
 void Fang::in_right(Uint16) {
     unsetState(STATE_CLIMB_L);
     unsetState(STATE_LEFT);
     setState(STATE_MRIGHT);
-    tmpspeed.x+=maxspeed.x;
+    hspeed+=maxspeedx;
 }
 
 void Fang::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
-        speed.x+=Sint16(gravity.x*Dgrav/1000);
         if (state&STATE_FALL) {
-            speed.y+=Sint16(gravity.y*Dgrav/1000);
-            if ((state&STATE_CLIMB) && (speed.y>V_CLIMB)) speed.y=V_CLIMB;
+            addSpeed(Sint16(gravity*Dgrav/1000));
+            if ((state&STATE_CLIMB) && (speed>V_CLIMB)) speed=V_CLIMB;
         }
         Hit hit=move(Dgrav);
         if (state&STATE_FALL) {
@@ -451,38 +424,24 @@ void Fang::fall(Uint16 dt) {
 //Act1: jumped
 void Fang::in_sp1(Uint16) {
     input->unsetState(INPUT_SP1);
-    if (event) return;
-    else setEvent(new Event(this,DE_JUMP));
 
     if (state&STATE_CLIMB_L) {
-        sfxeng->playWAV(au_jump);
         unsetState(STATE_LEFT);
         setState(STATE_FALL);
         unsetState(STATE_CLIMB_L);
         setState(STATE_ACT_1);
-        SpeedAnim jspeed;
-        jspeed.aspeed.x=Sint16(maxspeed.x*1.5);
-        jspeed.aspeed.y=0;
-        jspeed.t_left=T_JUMPOFF;
-        addSpeedAnim(jspeed);
-        speed.y+=V_JUMPOFF;
+        addSpeed(V_JUMPOFF);
+        setEvent(new ESpeed(this,T_JUMPOFF,Sint16(maxspeedx*1.5),0,0,0,au_jump));
     } else if (state&STATE_CLIMB_R) {
-        sfxeng->playWAV(au_jump);
         setState(STATE_LEFT);
         setState(STATE_FALL);
         unsetState(STATE_CLIMB_R);
         setState(STATE_ACT_1);
-        SpeedAnim jspeed;
-        jspeed.aspeed.x=Sint16(-maxspeed.x*1.5);
-        jspeed.aspeed.y=0;
-        jspeed.t_left=T_JUMPOFF;
-        addSpeedAnim(jspeed);
-        speed.y+=V_JUMPOFF;
+        addSpeed(V_JUMPOFF);
+        setEvent(new ESpeed(this,T_JUMPOFF,Sint16(-maxspeedx*1.5),0,0,0,au_jump));
     } else if ((!(state&STATE_FALL)) && (!(state&STATE_ACT_1))){
-        sfxeng->playWAV(au_jump);
-        setState(STATE_FALL);
         setState(STATE_ACT_1);
-        speed.y+=V_JUMP;
+        setEvent(new EJump(this,DE_JUMP,V_JUMP,0,0,au_jump));
     }
 }
 
@@ -520,7 +479,7 @@ Baleog::~Baleog() {
 //ZOMBIE (Monster)
 Zombie::Zombie(string imagename, Uint16 xcord, Uint16 ycord, string mname):
   Monster(imagename,xcord,ycord,mname) {
-    maxspeed.x=100;
+    maxspeedx=100;
     T_Attack_Bite=1500;
     im_left=new Animation(loadImage("olaf_left.bmp"),2,1000);
     im_right=new Animation(loadImage("olaf_right.bmp"),2,1000);
@@ -541,7 +500,7 @@ void Zombie::idle(Uint16 dt) {
 
 void Zombie::ai_left(Uint16 dt) {
     SDL_Rect oldpos=pos;
-    tmpspeed.x-=maxspeed.x;
+    hspeed-=maxspeedx;
     Hit hit=move(dt,true);
     if (hit.touch&enemy_types) {
         move(dt);
@@ -550,13 +509,13 @@ void Zombie::ai_left(Uint16 dt) {
         unsetState(STATE_LEFT);
     } else if (!(hit.touch&DIR_DOWN)) {
         unsetState(STATE_LEFT);
-        tmpspeed.x=0;
+        hspeed=0;
     } else move(dt);
 }
 
 void Zombie::ai_right(Uint16 dt) {
     SDL_Rect oldpos=pos;
-    tmpspeed.x+=maxspeed.x;
+    hspeed+=maxspeedx;
     Hit hit=move(dt,true);
     if (hit.touch&enemy_types) {
         move(dt);
@@ -565,7 +524,7 @@ void Zombie::ai_right(Uint16 dt) {
         setState(STATE_LEFT);
     } else if (!(hit.touch&DIR_DOWN)) {
         setState(STATE_LEFT);
-        tmpspeed.x=0;
+        hspeed=0;
     } else move(dt);
 }
 

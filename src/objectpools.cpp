@@ -24,10 +24,10 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
     string name=obj;
     if (arg1!="0") {
         //one additional parameter
-        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb") {
+        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Geysir" || name=="Wind") {
             if (arg2!="0") name=arg2;
         //two additional parameter
-        } else if (name=="Teleporter" || name=="Wind" || name=="Geysir") {
+        } else if (name=="Teleporter") {
             if (!arg3.empty()) name=arg3;
         //no additional parameters
         } else {
@@ -40,8 +40,8 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
     else if (obj=="Exit")    return (addObject(new Exit(image,x,y,name)));
     else if (obj=="Water")   return (addObject(new Water(image,x,y,name)));
     else if (obj=="Teleporter") return (addObject(new Teleporter(image,x,y,atoi(arg1.c_str()),atoi(arg2.c_str()),name)));
-    else if (obj=="Wind")    return (addObject(new Wind(image,x,y,atoi(arg1.c_str()),atoi(arg2.c_str()),name)));
-    else if (obj=="Geysir")  return (addObject(new Geysir(image,x,y,atoi(arg1.c_str()),atoi(arg2.c_str()),name)));
+    else if (obj=="Wind")    return (addObject(new Wind(image,x,y,atoi(arg1.c_str()),name)));
+    else if (obj=="Geysir")  return (addObject(new Geysir(image,x,y,atoi(arg1.c_str()),name)));
     else if (obj=="Trigger") return (addObject(new Trigger(image,x,y,arg1,name,arg3)));
     else if (obj=="Door")    return (addObject(new Door(image,x,y,arg1,name)));
     //Items

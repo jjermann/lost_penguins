@@ -62,13 +62,12 @@ class Eric : public Viking {
     public:
         Eric(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Eric");
         virtual ~Eric();
-        virtual void updateTouch();
         virtual void in_sp1(Uint16);
         virtual void in_sp2(Uint16);
     private:
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;
-        Speed jump,jump2;
+        Sint16 jump,jump2;
 };
 
 class Olaf : public Viking {
@@ -95,7 +94,7 @@ class Olaf : public Viking {
         Mix_Chunk* au_small;
         Mix_Chunk* au_big;
         Mix_Chunk* au_fart;
-        Speed fart;
+        Sint16 fart;
 };
 
 class Baleog : public Viking {
@@ -117,7 +116,7 @@ class Fang : public Viking {
     private:
         virtual void land();
         Mix_Chunk* au_jump;
-        Speed jump;
+        Sint16 jump;
 };
 
 class Scorch : public Viking {
@@ -132,7 +131,7 @@ class Scorch : public Viking {
         Uint8 left_wings;
         Mix_Chunk* au_swing;
         Mix_Chunk* au_tired;
-        Speed wing;
+        Sint16 wing;
 };
 
 
@@ -181,22 +180,22 @@ class Water : public Object {
 
 class Wind : public Object {
     public:
-        Wind(string imagename, Uint16 xpos=0, Uint16 ypos=0, Sint16 xAccel=0, Sint16 yAccel=0, string name="Wind");
+        Wind(string imagename, Uint16 xpos=0, Uint16 ypos=0, Sint16 Accel=0, string name="Wind");
         virtual ~Wind();
         virtual void enter(Object* obj);
         virtual void leave(Object* obj);
     private:
-        Speed gravitymod;
+        Sint16 gravitymod;
 };
 
 class Geysir : public Object {
     public:
-        Geysir(string imagename, Uint16 xpos=0, Uint16 ypos=0, Sint16 xAdd=0, Sint16 yAdd=0, string name="Geysir");
+        Geysir(string imagename, Uint16 xpos=0, Uint16 ypos=0, Sint16 yAdd=0, string name="Geysir");
         virtual ~Geysir();
         virtual void idle(Uint16 dt);
     private:
         Uint16 Deffect;
-        Speed aspeed;
+        Sint16 aspeed;
         Mix_Chunk* au_geysir;
 };
 

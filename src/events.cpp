@@ -43,7 +43,9 @@ void Event::cancel() {
 
 //CharacterEvent
 CharacterEvent::CharacterEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  Event(chr,length,edelay), charowner(chr), state(switchstate), sound(esound) { }
+  Event(chr,length,edelay), charowner(chr), state(switchstate), sound(esound) {
+    state|=ESTATE_RUN;
+}
 void CharacterEvent::start() {
     if (state) charowner->switchState(state);
     sfxeng->playWAV(sound);
@@ -59,10 +61,29 @@ void CharacterEvent::cancel() {
 }
 
 //Jump
-EJump::EJump(Character* chr, Uint16 length, Speed aspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* au_jump):
+EJump::EJump(Character* chr, Uint16 length, Sint16 aspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* au_jump):
   CharacterEvent(chr,length,edelay,switchstate,au_jump), speed(aspeed) { }
 void EJump::start() {
     charowner->setState(STATE_FALL);
     charowner->addSpeed(speed);
     CharacterEvent::start();
+}
+
+ELand::ELand(Character* chr, Uint16 length, Mix_Chunk* esound):
+  CharacterEvent(chr,length,0,(STATE_IRR|ESTATE_BUSY),esound) { }
+void ELand::start() {
+    charowner->addHealth(-1);
+    cout << "Autsch!\n";
+    CharacterEvent::start();
+}
+
+ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 ahspeed, Sint16 avspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
+  CharacterEvent(chr,length,edelay,switchstate,esound), hspeed(ahspeed),vspeed(avspeed) { }
+Uint16 ESpeed::update(Uint16 dt) {
+    Uint16 evstate=CharacterEvent::update(dt);
+    if (evstate&(EV_RUN|EV_START)) {
+        charowner->addHSpeed(hspeed);
+        charowner->addVSpeed(vspeed);
+    }
+    return evstate;
 }

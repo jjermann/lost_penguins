@@ -74,6 +74,14 @@ typedef std::set<Monster *>::iterator monster_iterator;
 //attack anim
 #define STATE_ATTACK    0x00000800
 
+//Event states
+//busy:  can't do anything interactively
+#define ESTATE_BUSY     0x00001000
+//abort: can do anything, event is canceled in case of another event
+#define ESTATE_ABORT    0x00002000
+//run:  default, equivalent to event != NULL
+#define ESTATE_RUN      0x00004000
+
 //Directions
 #define DIR_RIGHT       0x00000001
 #define DIR_LEFT        0x00000002
@@ -147,24 +155,6 @@ class Event {
         bool started;
 };
 
-
-//speed in pixels/second
-struct Speed {
-   Sint16 x;
-   Sint16 y;
-   Speed& operator+=(const Speed&);
-   Speed& operator-=(const Speed&);
-   Speed& operator*=(const Speed&);
-   Speed& operator/=(const Speed&);
-   Speed& operator*=(Sint16);
-   Speed& operator/=(Sint16);
-};
-Speed operator-(const Speed&);
-
-struct SpeedAnim {
-    Speed aspeed;
-    Sint16 t_left;
-};
 
 struct Config {
     Uint16 width;
@@ -368,25 +358,26 @@ class Character : public Object {
             return touch;
         }
         //Speed
-        const Speed& getSpeed() const {
+        Sint16 getSpeed() const {
             return speed;
         }
-        const Speed& setSpeed(const Speed& newspeed) {
+        Sint16 setSpeed(Sint16 newspeed) {
             return speed=newspeed;
         }
-        const Speed& addSpeed(const Speed& dspeed) {
+        Sint16 addSpeed(Sint16 dspeed) {
             return speed+=dspeed;
         }
-        void addSpeedAnim(SpeedAnim speedanim) {
-            speedanims.push_back(speedanim);
+        Sint16 addHSpeed(Sint16 dspeed) {
+            return hspeed+=dspeed;
         }
-        const Speed& updateSpeedAnims(Uint16 dt);
-        void setGravity(const Speed& setgravity) {
+        Sint16 addVSpeed(Sint16 dspeed) {
+            return vspeed+=dspeed;
+        }
+        void setGravity(Sint16 setgravity) {
             gravity=setgravity;
         }
-        void addGravity(const Speed& addgravity) {
-            gravity.x+=addgravity.x;
-            gravity.y+=addgravity.y;
+        void addGravity(Sint16 addgravity) {
+            gravity+=addgravity;
         }
         Hit checkMove(SDL_Rect& dest, bool tele=false, bool check=false);
         //VIRTUAL METHODS
@@ -418,15 +409,14 @@ class Character : public Object {
         Uint32 state;
         Uint8 health;
         //maximal normal speed;
-        Speed maxspeed;
-        //temporary speed change
-        Speed tmpspeed;
-        //current permanent speed
-        Speed speed;
+        Uint16 maxspeedx;
+        Uint16 maxspeedy;
+        //temporary speed (x direction)
+        Sint16 hspeed,vspeed;
+        //current permanent speed (y direction)
+        Sint16 speed;
         //current gravity
-        Speed gravity;
-        //speed animations
-        std::vector<SpeedAnim> speedanims;
+        Sint16 gravity;
         //temporary attributes
         Sint16 Dgrav,Dwater;
         //Common animations

@@ -53,10 +53,9 @@ void Water::leave(Object* obj) {
 
 
 //WIND (Object)
-Wind::Wind(string imagename, Uint16 xcord, Uint16 ycord, Sint16 xAccel, Sint16 yAccel, string oname):
+Wind::Wind(string imagename, Uint16 xcord, Uint16 ycord, Sint16 Accel, string oname):
   Object(imagename,xcord,ycord,oname) {
-    gravitymod.x=xAccel;
-    gravitymod.y=yAccel;
+    gravitymod=Accel;
 }
 Wind::~Wind() { }
 
@@ -72,10 +71,9 @@ void Wind::leave(Object *obj) {
 }
 
 //GEYSIR (Object)
-Geysir::Geysir(string imagename, Uint16 xcord, Uint16 ycord, Sint16 xAdd, Sint16 yAdd, string oname):
+Geysir::Geysir(string imagename, Uint16 xcord, Uint16 ycord, Sint16 yAdd, string oname):
   Object(imagename,xcord,ycord,oname) {
-    aspeed.x=xAdd;
-    aspeed.y=yAdd;
+    aspeed=yAdd;
     au_geysir=NULL;
     Deffect=0;
 }

@@ -1,14 +1,11 @@
 TODO:
 =====
 
- o EVENTS WON'T WORK VIRTUALLY!!!!!!
-   Idea: events for each character as private/protected functions
+ o IDEA: add horizontal gravity that slows objects down??
 
  o move object creation code (addObjectByName) to the objects
 
  o create dynamical plugins for all objects (or compile all in)
-
- o cleanup Speed/tmpspeed mess, idea: only y speed! no x speed
 
  o cleanup set_difference stuff => targets should be updated if an object
    dies in an intelligent way...
