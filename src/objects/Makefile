@@ -13,7 +13,10 @@ OBJS  = baleog.o bomb.o door.o erik.o exit.o fang.o geyser.o heart.o\
 PLUGS = ../objects.a
 
 
-all: $(OBJS) $(PLUGS)
+all:
+	+$(MAKE) depend
+	+$(MAKE) $(OBJS)
+	+$(MAKE) $(PLUGS)
 
 %.o: %.cpp
 	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) $(CXX_GAME) $(SDL) -c $< -o $@
@@ -26,3 +29,9 @@ clean:
 
 distclean: clean
 	rm -f *~
+	rm -f Makefile.dep
+
+depend:
+	touch Makefile.dep
+	makedepend *.cpp -f Makefile.dep 2>/dev/null
+-include Makefile.dep

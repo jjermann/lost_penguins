@@ -14,6 +14,11 @@ PLUGS = objects.a
 BIN   = ../lost_penguins
 
 
+all:
+	+$(MAKE) depend
+	+$(MAKE) -C objects
+	+$(MAKE) $(BIN)
+
 $(BIN): $(OBJS) $(PLUGS)
 	$(CXX) $(OBJS) $(PLUGS) $(SDL_LINK) -o $(BIN)
 
@@ -29,4 +34,10 @@ clean:
 
 distclean: clean
 	rm -f *~
+	rm -f Makefile.dep
 	+$(MAKE) -C objects distclean
+
+depend:
+	touch Makefile.dep
+	makedepend *.cpp -f Makefile.dep 2>/dev/null
+-include Makefile.dep
