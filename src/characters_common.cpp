@@ -16,7 +16,6 @@ Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname)
   hspeed(0),
   speed(0),
   gravity(900),
-  speedmod(100),
   Dgrav(0),
   im_die(NULL),
   dense_types(NOTHING),
@@ -86,8 +85,8 @@ void Character::idle(Uint16) {
 
 Hit Character::move(Uint16 dt, bool check) {
     SDL_Rect dest=pos;
-    dest.x+=Sint16((hspeed*speedmod*dt)/100000);
-    dest.y+=Sint16((speed*speedmod*dt)/100000);
+    dest.x+=Sint16((hspeed*dt)/1000);
+    dest.y+=Sint16((speed*dt)/1000);
     
     Hit hit=checkMove(dest,check);
     

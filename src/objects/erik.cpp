@@ -46,10 +46,12 @@ void Erik::in_sp1(Sint16 dt) {
     if (state&STATE_ACT_2) {
     } else if (state&STATE_ACT_1) {
         setState(STATE_ACT_2);
-        setEvent(new ESpeed(this,DE_JUMP,jump2,0,0,0,au_jump));
+        addSpeed(jump2);
+        setEvent(new CAnimEvent(this,DE_JUMP,0,0,au_jump));
     } else {
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,DE_JUMP,jump));
+        addSpeed(jump);
+        setEvent(new CAnimEvent(this,DE_JUMP));
     }
 }
 
@@ -61,15 +63,11 @@ void Erik::in_sp2(Sint16 dt) {
         if (state&STATE_RUN) cancelEvent();
         return;
     }
-    dense_types|=OTYPE_MONSTER;
     if (state&STATE_RUN) {
+        dense_types|=OTYPE_MONSTER;
         if (state&STATE_FALL) cancelEvent();
-    } else if (state&STATE_MLEFT) {
-        sfxeng->playWAV(au_run);
-        setEvent(new ERun(this,10000,Sint16(-1/2*maxspeedx),-maxspeedx,500,ESTATE_ABORT,au_run));
-    } else if (state&STATE_MRIGHT) {
-        sfxeng->playWAV(au_run);
-        setEvent(new ERun(this,10000,Sint16(1/2*maxspeedx),maxspeedx,500,ESTATE_ABORT,au_run));
+    } else if (state&(STATE_MLEFT|STATE_MRIGHT)) {
+        setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run));
     }
 }
 

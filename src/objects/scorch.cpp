@@ -35,6 +35,10 @@ Scorch::~Scorch() {
 }
 
 void Scorch::fall(Uint16 dt) {
+    if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
+        if (!getState(STATE_FALL)) hspeed*=0.9;
+        else hspeed*=0.96;  
+    }
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
@@ -65,12 +69,14 @@ void Scorch::in_sp1(Sint16 dt) {
         setState(STATE_ACT_1);
         setState(STATE_ACT_2);
         unsetState(STATE_GLIDE);
-        setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,au_tired));
+        addSpeed(V_FLY);
+        setEvent(new CAnimEvent(this,DE_WING,0,0,au_tired));
     //Use Wings
     } else {
         setState(STATE_ACT_1);
         left_wings--;
-        setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,au_swing));
+        addSpeed(V_FLY);
+        setEvent(new CAnimEvent(this,DE_WING,0,0,au_swing));
     }
 }
 

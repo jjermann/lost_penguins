@@ -124,37 +124,32 @@ void CAnimEvent::cancel() {
     CEvent::cancel();
 }
 
-ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
-  CAnimEvent(chr,length,edelay,switchstate,esound,runanim,delanim),
-  vspeed(avspeed),
-  hspeed(ahspeed) { }
-void ESpeed::start() {
-    charowner->addSpeed(vspeed);
-    charowner->addHSpeed(hspeed);
-    CAnimEvent::start();
-}
-void ESpeed::end() {
-    if (started) charowner->addHSpeed(-hspeed);
-    CAnimEvent::end();
-}
-void ESpeed::cancel() {
-    if (started) charowner->addHSpeed(-hspeed);
-    CAnimEvent::cancel();
-}
 
-
-ERun::ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
-  ESpeed(chr,length,0,ahspeed,edelay,(switchstate|STATE_PRESS_LR),esound,runanim,delanim),
-  ispeed(inispeed),
+ERun::ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
+  CAnimEvent(chr,length,edelay,(switchstate|STATE_PRESS_LR),esound,runanim,delanim),
+  dmax(edmax),
   t_reset(0) {
     charowner->setState(STATE_RUN);
-    charowner->addHSpeed(ispeed);
 }
 ERun::~ERun() {
     charowner->unsetState(STATE_RUN);
-    charowner->addHSpeed(-ispeed);
     owner->clearEvents();
 }
+void ERun::start() {
+    charowner->addMaxSpeed(dmax);
+    CAnimEvent::start();
+}
+
+void ERun::end() {
+    if (started) charowner->addMaxSpeed(-dmax);
+    CAnimEvent::end();
+}
+
+void ERun::cancel() {
+    if (started) charowner->addMaxSpeed(-dmax);
+    CAnimEvent::cancel();
+}
+
 void ERun::reset() {
     t_reset=0;
 }
@@ -164,7 +159,7 @@ Uint16 ERun::update(Uint16 dt) {
     if (t_reset>100) {
         evstate=EV_CANCEL;
     } else {
-        evstate=ESpeed::update(dt);
+        evstate=CAnimEvent::update(dt);
     } 
     return evstate;
 }

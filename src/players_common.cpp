@@ -199,32 +199,24 @@ void Player::in_use(Sint16 dt) {
 
 void Player::in_right(Sint16 dt) {
     if (dt < 0) {
-        if (state&STATE_MRIGHT) {
-            unsetState(STATE_MRIGHT);
-            hspeed-=maxspeedx;
-        }
+        unsetState(STATE_MRIGHT);
         return;
     }
     unsetState(STATE_LEFT);
-    if (!(state&STATE_MRIGHT)) {
-        hspeed+=maxspeedx;
-        setState(STATE_MRIGHT);
-    }
+    setState(STATE_MRIGHT);
+    if ((hspeed+SPEED_STEP)<maxspeedx) hspeed+=SPEED_STEP;
+    else if (hspeed<maxspeedx) hspeed=maxspeedx;
 }
 
 void Player::in_left(Sint16 dt) {
     if (dt < 0) {
-        if (state&STATE_MLEFT) {
-            unsetState(STATE_MLEFT);
-            hspeed+=maxspeedx;
-        }
+        unsetState(STATE_MLEFT);
         return;
     }
     setState(STATE_LEFT);
-    if (!(state&STATE_MLEFT)) {
-        hspeed-=maxspeedx;
-        setState(STATE_MLEFT);
-    }
+    setState(STATE_MLEFT);
+    if ((hspeed-SPEED_STEP)>(-maxspeedx)) hspeed-=SPEED_STEP;
+    else if (hspeed>(-maxspeedx)) hspeed=-maxspeedx;
 }
 void Player::in_up(Sint16) { }
 void Player::in_down(Sint16) { }
@@ -236,6 +228,10 @@ Hit Player::move(Uint16 dt, bool check) {
 }
 
 void Player::fall(Uint16 dt) {
+    if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
+        if (!getState(STATE_FALL)) hspeed*=0.9;
+        else hspeed*=0.96;
+    }
     Character::fall(dt);
 }
 
@@ -358,8 +354,15 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
             case W_TOUCH: {
                 //TODO: play animations (make new Event for this)
                 if (direction&(DIR_UP|DIR_DOWN)) sfxeng->playWAV(aud_hit);
-                if (direction&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-200,-400,0,ESTATE_BUSY,aud_hit));
-                else setEvent(new ESpeed(this,TSTRIKE,-200,400,0,ESTATE_BUSY,aud_hit));
+                if (direction&DIR_LEFT) {
+                    addSpeed(-200);
+                    addHSpeed(-400);
+                    setEvent(new CAnimEvent(this,TSTRIKE,0,ESTATE_BUSY,aud_hit));
+                } else {
+                    addSpeed(-200);
+                    addHSpeed(400);
+                    setEvent(new CAnimEvent(this,TSTRIKE,0,ESTATE_BUSY,aud_hit));
+                }
                 break;
             }
             case W_WATER: {

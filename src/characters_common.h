@@ -9,6 +9,7 @@
 #define V_KRIT          1000
 #define T_GRAV_EFFECT   10
 #define T_AI_EFFECT     20
+#define SPEED_STEP      10
  
 //Character states
 //facing: either left or right (not left)
@@ -60,11 +61,11 @@ class Character : public Object {
         }
         //@}
         //@{
-        void applySpeedMod(Uint16 speedm) {
-            speedmod=Uint16(speedmod*speedm/100);
+        Uint16 addMaxSpeed(Sint16 dmax) {
+            return maxspeedx=max(0,maxspeedx+dmax);
         }
-        void setSpeedMod(Uint16 speedm) {
-            speedmod=speedm;
+        Uint16 setMaxSpeed(Uint16 maxs) {
+            return maxspeedx=maxs;
         }
         //@}
         //@{
@@ -165,8 +166,6 @@ class Character : public Object {
         Sint16 speed;
         //current gravity
         Sint16 gravity;
-        //current speedmod
-        Uint16 speedmod;
         //temporary attributes
         Sint16 Dgrav;
         //Die animation

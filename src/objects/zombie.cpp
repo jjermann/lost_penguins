@@ -14,7 +14,7 @@ Zombie::Zombie(string imagename, Sint16 xcord, Sint16 ycord, string mname):
   Monster(imagename,xcord,ycord,mname),
   au_attack(sndcache->loadWAV("clang.wav")),
   T_Attack_Bite(1500) {
-    maxspeedx=100;
+    maxspeedx=80;
     im_left=new Animation(imgcache->loadImage("olaf1_left.bmp"),2,1000);
     im_right=new Animation(imgcache->loadImage("olaf1_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
@@ -26,14 +26,14 @@ Zombie::~Zombie() {
 }
 
 void Zombie::idle(Uint16 dt) {
-    hspeed=0;
     Character::idle(dt);
     runAI(dt);
 }
 
 void Zombie::ai_left(Uint16 dt) {
     SDL_Rect oldpos=pos;
-    hspeed-=maxspeedx;
+    if ((hspeed-SPEED_STEP)>maxspeedx) hspeed-=SPEED_STEP;
+    else if (hspeed>(-maxspeedx)) hspeed=-maxspeedx;
     Hit hit=move(dt,true);
     if (hit.touch&enemy_types) {
         move(dt);
@@ -52,7 +52,8 @@ void Zombie::ai_left(Uint16 dt) {
 
 void Zombie::ai_right(Uint16 dt) {
     SDL_Rect oldpos=pos;
-    hspeed+=maxspeedx;
+    if ((hspeed+SPEED_STEP)<maxspeedx) hspeed+=SPEED_STEP;
+    else if (hspeed<maxspeedx) hspeed=maxspeedx;
     Hit hit=move(dt,true);
     if (hit.touch&enemy_types) {
         move(dt);

@@ -113,43 +113,28 @@ class EAttack : public CAnimEvent {
         Uint16 mask;
 };
 
-/** \brief Speed modification event
-
-    Modifies the vertical and/or the horizontal speed.
-*/
-class ESpeed : public CAnimEvent {
-    public:
-        /// \param avspeed Vertical speed to be add when the event starts
-        /// \param ahspeed Horizontal speed to be add when the event starts
-        ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed=0, Uint16 edelay=0,
-          Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
-        virtual void start();
-        virtual void end();  
-        virtual void cancel();
-    protected:
-        Sint16 vspeed;
-        Sint16 hspeed;
-};
-
 /** \brief Delayed (accelerated) run event
 
     A special speed event that increases the horizontal speed after a while,
     has to be constantly maintained using reset().
 */
-class ERun : public ESpeed {
+class ERun : public CAnimEvent {
     public:
         /// Adds the initial speed
         /// \param inispeed Initial horizontal speed to be added
         /// \param ahspeed Horizontal speed to be added when the event starts
-        ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay=0,
+        ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay=0,
           Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
         virtual ~ERun();
         /// Forces the event to continue
+        virtual void start(); 
+        virtual void end(); 
+        virtual void cancel(); 
         virtual void reset(); 
         /// If the event wasn't forced to continue it will shortly end
         virtual Uint16 update(Uint16 dt);
     protected:
-        Sint16 ispeed;
+        Sint16 dmax;
         Sint16 t_reset;
 };
 

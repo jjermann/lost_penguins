@@ -48,6 +48,10 @@ void Fang::in_right(Sint16 dt) {
 }
 
 void Fang::fall(Uint16 dt) {
+    if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
+        if (!getState(STATE_FALL)) hspeed*=0.9;
+        else hspeed*=0.96;  
+    }
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
@@ -74,15 +78,20 @@ void Fang::in_sp1(Sint16 dt) {
         unsetState(STATE_LEFT);
         unsetState(STATE_CLIMB_L);
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(maxspeedx*1.5),0,0,au_jump));
+        addSpeed(V_JUMPOFF);
+        addHSpeed(maxspeedx);
+        setEvent(new CAnimEvent(this,T_JUMPOFF,0,0,au_jump));
     } else if (state&STATE_CLIMB_R) {
         setState(STATE_LEFT);
         unsetState(STATE_CLIMB_R);
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(-maxspeedx*1.5),0,0,au_jump));
+        addSpeed(V_JUMPOFF);
+        addHSpeed(-maxspeedx);
+        setEvent(new CAnimEvent(this,T_JUMPOFF,0,0,au_jump));
     } else if ((!(state&STATE_FALL)) && (!(state&STATE_ACT_1))){
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,DE_JUMP,V_JUMP,0,0,0,au_jump));
+        addSpeed(V_JUMP);
+        setEvent(new CAnimEvent(this,DE_JUMP,0,0,au_jump));
     }
 }
 

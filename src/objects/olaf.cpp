@@ -124,11 +124,11 @@ inline bool Olaf::trySmall(bool small) {
             //as we don't fall most states are off anyway
             unsetState(STATE_SHIELD);
             setState(STATE_SMALL);
-            maxspeedx/=4;
+            addMaxSpeed(-200);
         } else {
             sfxeng->playWAV(au_big);
             unsetState(STATE_SMALL);
-            maxspeedx*=4;
+            addMaxSpeed(200);
         }
         return true;
     } else return false;
@@ -174,12 +174,17 @@ void Olaf::in_sp2(Sint16 dt) {
         //Fart
         } else {
             setState(STATE_ACT_1);
-            setEvent(new ESpeed(this,DE_JUMP,fart,0,0,0,au_fart));
+            addSpeed(fart);
+            setEvent(new CAnimEvent(this,DE_JUMP,0,0,au_fart));
         }
     }
 }
     
 void Olaf::fall(Uint16 dt) {
+    if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
+        if (!getState(STATE_FALL)) hspeed*=0.9;
+        else hspeed*=0.96;  
+    }
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {

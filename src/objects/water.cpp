@@ -19,7 +19,7 @@ void Water::enter(Object* obj) {
     if(Character* ptr = dynamic_cast<Character*>(obj)) {
         sfxeng->playWAV(au_water);
         ptr->setState(STATE_WATER);
-        ptr->applySpeedMod(50);
+        ptr->addMaxSpeed(-200);
         ptr->hit(DIR_ALL,weapon);
     }
 }
@@ -27,7 +27,7 @@ void Water::enter(Object* obj) {
 void Water::leave(Object* obj) {
     if(Character* ptr = dynamic_cast<Character*>(obj)) {
         sfxeng->playWAV(au_water);
-        ptr->applySpeedMod(200);
+        ptr->addMaxSpeed(200);
         ptr->unsetState(STATE_WATER);
     }
 }
