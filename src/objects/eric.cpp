@@ -54,9 +54,11 @@ void Eric::in_sp2(Sint16 dt) {
     //TODO: check STATE_WATER
     if (dt < 0) {
         input->unsetState(INPUT_SP2);
+        dense_types&=~OTYPE_MONSTER;
         if (state&STATE_RUN) cancelEvent();
         return;
     }
+    dense_types|=OTYPE_MONSTER;
     if (state&STATE_RUN) {
         if (state&STATE_FALL) cancelEvent();
     } else if (state&STATE_MLEFT) {
