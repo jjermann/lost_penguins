@@ -9,7 +9,8 @@
 
 
 Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname) {
+  Player(imagename,xcord,ycord,pname),
+  fart(V_FART) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
@@ -30,7 +31,6 @@ Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string pname):
     au_big=sndcache->loadWAV("unblob.wav");
     au_fart=sndcache->loadWAV("fart1.wav");
     au_hit=sndcache->loadWAV("fathit.wav");
-    fart=V_FART;
 }
 Olaf::~Olaf() {
     delete im_left;

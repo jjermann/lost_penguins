@@ -12,7 +12,7 @@ class Geyser : public Object {
         virtual ~Geyser();
         virtual void idle(Uint16 dt);
     private:
-        Uint16 Deffect;
         Sint16 aspeed;
         Mix_Chunk* au_geyser;
+        Uint16 Deffect;
 };

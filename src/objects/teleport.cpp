@@ -9,10 +9,10 @@
 
 //(xExit,yExit) are the destination coordinates of the teleporter (bottom center)
 Teleporter::Teleporter(string imagename, Uint16 xcord, Uint16 ycord, Uint16 xExit, Uint16 yExit, string oname):
-  Object(imagename,xcord,ycord,oname) {
+  Object(imagename,xcord,ycord,oname),
+  au_tele(sndcache->loadWAV("teleprt.wav")) {
     exit.x=xExit;
     exit.y=yExit;
-    au_tele=sndcache->loadWAV("teleprt.wav");
 }
 Teleporter::~Teleporter() { }
 

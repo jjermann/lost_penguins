@@ -35,7 +35,6 @@ class Monster : public Character {
         virtual void ai_left(Uint16) { }
         virtual void ai_right(Uint16) { }
         virtual void ai_attack(Player*, Uint16) { }
-        Sint16 Dai,Dattack;
         //Attack targets
         std::set<Player *> targets;
         //move
@@ -43,4 +42,5 @@ class Monster : public Character {
         //common animations
         Animation* im_left;
         Animation* im_right;
+        Sint16 Dai,Dattack;
 };

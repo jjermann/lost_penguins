@@ -5,8 +5,14 @@
 #include "objects_common.h"
 
 
-Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname) {
-    im_orig=new Animation(imgcache->loadImage(imagename));
+Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname):
+  tbirth(SDL_GetTicks()),
+  state(NOTHING),
+  im_orig(new Animation(imgcache->loadImage(imagename))),
+  event(NULL),
+  otype(NOTHING),
+  name(oname),
+  delete_flag(false) {
     animation=im_orig;
     pos.x=xcord;
     pos.y=ycord;
@@ -16,10 +22,6 @@ Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname) {
     curpos.h=pos.h;
     curpos.x=0;
     curpos.y=0;
-    name=oname;
-    otype=NOTHING;
-    delete_flag=false;
-    event=NULL;
 }
 
 Object::~Object() {

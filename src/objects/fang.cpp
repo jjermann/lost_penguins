@@ -8,7 +8,8 @@
 
 
 Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname) {
+  Player(imagename,xcord,ycord,pname),
+  jump(V_JUMP) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
@@ -18,7 +19,6 @@ Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string pname):
     im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
     im_land_right=im_land_left;
     au_jump=NULL;
-    jump=V_JUMP;
 }
 Fang::~Fang() {
     delete im_left;

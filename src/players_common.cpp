@@ -11,7 +11,8 @@
 
 
 Player::Player(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Character(imagename,xcord,ycord,pname) {
+  Character(imagename,xcord,ycord,pname),
+  currentitem(0) {
     health=3;
     maxhealth=4;
     maxspeedx=300;
@@ -19,12 +20,10 @@ Player::Player(string imagename, Uint16 xcord, Uint16 ycord, string pname):
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         items[i]=NULL;
     }
-    currentitem=0;
     state=STATE_FALL;
     otype|=OTYPE_PLAYER;
     dense_types|=OTYPE_MONSTER;
     enemy_types|=OTYPE_MONSTER;
-    t_water=500;
     im_left=animation;
     im_right=animation;
     im_fall_left=animation;

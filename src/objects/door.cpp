@@ -7,12 +7,12 @@
 
 
 Door::Door(string imagename, Uint16 xcord, Uint16 ycord, string keyname, string oname):
-  Object(imagename,xcord,ycord,oname) {
-    open=false;
+  Object(imagename,xcord,ycord,oname),
+  open(false),
+  key(keyname),
+  au_open(sndcache->loadWAV("dooropn.wav")),
+  au_close(au_open) {
     otype=OTYPE_DENSE;
-    key=keyname;
-    au_open=sndcache->loadWAV("dooropn.wav");
-    au_close=au_open;
 }
 Door::~Door() { }
 

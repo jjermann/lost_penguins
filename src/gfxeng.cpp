@@ -7,7 +7,12 @@
 #include "gfxeng.h"
 
 
-GraphicsEngine::GraphicsEngine() {
+GraphicsEngine::GraphicsEngine():
+  pbar(true),
+  Dfps(0),
+  Dframes(0),
+  currentfps(0),
+  tcurrent(SDL_GetTicks()) {
     if ((screen=SDL_SetVideoMode(config.width,config.height,16,SDL_HWSURFACE|SDL_DOUBLEBUF|config.full)) != NULL) {
         cout << "Set VideoMode...\n";
     } else {
@@ -26,9 +31,6 @@ GraphicsEngine::GraphicsEngine() {
     bar.w=config.width;
     bar.h=BAR_HEIGHT;
     lifeimage=new Animation(imgcache->loadImage("life.bmp"));
-    
-    Dframes=Dfps=currentfps=0;
-    tcurrent=SDL_GetTicks();
 }
 
 GraphicsEngine::~GraphicsEngine() {

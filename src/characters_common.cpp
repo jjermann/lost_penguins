@@ -9,22 +9,22 @@
 
 //CHARACTER (Object)
 Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Object(imagename,xcord,ycord,pname) {
-    health=1;
-    maxhealth=1;
-    maxspeedx=300;
-    maxspeedy=0;
-    speed=hspeed=0;
-    gravity=900;
-    speedmod=100;
-    Dgrav=0;
+  Object(imagename,xcord,ycord,pname),
+  health(1),
+  maxhealth(1),
+  maxspeedx(300),
+  maxspeedy(0),
+  hspeed(0),
+  speed(0),
+  gravity(900),
+  speedmod(100),
+  Dgrav(0),
+  im_die(NULL),
+  dense_types(NOTHING),
+  enemy_types(NOTHING),
+  weapon(Weapon(0)) {
     state=STATE_FALL;
     otype|=OTYPE_CHARACTER;
-    t_water=0;
-    dense_types=NOTHING;
-    enemy_types=NOTHING;
-    weapon=Weapon(0);
-    im_die=NULL;
 }
 
 Character::~Character() { }
@@ -80,20 +80,10 @@ void Character::updateAnimState(bool change) {
     curpos.y=(pos.h-curpos.h);
 }
 
-void Character::idle(Uint16 dt) {
+void Character::idle(Uint16) {
     //check if we have ground below us...
     Hit hitobj;
     hitobj=checkMove(pos);
-
-    //can't swim
-    if(state&STATE_WATER) {
-        Dwater+=dt;
-        if (Dwater>=t_water) { 
-            Weapon water(-1,W_WATER,WS_WATER);
-            hit(DIR_ALL,water);
-            Dwater=0;
-        }
-    } else Dwater=0;
 
     //are we falling?
     if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0)) {

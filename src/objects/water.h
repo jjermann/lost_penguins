@@ -9,4 +9,7 @@ class Water : public Object {
         virtual ~Water();
         virtual void enter(Object* obj);
         virtual void leave(Object* obj);
+    protected:
+        Weapon weapon;
+        Mix_Chunk* au_water;
 };

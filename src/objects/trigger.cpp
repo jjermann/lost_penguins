@@ -5,9 +5,9 @@
 
 
 Trigger::Trigger(string imagename, Uint16 xcord, Uint16 ycord, string targetname, string oname, string keyname):
-  Object(imagename,xcord,ycord,oname) {
+  Object(imagename,xcord,ycord,oname),
+  key(keyname) {
     target=pool->getObject(targetname);
-    key=keyname;
 }
 Trigger::~Trigger() { }
 

@@ -11,9 +11,9 @@
 #include "players_common.h"
 
 
-InputHandler::InputHandler() {
+InputHandler::InputHandler():
+  state(NOTHING) {
     paused=false;
-    state=NOTHING;
     au_pause=sndcache->loadWAV("pause.wav");
 }
 

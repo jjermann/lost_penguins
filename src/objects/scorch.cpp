@@ -8,7 +8,9 @@
 
 
 Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname) {
+  Player(imagename,xcord,ycord,pname),
+  left_wings(SCORCH_MAX_WINGS),
+  wing(V_FLY) {
     im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;
     im_fall_left=im_left;
@@ -19,8 +21,6 @@ Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string pname):
     im_land_right=im_land_left;
     au_swing=sndcache->loadWAV("flapwngs.wav");
     au_tired=sndcache->loadWAV("flwings.wav");
-    left_wings=SCORCH_MAX_WINGS;
-    wing=V_FLY;
 }
 Scorch::~Scorch() {
     delete im_left;

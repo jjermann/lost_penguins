@@ -9,7 +9,11 @@
 //Initialize an animation: animation image, number of frames,
 //time intervall for the animation, if (total_time==0) it is considered a frames series
 Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time, bool an_once):
-  size(max_num),time(total_time),num(0),tcurrent(0),once(an_once) {
+  size(max_num),
+  time(total_time),
+  num(0),
+  tcurrent(0),
+  once(an_once) {
     if (time==0 || once) running=false;
     else running=true;
     frame.image=anim_image;
@@ -24,7 +28,11 @@ Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time,
 //Initialize an animation: animation image, width of a frame, number of frames,
 //time intervall for the animation, if (total_time==0) it is considered a frames series
 Animation::Animation(Uint16 width, SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time, bool an_once):
-  size(max_num),time(total_time),num(0),tcurrent(0),once(an_once) {
+  size(max_num),
+  time(total_time),
+  num(0),
+  tcurrent(0),
+  once(an_once) {
     if (time==0 || once) running=false;
     else running=true;
     frame.image=anim_image;
@@ -66,11 +74,10 @@ const Frame& Animation::setFrame(Uint16 num) {
     return frame;
 }
 
-AnimHandler::AnimHandler() {
-    //Initialization
-    tstart=SDL_GetTicks();
+AnimHandler::AnimHandler(): 
+  tstart(SDL_GetTicks()),
+  dt(0) {
     tcurrent=tstart;
-    dt=0;
 }
 
 AnimHandler::~AnimHandler() {

@@ -12,7 +12,9 @@
 ==================*/
 
 Monster::Monster(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Character(imagename,xcord,ycord,pname) {
+  Character(imagename,xcord,ycord,pname),
+  Dai(0),
+  Dattack(0) {
     health=1;
     maxspeedx=50;
     maxspeedy=0;
@@ -20,10 +22,8 @@ Monster::Monster(string imagename, Uint16 xcord, Uint16 ycord, string pname):
     otype|=OTYPE_MONSTER;
     dense_types|=OTYPE_PLAYER;
     enemy_types|=OTYPE_PLAYER;
-    t_water=1000;
     im_left=animation;
     im_right=animation;
-    Dai=Dattack=0;
 }
 
 Monster::~Monster() { }
@@ -123,5 +123,7 @@ void Monster::die() {
 }
 
 Uint16 Monster::hit(Uint16, Weapon& weap) {
-    return (addHealth(weap.getDamage()));
+    Uint16 newhealth=addHealth(weap.getDamage());
+    if (newhealth==0) die();
+    return newhealth;
 }

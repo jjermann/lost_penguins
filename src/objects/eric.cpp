@@ -2,6 +2,7 @@
 #include "events.h"
 #include "anim.h"
 #include "input.h"
+#include "weapons.h"
 #include "imgcache.h"
 #include "sndcache.h"
 #include "sfxeng.h"
@@ -9,7 +10,9 @@
 
 
 Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname) {
+  Player(imagename,xcord,ycord,pname),
+  jump(V_JUMP),
+  jump2(V_JUMP2) {
     im_left=new Animation(imgcache->loadImage("eric_left.bmp"));
     im_right=new Animation(60,imgcache->loadImage("kuru.bmp"),12,1000);
     im_fall_left=im_left;
@@ -20,9 +23,6 @@ Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string pname):
     im_land_right=im_land_left;
     au_jump=sndcache->loadWAV("rboots.wav");
     au_run=NULL;
-    t_water=60000;
-    jump=V_JUMP;
-    jump2=V_JUMP2;
 }
 Eric::~Eric() {
     delete im_left;
@@ -90,4 +90,10 @@ void Eric::in_right(Sint16 dt) {
         else cancelEvent();
     }
     Player::in_right(dt);
+}
+
+Uint16 Eric::hit(Uint16 dir, Weapon& weap) {
+    if (weap.getType()==W_WATER) {
+        return health;
+    } else return Player::hit(dir,weap);
 }

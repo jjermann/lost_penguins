@@ -8,6 +8,6 @@ class TriggeredBomb : public Character {
         virtual ~TriggeredBomb();
         virtual void idle(Uint16);
     private:
-        Mix_Chunk* au_bomb;
         Sint16 countdown;
+        Mix_Chunk* au_bomb;
 };

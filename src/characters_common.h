@@ -114,15 +114,13 @@ class Character : public Object {
         //current speedmod
         Uint16 speedmod;
         //temporary attributes
-        Sint16 Dgrav,Dwater;
+        Sint16 Dgrav;
         //Die animation
         Animation* im_die;
         //Entered objects
         std::set<Object *> enter;
         //Touched objects
         std::set<Object *> touch;
-        //How long can the character swim?
-        Uint16 t_water;
         //dense types
         Uint16 dense_types;
         //enemy types

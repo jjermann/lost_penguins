@@ -15,6 +15,7 @@ class Eric : public Player {
         virtual void in_sp2(Sint16);
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);
+        virtual Uint16 hit(Uint16,Weapon&);
     private:
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;

@@ -11,13 +11,13 @@
 
 
 Zombie::Zombie(string imagename, Uint16 xcord, Uint16 ycord, string mname):
-  Monster(imagename,xcord,ycord,mname) {
+  Monster(imagename,xcord,ycord,mname),
+  au_attack(sndcache->loadWAV("clang.wav")),
+  T_Attack_Bite(1500) {
     maxspeedx=100;
-    T_Attack_Bite=1500;
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"),2,1000);
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
-    au_attack=sndcache->loadWAV("clang.wav");
 }
 
 Zombie::~Zombie() {

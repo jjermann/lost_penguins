@@ -8,7 +8,12 @@
 
 //Common Events (basically sets the events idle for length)
 Event::Event(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate):
-  owner(obj),duration(length),delay(edelay),tleft(delay),started(false),state(switchstate) { }
+  owner(obj),
+  duration(length),
+  delay(edelay),
+  tleft(delay),
+  started(false),
+  state(switchstate) { }
 Event::~Event() {
     owner->clearEvents();
 }
@@ -50,7 +55,9 @@ void Event::cancel() {
 
 //CharacterEvent
 CharacterEvent::CharacterEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  Event(chr,length,edelay,switchstate), charowner(chr), sound(esound) {
+  Event(chr,length,edelay,switchstate),
+  charowner(chr),
+  sound(esound) {
     state|=ESTATE_RUN;
 }
 void CharacterEvent::start() {
@@ -66,7 +73,9 @@ void CharacterEvent::cancel() {
 
 
 EAnim::EAnim(Character* chr, Animation* runanim, bool delanim, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  CharacterEvent(chr,30000,edelay,(switchstate|ESTATE_BUSY|ESTATE_ANIM),esound),anim(runanim),del(delanim) {
+  CharacterEvent(chr,30000,edelay,(switchstate|ESTATE_BUSY|ESTATE_ANIM),esound),
+  anim(runanim),
+  del(delanim) {
     if (anim==NULL) cancel();
 }
 void EAnim::start() {
@@ -85,7 +94,9 @@ void EAnim::cancel() {
 
 
 ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  CharacterEvent(chr,length,edelay,switchstate,esound),vspeed(avspeed),hspeed(ahspeed) { }
+  CharacterEvent(chr,length,edelay,switchstate,esound),
+  vspeed(avspeed),
+  hspeed(ahspeed) { }
 void ESpeed::start() {
     charowner->addSpeed(vspeed);
     charowner->addHSpeed(hspeed);
@@ -102,7 +113,9 @@ void ESpeed::cancel() {
 
 
 ERun::ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  ESpeed(chr,length,0,ahspeed,edelay,switchstate,esound),ispeed(inispeed),t_reset(0) {
+  ESpeed(chr,length,0,ahspeed,edelay,switchstate,esound),
+  ispeed(inispeed),
+  t_reset(0) {
     charowner->setState(STATE_RUN);
     charowner->addHSpeed(ispeed);
 }

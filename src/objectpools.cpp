@@ -31,9 +31,8 @@
 ==================*/
 
 ObjectsPool::ObjectsPool():
-  currentplayer(playerspool.begin()) {
-    au_switch=sndcache->loadWAV("newchar.wav");
-}
+  currentplayer(playerspool.begin()),
+  au_switch(sndcache->loadWAV("newchar.wav")) { }
 ObjectsPool::~ObjectsPool() {
     object_iterator i=objectspool.begin();
     while (i!=objectspool.end()) i=removeObject(i);

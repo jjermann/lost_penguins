@@ -7,9 +7,10 @@
 #include "triggered_bomb.h"
 
 TriggeredBomb::TriggeredBomb(string imagename, Uint16 xcord, Uint16 ycord, Uint16 tleft, string cname):
-  Character(imagename,xcord,ycord,cname), countdown(tleft) {
+  Character(imagename,xcord,ycord,cname),
+  countdown(tleft),
+  au_bomb(sndcache->loadWAV("explsn.wav")) {
     weapon=Weapon(-1,W_EXPLOSION);
-    au_bomb=sndcache->loadWAV("explsn.wav");
 }
 TriggeredBomb::~TriggeredBomb() { }
 

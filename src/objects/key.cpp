@@ -7,9 +7,8 @@
 
 
 Key::Key(string imagename, Uint16 xcord, Uint16 ycord, string iname):
-  Item(imagename,xcord,ycord,iname) {
-    au_key=NULL;
-}
+  Item(imagename,xcord,ycord,iname),
+  au_key(NULL) { }
 Key::~Key() { }
 
 bool Key::act(Object* obj) {

@@ -128,6 +128,7 @@ class Object {
             delete this;
         }
     protected:
+        Uint16 tbirth;
         Uint32 state;
         Event* event;
         Animation* im_orig;
