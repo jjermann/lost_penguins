@@ -86,20 +86,20 @@ inline void GraphicsEngine::drawPlayerBar() {
     SDL_FillRect(screen,&bar,SDL_MapRGB(screen->format,100,100,100));
 
     //draw each player status
-    player_iterator pit=pool->playerspool.begin();
-    while (pit != pool->playerspool.end()) {
+    player_iterator plit=pool->playerspool.begin();
+    while (plit != pool->playerspool.end()) {
         //temp. variables
-        spos=(*pit)->getIcon().pos;
+        spos=(*plit)->getIcon().pos;
         
         //enlight current player
-        if ((*pit)==player) {
+        if ((*plit)==player) {
             ppos=dpos;
             SDL_FillRect(screen,&ppos,SDL_MapRGB(screen->format,120,120,120));
         }
         
         //draw life points
         frame=lifeimage->getFrame();
-        for (Uint8 j=0; j<(*pit)->getHealth(); j++) {
+        for (Uint8 j=0; j<(*plit)->getHealth(); j++) {
             ppos=dpos;
             ppos.w=frame.pos.w;
             ppos.h=frame.pos.h;
@@ -110,11 +110,11 @@ inline void GraphicsEngine::drawPlayerBar() {
         //draw player
         ppos=dpos;
         ppos.y+=lifeimage->getFrame().pos.h+1;
-        SDL_BlitSurface((*pit)->getIcon().image,&spos,screen,&ppos);
+        SDL_BlitSurface((*plit)->getIcon().image,&spos,screen,&ppos);
 
         //Write text stuff
         //font->write(screen,itos(plr->getHealth()),dpos.x,dpos.y);
-        font->write(screen,(*pit)->getName(),dpos.x,config.height-font->getHeight());
+        font->write(screen,(*plit)->getName(),dpos.x,config.height-font->getHeight());
 
         //draw the items of the current player
         for (Uint8 j=0; j<MAX_ITEMS; j++) {
@@ -123,9 +123,9 @@ inline void GraphicsEngine::drawPlayerBar() {
             ppos.y+=j*ICON_SIZE;
             ppos.w=ICON_SIZE;
             ppos.h=ICON_SIZE;
-            item=(*pit)->getItem(j);
+            item=(*plit)->getItem(j);
 
-            if ((j==(*pit)->getItemNum()) && (*pit)==player) {
+            if ((j==(*plit)->getItemNum()) && (*plit)==player) {
                 SDL_FillRect(screen,&ppos,SDL_MapRGB(screen->format,200,200,200));
             }
             if (item) {
@@ -135,7 +135,7 @@ inline void GraphicsEngine::drawPlayerBar() {
         }
 
         dpos.x+=dpos.w;
-        ++pit;
+        ++plit;
     }
 }
 

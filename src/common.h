@@ -38,10 +38,6 @@ class Event;
 class Weapon;
 class Animation;
 
-typedef std::vector<Object *>::iterator object_pliterator;
-typedef std::vector<Character *>::iterator character_pliterator;
-typedef std::vector<Player *>::iterator player_pliterator;
-typedef std::vector<Monster *>::iterator monster_pliterator;
 typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
 typedef std::set<Player *>::iterator player_iterator;

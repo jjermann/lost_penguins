@@ -148,10 +148,10 @@ std::set<Character *> Map::getCharactersIn(const SDL_Rect& rect, bool touch, Uin
 
 std::set<Player *> Map::getPlayersIn(const SDL_Rect& rect, bool touch, Uint16 radius) const {
     std::set<Player *> tmpset;
-    player_iterator pit=pool->playerspool.begin();
-    while (pit != pool->playerspool.end()) {
-        if ((*pit)->isIn(rect,touch,radius)) tmpset.insert(*pit);
-        ++pit;
+    player_iterator plit=pool->playerspool.begin();
+    while (plit != pool->playerspool.end()) {
+        if ((*plit)->isIn(rect,touch,radius)) tmpset.insert(*plit);
+        ++plit;
     }
     return tmpset;
 }
