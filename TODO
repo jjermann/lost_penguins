@@ -10,6 +10,8 @@ TODO:
 
  o FIX ALL BUGS! hahaha:
      - sometimes the zombie doesn't turn from a wall
+     - hit event
+     - zombie attacks too often if nearby
 
  o IDEA: add horizontal gravity that slows objects down??
 
