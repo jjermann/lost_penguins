@@ -19,6 +19,7 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     state=STATE_FALL;
     otype|=OTYPE_MONSTER;
     enemy_types|=OTYPE_PLAYER;
+    dense_types|=OTYPE_PLAYER;
     im_left=animation;
     im_right=animation;
     au_hit=sndcache->loadWAV("monhit.wav");
