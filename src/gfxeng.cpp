@@ -27,7 +27,7 @@ GraphicsEngine::~GraphicsEngine() {
 void GraphicsEngine::resize(Uint16 width, Uint16 height) {
     if (screen) SDL_FreeSurface(screen);
     
-    if ((screen=SDL_SetVideoMode(width,height,16,SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|(fullscreen ? SDL_FULLSCREEN : 0))) != NULL) {
+    if ((screen=SDL_SetVideoMode(width,height,config.bpp,SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|(fullscreen ? SDL_FULLSCREEN : 0))) != NULL) {
     } else {
         cout << "Couldn't set VideoMode: " << SDL_GetError() << endl;
         quitGame(-1);

@@ -95,6 +95,7 @@ int readConfig(const string& filename) {
     //default values
     config.width=640;
     config.height=480;
+    config.bpp=16;
     config.full=false;
     config.audio_rate = MIX_DEFAULT_FREQUENCY;
     config.audio_format = MIX_DEFAULT_FORMAT;
@@ -120,6 +121,8 @@ int readConfig(const string& filename) {
             config.width=atoi(arg1.c_str());
         } else if (option=="height") {
             config.height=atoi(arg1.c_str());
+        } else if (option=="bpp") {
+            config.bpp=atoi(arg1.c_str());
         } else if (option=="full" && arg1=="1") {
             config.full=true;
         } else if (option=="map") {
@@ -140,6 +143,9 @@ void parseInput(int, char* argv[]) {
         } else if ( strcmp(argv[i], "-height") == 0 || strcmp(argv[i], "-h") == 0) {
             config.height=atoi(argv[i+1]);
             i++;
+        } else if ( strcmp(argv[i], "-bpp") == 0 ) {
+            config.bpp=atoi(argv[i+1]);
+            i++;
         } else if ( strcmp(argv[i], "-full") == 0 || strcmp(argv[i], "-fs") == 0) {
             config.full=SDL_FULLSCREEN;
         } else if ( strcmp(argv[i], "-map") == 0 ) {
@@ -154,10 +160,11 @@ void parseInput(int, char* argv[]) {
 
 void usage() {
     cout << "Usage: lost_penguins [OPTIONS]\n";
-    cout << "  -w, -width	Changes resolution (width) of game.  Default: 640\n";
-    cout << "  -h, -height	Changes resolution (height) of game. Default: 480\n";
-    cout << "  -fs, -full	Enable fullscreen.                   Default: disabled\n";
-    cout << "  -map		Load specified map from data dir.    Default: map1\n";
-    cout << "  -h, --help	Show this text \n";
+    cout << "  -w, -width   Changes resolution (width) of game.    Default: 640\n";
+    cout << "  -h, -height  Changes resolution (height) of game.   Default: 480\n";
+    cout << "  -bpp         Specifies color depth (bpp) of screen. Default: 16\n";
+    cout << "  -fs, -full	Enable fullscreen.                     Default: disabled\n";
+    cout << "  -map         Load specified map from data dir.      Default: map1\n";
+    cout << "  -h, --help   Show this text \n";
     quitGame(4);
 }
