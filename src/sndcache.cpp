@@ -1,4 +1,5 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "sndcache.h"
 
 using namespace std;
 

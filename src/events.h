@@ -1,8 +1,33 @@
+#ifndef _EVENTS_H_
+    #define _EVENTS_H_
+#endif
+
 #define EV_DELAY     0x00000001
 #define EV_START     0x00000002
 #define EV_RUN       0x00000004
 #define EV_END       0x00000008
 #define EV_CANCEL    0x00000010
+
+//ALREADY DEFINED!!! fix this
+#define STATE_RUN        0x00400000
+
+class Event {
+    public:
+        Event(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING);
+        virtual ~Event();
+        virtual Uint16 update(Uint16 dt);   
+        virtual void cancel();
+        virtual void start();
+        virtual void end();
+        virtual void reset() { }
+    protected:
+        Object* owner;
+        Uint16 duration;
+        Uint16 delay;
+        Sint16 tleft;
+        bool started;
+        Uint32 state;
+};
 
 class CharacterEvent : public Event {
     public:

@@ -1,4 +1,10 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "font.h"
+#include "anim.h"
+#include "objectpools.h"
+#include "vikings_common.h"
+#include "imgcache.h"
+#include "gfxeng.h"
 
 using namespace std;
 

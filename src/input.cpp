@@ -1,5 +1,14 @@
-#include "lost_vikings.h"
+#include "common.h"
 #include "events.h"
+#include "anim.h"
+#include "input.h"
+#include "sndcache.h"
+#include "gfxeng.h"
+#include "sfxeng.h"
+#include "objectpools.h"
+//hack the viking calls should be in anim.cpp
+#include "objects_common.h"
+#include "vikings_common.h"
 
 using namespace std;
 

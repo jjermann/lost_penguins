@@ -1,7 +1,13 @@
-#include "lost_vikings.h"
-#include "objects.h"
+#include "common.h"
 #include "events.h"
+#include "input.h"
+#include "anim.h"
 #include "weapons.h"
+#include "sfxeng.h"
+#include "imgcache.h"
+#include "sndcache.h"
+#include "objectpools.h"
+#include "vikings_common.h"
 
 using namespace std;
 
@@ -10,6 +16,7 @@ using namespace std;
 Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Character(imagename,xcord,ycord,vname) {
     health=3;
+    maxhealth=4;
     maxspeedx=300;
     maxspeedy=200;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
@@ -46,6 +53,10 @@ Viking::~Viking() {
             removeItem(i);
         }
     }
+}
+
+Frame Viking::getIcon() const {
+    return (im_right->getFrame(0));
 }
 
 //updates the entered based states and values (includes updateTouch)
@@ -353,3 +364,7 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
     }
     return newhealth;
 }
+
+DeadViking::DeadViking(string imagename, Uint16 xcord, Uint16 ycord, string name):
+  Character(imagename,xcord,ycord,name) { }
+DeadViking::~DeadViking() { }

@@ -1,4 +1,5 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "sfxeng.h"
 
 using namespace std;
 

@@ -1,7 +1,9 @@
-#include "lost_vikings.h"
+#include "common.h"
 #include "events.h"
-#include "objects.h"
+#include "anim.h"
 #include "weapons.h"
+#include "sfxeng.h"
+#include "characters_common.h"
 
 using namespace std;
 

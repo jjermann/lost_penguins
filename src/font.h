@@ -1,3 +1,7 @@
+#ifndef _FONT_H_
+    #define _FONT_H_
+#endif
+
 /*
 Copyright (C) 2003 Matthias Braun
 

@@ -1,7 +1,15 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "anim.h"
+#include "input.h"
 #include "events.h"
-#include "objects.h"
+#include "imgcache.h"
+#include "sndcache.h"
+#include "sfxeng.h"
+#include "map.h"
 #include "weapons.h"
+#include "vikings_common.h"
+#include "monsters_common.h"
+#include "objects.h"
 
 using namespace std;
 
@@ -30,10 +38,6 @@ void TriggeredBomb::idle(Uint16 dt) {
         die();
     }
 }
-
-DeadViking::DeadViking(string imagename, Uint16 xcord, Uint16 ycord, string name):
-  Character(imagename,xcord,ycord,name) { }
-DeadViking::~DeadViking() { }
 
 
 /*==================

@@ -1,6 +1,7 @@
-#define NOTHING          0x00000000
+#ifndef _WEAPONS_H_
+    #define _WEAPONS_H_
+#endif
 
-//Weapon types
 //normal hit
 #define W_STRIKE         0x00000001
 //bomb
@@ -24,3 +25,22 @@
 
 #define DSTRIKE          100
 #define TSTRIKE          600
+
+class Weapon {
+    public:
+        Weapon(Sint16 dmg=-1, Uint16 weaptype=NOTHING, Uint16 subtype=WS_NORMAL);
+        virtual ~Weapon();
+        Uint16 getType() {
+            return wtype; 
+        }
+        Uint16 getSubType() {
+            return stype;
+        }
+        Sint16 getDamage() {
+            return damage;  
+        }
+    private:
+        Uint16 wtype;
+        Uint16 stype;
+        Uint16 damage;
+};

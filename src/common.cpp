@@ -1,4 +1,4 @@
-#include "lost_vikings.h"
+#include "common.h"
 
 ImageCache* imgcache;
 SoundCache* sndcache;

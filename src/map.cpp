@@ -1,4 +1,7 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "objectpools.h"
+#include "vikings_common.h"
+#include "map.h"
 
 using namespace std;
 

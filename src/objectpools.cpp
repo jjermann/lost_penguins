@@ -1,5 +1,11 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "map.h"
+#include "sfxeng.h"
+#include "sndcache.h"
 #include "objects.h"
+#ifndef _OBJECTPOOLS_H_
+    #include "objectpools.h"
+#endif
 
 using namespace std;
 

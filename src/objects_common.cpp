@@ -1,6 +1,8 @@
-#include "lost_vikings.h"
-#include "objects.h"
+#include "common.h"
+#include "imgcache.h"
+#include "anim.h"
 #include "events.h"
+#include "objects_common.h"
 
 using namespace std;
 
@@ -35,6 +37,24 @@ bool Object::isIn(const SDL_Rect& rect, bool touch, Uint16 radius) {
     if ((center.x+radius)>rect.x && center.x<(rect.x+rect.w+radius) && (center.y+radius)>rect.y && center.y<(rect.y+rect.h+radius)) return true;
     else return false;
     }
+}
+
+const Frame& Object::getFrame() const {
+    return animation->getFrame();
+}
+bool Object::updateAnim(Uint16 dt) {
+    return (animation->updateAnim(dt));
+}
+void Object::setAnim(Animation* anim) {
+    animation=anim;
+    animation->start();
+}
+void Object::resetAnimState() {
+    animation=im_orig;
+    animation->setFrame(0);
+}
+bool Object::isRunning() const {
+    return animation->isRunning();
 }
 
 //Events (triggered animations/effects)

@@ -1,4 +1,5 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "imgcache.h"
 
 using namespace std;
 

@@ -1,3 +1,13 @@
+#ifndef _OBJECTPOOLS_H_
+    #include "objectpools.h"
+#endif
+#ifndef _VIKINGS_COMMON_H_
+    #include "vikings_common.h"
+#endif
+#ifndef _MONSTERS_COMMON_H_
+    #include "monsters_common.h"
+#endif
+
 //Viking specific states...
 #define STATE_SWIM_S     0x00010000
 #define STATE_CLIMB_L    0x00010000
@@ -54,12 +64,6 @@ class TriggeredBomb : public Character {
         Sint16 countdown;
 };
 
-class DeadViking : public Character {
-    public:
-        DeadViking(string imagename, Uint16 xcord=0, Uint16 ycord=0, string name="DeadViking");
-        virtual ~DeadViking();
-        virtual Uint16 hit(Uint16,Weapon&) { return health; }
-};
 
 /*==================
       Vikings

@@ -1,6 +1,10 @@
-#include "lost_vikings.h"
-#include "objects.h"
+#include "common.h"
+#include "imgcache.h"
+#include "sndcache.h"
+#include "sfxeng.h"
+#include "map.h"
 #include "weapons.h"
+#include "objects.h"
 
 using namespace std;
 
@@ -89,7 +93,6 @@ void Geysir::idle(Uint16 dt) {
         std::set<Viking *> vikings=curmap->getVikingsIn(pos,true);
         std::set<Viking *>::iterator vkit=vikings.begin();
         while (vkit!=vikings.end()) {
-cout << (*vkit)->getName() << endl;
             (*vkit)->addSpeed(aspeed);
             ++vkit;
         }

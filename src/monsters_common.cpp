@@ -1,4 +1,9 @@
-#include "lost_vikings.h"
+#include "common.h"
+#include "anim.h"
+#include "weapons.h"
+#include "monsters_common.h"
+//shouldn't be here...
+#include "vikings_common.h"
 
 using namespace std;
 

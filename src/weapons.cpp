@@ -1,4 +1,4 @@
-#include "lost_vikings.h"
+#include "common.h"
 #include "weapons.h"
 
 using namespace std;

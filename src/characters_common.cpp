@@ -1,6 +1,10 @@
-#include "lost_vikings.h"
-#include "weapons.h"
+#include "common.h"
+#include "anim.h"
 #include "events.h"
+#include "map.h"
+#include "weapons.h"
+#include "objectpools.h"
+#include "characters_common.h"
 
 using namespace std;
 
@@ -9,6 +13,7 @@ using namespace std;
 Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Object(imagename,xcord,ycord,vname) {
     health=1;
+    maxhealth=1;
     maxspeedx=300;
     maxspeedy=0;
     speed=hspeed=0;
@@ -192,8 +197,8 @@ Uint8 Character::setHealth(Uint8 newhealth) {
         cout << name << " died!\n";
         health=0;
         return (health);
-    } else if (newhealth > MAX_HEALTH) {
-        return (health=MAX_HEALTH);
+    } else if (newhealth > maxhealth) {
+        return (health=maxhealth);
     } else {
         return (health=newhealth);
     }
