@@ -40,6 +40,7 @@ class Font {
         int getTextWidth(std::string text) const;
         void write(SDL_Surface* surface, std::string text, int x, int y) const;
         void writeCenter(SDL_Surface* surface, std::string text, int y) const;
+        void writeCenter(SDL_Surface* surface, std::string text, int x, int y) const;
     private:
         SFont_Font* initFont(SDL_Surface* Font);
         static Uint32 getPixel(SDL_Surface* surface, Sint32 X, Sint32 Y);

@@ -103,6 +103,10 @@ void Font::writeCenter(SDL_Surface *surface, string text, int y) const {
     write(surface, text, surface->w/2 - getTextWidth(text)/2, y);
 }
 
+void Font::writeCenter(SDL_Surface *surface, string text, int x, int y) const {
+    write(surface, text, x - getTextWidth(text)/2, y);
+}
+
 Uint32 Font::getPixel(SDL_Surface *surface, Sint32 X, Sint32 Y) {
     Uint8  *bits;
     Uint32 Bpp;

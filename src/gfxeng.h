@@ -51,6 +51,8 @@ class GraphicsEngine {
         bool fullscreen;
         //update state
         Uint8 updatetype;
+        //video flags
+        Uint32 vflags;
     protected:
         /// Draw the background and all objects in the pool. This is a very time
         /// consuming function...

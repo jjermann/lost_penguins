@@ -187,22 +187,21 @@ void KeyConfigMenu::update() {
 
 GraphicConfigMenu::GraphicConfigMenu(): Menu() {
     title="-== GRAPHIC SETTINGS ==-";
-    entries.resize(4);
     update();
 }
 void GraphicConfigMenu::act() {
     switch (currententry) {
-    case 1: {
+    case 0: {
         gfxeng->toggleFullScreen();
         gfxeng->update(UPDATE_ALL);
         break;
     }
-    case 2: {
+    case 1: {
         gfxeng->toggleFPS();
         gfxeng->update(UPDATE_MENU);
         break;
     }
-    case 3: {
+    case 2: {
         gfxeng->togglePlayerBar();
         gfxeng->update(UPDATE_ALL);
         break;
@@ -214,8 +213,22 @@ void GraphicConfigMenu::act() {
     update();
 }
 void GraphicConfigMenu::update() {
-    entries[0]="Resolution:  " + itos(gfxeng->screen->w) + " x " + itos(gfxeng->screen->h) + "  (" + itos(config.bpp) + " bpp)";
-    entries[1]="Fullscreen:  " + string((gfxeng->fullscreen) ? "ON" : "OFF");
-    entries[2]="Show FPS: "+string((gfxeng->show_fps) ? "ON" : "OFF");
-    entries[3]="Show Player Bar: "+string((gfxeng->show_bar) ? "ON" : "OFF");
+    entries.resize(4);
+    char driver_name[10];
+    SDL_VideoDriverName(driver_name, 10);
+
+    entries[0]="Fullscreen:  " + string((gfxeng->fullscreen) ? "ON" : "OFF");
+    entries[1]="Show FPS: "+string((gfxeng->show_fps) ? "ON" : "OFF");
+    entries[2]="Show Player Bar: "+string((gfxeng->show_bar) ? "ON" : "OFF");
+    entries[3]="Video settings:  [" + string(driver_name) + "]   " + itos(gfxeng->screen->w) + " x " + itos(gfxeng->screen->h) + "  (" + itos(config.bpp) + " bpp)";
+/*
+    entries.push_back("");
+
+    SDL_Rect** modes=SDL_ListModes(NULL, gfxeng->vflags);
+    if(modes == (SDL_Rect **)0)  entries.push_back("No modes available");
+    else if(modes == (SDL_Rect **)-1) entries.push_back("All resolutions available");
+    else {
+        for(Uint16 i=0;modes[i];++i) entries.push_back(itos(modes[i]->w) + " x " + itos(modes[i]->h));
+    }
+*/
 }

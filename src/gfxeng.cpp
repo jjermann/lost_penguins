@@ -17,7 +17,8 @@ GraphicsEngine::GraphicsEngine():
   menubg(NULL),
   show_bar(true),
   show_fps(true),
-  fullscreen(config.full) {
+  fullscreen(config.full),
+  vflags(SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF) {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     rmask = 0xff000000;
     gmask = 0x00ff0000;
@@ -88,8 +89,10 @@ void GraphicsEngine::draw() {
 
 void GraphicsEngine::resize(Uint16 width, Uint16 height) {
     if (screen) SDL_FreeSurface(screen);
-    
-    if ((screen=SDL_SetVideoMode(width,height,config.bpp,SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|(fullscreen ? SDL_FULLSCREEN : 0))) != NULL) {
+    if (fullscreen) vflags|=SDL_FULLSCREEN;
+    else vflags&=~SDL_FULLSCREEN;
+
+    if ((screen=SDL_SetVideoMode(width,height,config.bpp,vflags)) != NULL) {
     } else {
         cout << "Couldn't set VideoMode: " << SDL_GetError() << endl;
         quitGame(-1);
@@ -291,22 +294,41 @@ void GraphicsEngine::drawMenu() {
 
     menu->font_title->writeCenter(screen,menu->title,0);
 
+    //size of the menu in pixels if it was just one row
+    Uint16 menu_pix_size   = (menu->getSize()-1)*DFONT+(menu->getSize()-1)*(menu->font->getHeight())+menu->font_high->getHeight();
+    //number of rows to use
+    Uint8  rows            = menu_pix_size/(screen->h-menu->font_title->getHeight()-DFONT)+1;
+    //number of entries per row
+    Uint8  row_size        = menu->getSize()/rows+1;
+    //size of one row in pixels, differs from menu_pix_size/rows and depends on the currententry
+    Uint16 row_pix_size    = (row_size-1)*DFONT+row_size*(menu->font->getHeight());
+    Uint16 currow_pix_size = (row_size-1)*DFONT+(row_size-1)*(menu->font->getHeight())+menu->font_high->getHeight();
+    //current height of the text
     Uint16 h;
+    //current row
+    Uint8  currow          = 0;
+    //true if the currententry is in the current row
+    bool   current_row     = false;
+
     for (Uint8 i=0; i< menu->getSize(); i++) {
-        if (i<=menu->currententry) {
-            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-1)*DFONT-(menu->getSize()-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2
+        if (i>=row_size*(currow+1)) currow++;
+        if (menu->currententry>=row_size*currow && menu->currententry<row_size*(currow+1)) current_row=true;
+        else current_row=false;
+        
+        if (i<=menu->currententry || (!current_row)) {
+            h=(screen->h+menu->font_title->getHeight()-(current_row ? currow_pix_size : row_pix_size))/2
               -DFONT
-              +i*DFONT
-              +i*(menu->font->getHeight());
+              +(i-row_size*currow)*DFONT
+              +(i-row_size*currow)*(menu->font->getHeight());
         } else {
-            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-1)*DFONT-(menu->getSize()-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2
+            h=(screen->h+menu->font_title->getHeight()-currow_pix_size)/2
               -DFONT
-              +i*DFONT
-              +(i-1)*(menu->font->getHeight())
+              +(i-row_size*currow)*DFONT
+              +(i-1-row_size*currow)*(menu->font->getHeight())
               +(menu->font_high->getHeight());
         }
-        if (i==menu->currententry) menu->font_high->writeCenter(screen,menu->entries[i],h);
-        else menu->font->writeCenter(screen,menu->entries[i],h);
+        if (i==menu->currententry) menu->font_high->writeCenter(screen,menu->entries[i],currow*(screen->w)/rows+(screen->w)/rows/2,h);
+        else menu->font->writeCenter(screen,menu->entries[i],currow*(screen->w)/rows+(screen->w)/rows/2,h);
     }
 }
 
