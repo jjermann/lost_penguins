@@ -9,17 +9,17 @@
 #include "gfxeng.h"
 #include "sfxeng.h"
 #include "objectpools.h"
-#include "vikings_common.h"
+#include "players_common.h"
 
 
 int main(int argc, char* argv[]) {
-    cout << "Starting Lost Vikings!\n";
+    cout << "Starting Lost Players!\n";
     //Clean exit on Windows close...
     atexit(SDL_Quit);
 
     cout << "Loading configuration file...\n";
     //Maybe: add some more location checks...
-    if (readConfig("/usr/local/etc/lost_vikings.conf")) cout << "Loaded /usr/local/etc/lost_vikings.conf...\n";
+    if (readConfig("/usr/local/etc/lost_penguins.conf")) cout << "Loaded /usr/local/etc/lost_penguins.conf...\n";
     else cout << "Configuration files not found! Set default parameters...\n";
 
     parseInput(argc,argv);
@@ -159,7 +159,7 @@ void parseInput(int, char* argv[]) {
 }
 
 void usage() {
-    cout << "Usage: lost_vikings [OPTIONS]\n";
+    cout << "Usage: lost_penguins [OPTIONS]\n";
     cout << "  -w, -width	Changes resolution (width) of game.  Default: 640\n";
     cout << "  -h, -height	Changes resolution (height) of game. Default: 480\n";
     cout << "  -fs, -full	Enable fullscreen.                   Default: disabled\n";

@@ -2,7 +2,7 @@
 #include "input.h"
 #include "gfxeng.h"
 #include "objectpools.h"
-#include "vikings_common.h"
+#include "players_common.h"
 #include "anim.h"
 
 
@@ -101,20 +101,20 @@ void AnimHandler::runAnims() {
             (*obit)->updateEvents(dt);
             ++obit;
         }
-        //handle current viking
-        if ((viking!=NULL) && (!(viking->getState(ESTATE_BUSY)))) {
-            if (input->getState(INPUT_USE)) viking->in_use(dt);
-            if (input->getState(INPUT_ACT)) viking->in_act(dt);
-            if (input->getState(INPUT_RIGHT)) viking->in_right(dt);
-            if (input->getState(INPUT_LEFT)) viking->in_left(dt);
-            if ((!(viking->getState(ESTATE_RUN)))||viking->getState(ESTATE_ABORT)) {
-                if (input->getState(INPUT_SP1)) viking->in_sp1(dt);
-                if (input->getState(INPUT_SP2)) viking->in_sp2(dt);
+        //handle current player
+        if ((player!=NULL) && (!(player->getState(ESTATE_BUSY)))) {
+            if (input->getState(INPUT_USE)) player->in_use(dt);
+            if (input->getState(INPUT_ACT)) player->in_act(dt);
+            if (input->getState(INPUT_RIGHT)) player->in_right(dt);
+            if (input->getState(INPUT_LEFT)) player->in_left(dt);
+            if ((!(player->getState(ESTATE_RUN)))||player->getState(ESTATE_ABORT)) {
+                if (input->getState(INPUT_SP1)) player->in_sp1(dt);
+                if (input->getState(INPUT_SP2)) player->in_sp2(dt);
             }
-            if (input->getState(INPUT_UP)) viking->in_up(dt);
-            if (input->getState(INPUT_DOWN)) viking->in_down(dt);
+            if (input->getState(INPUT_UP)) player->in_up(dt);
+            if (input->getState(INPUT_DOWN)) player->in_down(dt);
         }
-        //run end viking effects
+        //run end player effects
         character_iterator cit=pool->characterspool.begin();
         while (cit!=pool->characterspool.end()) {
             (*cit)->fall(dt);
@@ -133,16 +133,16 @@ void AnimHandler::runAnims() {
     } else {
         if (input->getState(INPUT_RIGHT)) {
             input->unsetState(INPUT_RIGHT);
-            viking->switchItem(true);
+            player->switchItem(true);
         }
         if (input->getState(INPUT_LEFT)) {
             input->unsetState(INPUT_LEFT);
-            viking->switchItem(false);
+            player->switchItem(false);
         }
         if (input->getState(INPUT_DEL)) {
             input->unsetState(INPUT_DEL);
-            if (viking->getState(STATE_LEFT)) viking->dropItem(false);
-            else viking->dropItem(true);
+            if (player->getState(STATE_LEFT)) player->dropItem(false);
+            else player->dropItem(true);
             gfxeng->renderScene(true);
         }
     }

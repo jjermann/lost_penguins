@@ -14,7 +14,7 @@
 #define T_GRAV_EFFECT   10
 #define T_AI_EFFECT     20
  
-//Character/Viking states
+//Character/Player states
 //facing: either left or right (not left)
 #define STATE_LEFT      0x00000001
 //movement (while up/down/left/right key is pressed)
@@ -49,11 +49,11 @@ class Character : public Object {
         Sint16 addHSpeed(Sint16 dspeed) {
             return hspeed+=dspeed;
         }
-        void setGravity(Sint16 setgravity) {
-            gravity=setgravity;
+        void setGraplity(Sint16 setgraplity) {
+            graplity=setgraplity;
         }
-        void addGravity(Sint16 addgravity) {
-            gravity+=addgravity;
+        void addGraplity(Sint16 addgraplity) {
+            graplity+=addgraplity;
         }
         void applySpeedMod(Uint16 speedm) {
             speedmod=Uint16(speedmod*speedm/100);
@@ -109,8 +109,8 @@ class Character : public Object {
         Sint16 hspeed;
         //current permanent speed (y direction)
         Sint16 speed;
-        //current gravity
-        Sint16 gravity;
+        //current graplity
+        Sint16 graplity;
         //current speedmod
         Uint16 speedmod;
         //temporary attributes

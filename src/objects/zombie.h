@@ -14,7 +14,7 @@ class Zombie : public Monster {
         virtual void runAI(Uint16);
         virtual void ai_left(Uint16);
         virtual void ai_right(Uint16);
-        virtual void ai_attack(Viking*, Uint16);
+        virtual void ai_attack(Player*, Uint16);
         Uint16 T_Attack_Bite;
         Mix_Chunk* au_attack;
 };

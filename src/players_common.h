@@ -1,5 +1,5 @@
-#ifndef _VIKINGS_COMMON_H_
-    #define _VIKINGS_COMMON_H_
+#ifndef _PLAYERS_COMMON_H_
+    #define _PLAYERS_COMMON_H_
 #endif
 #ifndef _CHARACTERS_COMMON_H_
     #include "characters_common.h"
@@ -7,7 +7,7 @@
 
 #define MAX_ITEMS       3
    
-//Character/Viking states
+//Character/Player states
 //facing: either left or right (not left)
 #define STATE_LEFT      0x00000001
 //movement (while up/down/left/right key is pressed)
@@ -25,13 +25,13 @@
 #define STATE_ACT_2     0x00000400
 #define STATE_ACT_3     0x00000800
 
-//TODO: somehow differentiate between characters, vikings and AI players or objects
-class Viking : public Character {
+//TODO: somehow differentiate between characters, players and AI players or objects
+class Player : public Character {
     public:
-        Viking(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Viking");
-        virtual ~Viking();
+        Player(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Player");
+        virtual ~Player();
         //Items
-        //returns icon for the viking bar
+        //returns icon for the player bar
         Frame getIcon() const;
         Uint8 getItemNum() {
             return currentitem;
@@ -54,7 +54,7 @@ class Viking : public Character {
         //VIRTUAL METHODS
         //updates the current animation state
         virtual void updateAnimState(bool change=true);
-        //Define these for each viking...
+        //Define these for each player...
         virtual void idle(Uint16);
         virtual void fall(Uint16);
         virtual void in_right(Sint16);
@@ -63,7 +63,7 @@ class Viking : public Character {
         virtual void in_down(Sint16);
         virtual void in_sp1(Sint16);
         virtual void in_sp2(Sint16);
-        //This should be the same for all vikings
+        //This should be the same for all players
         virtual void in_act(Sint16);
         virtual void in_use(Sint16);
         //gets hit by a weapon
@@ -111,8 +111,8 @@ class Viking : public Character {
         Uint8 currentitem;
 };
 
-class DeadViking : public Character {
+class DeadPlayer : public Character {
     public:
-        DeadViking(string imagename, Uint16 xcord=0, Uint16 ycord=0, string name="DeadViking");
-        virtual ~DeadViking();
+        DeadPlayer(string imagename, Uint16 xcord=0, Uint16 ycord=0, string name="DeadPlayer");
+        virtual ~DeadPlayer();
 };

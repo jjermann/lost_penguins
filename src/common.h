@@ -22,7 +22,7 @@ using namespace std;
 
 class Object;
 class Character;
-class Viking;
+class Player;
 class Monster;
 class ImageCache;
 class SoundCache;
@@ -38,16 +38,14 @@ class Event;
 class Weapon;
 class Animation;
 
-typedef std::vector<Object *>::iterator object_viterator;
-typedef std::vector<Character *>::iterator character_viterator;
-typedef std::vector<Viking *>::iterator viking_viterator;
-typedef std::vector<Monster *>::iterator monster_viterator;
+typedef std::vector<Object *>::iterator object_pliterator;
+typedef std::vector<Character *>::iterator character_pliterator;
+typedef std::vector<Player *>::iterator player_pliterator;
+typedef std::vector<Monster *>::iterator monster_pliterator;
 typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
-typedef std::set<Viking *>::iterator viking_iterator;
+typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
-typedef Object* (*pCreate)(string);
-typedef Object* (*pDestroy)(string);
 
 //General definitions
 #define NOTHING         0x00000000
@@ -100,7 +98,7 @@ extern SoundCache* sndcache;
 extern GraphicsEngine* gfxeng;
 extern SoundsEngine* sfxeng;
 extern ObjectsPool* pool;
-extern Viking* viking;
+extern Player* player;
 extern Background* background;
 extern Map* curmap;
 extern InputHandler* input;

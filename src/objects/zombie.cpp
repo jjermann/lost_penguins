@@ -5,7 +5,7 @@
 #include "imgcache.h"
 #include "sndcache.h"
 #include "sfxeng.h"
-#include "vikings_common.h"
+#include "players_common.h"
 #include "map.h"
 #include "zombie.h"
 
@@ -74,7 +74,7 @@ void Zombie::runAI(Uint16 dt) {
                 //shouldn't happen
                 unsetState(STATE_ATTACK);
             } else {
-                Viking* target=*(targets.begin());
+                Player* target=*(targets.begin());
                 Uint16 dir=curmap->getDirection(getCenter(),target->getCenter());
                 dir&=~(DIR_UP|DIR_DOWN);
                 if (dir&DIR_LEFT) setState(STATE_LEFT);
@@ -90,9 +90,9 @@ void Zombie::runAI(Uint16 dt) {
     }
 }
 
-void Zombie::ai_attack(Viking* vik, Uint16 dir) {
-    cout << name << " attacks " << vik->getName() << " into " << dir << endl;
+void Zombie::ai_attack(Player* plr, Uint16 dir) {
+    cout << name << " attacks " << plr->getName() << " into " << dir << endl;
     sfxeng->playWAV(au_attack);
-    vik->hit(dir,weapon);
+    plr->hit(dir,weapon);
     Dattack=0;
 }

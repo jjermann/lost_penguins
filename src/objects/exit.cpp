@@ -1,7 +1,7 @@
 #include "common.h"
 #include "objectpools.h"
 //shouldn't be here...
-#include "vikings_common.h"
+#include "players_common.h"
 #include "exit.h"
 
 
@@ -10,8 +10,8 @@ Exit::Exit(string imagename, Uint16 xcord, Uint16 ycord, string oname):
 Exit::~Exit() { }
 
 bool Exit::act(Object*) {
-    viking_iterator it=pool->vikingspool.begin();
-    while (it!=pool->vikingspool.end()) {
+    player_iterator it=pool->playerspool.begin();
+    while (it!=pool->playerspool.end()) {
         if (!((*it)->isIn(pos))) return false;
         ++it;
     }

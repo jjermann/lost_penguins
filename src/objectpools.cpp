@@ -31,7 +31,7 @@
 ==================*/
 
 ObjectsPool::ObjectsPool():
-  currentviking(vikingspool.begin()) {
+  currentplayer(playerspool.begin()) {
     au_switch=sndcache->loadWAV("newchar.wav");
 }
 ObjectsPool::~ObjectsPool() {
@@ -73,12 +73,12 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
 
     //normal characters
     else if (obj=="TriggeredBomb") return (addCharacter(new TriggeredBomb(image,x,y,atoi(arg1.c_str()),name)));
-    //Vikings
-    else if (obj=="Eric")    return (addViking(new Eric(image,x,y,name)));
-    else if (obj=="Olaf")    return (addViking(new Olaf(image,x,y,name)));
-    else if (obj=="Baleog")  return (addViking(new Baleog(image,x,y,name)));
-    else if (obj=="Fang")    return (addViking(new Fang(image,x,y,name)));  
-    else if (obj=="Scorch")  return (addViking(new Scorch(image,x,y,name)));
+    //Players
+    else if (obj=="Eric")    return (addPlayer(new Eric(image,x,y,name)));
+    else if (obj=="Olaf")    return (addPlayer(new Olaf(image,x,y,name)));
+    else if (obj=="Baleog")  return (addPlayer(new Baleog(image,x,y,name)));
+    else if (obj=="Fang")    return (addPlayer(new Fang(image,x,y,name)));  
+    else if (obj=="Scorch")  return (addPlayer(new Scorch(image,x,y,name)));
 
     //Monsters
     else if (obj=="Zombie")  return (addMonster(new Zombie(image,x,y,name)));
@@ -119,17 +119,17 @@ object_iterator ObjectsPool::removeObject(object_iterator it) {
         objectspool.erase(*it);
         if (Character* ptrc = dynamic_cast<Character*>(*it)) {
             characterspool.erase(ptrc);
-            if(Viking* ptrv = dynamic_cast<Viking*>(*it)) {
-                if (vikingspool.erase(ptrv)) {
-                    currentviking=vikingspool.begin();
-                    if (currentviking!=vikingspool.end()) {
-                        if (viking) viking->clearStates(false);
-                        viking=*currentviking;
-                    } else viking=NULL;
+            if(Player* ptrv = dynamic_cast<Player*>(*it)) {
+                if (playerspool.erase(ptrv)) {
+                    currentplayer=playerspool.begin();
+                    if (currentplayer!=playerspool.end()) {
+                        if (player) player->clearStates(false);
+                        player=*currentplayer;
+                    } else player=NULL;
                 }
             } else if (Monster* ptrm = dynamic_cast<Monster*>(*it)) monsterspool.erase(ptrm);
         }
-        delete (*it);
+        (*it)->destroy();
         return (++it);
     } else return objectspool.end();
 }
@@ -143,13 +143,13 @@ Object* ObjectsPool::moveObject(Object* object) {
     objectspool.erase(object);
     if (Character* ptrc = dynamic_cast<Character*>(object)) {
         characterspool.erase(ptrc);
-        if(Viking* ptrv = dynamic_cast<Viking*>(object)) {
-            if (vikingspool.erase(ptrv)) {
-                currentviking=vikingspool.begin();
-                if (currentviking!=vikingspool.end()) {
-                    if (viking) viking->clearStates(false);
-                    viking=*currentviking;
-                } else viking=NULL;
+        if(Player* ptrv = dynamic_cast<Player*>(object)) {
+            if (playerspool.erase(ptrv)) {
+                currentplayer=playerspool.begin();
+                if (currentplayer!=playerspool.end()) {
+                    if (player) player->clearStates(false);
+                    player=*currentplayer;
+                } else player=NULL;
             }
         } else if (Monster* ptrm = dynamic_cast<Monster*>(object)) monsterspool.erase(ptrm);
     }
@@ -170,31 +170,31 @@ Character* ObjectsPool::addCharacter(Character* newcharacter) {
 }
 
 //only used internally by the objects -> Fix!!
-Viking* ObjectsPool::addViking(Viking* newviking) {
-    if ( (newviking!=NULL) && (curmap->checkPlace(*(newviking->getPos()),*maparea).enter==NOTHING) ) {
-        vikingspool.insert(newviking);
-        currentviking=vikingspool.begin();
-        pool->addCharacter(newviking);
-        return newviking;
+Player* ObjectsPool::addPlayer(Player* newplayer) {
+    if ( (newplayer!=NULL) && (curmap->checkPlace(*(newplayer->getPos()),*maparea).enter==NOTHING) ) {
+        playerspool.insert(newplayer);
+        currentplayer=playerspool.begin();
+        pool->addCharacter(newplayer);
+        return newplayer;
     } else {
-        cout << "Couldn't place viking!\n";
+        cout << "Couldn't place player!\n";
         return NULL;
     }
 }
 
-//POST: rotates vikings returns a non NULL pointer if possible
-Viking* ObjectsPool::switchViking() {
-    if (currentviking != vikingspool.end()) {
+//POST: rotates players returns a non NULL pointer if possible
+Player* ObjectsPool::switchPlayer() {
+    if (currentplayer != playerspool.end()) {
         sfxeng->playWAV(au_switch);
-        ++currentviking;
-        if (currentviking == vikingspool.end()) currentviking=vikingspool.begin();
-        if (currentviking != vikingspool.end()) {
-            if (viking) viking->clearStates(false);
-            viking=*currentviking;
+        ++currentplayer;
+        if (currentplayer == playerspool.end()) currentplayer=playerspool.begin();
+        if (currentplayer != playerspool.end()) {
+            if (player) player->clearStates(false);
+            player=*currentplayer;
         }
-        else viking=NULL;
-        return viking;
-    } else return (viking=NULL);
+        else player=NULL;
+        return player;
+    } else return (player=NULL);
 }
 
 

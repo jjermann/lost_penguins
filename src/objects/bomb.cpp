@@ -1,7 +1,7 @@
 #include "common.h"
 //shouldn't be here...
 #include "objectpools.h"
-#include "vikings_common.h"
+#include "players_common.h"
 #include "triggered_bomb.h"
 #include "bomb.h"
 

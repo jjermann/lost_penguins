@@ -5,6 +5,7 @@ Bugs
  o zombie attacks too often if nearby
  o in short: rewrite zombie
  o memleaks, segfaults?
+ o teleporter!!!
 
 
 Code
@@ -56,7 +57,7 @@ Progress
 ========
 
  o DONE?: fall logic including gravity!!
- o DONE?: viking, object, item, ai, weapons, character
+ o DONE?: players, object, item, ai, weapons, character
  o PART DONE: effect management (periodic events, permanent effects, etc)
  o DONE: hitlogic
 
@@ -65,7 +66,7 @@ Features/Ideas
 ==============
 
  o Make water movements possible (eric)
- o Improve viking bar management
+ o Improve player bar management
  o Add better graphics
  o finnish the map editor
  o OpenGL

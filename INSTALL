@@ -10,7 +10,7 @@ Installation
 ============
 
 1. Untar the file
-2. Edit src/Makefile :
+2. Edit src/Makefile and src/objects/Makefile:
      -DSDL_MIXER is needed for audio support, disable it if you didn't
       install the SDL_mixer headers.
      -DSDL_IMAGE is needed for "non BMP" image loading, if you didn't
@@ -19,5 +19,5 @@ Installation
       source. It's needed... ;)
      -Note: libjpeg is needed for jpeg image support
      -Check the optimization flags.
-3. Run: make lost_vikings
-4. Run: ./lost_vikings
+3. Run: make lost_penguins
+4. Run: ./lost_penguins

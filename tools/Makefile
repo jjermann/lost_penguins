@@ -18,7 +18,6 @@ $(BIN): $(OBJS)
 
 clean:
 		rm -f *.o
-		rm -f $(BIN)
 
 distclean: clean
 		rm -f *~

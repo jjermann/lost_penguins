@@ -11,7 +11,7 @@
 #define OTYPE_TOUCH     0x00000020
 #define OTYPE_ENTER     0x00000040
 #define OTYPE_CHARACTER 0x00000080
-#define OTYPE_VIKING    0x00000100
+#define OTYPE_PLAYER    0x00000100
 #define OTYPE_MONSTER   0x00000200
 #define OTYPE_ITEM      0x00000400
 #define OTYPE_PROJ      0x00000800
@@ -124,6 +124,9 @@ class Object {
         virtual void leave(Object*) { }
         //permanent effects this base function must be run by all derived classes
         virtual void idle(Uint16) { }
+        virtual void destroy() {
+            delete this;
+        }
     protected:
         Uint32 state;
         Event* event;
@@ -146,11 +149,11 @@ class Item : public Object {
         Item(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Item");
         virtual ~Item();
         virtual bool act(Object*) { return false; }
-        void setOwner(Viking* vik) {
-            owner=vik;
+        void setOwner(Player* plr) {
+            owner=plr;
         }
     protected:
-        Viking* owner;
+        Player* owner;
 };
 
 class Background : public Object {

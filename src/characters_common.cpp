@@ -8,14 +8,14 @@
 
 
 //CHARACTER (Object)
-Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Object(imagename,xcord,ycord,vname) {
+Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Object(imagename,xcord,ycord,pname) {
     health=1;
     maxhealth=1;
     maxspeedx=300;
     maxspeedy=0;
     speed=hspeed=0;
-    gravity=900;
+    graplity=900;
     speedmod=100;
     Dgrav=0;
     state=STATE_FALL;
@@ -95,14 +95,14 @@ void Character::idle(Uint16 dt) {
     } else Dwater=0;
 
     //are we falling?
-    if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0)) {
+    if ((!(hitobj.touch&DIR_DOWN)) || (graplity<0)) {
         setState(STATE_FALL);
     }
 }
 
 Hit Character::move(Uint16 dt, bool check) {
     //checks if we already have a critical speed
-    //add accelerations for each viking in viking.cpp!
+    //add accelerations for each player in player.cpp!
     if (!check) {
         if (state&STATE_FALL) {
             if (speed>V_KRIT) {
@@ -136,7 +136,7 @@ void Character::fall(Uint16 dt) {
     Dgrav+=dt;  
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(gravity*Dgrav/1000));
+            addSpeed(Sint16(graplity*Dgrav/1000));
         }
         Hit hit=move(Dgrav);
         if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
@@ -187,7 +187,7 @@ Uint8 Character::getHealth() {
     return health;
 }
 
-//PRE:  new health of viking
+//PRE:  new health of player
 //ACT:  changes health, deletes object if health=0
 //POST: returns new health
 Uint8 Character::setHealth(Uint8 newhealth) {

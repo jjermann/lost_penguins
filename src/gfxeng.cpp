@@ -2,7 +2,7 @@
 #include "font.h"
 #include "anim.h"
 #include "objectpools.h"
-#include "vikings_common.h"
+#include "players_common.h"
 #include "imgcache.h"
 #include "gfxeng.h"
 
@@ -15,12 +15,12 @@ GraphicsEngine::GraphicsEngine() {
         quitGame(-1);
     }
 
-    vbar=true;
+    pbar=true;
     backpos.x=0;
     backpos.y=0;
     backpos.w=config.width;
     backpos.h=config.height-BAR_HEIGHT;
-    //viking bar
+    //player bar
     bar.x=0;
     bar.y=backpos.y+backpos.h;
     bar.w=config.width;
@@ -68,13 +68,13 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
     return shift;    
 }
 
-inline void GraphicsEngine::drawVikingBar() {
-    //#vikings
-    Uint8 vnum=pool->vikingspool.size();
+inline void GraphicsEngine::drawPlayerBar() {
+    //#players
+    Uint8 pnum=pool->playerspool.size();
     //temporary dest pos, source pos, copy of dest pos
-    SDL_Rect dpos,spos,vpos;
+    SDL_Rect dpos,spos,ppos;
     dpos.h=BAR_HEIGHT;
-    if (vnum>0) dpos.w=(Uint16)(config.width/vnum);
+    if (pnum>0) dpos.w=(Uint16)(config.width/pnum);
     else dpos.w=0;
     dpos.x=0;
     dpos.y=config.height-BAR_HEIGHT;
@@ -82,60 +82,60 @@ inline void GraphicsEngine::drawVikingBar() {
     Item* item=NULL;
     Frame frame;
 
-    //Fill the viking bar area
+    //Fill the player bar area
     SDL_FillRect(screen,&bar,SDL_MapRGB(screen->format,100,100,100));
 
-    //draw each viking status
-    viking_iterator vkit=pool->vikingspool.begin();
-    while (vkit != pool->vikingspool.end()) {
+    //draw each player status
+    player_iterator pit=pool->playerspool.begin();
+    while (pit != pool->playerspool.end()) {
         //temp. variables
-        spos=(*vkit)->getIcon().pos;
+        spos=(*pit)->getIcon().pos;
         
-        //enlight current viking
-        if ((*vkit)==viking) {
-            vpos=dpos;
-            SDL_FillRect(screen,&vpos,SDL_MapRGB(screen->format,120,120,120));
+        //enlight current player
+        if ((*pit)==player) {
+            ppos=dpos;
+            SDL_FillRect(screen,&ppos,SDL_MapRGB(screen->format,120,120,120));
         }
         
         //draw life points
         frame=lifeimage->getFrame();
-        for (Uint8 j=0; j<(*vkit)->getHealth(); j++) {
-            vpos=dpos;
-            vpos.w=frame.pos.w;
-            vpos.h=frame.pos.h;
-            vpos.x+=j*(vpos.w+1);
-            SDL_BlitSurface(frame.image,&frame.pos,screen,&vpos);
+        for (Uint8 j=0; j<(*pit)->getHealth(); j++) {
+            ppos=dpos;
+            ppos.w=frame.pos.w;
+            ppos.h=frame.pos.h;
+            ppos.x+=j*(ppos.w+1);
+            SDL_BlitSurface(frame.image,&frame.pos,screen,&ppos);
         }
         
-        //draw viking
-        vpos=dpos;
-        vpos.y+=lifeimage->getFrame().pos.h+1;
-        SDL_BlitSurface((*vkit)->getIcon().image,&spos,screen,&vpos);
+        //draw player
+        ppos=dpos;
+        ppos.y+=lifeimage->getFrame().pos.h+1;
+        SDL_BlitSurface((*pit)->getIcon().image,&spos,screen,&ppos);
 
         //Write text stuff
-        //font->write(screen,itos(vik->getHealth()),dpos.x,dpos.y);
-        font->write(screen,(*vkit)->getName(),dpos.x,config.height-font->getHeight());
+        //font->write(screen,itos(plr->getHealth()),dpos.x,dpos.y);
+        font->write(screen,(*pit)->getName(),dpos.x,config.height-font->getHeight());
 
-        //draw the items of the current viking
+        //draw the items of the current player
         for (Uint8 j=0; j<MAX_ITEMS; j++) {
-            vpos=dpos;
-            vpos.x+=spos.w+1;
-            vpos.y+=j*ICON_SIZE;
-            vpos.w=ICON_SIZE;
-            vpos.h=ICON_SIZE;
-            item=(*vkit)->getItem(j);
+            ppos=dpos;
+            ppos.x+=spos.w+1;
+            ppos.y+=j*ICON_SIZE;
+            ppos.w=ICON_SIZE;
+            ppos.h=ICON_SIZE;
+            item=(*pit)->getItem(j);
 
-            if ((j==(*vkit)->getItemNum()) && (*vkit)==viking) {
-                SDL_FillRect(screen,&vpos,SDL_MapRGB(screen->format,200,200,200));
+            if ((j==(*pit)->getItemNum()) && (*pit)==player) {
+                SDL_FillRect(screen,&ppos,SDL_MapRGB(screen->format,200,200,200));
             }
             if (item) {
                 frame=item->getFrame();
-                SDL_BlitSurface(frame.image,&frame.pos,screen,&vpos);
+                SDL_BlitSurface(frame.image,&frame.pos,screen,&ppos);
             } //else TODO clear the area...
         }
 
         dpos.x+=dpos.w;
-        ++vkit;
+        ++pit;
     }
 }
 
@@ -143,8 +143,8 @@ void GraphicsEngine::renderScene(bool insist) {
     if (!paused || insist) {
         //We don't want to change pos!
         SDL_Rect tmprect,shift,srcpos;
-        if (viking!=NULL) {
-            shift=setShift(viking->getCenter());
+        if (player!=NULL) {
+            shift=setShift(player->getCenter());
         } else {
             shift.x=0;
             shift.y=0;
@@ -164,16 +164,16 @@ void GraphicsEngine::renderScene(bool insist) {
             ++obit;
         }
     
-        if (viking!=NULL) {
-            tmprect=*(viking->getPos());
-            srcpos=viking->getFrame().pos;
-            shiftMapArea(tmprect,*(viking->getCurPos()));
-            SDL_BlitSurface(viking->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+        if (player!=NULL) {
+            tmprect=*(player->getPos());
+            srcpos=player->getFrame().pos;
+            shiftMapArea(tmprect,*(player->getCurPos()));
+            SDL_BlitSurface(player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         }
     }
     
     //TODO don't draw the whole screen, just till bar, just upgrade certain regions of the bar
-    if (vbar) drawVikingBar();
+    if (pbar) drawPlayerBar();
     if (fps) {
         Dfps+=(SDL_GetTicks()-tcurrent);
         tcurrent=SDL_GetTicks();
@@ -188,14 +188,14 @@ void GraphicsEngine::renderScene(bool insist) {
     SDL_Flip(screen);
 }
 
-void GraphicsEngine::toggleVikingBar() {
+void GraphicsEngine::togglePlayerBar() {
     //on  -> off
-    if (vbar) {
-        vbar=false;
+    if (pbar) {
+        pbar=false;
         backpos.h+=BAR_HEIGHT;
     //off -> on
     } else {
-        vbar=true;
+        pbar=true;
         backpos.h-=BAR_HEIGHT;
     }
 }

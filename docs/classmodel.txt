@@ -58,12 +58,12 @@ todo:
     - check/update existence in/at an object
 
 
-    VIKING (Character)
+    PLAYER (Character)
     description:
       - controlled by player
       - very active
     owner:
-      - vikingspool
+      - playerspool
     properties:
       - owns items (items, currentitem)
       - more basic animation states
@@ -71,7 +71,7 @@ todo:
     methods:
       - handle input events
       - check/change items
-      - viking bar properties
+      - player bar properties
     examples:
       - Eric
       - Olaf
@@ -99,7 +99,7 @@ todo:
   description:
     - indirectly used
   owner:
-    - objectspool or viking
+    - objectspool or player
   properties:
     - owner
   methods:

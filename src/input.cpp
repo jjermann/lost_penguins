@@ -6,9 +6,9 @@
 #include "gfxeng.h"
 #include "sfxeng.h"
 #include "objectpools.h"
-//hack the viking calls should be in anim.cpp
+//hack the player calls should be in anim.cpp
 #include "objects_common.h"
-#include "vikings_common.h"
+#include "players_common.h"
 
 
 InputHandler::InputHandler() {
@@ -31,32 +31,32 @@ void InputHandler::pollEvents() {
             case SDL_KEYUP: {
                 switch(event.key.keysym.sym) {
                     case SDLK_LEFT: {
-                        if (state&INPUT_LEFT) viking->in_left(-1);
+                        if (state&INPUT_LEFT) player->in_left(-1);
                         state&=~INPUT_LEFT;
                         break;
                     }
                     case SDLK_RIGHT: {
-                        if (state&INPUT_RIGHT) viking->in_right(-1);
+                        if (state&INPUT_RIGHT) player->in_right(-1);
                         state&=~INPUT_RIGHT;
                         break;
                     }
                     case SDLK_UP: {
-                        if (state&INPUT_UP) viking->in_up(-1);
+                        if (state&INPUT_UP) player->in_up(-1);
                         state&=~INPUT_UP;
                         break;
                     }
                     case SDLK_DOWN: {
-                        if (state&INPUT_DOWN) viking->in_down(-1);
+                        if (state&INPUT_DOWN) player->in_down(-1);
                         state&=~INPUT_DOWN;
                         break;
                     }
                     case SDLK_SPACE: {
-                        if (state&INPUT_SP1) viking->in_sp1(-1);
+                        if (state&INPUT_SP1) player->in_sp1(-1);
                         state&=~INPUT_SP1;
                         break;
                     }
                     case SDLK_LSHIFT: {
-                        if (state&INPUT_SP2) viking->in_sp2(-1);
+                        if (state&INPUT_SP2) player->in_sp2(-1);
                         state&=~INPUT_SP2;
                         break;
                     }
@@ -65,12 +65,12 @@ void InputHandler::pollEvents() {
                         break;
                     }
                     case SDLK_RETURN: {
-                        if (state&INPUT_ACT) viking->in_act(-1);
+                        if (state&INPUT_ACT) player->in_act(-1);
                         state&=~INPUT_ACT;
                         break;
                     }
                     case SDLK_INSERT: {
-                        if (state&INPUT_USE) viking->in_use(-1);
+                        if (state&INPUT_USE) player->in_use(-1);
                         state&=~INPUT_USE;
                         break;
                     }
@@ -87,7 +87,7 @@ void InputHandler::pollEvents() {
             case SDL_KEYDOWN: {
                 switch(event.key.keysym.sym) {
                     case SDLK_LCTRL: {
-                        pool->switchViking();
+                        pool->switchPlayer();
                         state=NOTHING;
                         break;
                     }
@@ -145,7 +145,7 @@ void InputHandler::pollEvents() {
                          break;
                     }
                     case SDLK_F1: {
-                         gfxeng->toggleVikingBar();
+                         gfxeng->togglePlayerBar();
                          break;
                     }
                     case SDLK_F2: {

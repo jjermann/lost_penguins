@@ -8,8 +8,8 @@
 #include "eric.h"
 
 
-Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Viking(imagename,xcord,ycord,vname) {
+Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Player(imagename,xcord,ycord,pname) {
     im_left=new Animation(imgcache->loadImage("eric_left.bmp"));
     im_right=new Animation(60,imgcache->loadImage("kuru.bmp"),12,1000);
     im_fall_left=im_left;
@@ -77,7 +77,7 @@ void Eric::in_left(Sint16 dt) {
         //changed directions, TODO: play decelerate animation
         else cancelEvent();
     }
-    Viking::in_left(dt);
+    Player::in_left(dt);
 }
 
 void Eric::in_right(Sint16 dt) {
@@ -89,5 +89,5 @@ void Eric::in_right(Sint16 dt) {
         //changed directions, TODO: play decelerate animation
         else cancelEvent();
     }
-    Viking::in_right(dt);
+    Player::in_right(dt);
 }

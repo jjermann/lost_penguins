@@ -1,6 +1,6 @@
 #include "common.h"
 #include "objectpools.h"
-#include "vikings_common.h"
+#include "players_common.h"
 #include "map.h"
 
 
@@ -13,8 +13,8 @@ Map::Map(string mapname) {
         quitGame(3);
     }
     
-    if (pool->vikingspool.size()>0) viking=*pool->vikingspool.begin();
-    else viking=NULL;
+    if (pool->playerspool.size()>0) player=*pool->playerspool.begin();
+    else player=NULL;
 }
 
 Map::~Map() {
@@ -146,12 +146,12 @@ std::set<Character *> Map::getCharactersIn(const SDL_Rect& rect, bool touch, Uin
     return tmpset;
 }
 
-std::set<Viking *> Map::getVikingsIn(const SDL_Rect& rect, bool touch, Uint16 radius) const {
-    std::set<Viking *> tmpset;
-    viking_iterator vkit=pool->vikingspool.begin();
-    while (vkit != pool->vikingspool.end()) {
-        if ((*vkit)->isIn(rect,touch,radius)) tmpset.insert(*vkit);
-        ++vkit;
+std::set<Player *> Map::getPlayersIn(const SDL_Rect& rect, bool touch, Uint16 radius) const {
+    std::set<Player *> tmpset;
+    player_iterator pit=pool->playerspool.begin();
+    while (pit != pool->playerspool.end()) {
+        if ((*pit)->isIn(rect,touch,radius)) tmpset.insert(*pit);
+        ++pit;
     }
     return tmpset;
 }

@@ -1,10 +1,10 @@
-BINS = lost_vikings slvextract
+BINS = lost_penguins slvextract
 
 default:
 	+$(MAKE) -C src
 	+$(MAKE) -C tools
 
-lost_vikings:
+lost_penguins:
 	+$(MAKE) -C src
 
 tools:
@@ -21,13 +21,13 @@ distclean: clean
 	rm -f *~
 
 install:
-	cp lost_vikings /usr/local/bin
-	mkdir -p /usr/local/share/lost_vikings/
+	cp lost_penguins /usr/local/bin
+	mkdir -p /usr/local/share/lost_penguins/
 	mkdir -p /usr/local/etc/
-	cp lost_vikings.conf /usr/local/etc/
-	cp data/* /usr/local/share/lost_vikings/
+	cp lost_penguins.conf /usr/local/etc/
+	cp data/* /usr/local/share/lost_penguins/
 
 uninstall:
-	rm -f /usr/local/bin/lost_vikings
-	rm -rf /usr/local/share/lost_vikings/
-	rm -f /usr/local/etc/lost_vikings.conf
+	rm -f /usr/local/bin/lost_penguins
+	rm -rf /usr/local/share/lost_penguins/
+	rm -f /usr/local/etc/lost_penguins.conf

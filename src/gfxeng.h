@@ -11,23 +11,23 @@ class GraphicsEngine {
         ~GraphicsEngine();
         //drawing
         void renderScene(bool insist=true);
-        void toggleVikingBar();
+        void togglePlayerBar();
     private:
         inline SDL_Rect clipToBG(SDL_Rect dest) const;
         //updates backpos and returns the new shift vector (ignore w,h)
         inline SDL_Rect setShift(SDL_Rect center);
         //simple vector addition, should be replaced by operator
         inline SDL_Rect* shiftMapArea(SDL_Rect& area, const SDL_Rect& shift);
-        //draw viking bar
-        inline void drawVikingBar();
+        //draw player bar
+        inline void drawPlayerBar();
         //currently visible part of the maparea
         SDL_Rect backpos;
         //main screen
         SDL_Surface* screen;
-        //viking bar
+        //player bar
         SDL_Rect bar;
-        //viking bar
-        bool vbar;
+        //player bar
+        bool pbar;
         Animation* lifeimage;
         //fps stuff
         Uint16 Dfps,Dframes,currentfps,tcurrent;

@@ -8,8 +8,8 @@
 #include "olaf.h"
 
 
-Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Viking(imagename,xcord,ycord,vname) {
+Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Player(imagename,xcord,ycord,pname) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
@@ -63,7 +63,7 @@ void Olaf::updateAnimState(bool change) {
         }
     } else {
         otype&=~OTYPE_DENSE_D;
-        Viking::updateAnimState();
+        Player::updateAnimState();
     }
     curpos.w=animation->getWidth();
     curpos.h=animation->getHeight();
@@ -74,13 +74,13 @@ void Olaf::updateAnimState(bool change) {
 void Olaf::in_left(Sint16 dt) {
     //No navigation while farting from ground (replace this by a busy event)
     if ((dt < 0) || (!(state&STATE_ACT_2))) {
-        Viking::in_left(dt);
+        Player::in_left(dt);
     }
 }
 void Olaf::in_right(Sint16 dt) {
     //No navigation while farting from ground (replace this by a busy event)
     if ((dt < 0) || (!(state&STATE_ACT_2))) {
-        Viking::in_right(dt);
+        Player::in_right(dt);
     }
 }
 
@@ -167,7 +167,7 @@ void Olaf::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(gravity*Dgrav/1000));
+            addSpeed(Sint16(graplity*Dgrav/1000));
             if ((state&STATE_SMALL) && (speed > V_SMALLCHANGE)) trySmall(false);
             if ((state&STATE_SHIELD) && (speed > V_SHIELD)) setSpeed(V_SHIELD);
         }
@@ -183,13 +183,13 @@ Uint16 Olaf::hit(Uint16 dir, Weapon& weap) {
     if ((!(state&STATE_SMALL)) && (weap.getType()&(W_STRIKE|W_EXPLOSION))) {
         if (state&STATE_SHIELD) {
             if (dir==DIR_DOWN) return health;
-            else return Viking::hit(dir,weap);
+            else return Player::hit(dir,weap);
         } else if (state&STATE_LEFT) {
             if (dir==DIR_RIGHT) return health;
-            else return Viking::hit(dir,weap);
+            else return Player::hit(dir,weap);
         } else {
             if (dir==DIR_LEFT) return health;
-            else return Viking::hit(dir,weap);
+            else return Player::hit(dir,weap);
         }
-    } else return Viking::hit(dir,weap);
+    } else return Player::hit(dir,weap);
 }

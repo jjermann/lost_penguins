@@ -1,5 +1,5 @@
-#ifndef _VIKINGS_COMMON_H_
-    #include "vikings_common.h"
+#ifndef _PLAYERS_COMMON_H_
+    #include "players_common.h"
 #endif
 
 #define STATE_GLIDE      0x00040000
@@ -11,7 +11,7 @@
 #define DE_WING        300
 
  
-class Scorch : public Viking {
+class Scorch : public Player {
     public:
         Scorch(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Scorch");
         virtual ~Scorch();

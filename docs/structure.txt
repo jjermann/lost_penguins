@@ -31,7 +31,7 @@ Objects (pool):
     - sharp edges, electric fence
     - water
     - rope, ladder
- o Vikings (vpool)
+ o Players (ppool)
  o Weapons (wpool? no)
     - fireballs
     - swordstrike
@@ -113,9 +113,9 @@ solution:
 effects=enter(),touch(),act(),...
 effects are used internally to check what is happening, they are
 triggered by the active element and controlled by the passive element!
-eg. viking falls down with state_fall2 _touching_ (triggering)
+eg. player falls down with state_fall2 _touching_ (triggering)
 touch(direction) of the ground => ground's touch sends a hit(pressure)
-to the viking => viking checks state_fall2 and takes damage
+to the player => player checks state_fall2 and takes damage
 
 weapon hits=hit()
 a weapon hit is a response to an attack/effect
@@ -141,13 +141,13 @@ solution3: never call hit
 
 
 dense types:
- - monsters: VIKINGS, DENSE OBJECTS (for non ghosts)
- - vikings:  MONSTERS, DENSE OBJECTS
+ - monsters: PLAYERS, DENSE OBJECTS (for non ghosts)
+ - players:  MONSTERS, DENSE OBJECTS
  - tomator:  DENSE OBJECTS
 
 enemy types (only for monsters?):
- - monsters: VIKINGS
- - vikings:  MONSTERS
+ - monsters: PLAYERS
+ - players:  MONSTERS
 
 
 example return of checkHit:

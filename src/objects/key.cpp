@@ -2,7 +2,7 @@
 #include "sfxeng.h"
 #include "objects_common.h"
 //this shouldn't be here
-#include "vikings_common.h"
+#include "players_common.h"
 #include "key.h"
 
 

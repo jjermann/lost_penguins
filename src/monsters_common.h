@@ -13,7 +13,7 @@ class Monster : public Character {
         virtual void removedObject(Object*);
         //updates the current animation state
         virtual void updateAnimState(bool change=true);
-        //Define these for each viking...
+        //Define these for each player...
         virtual void idle(Uint16);
         virtual void fall(Uint16);
         //gets hit by a weapon
@@ -34,10 +34,10 @@ class Monster : public Character {
         virtual void runAI(Uint16) { }
         virtual void ai_left(Uint16) { }
         virtual void ai_right(Uint16) { }
-        virtual void ai_attack(Viking*, Uint16) { }
+        virtual void ai_attack(Player*, Uint16) { }
         Sint16 Dai,Dattack;
         //Attack targets
-        std::set<Viking *> targets;
+        std::set<Player *> targets;
         //move
         virtual Hit move(Uint16 dt, bool check=false);
         //common animations

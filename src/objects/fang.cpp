@@ -7,8 +7,8 @@
 #include "fang.h"
 
 
-Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Viking(imagename,xcord,ycord,vname) {
+Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Player(imagename,xcord,ycord,pname) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
@@ -27,11 +27,11 @@ Fang::~Fang() {
 }
 
 void Fang::in_left(Sint16 dt) {
-    Viking::in_left(dt);
+    Player::in_left(dt);
     if (dt >= 0) unsetState(STATE_CLIMB_R);
 }
 void Fang::in_right(Sint16 dt) {
-    Viking::in_right(dt);
+    Player::in_right(dt);
     if (dt >= 0) unsetState(STATE_CLIMB_L);
 }
 
@@ -39,7 +39,7 @@ void Fang::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(gravity*Dgrav/1000));
+            addSpeed(Sint16(graplity*Dgrav/1000));
             if ((state&STATE_CLIMB) && (speed>V_CLIMB)) speed=V_CLIMB;
         }
         Hit hit=move(Dgrav);
@@ -77,7 +77,7 @@ void Fang::in_sp1(Sint16 dt) {
 }
 
 void Fang::crash(Uint16 dir) {
-    Viking::crash(dir);
+    Player::crash(dir);
     switch (dir) {
         case DIR_LEFT: {
             setState(STATE_CLIMB_L);
@@ -92,7 +92,7 @@ void Fang::crash(Uint16 dir) {
 }
 
 void Fang::clearStates(bool reset) {
-    Viking::clearStates(reset);
+    Player::clearStates(reset);
     if (reset) {
         unsetState(STATE_CLIMB_R);
         unsetState(STATE_CLIMB_L);

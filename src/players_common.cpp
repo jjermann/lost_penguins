@@ -7,12 +7,11 @@
 #include "imgcache.h"
 #include "sndcache.h"
 #include "objectpools.h"
-#include "vikings_common.h"
+#include "players_common.h"
 
 
-//VIKING (Character)
-Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Character(imagename,xcord,ycord,vname) {
+Player::Player(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Character(imagename,xcord,ycord,pname) {
     health=3;
     maxhealth=4;
     maxspeedx=300;
@@ -22,7 +21,7 @@ Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     }
     currentitem=0;
     state=STATE_FALL;
-    otype|=OTYPE_VIKING;
+    otype|=OTYPE_PLAYER;
     dense_types|=OTYPE_MONSTER;
     enemy_types|=OTYPE_MONSTER;
     t_water=500;
@@ -37,7 +36,7 @@ Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     au_land=sndcache->loadWAV("dizzy.wav");
     au_act=sndcache->loadWAV("button.wav");
     au_newitem=sndcache->loadWAV("pickup.wav");
-    au_hit=sndcache->loadWAV("vikhit.wav");
+    au_hit=sndcache->loadWAV("plrhit.wav");
     au_elec=sndcache->loadWAV("elecdth.wav");
     au_drown=sndcache->loadWAV("drown.wav");
     au_fire=sndcache->loadWAV("fireball.wav");
@@ -45,7 +44,7 @@ Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     au_heal=sndcache->loadWAV("usefood1.wav");
 }
 
-Viking::~Viking() {
+Player::~Player() {
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         if (items[i]) {
             removeItem(i);
@@ -53,12 +52,12 @@ Viking::~Viking() {
     }
 }
 
-Frame Viking::getIcon() const {
+Frame Player::getIcon() const {
     return (im_right->getFrame(0));
 }
 
 //updates the entered based states and values (includes updateTouch)
-void Viking::addEnter(std::set<Object *>& aset) {
+void Player::addEnter(std::set<Object *>& aset) {
     Character::addEnter(aset);
     object_iterator obit=aset.begin();
     while (obit!=aset.end()) {
@@ -72,17 +71,17 @@ void Viking::addEnter(std::set<Object *>& aset) {
 }
 
 //updates the touched based states and values
-void Viking::addTouch(std::set<Object *>& aset) {
+void Player::addTouch(std::set<Object *>& aset) {
     Character::addTouch(aset);
 }
-void Viking::removeEnter(std::set<Object *>& rset) {
+void Player::removeEnter(std::set<Object *>& rset) {
     Character::removeEnter(rset);
 }
-void Viking::removeTouch(std::set<Object *>& rset) {
+void Player::removeTouch(std::set<Object *>& rset) {
     Character::removeTouch(rset);
 }
 
-bool Viking::pickupItem(Item* newitem) {
+bool Player::pickupItem(Item* newitem) {
     if (newitem==NULL) return false;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         if (items[i] == NULL) {
@@ -97,20 +96,20 @@ bool Viking::pickupItem(Item* newitem) {
     return false;
 }
 
-void Viking::removeItem(Uint8 num) {
+void Player::removeItem(Uint8 num) {
     if (num>=MAX_ITEMS || items[num]==NULL) return;
     delete items[num];
     items[num]=NULL;
 }
 
-Item* Viking::moveItem(Uint8 num) {
+Item* Player::moveItem(Uint8 num) {
     if (num>=MAX_ITEMS || items[num]==NULL) return NULL;
     Item* tmpit=items[num];
     items[num]=NULL;
     return tmpit;
 }
 
-void Viking::switchItem(bool right) {
+void Player::switchItem(bool right) {
     if (right) {
         ++currentitem;
         if (currentitem>=MAX_ITEMS) currentitem=0;
@@ -120,7 +119,7 @@ void Viking::switchItem(bool right) {
     }
 }
 
-Object* Viking::dropItem(Uint8 num, bool right) {
+Object* Player::dropItem(Uint8 num, bool right) {
     Item* tmpit=moveItem(num);
     Object* tmpobj=NULL;
     bool ok=false;
@@ -139,7 +138,7 @@ Object* Viking::dropItem(Uint8 num, bool right) {
 
 //check the states and change the image correspondingly
 //TODO: add left, right, up, down, etc movement animations
-void Viking::updateAnimState(bool change) {
+void Player::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_LEFT) {
         if (state&STATE_FALL) {
@@ -169,12 +168,12 @@ void Viking::updateAnimState(bool change) {
 }
 
 //first thing to do
-void Viking::idle(Uint16 dt) {
+void Player::idle(Uint16 dt) {
     Character::idle(dt);
 }
 
 //input: activation key (return)
-void Viking::in_act(Sint16 dt) {
+void Player::in_act(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_ACT);
     object_iterator i=enter.begin();
@@ -188,14 +187,14 @@ void Viking::in_act(Sint16 dt) {
 }
 
 //input: use key (insert)
-void Viking::in_use(Sint16 dt) {
+void Player::in_use(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_USE);
     if (items[currentitem]) items[currentitem]->act(this);
 }
 
 //input: right key
-void Viking::in_right(Sint16 dt) {
+void Player::in_right(Sint16 dt) {
     if (dt < 0) {
         if (state&STATE_MRIGHT) {
             unsetState(STATE_MRIGHT);
@@ -211,7 +210,7 @@ void Viking::in_right(Sint16 dt) {
 }
 
 //input: left key
-void Viking::in_left(Sint16 dt) {
+void Player::in_left(Sint16 dt) {
     if (dt < 0) {
         if (state&STATE_MLEFT) {
             unsetState(STATE_MLEFT);
@@ -226,23 +225,23 @@ void Viking::in_left(Sint16 dt) {
     }
 }
 //input: up key
-void Viking::in_up(Sint16) { }
+void Player::in_up(Sint16) { }
 //input: down key
-void Viking::in_down(Sint16) { }
+void Player::in_down(Sint16) { }
 //input: special1 key (SPACE)
-void Viking::in_sp1(Sint16) { }
+void Player::in_sp1(Sint16) { }
 //input: special2 key (SHIFT)
-void Viking::in_sp2(Sint16) { }
+void Player::in_sp2(Sint16) { }
 
-Hit Viking::move(Uint16 dt, bool check) {
+Hit Player::move(Uint16 dt, bool check) {
     return Character::move(dt,check);
 }
 
-void Viking::fall(Uint16 dt) {
+void Player::fall(Uint16 dt) {
     Character::fall(dt);
 }
 
-void Viking::crash(Uint16 dir) {
+void Player::crash(Uint16 dir) {
     Character::crash(dir);
     switch (dir) {
         case DIR_DOWN: {
@@ -259,13 +258,13 @@ void Viking::crash(Uint16 dir) {
     }
 }
 
-void Viking::die() {
+void Player::die() {
     failed=true;
     Character::die();
 }
 
-//unset all interactivity
-void Viking::clearStates(bool reset) {
+//unset all interactiplity
+void Player::clearStates(bool reset) {
     if (getState(STATE_MLEFT)) in_left(-1);
     if (getState(STATE_MRIGHT)) in_right(-1);
     if (getState(STATE_MUP)) in_up(-1);
@@ -277,7 +276,7 @@ void Viking::clearStates(bool reset) {
     }
 }
 
-Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
+Uint16 Player::hit(Uint16 direction, Weapon& weap) {
     Uint16 newhealth;
     if (weap.getType()&W_WATER) newhealth=setHealth(0);
     else newhealth=addHealth(weap.getDamage());
@@ -286,21 +285,21 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
     if (newhealth==0) {
         die();
         //should be !=NULL or sthg is wrong with the placement code...
-        Character* deadvik=pool->addCharacter(new DeadViking("dead_viking.bmp",pos.x,pos.y));
+        Character* deadplr=pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
         switch(weap.getSubType()) {
             case WS_FIRE: {
-                if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_fire));
+                if (deadplr && im_die) deadplr->setEvent(new EAnim(deadplr,im_die,false,0,ESTATE_BUSY,au_fire));
                 else sfxeng->playWAV(au_fire);
                 break;
             }
             case WS_WATER: {
-                if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_drown));
+                if (deadplr && im_die) deadplr->setEvent(new EAnim(deadplr,im_die,false,0,ESTATE_BUSY,au_drown));
                 else sfxeng->playWAV(au_drown);
                 break;
             }
             //WS_NORMAL, WS_ELECTRIC, WS_FIRE, WS_PRESSURE
             default: {
-                if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_die));
+                if (deadplr && im_die) deadplr->setEvent(new EAnim(deadplr,im_die,false,0,ESTATE_BUSY,au_die));
                 else sfxeng->playWAV(au_die);
             }
         }
@@ -363,6 +362,6 @@ Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
     return newhealth;
 }
 
-DeadViking::DeadViking(string imagename, Uint16 xcord, Uint16 ycord, string name):
+DeadPlayer::DeadPlayer(string imagename, Uint16 xcord, Uint16 ycord, string name):
   Character(imagename,xcord,ycord,name) { }
-DeadViking::~DeadViking() { }
+DeadPlayer::~DeadPlayer() { }

@@ -3,7 +3,7 @@
 #include "weapons.h"
 #include "monsters_common.h"
 //shouldn't be here...
-#include "vikings_common.h"
+#include "players_common.h"
 
 
 
@@ -11,15 +11,15 @@
   Monster (Object)
 ==================*/
 
-Monster::Monster(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Character(imagename,xcord,ycord,vname) {
+Monster::Monster(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Character(imagename,xcord,ycord,pname) {
     health=1;
     maxspeedx=50;
     maxspeedy=0;
     state=STATE_FALL;
     otype|=OTYPE_MONSTER;
-    dense_types|=OTYPE_VIKING;
-    enemy_types|=OTYPE_VIKING;
+    dense_types|=OTYPE_PLAYER;
+    enemy_types|=OTYPE_PLAYER;
     t_water=1000;
     im_left=animation;
     im_right=animation;
@@ -36,12 +36,12 @@ void Monster::addEnter(std::set<Object *>& aset) {
 //updates the touched based states and values
 void Monster::addTouch(std::set<Object *>& aset) {
     Character::addTouch(aset);
-    Viking* ptr=NULL;
+    Player* ptr=NULL;
     object_iterator obit=aset.begin();
     //TODO: clean up this mess
     while (obit != aset.end()) {
         if ((*obit)->getType()&enemy_types) {
-            if((ptr = dynamic_cast<Viking*>(*obit))) {
+            if((ptr = dynamic_cast<Player*>(*obit))) {
                 setState(STATE_ATTACK);
                 targets.insert(ptr);
             }
@@ -55,11 +55,11 @@ void Monster::removeEnter(std::set<Object *>& rset) {
 }
 void Monster::removeTouch(std::set<Object *>& rset) {
     Character::removeTouch(rset);
-    Viking* ptr=NULL;
+    Player* ptr=NULL;
     object_iterator obit=rset.begin();
     while (obit != rset.end()) {
-        if ((*obit)->getType()&OTYPE_VIKING) {
-            if((ptr = dynamic_cast<Viking*>(*obit))) {
+        if ((*obit)->getType()&OTYPE_PLAYER) {
+            if((ptr = dynamic_cast<Player*>(*obit))) {
                 targets.erase(ptr);
             }
         }
@@ -71,7 +71,7 @@ void Monster::removeTouch(std::set<Object *>& rset) {
 
 void Monster::removedObject(Object* obj) {
     Character::removedObject(obj);
-    if (Viking* ptr = dynamic_cast<Viking*>(obj)) {
+    if (Player* ptr = dynamic_cast<Player*>(obj)) {
         targets.erase(ptr);
     }
 }

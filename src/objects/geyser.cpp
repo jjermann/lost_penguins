@@ -3,7 +3,7 @@
 #include "sfxeng.h"
 #include "objects_common.h"
 //shouldn't be here...
-#include "vikings_common.h"
+#include "players_common.h"
 #include "map.h"
 #include "geyser.h"
 
@@ -22,11 +22,11 @@ void Geyser::idle(Uint16 dt) {
     if (Deffect>T_GEYSIR) {
         Deffect=0;
         sfxeng->playWAV(au_geyser);
-        std::set<Viking *> vikings=curmap->getVikingsIn(pos,true);
-        std::set<Viking *>::iterator vkit=vikings.begin();
-        while (vkit!=vikings.end()) {
-            (*vkit)->addSpeed(aspeed);
-            ++vkit;
+        std::set<Player *> players=curmap->getPlayersIn(pos,true);
+        std::set<Player *>::iterator pit=players.begin();
+        while (pit!=players.end()) {
+            (*pit)->addSpeed(aspeed);
+            ++pit;
         }
     }
 }

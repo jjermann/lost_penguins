@@ -5,7 +5,7 @@ SoundCache* sndcache;
 GraphicsEngine* gfxeng;
 SoundsEngine* sfxeng;
 ObjectsPool* pool;
-Viking* viking;
+Player* player;
 Background* background;
 Map* curmap;
 InputHandler* input;

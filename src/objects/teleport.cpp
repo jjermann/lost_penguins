@@ -3,7 +3,7 @@
 #include "sfxeng.h"
 #include "objects_common.h"
 //shouldn't be here...
-#include "vikings_common.h"
+#include "players_common.h"
 #include "teleport.h"
 
 
@@ -18,8 +18,8 @@ Teleporter::~Teleporter() { }
 
 bool Teleporter::act(Object* obj) {
     SDL_Rect newpos=exit;
-    //checks if obj is a viking...
-    if(Viking* ptr = dynamic_cast<Viking*>(obj)) {
+    //checks if obj is a player...
+    if(Player* ptr = dynamic_cast<Player*>(obj)) {
         sfxeng->playWAV(au_tele);
         newpos.x-=(Uint16)((obj->getPos()->w)/2);
         newpos.y-=pos.h;

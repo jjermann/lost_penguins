@@ -2,7 +2,7 @@
 #include "weapons.h"
 #include "objects_common.h"
 //shouldn't be here...
-#include "vikings_common.h"
+#include "players_common.h"
 #include "heart.h"
 
 

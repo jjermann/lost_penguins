@@ -7,8 +7,8 @@
 #include "scorch.h"
 
 
-Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
-  Viking(imagename,xcord,ycord,vname) {
+Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+  Player(imagename,xcord,ycord,pname) {
     im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;
     im_fall_left=im_left;
@@ -28,7 +28,7 @@ Scorch::~Scorch() {
 }
 
 void Scorch::idle(Uint16 dt) {
-    Viking::idle(dt);
+    Player::idle(dt);
     if (!(input->getState(INPUT_SP1))) {
         unsetState(STATE_ACT_1);
         unsetState(STATE_GLIDE);
@@ -39,7 +39,7 @@ void Scorch::fall(Uint16 dt) {
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {
         if (state&STATE_FALL) {
-            addSpeed(Sint16(gravity*Dgrav/1000));
+            addSpeed(Sint16(graplity*Dgrav/1000));
             if ((state&STATE_GLIDE) && (speed > V_GLIDE)) speed=V_GLIDE;;
         }
         Hit hit=move(Dgrav);
@@ -80,7 +80,7 @@ void Scorch::in_sp1(Sint16 dt) {
 }
 
 void Scorch::clearStates(bool reset) {
-    Viking::clearStates(reset);
+    Player::clearStates(reset);
     if (reset) {
         unsetState(STATE_GLIDE);
         input->unsetState(INPUT_SP1);

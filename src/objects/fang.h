@@ -1,5 +1,5 @@
-#ifndef _VIKINGS_COMMON_H_
-    #include "vikings_common.h"
+#ifndef _PLAYERS_COMMON_H_
+    #include "players_common.h"
 #endif
 
 #define STATE_CLIMB_L    0x00010000
@@ -17,7 +17,7 @@
 #define DE_JUMP        200
 
  
-class Fang : public Viking {
+class Fang : public Player {
     public:
         Fang(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Fang");
         virtual ~Fang();
