@@ -5,7 +5,7 @@
 #include "sndcache.h"
 #include "gfxeng.h"
 #include "sfxeng.h"
-#include "map.h"
+#include "scenario.h"
 #include "objectpools.h"
 #include "objects_common.h"
 

@@ -6,7 +6,7 @@
 #include "sndcache.h"
 #include "monsters_common.h"
 //shouldn't be here...
-#include "map.h"
+#include "scenario.h"
 #include "players_common.h"
 
 

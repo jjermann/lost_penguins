@@ -4,7 +4,7 @@
 #include "sndcache.h"
 #include "weapons.h"
 //shouldn't be here...
-#include "map.h"
+#include "scenario.h"
 #include "characters_common.h"
 #include "water.h"
 

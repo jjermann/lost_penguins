@@ -1,5 +1,5 @@
 #include "common.h"
-#include "map.h"
+#include "scenario.h"
 #include "sfxeng.h"
 #include "sndcache.h"
 #include "objectpools.h"

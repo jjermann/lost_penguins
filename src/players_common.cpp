@@ -7,7 +7,7 @@
 #include "imgcache.h"
 #include "sndcache.h"
 #include "objectpools.h"
-#include "map.h"
+#include "scenario.h"
 #include "players_common.h"
 
 

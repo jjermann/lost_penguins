@@ -4,7 +4,7 @@
 #include "objectpools.h"
 #include "players_common.h"
 #include "imgcache.h"
-#include "map.h"
+#include "scenario.h"
 #include "gfxeng.h"
 
 

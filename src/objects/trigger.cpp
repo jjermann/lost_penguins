@@ -1,6 +1,6 @@
 #include "common.h"
 #include "objectpools.h"
-#include "map.h"
+#include "scenario.h"
 #include "objects_common.h"
 #include "trigger.h"
 

@@ -3,7 +3,7 @@
 #include "gfxeng.h"
 #include "objectpools.h"
 #include "players_common.h"
-#include "map.h"
+#include "scenario.h"
 #include "anim.h"
 
 

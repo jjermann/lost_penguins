@@ -6,7 +6,7 @@
 #include "sndcache.h"
 #include "sfxeng.h"
 #include "players_common.h"
-#include "map.h"
+#include "scenario.h"
 #include "zombie.h"
 
 

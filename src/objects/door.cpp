@@ -2,7 +2,7 @@
 #include "sndcache.h"
 #include "sfxeng.h"
 #include "objects_common.h"
-#include "map.h"
+#include "scenario.h"
 #include "door.h"
 
 

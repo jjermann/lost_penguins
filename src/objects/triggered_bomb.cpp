@@ -3,7 +3,7 @@
 #include "sfxeng.h"
 #include "weapons.h"
 #include "characters_common.h"
-#include "map.h"
+#include "scenario.h"
 #include "triggered_bomb.h"
 
 TriggeredBomb::TriggeredBomb(string imagename, Sint16 xcord, Sint16 ycord, Uint16 tleft, string cname):

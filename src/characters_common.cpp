@@ -1,7 +1,7 @@
 #include "common.h"
 #include "anim.h"
 #include "events.h"
-#include "map.h"
+#include "scenario.h"
 #include "weapons.h"
 #include "objectpools.h"
 #include "characters_common.h"

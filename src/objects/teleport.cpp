@@ -4,7 +4,7 @@
 #include "objects_common.h"
 //shouldn't be here...
 #include "players_common.h"
-#include "map.h"
+#include "scenario.h"
 #include "teleport.h"
 
 

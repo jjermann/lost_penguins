@@ -3,7 +3,7 @@
 #include "anim.h"
 #include "input.h"
 #include "font.h"
-#include "map.h"
+#include "scenario.h"
 #include "imgcache.h"
 #include "sndcache.h"
 #include "gfxeng.h"

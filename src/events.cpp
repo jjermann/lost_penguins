@@ -2,7 +2,7 @@
 #include "events.h"
 #include "anim.h"
 #include "weapons.h"
-#include "map.h"
+#include "scenario.h"
 #include "sfxeng.h"
 #include "characters_common.h"
 

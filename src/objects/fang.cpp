@@ -4,7 +4,7 @@
 #include "input.h"
 #include "imgcache.h"
 #include "sndcache.h"
-#include "map.h"
+#include "scenario.h"
 #include "fang.h"
 
 

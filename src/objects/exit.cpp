@@ -1,7 +1,7 @@
 #include "common.h"
 #include "objectpools.h"
 //shouldn't be here...
-#include "map.h"
+#include "scenario.h"
 #include "players_common.h"
 #include "exit.h"
 

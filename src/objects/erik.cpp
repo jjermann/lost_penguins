@@ -2,7 +2,7 @@
 #include "events.h"
 #include "anim.h"
 #include "input.h"
-#include "map.h"
+#include "scenario.h"
 #include "weapons.h"
 #include "imgcache.h"
 #include "sndcache.h"

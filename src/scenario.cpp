@@ -4,7 +4,7 @@
 #include "imgcache.h"
 #include "sndcache.h"
 #include "anim.h"
-#include "map.h"
+#include "scenario.h"
 
 
 Scenario::Scenario():

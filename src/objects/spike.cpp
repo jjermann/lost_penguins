@@ -4,7 +4,7 @@
 #include "weapons.h"
 #include "players_common.h"
 #include "monsters_common.h"
-#include "map.h"
+#include "scenario.h"
 #include "spike.h"
 
 Spike::Spike(string imagename, Sint16 xcord, Sint16 ycord, Uint16 sdir, string oname):

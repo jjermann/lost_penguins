@@ -4,7 +4,7 @@
 #include "events.h"
 #include "objects_common.h"
 //HACK!
-#include "map.h"
+#include "scenario.h"
 
 
 Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
