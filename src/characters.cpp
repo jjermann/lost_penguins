@@ -515,6 +515,7 @@ Zombie::~Zombie() {
 }
 
 void Zombie::idle(Uint16 dt) {
+    hspeed=0;
     Character::idle(dt);
     if (!(state&STATE_FALL)) {
         runAI(dt);
