@@ -1,7 +1,7 @@
 #include "common.h"
 #include "events.h"
 #include "input.h"
-#include "anim.h"
+#include "animation.h"
 #include "weapons.h"
 #include "sfxeng.h"
 #include "imgcache.h"

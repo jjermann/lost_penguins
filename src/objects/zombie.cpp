@@ -1,6 +1,6 @@
 #include "common.h"
 #include "events.h"
-#include "anim.h"
+#include "animation.h"
 #include "weapons.h"
 #include "imgcache.h"
 #include "sndcache.h"

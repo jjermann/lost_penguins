@@ -1,6 +1,6 @@
 #include "common.h"
 #include "imgcache.h"
-#include "anim.h"
+#include "animation.h"
 #include "events.h"
 #include "objects_common.h"
 //HACK!

@@ -3,7 +3,7 @@
 #include "players_common.h"
 #include "imgcache.h"
 #include "sndcache.h"
-#include "anim.h"
+#include "physics.h"
 #include "scenario.h"
 
 
@@ -17,8 +17,8 @@ Scenario::Scenario():
     imgcache=new ImageCache();
     cout << "Scenario: SoundCache...\n";
     sndcache=new SoundCache();
-    cout << "Scenario: AnimHandler...\n"; 
-    anim=new AnimHandler();
+    cout << "Scenario: PhysicHandler...\n"; 
+    physic=new PhysicHandler();
     cout << "Map: ObjectsPool...\n";
     pool=new ObjectsPool();
 }
@@ -29,8 +29,8 @@ Scenario::~Scenario() {
     cout << "Map: Deleted Pools...\n";
     if (background) delete background;
     cout << "Map: Deleted Background...\n";
-    delete anim;
-    cout << "Scenario: Deleted Animhandler...\n";
+    delete physic;
+    cout << "Scenario: Deleted PhysicHandler...\n";
     delete sndcache;
     cout << "Scenario: Deleted SoundCache...\n";
     delete imgcache;
@@ -43,8 +43,8 @@ inline void Scenario::reinitMap() {
         pool=new ObjectsPool();
     } else if (!pool) pool=new ObjectsPool();
     if (background) delete background;
-    if (anim) delete anim;
-    anim=new AnimHandler();
+    if (physic) delete physic;
+    physic=new PhysicHandler();
     background=NULL;
     area=NULL;
     player=NULL;

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "scenario.h"
-#include "anim.h"
+#include "physics.h"
 #include "gfxeng.h"
 #include "sfxeng.h"
 #include "menu.h"
@@ -75,7 +75,7 @@ void GameMenu::act() {
     case 0: {
         if (!closeMenu()) {
             gfxeng->renderScene(true);
-            scenario->anim->resetTime();
+            scenario->physic->resetTime();
             sfxeng->resumeMusic();
         }
         break;

@@ -1,6 +1,5 @@
 #include "common.h"
 #include "events.h"
-#include "anim.h"
 #include "input.h"
 #include "sndcache.h"
 #include "gfxeng.h"
@@ -8,6 +7,7 @@
 #include "scenario.h"
 #include "objectpools.h"
 #include "menu.h"
+#include "physics.h"
 #include "objects_common.h"
 
 
@@ -158,7 +158,7 @@ void InputHandler::pollMEvents() {
                              state|=INPUT_MENU;
                              if (!closeMenu()) {
                                  gfxeng->renderScene(true);
-                                 scenario->anim->resetTime();
+                                 scenario->physic->resetTime();
                                  sfxeng->resumeMusic();
                              }
                          } else {
@@ -318,7 +318,7 @@ void InputHandler::pollEvents() {
                          } else if (paused) {
                              state|=INPUT_PAUSE;
                              paused=false;
-                             scenario->anim->resetTime();
+                             scenario->physic->resetTime();
                              sfxeng->resumeMusic();
                          } else {
                              state|=INPUT_PAUSE;
@@ -335,7 +335,7 @@ void InputHandler::pollEvents() {
                              state|=INPUT_MENU;
                              if (!closeMenu()) {
                                  gfxeng->renderScene(true);
-                                 scenario->anim->resetTime();
+                                 scenario->physic->resetTime();
                                  sfxeng->resumeMusic();
                              }
                          } else {

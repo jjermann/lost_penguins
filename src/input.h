@@ -25,7 +25,7 @@
 
 /** \brief Handels keyboard events
 
-    \remark A key release event which is passed on to the AnimHandler
+    \remark A key release event which is passed on to the PhysicHandler
       mustn't be cummulative (see player code as well). Ie. If the event
       is triggered twice it should do the same as if once... 
 */

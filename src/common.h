@@ -35,7 +35,7 @@ class ObjectsPool;
 class Background;
 class Scenario;
 class InputHandler;
-class AnimHandler;
+class PhysicHandler;
 class Font;
 class Event;
 class Weapon;

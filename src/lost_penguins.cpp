@@ -1,6 +1,6 @@
 #include "common.h"
 #include "events.h"
-#include "anim.h"
+#include "physics.h"
 #include "input.h"
 #include "font.h"
 #include "scenario.h"
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
             //Check input
             input->pollEvents();
             //Run Animations
-            scenario->anim->runAnims();
+            scenario->physic->update();
         } else {
             quitGame(-6);
         }

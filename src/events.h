@@ -9,7 +9,7 @@
 
 /** \brief Base class for events (non instantanious effects)
 
-    Organize effects that aren't instantanious. Updated by AnimHandler, usually
+    Organize effects that aren't instantanious. Updated by PhysicHandler, usually
     a member of an Object (controlled by the object). An effect can be delayed and has a
     certain run period (marked by a state).
 */

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "events.h"
-#include "anim.h"
+#include "animation.h"
 #include "input.h"
 #include "imgcache.h"
 #include "scenario.h"

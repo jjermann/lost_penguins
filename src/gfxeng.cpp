@@ -1,6 +1,6 @@
 #include "common.h"
 #include "font.h"
-#include "anim.h"
+#include "animation.h"
 #include "objectpools.h"
 #include "players_common.h"
 #include "imgcache.h"

@@ -118,7 +118,7 @@ class Object {
         /// Schedules a new event and cancels any currently running event
         /// \param ev New event
         virtual void setEvent(Event* ev);
-        /// Updates the event (run by the AnimHandler) and react on the new event
+        /// Updates the event (run by the PhysicHandler) and react on the new event
         /// state (start, end or cancel an event).
         /// \return New event state
         Uint16 updateEvents(Uint16 dt);

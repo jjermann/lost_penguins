@@ -1,5 +1,5 @@
 #include "common.h"
-#include "anim.h"
+#include "animation.h"
 #include "events.h"
 #include "scenario.h"
 #include "weapons.h"

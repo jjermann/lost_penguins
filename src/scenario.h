@@ -59,16 +59,16 @@ class Scenario {
         SoundCache* sndcache;
         /// Object pool
         ObjectsPool* pool;
-        /// Animation Handler
-        AnimHandler* anim;
-        /// True if the mission failed
-        bool failed;
+        /// Physic Handler
+        PhysicHandler* physic;
         ///\brief Loads and initializes the map data
         ///
         /// Parses the map file and tries to add the objects by using addObjectByName()
         /// \param mapname Map file name without the data directory in it
         /// \return 0 if a Background was found, -1 if not, -2 if the loading failed
         int loadMap(string mapname);
+        /// True if the mission failed
+        bool failed;
         /// Name of the map file
         string name;
     private:
