@@ -1,5 +1,6 @@
 #include "lost_vikings.h"
 #include "objects.h"
+#include "weapons.h"
 
 using namespace std;
 
@@ -173,15 +174,13 @@ bool Door::act(Object* obj) {
 
 //HEART (Item)
 Heart::Heart(string imagename, Uint16 xcord, Uint16 ycord, string iname):
-  Item(imagename,xcord,ycord,iname) {
-    au_heal=sndcache->loadWAV("usefood1.wav");
-}
+  Item(imagename,xcord,ycord,iname) { }
 Heart::~Heart() { }
 
 bool Heart::act(Object* obj) {
     if ((obj==NULL) || (obj!=owner)) return false;
-    sfxeng->playWAV(au_heal);
-    owner->addHealth(1);
+    Weapon tmpheal(1,W_HEAL,WS_HEAL);
+    owner->hit(DIR_ALL,tmpheal);
     owner->removeItem();
     return true;
 }
@@ -221,3 +220,4 @@ bool Bomb::act(Object*) {
         return false;
     }
 }
+

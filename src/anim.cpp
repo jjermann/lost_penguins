@@ -5,13 +5,10 @@ using namespace std;
 
 //Initialize an animation: animation image, number of frames,
 //time intervall for the animation, if (total_time==0) it is considered a frames series
-Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time) {
-    size=max_num;
-    num=0;
-    time=total_time;
-    if (time==0) running=false;
+Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time, bool an_once):
+  size(max_num),time(total_time),num(0),tcurrent(0),once(an_once) {
+    if (time==0 || once) running=false;
     else running=true;
-    tcurrent=0;
     frame.image=anim_image;
     w=(Uint16)((frame.image->w)/size);
     h=frame.image->h;
@@ -23,13 +20,10 @@ Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time)
 
 //Initialize an animation: animation image, width of a frame, number of frames,
 //time intervall for the animation, if (total_time==0) it is considered a frames series
-Animation::Animation(SDL_Surface* anim_image, Uint16 width, Uint16 max_num, Uint16 total_time) {
-    size=max_num;
-    num=0;
-    time=total_time;
-    if (time==0) running=false;
+Animation::Animation(Uint16 width, SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time, bool an_once):
+  size(max_num),time(total_time),num(0),tcurrent(0),once(an_once) {
+    if (time==0 || once) running=false;
     else running=true;
-    tcurrent=0;
     frame.image=anim_image;
     w=width;
     h=frame.image->h;
@@ -41,28 +35,33 @@ Animation::Animation(SDL_Surface* anim_image, Uint16 width, Uint16 max_num, Uint
 
 Animation::~Animation() { }
 
-//updates a running animation
-const Frame& Animation::updateAnim(Uint16 dt) {
-    if (!running) return frame;
+//TODO: this should be more advanced
+//updates a running animation, returns true if it's running
+bool Animation::updateAnim(Uint16 dt) {
+    if (!running) return false;
     tcurrent+=dt;
     if (tcurrent < time) {
         num=(Uint16)((tcurrent*size)/time);
         if (num>=size) num=0;
+    } else if (once || time==0) {
+        num=size;
+        tcurrent=time;
+        running=false;
     } else {
         num=0;
         tcurrent=0;
     }
     frame.pos.x=num*w;
+    if (running) return true;
+    else return false;
 //The solution below would be better but it won't work with the 2nd constructor
 //    frame.pos.x=(Uint16)((num*frame.image->w)/size);
-    return frame;
 }
 
 const Frame& Animation::setFrame(Uint16 num) {
     frame.pos.x=num*w;
     return frame;
 }
-
 
 AnimHandler::AnimHandler() {
     //Initialization
@@ -116,13 +115,16 @@ void AnimHandler::runAnims() {
         character_iterator cit=pool->characterspool.begin();
         while (cit!=pool->characterspool.end()) {
             (*cit)->fall(dt);
-            (*cit)->updateAnimState();
+            (*cit)->updateAnimState(!((*cit)->getState(ESTATE_ANIM)));
             ++cit;
         }
         //update the animations of all objects
         obit=pool->objectspool.begin();
         while (obit!=pool->objectspool.end()) {
-            if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
+            if ((*obit)->getState(ESTATE_ANIM)) { 
+                bool runs=(*obit)->updateAnim(dt);
+                if (!runs) (*obit)->stopEvent();
+            } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
             ++obit;
         }
     } else {

@@ -31,6 +31,10 @@ void TriggeredBomb::idle(Uint16 dt) {
     }
 }
 
+DeadViking::DeadViking(string imagename, Uint16 xcord, Uint16 ycord, string name):
+  Character(imagename,xcord,ycord,name) { }
+DeadViking::~DeadViking() { }
+
 
 /*==================
       Vikings
@@ -40,13 +44,13 @@ void TriggeredBomb::idle(Uint16 dt) {
 Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Viking(imagename,xcord,ycord,vname) {
     im_left=new Animation(imgcache->loadImage("eric_left.bmp"));
-    im_right=new Animation(imgcache->loadImage("kuru.bmp"),60,12,1000);
+    im_right=new Animation(60,imgcache->loadImage("kuru.bmp"),12,1000);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=im_left;
-    im_land_right=im_right;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
+    im_land_right=im_land_left;
     au_jump=sndcache->loadWAV("rboots.wav");
     au_run=NULL;
     t_water=60000;
@@ -56,6 +60,7 @@ Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
 Eric::~Eric() {
     delete im_left;
     delete im_right;
+    delete im_land_left;
 }
 
 //Eric1: Jump
@@ -124,7 +129,7 @@ Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"));
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
     im_land_right=im_land_left;
 
     im_small_left=new Animation(imgcache->loadImage("gun.bmp"),9,1000);
@@ -133,6 +138,7 @@ Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_shield_left=new Animation(imgcache->loadImage("olaf_fall_shield_left.bmp"));
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
+    im_die=new Animation(60,imgcache->loadImage("kuru.bmp"),12,2000,true);
     au_small=sndcache->loadWAV("blob.wav");
     au_big=sndcache->loadWAV("unblob.wav");
     au_fart=sndcache->loadWAV("fart1.wav");
@@ -148,14 +154,11 @@ Olaf::~Olaf() {
     delete im_shield_left;
 }
 
-void Olaf::updateAnimState() {
-    if (state&STATE_SMALL) {
+void Olaf::updateAnimState(bool change) {
+    if (!change) {
+    } else if (state&STATE_SMALL) {
         if (state&STATE_LEFT) animation=im_small_left;
         else animation=im_small_right;
-        curpos.w=animation->getWidth();
-        curpos.h=animation->getHeight();
-        curpos.x=(Uint16)((pos.w-curpos.w)/2);
-        curpos.y=(pos.h-curpos.h);
     } else if (state&STATE_SHIELD) {
         otype|=OTYPE_DENSE_D;
         if (state&STATE_LEFT) {
@@ -171,14 +174,14 @@ void Olaf::updateAnimState() {
                 animation=im_shield_right;
             }
         }
-        curpos.w=animation->getWidth();
-        curpos.h=animation->getHeight();
-        curpos.x=(Uint16)((pos.w-curpos.w)/2);
-        curpos.y=(pos.h-curpos.h);
     } else {
         otype&=~OTYPE_DENSE_D;
         Viking::updateAnimState();
     }
+    curpos.w=animation->getWidth();
+    curpos.h=animation->getHeight();
+    curpos.x=(Uint16)((pos.w-curpos.w)/2);
+    curpos.y=(pos.h-curpos.h);
 }
 
 void Olaf::in_left(Sint16 dt) {
@@ -295,27 +298,20 @@ void Olaf::fall(Uint16 dt) {
     }
 }
 
-Sint16 Olaf::hit(Uint16 dir, Weapon& weap) {
-    //check if olaf is protected by a shield or falling
-    Sint16 dhealth=0;
-    if (!((state&STATE_SHIELD) || (state&STATE_FALL))) {
-        if ((!(state&STATE_LEFT)) && (dir&DIR_LEFT)) dhealth=1;
-        else if ((state&STATE_LEFT) && (dir&DIR_RIGHT)) dhealth=1;
-    }
-    if (dhealth) return 0;
-    else dhealth=addHealth(weap.getDamage());
-    
-    switch (weap.getType()) {   
-        case W_STRIKE: {
-            if (dir&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-100,-DSTRIKE,0,ESTATE_BUSY,au_hit));
-            else setEvent(new ESpeed(this,TSTRIKE,-100,DSTRIKE,0,ESTATE_BUSY,au_hit));
-            break;
+Uint16 Olaf::hit(Uint16 dir, Weapon& weap) {
+    trySmall(false);
+    if ((!state&STATE_SMALL) && (weap.getType()&(W_STRIKE|W_EXPLOSION))) {
+        if (state&STATE_SHIELD) {
+            if (dir==DIR_DOWN) return health;
+            else return Viking::hit(dir,weap);
+        } else if (state&STATE_LEFT) {
+            if (dir==DIR_RIGHT) return health;
+            else return Viking::hit(dir,weap);
+        } else {
+            if (dir==DIR_LEFT) return health;
+            else return Viking::hit(dir,weap);
         }
-        default: {
-            break;
-        }
-    }
-    return dhealth;
+    } else return Viking::hit(dir,weap);
 }
 
 
@@ -328,8 +324,8 @@ Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_fall_right=im_left;
     im_krit_left=im_left;
     im_krit_right=im_left;
-    im_land_left=im_left;
-    im_land_right=im_right;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
+    im_land_right=im_land_left;
     au_swing=NULL;
     au_tired=NULL;
     left_wings=SCORCH_MAX_WINGS;
@@ -337,6 +333,7 @@ Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
 }
 Scorch::~Scorch() {
     delete im_left;
+    delete im_land_left;
 }
 
 void Scorch::idle(Uint16 dt) {
@@ -404,7 +401,7 @@ Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"));
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
     im_land_right=im_land_left;
     au_jump=NULL;
     jump=V_JUMP;
@@ -484,13 +481,14 @@ Baleog::Baleog(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_fall_right=im_left;
     im_krit_left=im_left;
     im_krit_right=im_left;
-    im_land_left=im_left;
-    im_land_right=im_right;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
+    im_land_right=im_land_left;
     au_hit=NULL;
 }
 
 Baleog::~Baleog() {
     delete im_left;
+    delete im_land_left;
 }
 
 
@@ -565,6 +563,7 @@ void Zombie::runAI(Uint16 dt) {
             } else {
                 Viking* target=*(targets.begin());
                 Uint16 dir=curmap->getDirection(getCenter(),target->getCenter());
+                dir&=~(DIR_UP|DIR_DOWN);
                 if (dir&DIR_LEFT) setState(STATE_LEFT);
                 else unsetState(STATE_LEFT);
                 

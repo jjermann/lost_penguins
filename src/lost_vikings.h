@@ -19,6 +19,7 @@ class Object;
 class Character;
 class Viking;
 class Monster;
+class Weapon;
 typedef std::vector<Object *>::iterator object_viterator;
 typedef std::vector<Character *>::iterator character_viterator;
 typedef std::vector<Viking *>::iterator viking_viterator;
@@ -82,6 +83,8 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define ESTATE_ABORT    0x00002000
 //run:  default, equivalent to event != NULL
 #define ESTATE_RUN      0x00004000
+//anim: an animation is beeing played, don't run updateAnimState...
+#define ESTATE_ANIM     0x00008000
 
 //Directions
 #define DIR_RIGHT       0x00000001
@@ -119,26 +122,6 @@ struct Hit {
    Uint16 touch;
 };
 
-//Weapons
-class Weapon {
-    public:
-        Weapon(Sint16 dmg=-1, Uint16 weaptype=NOTHING, Uint16 subtype=NOTHING);
-        virtual ~Weapon();
-        Uint16 getType() {
-            return wtype;
-        }
-        Uint16 getSubType() {
-            return stype;
-        }
-        Sint16 getDamage() {
-            return damage;
-        }
-    private:
-        Uint16 wtype;
-        Uint16 stype;
-        Uint16 damage;
-};
-
 //Events
 class Event {
     public:
@@ -157,6 +140,26 @@ class Event {
         bool started;
 };
 
+#define WS_NORMAL 0x00000001
+//Weapons
+class Weapon {
+    public:
+        Weapon(Sint16 dmg=-1, Uint16 weaptype=NOTHING, Uint16 subtype=WS_NORMAL);
+        virtual ~Weapon();
+        Uint16 getType() {
+            return wtype;
+        }
+        Uint16 getSubType() {
+            return stype;
+        }
+        Sint16 getDamage() {
+            return damage;
+        }
+    private:
+        Uint16 wtype;
+        Uint16 stype;
+        Uint16 damage;
+};
 
 struct Config {
     Uint16 width;
@@ -183,13 +186,18 @@ struct Frame {
 //Eventually change this to a matrix of frames: each row a different animation
 class Animation {
     public:
-        Animation(SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0);
-        Animation(SDL_Surface* image, Uint16 width, Uint16 max_num, Uint16 total_time);
+        Animation(SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool once=false);
+        Animation(Uint16 width, SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool an_once=false);
         ~Animation();
-        //update a running animation
-        const Frame& updateAnim(Uint16 dt);
+        //update a running animation, returns true if the animation is running
+        bool updateAnim(Uint16 dt);
         //update frame status of a frame series (not running)
         const Frame& setFrame(Uint16 nr);
+        void start() {
+            num=0;
+            tcurrent=0;
+            running=true;
+        }
         //return current frame
         const Frame& getFrame() const {
             return frame;
@@ -225,6 +233,8 @@ class Animation {
         Uint16 tcurrent;
         //frame series or running?
         bool running;
+        //play the animation only once?
+        bool once;
 };
 
 //Base class of almost everything
@@ -245,6 +255,8 @@ class Object {
             SDL_Rect tmprect;
             tmprect.x=pos.x+Uint16(pos.w/2);
             tmprect.y=pos.y+Uint16(pos.h/2);
+            tmprect.w=0;
+            tmprect.h=0;
             return tmprect;
         }
         //is the Object in the rectangle rect
@@ -279,8 +291,13 @@ class Object {
             return name;
         }
         //update the actual Animation
-        const Frame& updateAnim(Uint16 dt) {
+        bool updateAnim(Uint16 dt) {
             return (animation->updateAnim(dt));
+        }
+        //not to be used with updateAnimState (used eg. with ESTATE_ANIM)
+        void setAnim(Animation* anim) {
+            animation=anim;
+            animation->start();
         }
         bool isRunning() const {
             return animation->isRunning();
@@ -296,6 +313,20 @@ class Object {
         void setEvent(Event* ev);
         Uint16 updateEvents(Uint16 dt);
         void cancelEvent();
+        void stopEvent();
+        //states
+        bool getState(Uint32 cstate) const {
+            return (state&cstate);
+        }
+        void setState(Uint32 cstate) {
+            state|=cstate;
+        }
+        void switchState(Uint32 cstate) {
+            state^=cstate;
+        }
+        void unsetState(Uint32 cstate) {
+            state&=~cstate;
+        }
         //VIRTUAL METHODS
         //When activated by an object
         virtual bool act(Object*) { return false; }
@@ -309,12 +340,10 @@ class Object {
         virtual void leave(Object*) { }
         //permanent effects this base function must be run by all derived classes
         virtual void idle(Uint16) { }
-        //When hit by a weapon
-        virtual Sint16 hit(Uint16, Weapon&) {
-            return 0;
-        }
     protected:
+        Uint32 state;
         Event* event;
+        Animation* im_orig;
         Animation* animation;
         //temporary information about where to _draw_ the animation frame:
         //curpos.wh <= pos.wh, curpos.xy = positive dxy
@@ -338,27 +367,6 @@ class Character : public Object {
         virtual ~Character();
         //health
         Uint8 getHealth();
-        Uint8 setHealth(Uint8);
-        Uint8 addHealth(Sint8);
-        //states
-        bool getState(Uint32 cstate) const {
-            return (state&cstate);
-        }
-        void setState(Uint32 cstate) {
-            state|=cstate;
-        }
-        void switchState(Uint32 cstate) {
-            state^=cstate;
-        }
-        void unsetState(Uint32 cstate) {
-            state&=~cstate;
-        }
-        const std::set<Object *>& getEnter() const {
-            return enter;
-        }
-        const std::set<Object *>& getTouch() const {
-            return touch;
-        }
         //Speed
         Sint16 getSpeed() const {
             return speed;
@@ -379,15 +387,24 @@ class Character : public Object {
             gravity+=addgravity;
         }
         Hit checkMove(SDL_Rect& dest, bool tele=false, bool check=false);
+        //regions
+        const std::set<Object *>& getEnter() const {
+            return enter;
+        }
+        const std::set<Object *>& getTouch() const {
+            return touch;
+        }
         //VIRTUAL METHODS
         virtual void removedObject(Object*);
         //updates the current animation state
-        virtual void updateAnimState();
+        virtual void updateAnimState(bool change=true);
         //Define these for each character, the base function must be run for all derived classes
         virtual void idle(Uint16);
         virtual void fall(Uint16);
+        //when it dies...
+        virtual void die();
         //gets hit by a weapon
-        virtual Sint16 hit(Uint16 direction, Weapon& weap);
+        virtual Uint16 hit(Uint16 direction, Weapon& weap);
     protected:
         //add places
         virtual void addTouch(std::set<Object *>&);
@@ -398,14 +415,13 @@ class Character : public Object {
         //helper functions
         inline Hit checkHit(const SDL_Rect& dest, Object* destobj, bool tele=false) const;
         inline void updateRegions(std::set<Object *>& newtouch, std::set<Object *>& newenter);
+        //health
+        Uint8 setHealth(Uint8);
+        Uint8 addHealth(Sint8);
         //fall -> not fall, run into wall
         virtual void land();
-        //when it dies...
-        virtual void die();
         //move
         virtual Hit move(Uint16 dt, bool check=false);
-        //character state
-        Uint32 state;
         Uint8 health;
         //maximal normal speed;
         Uint16 maxspeedx;
@@ -418,8 +434,8 @@ class Character : public Object {
         Sint16 gravity;
         //temporary attributes
         Sint16 Dgrav,Dwater;
-        //Common animations
-        Animation* im_orig;
+        //Die animation
+        Animation* im_die;
         //Entered objects
         std::set<Object *> enter;
         //Touched objects
@@ -467,7 +483,7 @@ class Viking : public Character {
         }
         //VIRTUAL METHODS
         //updates the current animation state
-        virtual void updateAnimState();
+        virtual void updateAnimState(bool change=true);
         //Define these for each viking...
         virtual void idle(Uint16);
         virtual void fall(Uint16);
@@ -480,6 +496,8 @@ class Viking : public Character {
         //This should be the same for all vikings
         virtual void in_act(Sint16);
         virtual void in_use(Sint16);
+        //gets hit by a weapon
+        virtual Uint16 hit(Uint16 direction, Weapon& weap);
     protected:
         //add places
         virtual void addTouch(std::set<Object *>&);
@@ -511,6 +529,11 @@ class Viking : public Character {
         Mix_Chunk*  au_act;
         Mix_Chunk*  au_newitem;
         Mix_Chunk*  au_hit;
+        Mix_Chunk*  au_die;
+        Mix_Chunk*  au_elec;
+        Mix_Chunk*  au_drown;
+        Mix_Chunk*  au_fire;
+        Mix_Chunk*  au_heal;
         //Items
         Item* items[MAX_ITEMS];
         Uint8 currentitem;
@@ -523,11 +546,13 @@ class Monster : public Character {
         virtual ~Monster();
         virtual void removedObject(Object*);
         //updates the current animation state
-        virtual void updateAnimState();
+        virtual void updateAnimState(bool change=true);
         //Define these for each viking...
         virtual void idle(Uint16);
         virtual void fall(Uint16);
-        //TODO: add AI commands
+        //gets hit by a weapon
+        virtual Uint16 hit(Uint16 direction, Weapon& weap);
+        //TODO: add AI commands?
     protected:
         //add places
         virtual void addTouch(std::set<Object *>&);

@@ -74,8 +74,9 @@ void Monster::removedObject(Object* obj) {
 
 //check the states and change the image correspondingly
 //TODO: add left, right, up, down, etc movement animations
-void Monster::updateAnimState() {
-    if (state&STATE_LEFT) {
+void Monster::updateAnimState(bool change) {
+    if (!change) {
+    } else if (state&STATE_LEFT) {
         animation=im_left;   
     } else {   
         animation=im_right;
@@ -111,4 +112,8 @@ void Monster::land() {
 //dying
 void Monster::die() {
     Character::die();
+}
+
+Uint16 Monster::hit(Uint16 dir, Weapon& weap) {
+    return Character::hit(dir,weap);
 }

@@ -5,8 +5,9 @@
 using namespace std;
 
 Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname) {
-    animation=new Animation(imgcache->loadImage(imagename));
-    pos.x=xcord; 
+    im_orig=new Animation(imgcache->loadImage(imagename));
+    animation=im_orig;
+    pos.x=xcord;
     pos.y=ycord;
     pos.w=animation->getWidth();
     pos.h=animation->getHeight();
@@ -41,6 +42,7 @@ void Object::clearEvents() {
     event=NULL;
 }
 void Object::setEvent(Event* ev) {
+    if (ev==NULL) return;
     if (event) event->cancel();
     event=ev;
     updateEvents(0);
@@ -66,7 +68,10 @@ Uint16 Object::updateEvents(Uint16 dt) {
     return evstate;
 }
 void Object::cancelEvent() {
-    event->cancel();
+    if (event) event->cancel();
+}
+void Object::stopEvent() {
+    if (event) event->end();
 }
 
 

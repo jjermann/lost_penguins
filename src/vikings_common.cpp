@@ -1,5 +1,7 @@
 #include "lost_vikings.h"
+#include "objects.h"
 #include "events.h"
+#include "weapons.h"
 
 using namespace std;
 
@@ -30,7 +32,12 @@ Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     au_land=sndcache->loadWAV("dizzy.wav");
     au_act=sndcache->loadWAV("button.wav");
     au_newitem=sndcache->loadWAV("pickup.wav");
-    au_hit=NULL;
+    au_hit=sndcache->loadWAV("vikhit.wav");
+    au_elec=sndcache->loadWAV("elecdth.wav");
+    au_drown=sndcache->loadWAV("drown.wav");
+    au_fire=sndcache->loadWAV("fireball.wav");
+    au_die=sndcache->loadWAV("bones.wav");
+    au_heal=sndcache->loadWAV("usefood1.wav");
 }
 
 Viking::~Viking() {
@@ -123,8 +130,9 @@ Object* Viking::dropItem(Uint8 num, bool right) {
 
 //check the states and change the image correspondingly
 //TODO: add left, right, up, down, etc movement animations
-void Viking::updateAnimState() {
-    if (state&STATE_LEFT) {
+void Viking::updateAnimState(bool change) {
+    if (!change) {
+    } else if (state&STATE_LEFT) {
         if (state&STATE_IRR) {
             animation=im_land_left;
         } else if (state&STATE_FALL) {
@@ -240,7 +248,8 @@ void Viking::land() {
 
     if (state&STATE_FALL2) {
         unsetState(STATE_FALL2);
-        setEvent(new ELand(this,T_IRR,au_land));
+        Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
+        hit(DIR_UP,tmpweap);
     }
 }
 
@@ -248,4 +257,95 @@ void Viking::land() {
 void Viking::die() {
     failed=true;
     Character::die();
+}
+
+//hit
+Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
+    Uint16 newhealth;
+    if (weap.getType()&W_WATER) newhealth=setHealth(0);
+    else newhealth=Character::hit(direction,weap);
+    
+    //died
+    if (newhealth==0) {
+        die();
+        //should be !=NULL or sthg is wrong with the placement code...
+        Character* deadvik=pool->addCharacter(new DeadViking("dead_viking.bmp",pos.x,pos.y));
+        switch(weap.getSubType()) {
+            case WS_FIRE: {
+                if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_fire));
+                else sfxeng->playWAV(au_fire);
+                break;
+            }
+            case WS_WATER: {
+                if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_drown));
+                else sfxeng->playWAV(au_drown);
+                break;
+            }
+            //WS_NORMAL, WS_ELECTRIC, WS_FIRE, WS_PRESSURE
+            default: {
+                if (deadvik && im_die) deadvik->setEvent(new EAnim(deadvik,im_die,false,0,ESTATE_BUSY,au_die));
+                else sfxeng->playWAV(au_die);
+                break;
+            }
+        }
+    //damaged or healed...
+    } else {
+        Mix_Chunk* aud_hit;
+        Animation* anim_hit;
+        if (state&STATE_LEFT) anim_hit=im_land_left;
+        else anim_hit=im_land_right;
+        //TODO add more Animations
+        switch(weap.getSubType()) {
+            case WS_HEAL: {
+                aud_hit=au_heal;
+                break;
+            }
+            case WS_WATER: {
+                aud_hit=au_drown;
+                break;
+            }
+            case WS_ELECTRIC: {
+                aud_hit=au_elec;
+                break;
+            }
+            case WS_PRESSURE: {
+                aud_hit=au_land;
+                break;
+            }
+            default: {
+                aud_hit=au_hit;
+                break;
+            }
+        }
+        switch(weap.getType()) {
+            case W_HEAL: {
+                sfxeng->playWAV(aud_hit);
+                break;
+            }
+            case W_PRESSURE: {
+                setEvent(new EAnim(this,anim_hit,false,0,STATE_IRR|ESTATE_BUSY,aud_hit));
+                break;
+            }
+            case W_TOUCH: {
+                //TODO: play animations (make new Event for this)
+                if (direction&(DIR_UP|DIR_DOWN)) sfxeng->playWAV(aud_hit);
+                if (direction&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-100,-DSTRIKE,0,ESTATE_BUSY,aud_hit));
+                else setEvent(new ESpeed(this,TSTRIKE,-100,DSTRIKE,0,ESTATE_BUSY,aud_hit));
+                break;
+            }
+            case W_WATER: {
+                sfxeng->playWAV(aud_hit);
+                break;
+            }
+            case W_STRIKE: case W_EXPLOSION: {
+                //TODO: play animations
+                sfxeng->playWAV(aud_hit);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    return newhealth;
 }

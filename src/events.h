@@ -43,3 +43,14 @@ class ERun : public ESpeed {
         Sint16 ispeed;
         Sint16 t_reset;
 };
+
+class EAnim : public CharacterEvent {
+    public:
+        EAnim(Character* chr, Animation* runanim, bool delanim=false, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL);
+        virtual void start();
+        virtual void end();
+        virtual void cancel();
+    protected:
+        Animation* anim;
+        bool del;
+};

@@ -1,6 +1,7 @@
 #include "lost_vikings.h"
 #include "events.h"
 #include "objects.h"
+#include "weapons.h"
 
 using namespace std;
 
@@ -67,8 +68,8 @@ void CharacterEvent::cancel() {
 ELand::ELand(Character* chr, Uint16 length, Mix_Chunk* esound):
   CharacterEvent(chr,length,0,(STATE_IRR|ESTATE_BUSY),esound) { }
 void ELand::start() {
-    charowner->addHealth(-1);
-    cout << "Autsch!\n";
+    Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
+    charowner->hit(DIR_UP,tmpweap);
     CharacterEvent::start();
 }
 
@@ -111,4 +112,23 @@ Uint16 ERun::update(Uint16 dt) {
         evstate=CharacterEvent::update(dt);
     } 
     return evstate;
+}
+
+
+EAnim::EAnim(Character* chr, Animation* runanim, bool delanim, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
+  CharacterEvent(chr,30000,edelay,(switchstate|ESTATE_BUSY|ESTATE_ANIM),esound),anim(runanim),del(delanim) {
+    if (anim==NULL) cancel();
+}
+void EAnim::start() {
+    CharacterEvent::start();
+    charowner->setAnim(anim);
+}
+void EAnim::end() {
+    //hack!!!
+    if (del) delete anim;
+    if (started) charowner->updateAnimState();
+    CharacterEvent::end();
+}
+void EAnim::cancel() {
+    end();
 }

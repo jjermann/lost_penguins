@@ -17,9 +17,9 @@ Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname)
     state=STATE_FALL;
     otype|=OTYPE_CHARACTER;
     t_water=0;
-    im_orig=animation;
     dense_types=NOTHING;
     weapon=Weapon(0);
+    im_die=NULL;
 }
 
 Character::~Character() { }
@@ -67,25 +67,32 @@ void Character::removedObject(Object* obj) {
 
 //check the states and change the image correspondingly
 //TODO: add left, right, up, down, etc movement animations
-void Character::updateAnimState() { }
+void Character::updateAnimState(bool change) {
+    if (change) animation=im_orig;
+    curpos.w=animation->getWidth();
+    curpos.h=animation->getHeight();
+    curpos.x=(Uint16)((pos.w-curpos.w)/2); 
+    curpos.y=(pos.h-curpos.h);
+}
 
 //first thing to do
 void Character::idle(Uint16 dt) {
     //check if we have ground below us...
-    Hit hit;
-    hit=checkMove(pos);
+    Hit hitobj;
+    hitobj=checkMove(pos);
 
     //can't swim
     if(state&STATE_WATER) {
         Dwater+=dt;
         if (Dwater>=t_water) { 
-            addHealth(-1);
+            Weapon water(-1,W_WATER,WS_WATER);
+            hit(DIR_ALL,water);
             Dwater=0;
         }
     } else Dwater=0;
 
     //are we falling?
-    if ((!(hit.touch&DIR_DOWN)) || (gravity<0)) {
+    if ((!(hitobj.touch&DIR_DOWN)) || (gravity<0)) {
         setState(STATE_FALL);
     }
 }
@@ -115,13 +122,13 @@ Hit Character::move(Uint16 dt, bool check) {
         pos.y=dest.y; 
 
         if ((hit.enter&DIR_LEFT) || (hit.enter&DIR_RIGHT)) {
-            if (event) event->cancel();
+            if (event && (!(state&ESTATE_BUSY))) event->cancel();
             unsetState(STATE_MLEFT);
             unsetState(STATE_MRIGHT);
             hspeed=0;     
         }
         if (hit.enter&DIR_UP) {
-            if (event) event->cancel();
+            if (event && (!(state&ESTATE_BUSY))) event->cancel();
             speed=0;
         }
     }
@@ -145,7 +152,7 @@ void Character::fall(Uint16 dt) {
 
 //landing
 void Character::land() {
-    if (event) event->cancel();
+    if (event && (!(state&ESTATE_BUSY))) event->cancel();
     speed=0;
     unsetState(STATE_FALL);
     Dgrav=0;
@@ -172,7 +179,6 @@ Uint8 Character::setHealth(Uint8 newhealth) {
     if (newhealth==0) {
         cout << name << " died!\n";
         health=0;
-        die();
         return (health);
     } else if (newhealth > MAX_HEALTH) {
         return (health=MAX_HEALTH);
@@ -182,6 +188,7 @@ Uint8 Character::setHealth(Uint8 newhealth) {
 }
 
 Uint8 Character::addHealth(Sint8 dhealth) {
+    if (health==0) return 0;
     if ((health+dhealth)>=0) return setHealth(health+dhealth);
     else return health;
 }
@@ -379,17 +386,6 @@ inline void Character::updateRegions(std::set<Object *>& newtouch, std::set<Obje
 
 
 //gets hit by a weapon
-Sint16 Character::hit(Uint16 dir, Weapon& weap) {
-    Sint16 dhealth=addHealth(weap.getDamage());
-    switch (weap.getType()) {
-        case W_STRIKE: {
-            if (dir&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-100,-DSTRIKE,0,ESTATE_BUSY,NULL));
-            else setEvent(new ESpeed(this,TSTRIKE,-100,DSTRIKE,0,ESTATE_BUSY,NULL));
-            break;
-        }
-        default: {
-            break;
-        }
-    }
-    return dhealth;
+Uint16 Character::hit(Uint16 dir, Weapon& weap) {
+    return addHealth(weap.getDamage());
 }

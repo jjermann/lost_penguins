@@ -35,7 +35,6 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
             name=arg1;
         }
     }
-
     //normal objects
     if (obj=="Wall")         return (addObject(new Wall(image,x,y,name)));
     else if (obj=="Exit")    return (addObject(new Exit(image,x,y,name)));
@@ -99,7 +98,8 @@ object_iterator ObjectsPool::removeObject(object_iterator it) {
             if(Viking* ptrv = dynamic_cast<Viking*>(*it)) {
                 if (vikingspool.erase(ptrv)) {
                     currentviking=vikingspool.begin();
-                    switchViking();
+                    if (currentviking!=vikingspool.end()) viking=*currentviking;
+                    else viking=NULL;
                 }
             } else if (Monster* ptrm = dynamic_cast<Monster*>(*it)) monsterspool.erase(ptrm);
         }
@@ -120,7 +120,8 @@ Object* ObjectsPool::moveObject(Object* object) {
         if(Viking* ptrv = dynamic_cast<Viking*>(object)) {
             if (vikingspool.erase(ptrv)) {
                 currentviking=vikingspool.begin();
-                switchViking();
+                if (currentviking!=vikingspool.end()) viking=*currentviking;
+                else viking=NULL;
             }
         } else if (Monster* ptrm = dynamic_cast<Monster*>(object)) monsterspool.erase(ptrm);
     }

@@ -1,21 +1,36 @@
 TODO:
 =====
 
- o clenup the files (move out objects, separate .h, etc)
+ o IDEA: change Animation* pointers to Animation (or references), leave only
+   animation as a pointer and get the address each time...
+
+ o cleanup the files (move out objects, separate .h, etc)
 
  o introduce animation events that play an animation and end when it's
    finnished (always ESTATE_BUSY or abort animation?)
 
- o allow an event length depending on animation length, or: relate events more with animations!!!
+ o allow an event length depending on animation length, or: relate events more
+   with animations!!!
 
  o change hit to play the right death animation/sound, change water to hit
    characters...
 
+ o PROPER PLACEMENT CODE (and IDEA: allow moves from NULL and/or to NULL),
+   units should be placed in a way they won't give conflicts, examples:
+     - teleport should really teleport (above ground if possible)
+     - if a unit's position is too low and it dies the dead corps is
+       illegaly placed!
+     - the placement should somehow involve checkPlace...
+
  o FIX ALL BUGS! hahaha:
-     - sometimes the zombie doesn't turn from a wall
+     - the right/left movement stays when a busy animation starts!
+     - the zombie doesn't turn from a wall
      - hit event
      - zombie attacks too often if nearby
      - in short: rewrite zombie
+     - the new speed system doesn't always work (eg right move, ctrl before
+       release, etc, very buggy :()
+     - segfaults when doing sthg while the current viking is dying...
 
  o IDEA: add horizontal gravity that slows objects down??
 
@@ -23,27 +38,42 @@ TODO:
 
  o create dynamical plugins for all objects (or compile all in)
 
- o cleanup set_difference stuff => targets should be updated if an object
-   dies in an intelligent way...
-
- o DONE? Fix Memleaks
- 
- o pointers => references where possible
+ o IMPROVE?: cleanup set_difference stuff => targets should be updated if
+   an object dies in an intelligent way...
 
  o Structure/Cleanup:  
-     - PART DONE: fall logic including gravity!!
-     - PART_DONE: viking, object, item, ai, weapons, character
-     - IMPROVE: effect management (periodic events, permanent effects, etc)
-     - IDEA: find a better trigger/effect system
+     - DONE?: fall logic including gravity!!
+     - DONE?: viking, object, item, ai, weapons, character
+     - PART DONE: effect management (periodic events, permanent effects, etc)
      - DONE: hitlogic
-     - IDEA: remove touch, enter and call them in checkMove?
      - IDEA: merge otype and ctype and make all moves/etc depend on it
-     - IDEA: allow moves from NULL to NULL
 
  o Add attributes:
      - crushable (ie. weapon fart, jump, run destroys them?)
      - bombable (ie. bomb destroys them)
      - multistates? => bridges, door, stone block
+
+ o Maybe: Improve the (very simple) image format:
+     - All frame in one sprite sheet for each character (image matrices
+       using two description vectors or even more general: offset matrices)
+     - store rects in an array/vector/whatever or use offset matrices
+     - do some column/row logics to easy the access
+     - eg. set offsets for left, right, mleft, mright...
+
+-------------------------------------------------------------------------------
+
+ o DONE? Fix Memleaks
+ o pointers => references where possible
+ o Improve viking bar management
+ o Add better graphics
+ o finnish the map editor
+ o OpenGL
+ o Simple AI
+ o Menu
+
+ o Finnish the vikings:
+     - weapons: run, jump2, fart, sword, arm, fire, claws
+     - baleog swing (hard one)
 
  o Add new objects:
      - ladder
@@ -56,7 +86,7 @@ TODO:
      - plant
      - knight
      - dragon
-     - skeleton
+     - skeleton -> zombie
      - fish
      - firetower
  
@@ -70,31 +100,4 @@ TODO:
     - arm
 
  o Items?:
-    - bomb
-    - life
-    - key
     - special items
-
- o Finnish the vikings:
-     - weapons: run, jump2, fart, sword, arm, fire, claws
-     - eric run
-     - baleog swing (hard one)
-
- o Improve viking bar management
-
- o Add better graphics
-
- o finnish the map editor
-
- o Maybe: Improve the (very simple) image format:
-     - All frame in one sprite sheet for each character (image matrices
-       using two description vectors or even more general: offset matrices)
-     - store rects in an array/vector/whatever or use offset matrices
-     - do some column/row logics to easy the access
-     - eg. set offsets for left, right, mleft, mright...
-
- o OpenGL
-
- o Simple AI
-
- o Menu

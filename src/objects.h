@@ -54,6 +54,12 @@ class TriggeredBomb : public Character {
         Sint16 countdown;
 };
 
+class DeadViking : public Character {
+    public:
+        DeadViking(string imagename, Uint16 xcord=0, Uint16 ycord=0, string name="DeadViking");
+        virtual ~DeadViking();
+        virtual Uint16 hit(Uint16,Weapon&) { return health; }
+};
 
 /*==================
       Vikings
@@ -76,7 +82,7 @@ class Olaf : public Viking {
     public:
         Olaf(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Olaf");
         virtual ~Olaf();
-        virtual void updateAnimState();
+        virtual void updateAnimState(bool change=true);
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);
         virtual void in_down(Sint16);
@@ -84,7 +90,7 @@ class Olaf : public Viking {
         virtual void fall(Uint16);
         virtual void in_sp1(Sint16);
         virtual void in_sp2(Sint16);
-        virtual Sint16 hit(Uint16,Weapon&);
+        virtual Uint16 hit(Uint16,Weapon&);
     private:
         inline bool trySmall(bool small);
         Animation* im_small_left;
@@ -244,8 +250,6 @@ class Heart : public Item {
         Heart(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Heart");
         virtual ~Heart();
         virtual bool act(Object* obj);
-    private:
-        Mix_Chunk* au_heal;
 };
 
 class Key : public Item {
