@@ -39,13 +39,13 @@ Fang::~Fang() {
     delete im_claw_right;
 }
 
-void Fang::in_left(Sint16 dt) {
+void Fang::in_left(Uint16 dt) {
     Player::in_left(dt);
-    if (dt >= 0) unsetState(STATE_CLIMB_R);
+    unsetState(STATE_CLIMB_R);
 }
-void Fang::in_right(Sint16 dt) {
+void Fang::in_right(Uint16 dt) {
     Player::in_right(dt);
-    if (dt >= 0) unsetState(STATE_CLIMB_L);
+    unsetState(STATE_CLIMB_L);
 }
 
 void Fang::fall(Uint16 dt) {
@@ -71,10 +71,7 @@ void Fang::fall(Uint16 dt) {
     }
 }
 
-void Fang::in_sp1(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_SP1);
-
+void Fang::in_sp1() {
     if (state&STATE_CLIMB_L) {
         unsetState(STATE_LEFT);
         unsetState(STATE_CLIMB_L);
@@ -96,10 +93,7 @@ void Fang::in_sp1(Sint16 dt) {
     }
 }
 
-void Fang::in_sp2(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_SP2);
-
+void Fang::in_sp2() {
     setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? im_claw_left : im_claw_right));
 }
 

@@ -177,9 +177,7 @@ void Player::idle(Uint16 dt) {
     Character::idle(dt);
 }
 
-void Player::in_act(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_ACT);
+void Player::in_act() {
     object_iterator i=enter.begin();
     while (i!=enter.end()) {
         if ((*i)->act(this)) {
@@ -190,39 +188,23 @@ void Player::in_act(Sint16 dt) {
     }
 }
 
-void Player::in_use(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_USE);
+void Player::in_use() {
     if (items[currentitem]) {
         if (!(items[currentitem]->act(this))) sfxeng->playWAV(au_useerror);
     }
 }
 
-void Player::in_right(Sint16 dt) {
-    if (dt < 0) {
-        unsetState(STATE_MRIGHT);
-        return;
-    }
+void Player::in_right(Uint16 dt) {
     unsetState(STATE_LEFT);
-    setState(STATE_MRIGHT);
     if ((hspeed+HSPEED_MULT*dt/100)<maxspeedx) hspeed+=HSPEED_MULT*dt/100;
     else if (hspeed<maxspeedx) hspeed=maxspeedx;
 }
 
-void Player::in_left(Sint16 dt) {
-    if (dt < 0) {
-        unsetState(STATE_MLEFT);
-        return;
-    }
+void Player::in_left(Uint16 dt) {
     setState(STATE_LEFT);
-    setState(STATE_MLEFT);
     if ((hspeed-HSPEED_MULT*dt/100)>(-maxspeedx)) hspeed-=HSPEED_MULT*dt/100;
     else if (hspeed>(-maxspeedx)) hspeed=-maxspeedx;
 }
-void Player::in_up(Sint16) { }
-void Player::in_down(Sint16) { }
-void Player::in_sp1(Sint16) { }
-void Player::in_sp2(Sint16) { }
 
 Hit Player::move(Uint16 dt, bool check) {
     return Character::move(dt,check);
@@ -276,10 +258,6 @@ void Player::die() {
 }
 
 void Player::clearStates(bool reset) {
-    if (getState(STATE_MLEFT)) in_left(-1);
-    if (getState(STATE_MRIGHT)) in_right(-1);
-    if (getState(STATE_MUP)) in_up(-1);
-    if (getState(STATE_MDOWN)) in_down(-1);
     if (reset) {
         unsetState(STATE_ACT_1);
         unsetState(STATE_ACT_2);

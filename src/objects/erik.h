@@ -15,16 +15,18 @@ class Erik : public Player {
     public:
         Erik(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Erik");
         virtual ~Erik();
-        /// \brief Erik jumps
-        virtual void in_sp1(Sint16);
-        // \brief Erik runs
-        virtual void in_sp2(Sint16);
-        virtual void in_left(Sint16);
-        virtual void in_right(Sint16);
+        virtual void idle(Uint16); 
+       /// \brief Erik jumps
+        virtual void in_sp1();
+        /// \brief Erik runs
+        virtual void in_sp2();
+        virtual void in_left(Uint16);
+        virtual void in_right(Uint16);
         virtual void crash(Uint16 dir);
         virtual Uint16 hit(Uint16 direction,Weapon& weap);
     private:
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;
         Sint16 jump,jump2;
+        bool run_right;
 };

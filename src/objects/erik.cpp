@@ -36,11 +36,29 @@ Erik::~Erik() {
     delete im_land_right;
 }
 
-void Erik::in_sp1(Sint16 dt) {
-    //TODO: check STATE_WATER
-    if (dt < 0) return;
-    input->unsetState(INPUT_SP1);
+void Erik::idle(Uint16 dt) {
+    Player::idle(dt);
+    //TODO: this is an ugly hack...
+    if (!input->keyState(KEY_SP2)) {
+        dense_types&=~OTYPE_MONSTER;
+        if (state&STATE_RUN) cancelEvent();
+    } else if (state&STATE_RUN) {
+        dense_types|=OTYPE_MONSTER;
+        if (state&STATE_FALL) cancelEvent();
+        if ((!state&STATE_MRIGHT) && run_right) cancelEvent();
+        if ((!state&STATE_MLEFT) && (!run_right)) cancelEvent();
+    } else {
+        //TODO: check STATE_WATER
+        if (state&(STATE_MLEFT|STATE_MRIGHT)) {
+            if (state&STATE_MRIGHT) run_right=true;
+            else run_right=false;
+            setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run));
+        }
+    }
+}
 
+void Erik::in_sp1() {
+    //TODO: check STATE_WATER
     if (state&STATE_FALL) setState(STATE_ACT_1);
 
     if (state&STATE_ACT_2) {
@@ -55,27 +73,17 @@ void Erik::in_sp1(Sint16 dt) {
     }
 }
 
-void Erik::in_sp2(Sint16 dt) {
+void Erik::in_sp2() {
     //TODO: check STATE_WATER
-    if (dt < 0) {
-        input->unsetState(INPUT_SP2);
-        dense_types&=~OTYPE_MONSTER;
-        if (state&STATE_RUN) cancelEvent();
-        return;
-    }
-    if (state&STATE_RUN) {
-        dense_types|=OTYPE_MONSTER;
-        if (state&STATE_FALL) cancelEvent();
-    } else if (state&(STATE_MLEFT|STATE_MRIGHT)) {
+    if (state&(STATE_MLEFT|STATE_MRIGHT)) {
+        if (state&STATE_MRIGHT) run_right=true;
+        else run_right=false;
         setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run));
     }
 }
 
-void Erik::in_left(Sint16 dt) {
-    if (dt < 0) {
-        //TODO: play decelerate animation (setEvent instead)
-        if (state&STATE_RUN) cancelEvent();
-    } else if (state&STATE_RUN) {
+void Erik::in_left(Uint16 dt) {
+    if (state&STATE_RUN) {
         if (state&STATE_LEFT) event->reset();
         //changed directions, TODO: play decelerate animation
         else cancelEvent();
@@ -83,11 +91,8 @@ void Erik::in_left(Sint16 dt) {
     Player::in_left(dt);
 }
 
-void Erik::in_right(Sint16 dt) {
-    if (dt < 0) {
-        //TODO: play decelerate animation (setEvent instead)
-        if (state&STATE_RUN) cancelEvent();
-    } else if (state&STATE_RUN) {
+void Erik::in_right(Uint16 dt) {
+    if (state&STATE_RUN) {
         if (!(state&STATE_LEFT)) event->reset();
         //changed directions, TODO: play decelerate animation
         else cancelEvent();

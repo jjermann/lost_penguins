@@ -10,11 +10,20 @@ class PhysicHandler  {
         ~PhysicHandler();
         /// Updates all game states and animations
         void update();
-        /// Resets the current time
-        /// \return New current time
-        Uint16 resetTime();
+        Uint16 getFPS() {
+            return currentfps;
+        }
+        Uint16 getMinFPS() {
+            return minfps;
+        }
     private:
         Uint16 tstart, tcurrent, dt;
+        bool reset_time;
+        Uint16 Dfps,Dframes,currentfps,minfps;
+    private:
+        inline void updateGame();
+        inline void updatePaused();
+        inline void updateFPS();
 };
 
 #endif

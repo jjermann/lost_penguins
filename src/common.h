@@ -61,6 +61,26 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define DIR_DWL         0x0000000A
 #define DIR_LR          0x00000003
 
+enum ConfigKey {
+    KEY_START,
+    KEY_LEFT,
+    KEY_RIGHT,
+    KEY_UP,
+    KEY_DOWN,
+    KEY_SP1,
+    KEY_SP2,
+    KEY_ACT,
+    KEY_USE,
+    KEY_DROP,
+    KEY_SWITCH,
+    KEY_PAUSE,
+    KEY_MENU,
+    KEY_FPS,
+    KEY_BAR,
+    KEY_FULL,
+    KEY_QUIT
+};
+
 /**\brief Collision type
 
 */
@@ -82,6 +102,7 @@ struct Config {
     int audio_channels;
     string datadir;
     string map;
+    SDLKey keybind[30];
 };
 
 /**\brief Frame format

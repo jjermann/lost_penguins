@@ -6,17 +6,15 @@
 #include "imgcache.h"
 #include "scenario.h"
 #include "menu.h"
+//Only needed for fps
+#include "scenario.h"
+#include "physics.h"
 #include "gfxeng.h"
 
 
 GraphicsEngine::GraphicsEngine():
   screen(NULL),
   menubg(NULL),
-  Dfps(0),
-  Dframes(0),
-  currentfps(0),
-  tcurrent(SDL_GetTicks()),
-  menu_done(false),
   show_bar(true),
   show_fps(true),
   fullscreen(config.full) {
@@ -41,6 +39,53 @@ GraphicsEngine::~GraphicsEngine() {
     SDL_FreeSurface(screen);
 }
 
+void GraphicsEngine::update(Uint8 upd) {
+    if (updatetype==UPDATE_ALL) return;
+    else updatetype=upd;
+}
+
+void GraphicsEngine::draw() {
+    //Menu
+    if (menu) {
+        //Assure we have a (correct) menu background
+        if (!menubg) {
+            if (running) {
+                setGameMenuBG();
+            } else {
+                setMenuBG();
+            }
+        }
+        if (updatetype==UPDATE_ALL) {
+            if (running) {
+                setGameMenuBG();
+                drawMenu();
+            } else {
+                setMenuBG();
+                drawMenu();
+            }
+        } else if (updatetype==UPDATE_MENU) {
+            drawMenu();
+        }
+    //Paused game
+    } else if (paused) {
+        if (updatetype==UPDATE_ALL) {
+            drawScene();
+            drawPlayerBar();
+        } else if (updatetype==UPDATE_BAR) {
+            drawPlayerBar();
+        }
+    //Not paused running game
+    } else if (running) {
+        drawScene();
+        drawPlayerBar();
+        drawFPS();
+        updatetype=UPDATE_ALL;
+    } else return;
+    //This is the most time consuming operation
+    if (updatetype!=UPDATE_NOTHING) SDL_Flip(screen);
+    updatetype=UPDATE_NOTHING;
+}
+
 void GraphicsEngine::resize(Uint16 width, Uint16 height) {
     if (screen) SDL_FreeSurface(screen);
     
@@ -59,6 +104,7 @@ void GraphicsEngine::resize(Uint16 width, Uint16 height) {
     vis_map.y=0;
     vis_map.w=screen->w;
     vis_map.h=screen->h-bar.h;
+    update(UPDATE_ALL);
 }
 
 inline SDL_Rect GraphicsEngine::clipToBG(SDL_Rect dest) const {
@@ -92,7 +138,43 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
     return shift;    
 }
 
-inline void GraphicsEngine::drawPlayerBar() {
+void GraphicsEngine::drawScene() {
+    if (!running) return;
+
+    //We don't want to change pos!
+    SDL_Rect tmprect,shift,srcpos;
+    if (scenario->player!=NULL) {
+        shift=setShift(scenario->player->getCenter());
+    } else {
+        shift.x=0;
+        shift.y=0;
+    }
+
+    tmprect=*scenario->area;
+    srcpos=scenario->background->getFrame().pos;
+    shiftMapArea(tmprect,*scenario->background->getCurPos());
+    SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+    
+    object_iterator obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        tmprect=*((*obit)->getPos());
+        srcpos=(*obit)->getFrame().pos;
+        shiftMapArea(tmprect,*((*obit)->getCurPos()));
+        SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+        ++obit;
+    }
+
+    if (scenario->player!=NULL) {
+        tmprect=*(scenario->player->getPos());
+        srcpos=scenario->player->getFrame().pos;
+        shiftMapArea(tmprect,*(scenario->player->getCurPos()));
+        SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+    }
+}
+
+//TODO don't draw the whole screen, just till bar, just upgrade certain regions of the bar
+void GraphicsEngine::drawPlayerBar() {
+    if (!show_bar) return;
     //#players
     Uint8 pnum=scenario->pool->playerspool.size();
     //temporary dest pos, source pos, copy of dest pos
@@ -163,54 +245,9 @@ inline void GraphicsEngine::drawPlayerBar() {
     }
 }
 
-void GraphicsEngine::renderScene(bool insist) {
-    resetMenuBG();
-    if (scenario->background && (!paused || insist)) {
-        //We don't want to change pos!
-        SDL_Rect tmprect,shift,srcpos;
-        if (scenario->player!=NULL) {
-            shift=setShift(scenario->player->getCenter());
-        } else {
-            shift.x=0;
-            shift.y=0;
-        }
-    
-        tmprect=*scenario->area;
-        srcpos=scenario->background->getFrame().pos;
-        shiftMapArea(tmprect,*scenario->background->getCurPos());
-        SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
-        
-        object_iterator obit=scenario->pool->objectspool.begin();
-        while (obit!=scenario->pool->objectspool.end()) {
-            tmprect=*((*obit)->getPos());
-            srcpos=(*obit)->getFrame().pos;
-            shiftMapArea(tmprect,*((*obit)->getCurPos()));
-            SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
-            ++obit;
-        }
-    
-        if (scenario->player!=NULL) {
-            tmprect=*(scenario->player->getPos());
-            srcpos=scenario->player->getFrame().pos;
-            shiftMapArea(tmprect,*(scenario->player->getCurPos()));
-            SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
-        }
-    }
-    
-    //TODO don't draw the whole screen, just till bar, just upgrade certain regions of the bar
-    if (show_bar) drawPlayerBar();
-    if (show_fps) {
-        Dfps+=(SDL_GetTicks()-tcurrent);
-        tcurrent=SDL_GetTicks();
-        ++Dframes;
-        if (Dfps>=100) {
-            currentfps=Uint16(Dframes*1000/Dfps);
-            Dfps=0;
-            Dframes=0;
-        }
-        font->write(screen,"FPS: " + itos(currentfps),screen->w-150,0);
-    }
-    SDL_Flip(screen);
+void GraphicsEngine::drawFPS() {
+    if (!show_fps) return;
+    font->write(screen,"FPS: " + itos(scenario->physic->getFPS()) + " [" + itos(scenario->physic->getMinFPS()) + "]",screen->w-170,0);
 }
 
 void GraphicsEngine::togglePlayerBar() {
@@ -250,57 +287,53 @@ void GraphicsEngine::toggleFullScreen() {
 }
 
 void GraphicsEngine::drawMenu() {
-    if (!menu_done) {
-        menu_done=true;
-        //Semitransparent background
-        setGameMenuBG();
-        SDL_BlitSurface(menubg,NULL,screen,NULL);
+    if (menubg) SDL_BlitSurface(menubg,NULL,screen,NULL);
 
-        menu->font_title->writeCenter(screen,menu->title,0);
+    menu->font_title->writeCenter(screen,menu->title,0);
 
-        Uint16 h;
-        for (Uint8 i=0; i< menu->getSize(); i++) {
-            if (i<=menu->currententry) {
-                h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2;
-            } else {
-                h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i)*(menu->font->getHeight()))/2;
-            }
-            if (i==menu->currententry) menu->font_high->writeCenter(screen,menu->entries[i],h);
-            else menu->font->writeCenter(screen,menu->entries[i],h);
+    Uint16 h;
+    for (Uint8 i=0; i< menu->getSize(); i++) {
+        if (i<=menu->currententry) {
+            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2;
+        } else {
+            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i)*(menu->font->getHeight()))/2;
         }
-
-        SDL_Flip(screen);
+        if (i==menu->currententry) menu->font_high->writeCenter(screen,menu->entries[i],h);
+        else menu->font->writeCenter(screen,menu->entries[i],h);
     }
 }
 
 //this could probably be done much easier ;)
 inline void GraphicsEngine::setGameMenuBG() {
-    if (!menubg) {
-        SDL_Surface* tmp = SDL_CreateRGBSurface (
-          SDL_HWSURFACE,
-          screen->w,
-          screen->h,
-          32,
-          rmask,gmask,bmask,0);
+    if (menubg) SDL_FreeSurface(menubg);
+    drawScene();
+    drawPlayerBar();
+    SDL_Flip(screen);
+    
+    SDL_Surface* tmp = SDL_CreateRGBSurface (
+      SDL_HWSURFACE,
+      screen->w,
+      screen->h,
+      32,
+      rmask,gmask,bmask,0);
 #ifdef ALPHA
-        menubg = SDL_CreateRGBSurface (
-          SDL_HWSURFACE,
-          screen->w,
-          screen->h,
-          32,
-          rmask,gmask,bmask,0);
-        SDL_BlitSurface(screen,NULL,menubg,NULL);
-        SDL_SetAlpha(menubg,SDL_SRCALPHA,60);
-        SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
-        SDL_BlitSurface(menubg,NULL,tmp,NULL);
-        SDL_FreeSurface(menubg);
-        menubg=SDL_DisplayFormatAlpha(tmp);
+    menubg = SDL_CreateRGBSurface (
+      SDL_HWSURFACE,
+      screen->w,
+      screen->h,
+      32,
+      rmask,gmask,bmask,0);
+    SDL_BlitSurface(screen,NULL,menubg,NULL);
+    SDL_SetAlpha(menubg,SDL_SRCALPHA,60);
+    SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
+    SDL_BlitSurface(menubg,NULL,tmp,NULL);
+    SDL_FreeSurface(menubg);
+    menubg=SDL_DisplayFormatAlpha(tmp);
 #else
-        SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
-        menubg=SDL_DisplayFormat(tmp);
+    SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
+    menubg=SDL_DisplayFormat(tmp);
 #endif
-        SDL_FreeSurface(tmp);
-    }
+    SDL_FreeSurface(tmp);
 }
 
 void GraphicsEngine::setMenuBG(SDL_Surface* menu_background) {

@@ -51,27 +51,13 @@ int main(int argc, char* argv[]) {
     scenario=new Scenario();
 
     gfxeng->setMenuBG();
-    menu=new StartMenu();
+    menu=NULL;
+    setMenu(new StartMenu());
 
     while (true) {
-        if (menu) {
-            gfxeng->drawMenu();
-            //Check menu input
-            input->pollMEvents();
-        } else if (running) {
-            if (paused) {
-                //Check pause input
-                input->pollPEvents();
-            } else {
-                gfxeng->renderScene();
-                //Check normal input
-                input->pollEvents();
-                //Run Animations
-                scenario->physic->update();
-            }
-        } else {
-            quitGame(-6);
-        }
+        input->update();
+        if (running) scenario->physic->update();
+        gfxeng->draw();
     }
 
     quitGame(-2);
@@ -112,6 +98,24 @@ int readConfig(const string& filename) {
     config.datadir="data/";
     config.map="map1.cfg";
 
+    //key bindings
+    config.keybind[KEY_LEFT]    = SDLK_LEFT;
+    config.keybind[KEY_RIGHT]   = SDLK_RIGHT;
+    config.keybind[KEY_UP]      = SDLK_UP;
+    config.keybind[KEY_DOWN]    = SDLK_DOWN;
+    config.keybind[KEY_SP1]     = SDLK_SPACE;
+    config.keybind[KEY_SP2]     = SDLK_LSHIFT;
+    config.keybind[KEY_ACT]     = SDLK_RETURN;
+    config.keybind[KEY_USE]     = SDLK_INSERT;
+    config.keybind[KEY_DROP]    = SDLK_DELETE;
+    config.keybind[KEY_SWITCH]  = SDLK_LCTRL;
+    config.keybind[KEY_PAUSE]   = SDLK_TAB;
+    config.keybind[KEY_MENU]    = SDLK_ESCAPE;
+    config.keybind[KEY_FPS]     = SDLK_F2;
+    config.keybind[KEY_BAR]     = SDLK_F1;
+    config.keybind[KEY_FULL]    = SDLK_f;
+    config.keybind[KEY_QUIT]    = SDLK_q;
+
     configfile.open(filename.c_str());
     if (!configfile) return 0;
 
@@ -136,6 +140,7 @@ int readConfig(const string& filename) {
             config.full=true;
         } else if (option=="map") {
             config.map=arg1;
+        //TODO: add keybindings
         } else {
             cout << "Unknown option: " << option << endl;
         }

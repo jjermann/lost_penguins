@@ -25,12 +25,12 @@ class Fang : public Player {
         Fang(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Fang");
         virtual ~Fang();
         virtual void fall(Uint16);
-        virtual void in_left(Sint16);
-        virtual void in_right(Sint16);
+        virtual void in_left(Uint16);
+        virtual void in_right(Uint16);
         /// \brief Fang jumps
-        virtual void in_sp1(Sint16);
+        virtual void in_sp1();
         /// \brief Fang attacks
-        virtual void in_sp2(Sint16);
+        virtual void in_sp2();
         virtual void clearStates(bool reset=false);
     private:
         virtual void crash(Uint16 dir=DIR_DOWN);

@@ -24,24 +24,3 @@ int boost(int a, int b) {
     if (a>=0) return a=max(0,a+b);
     else return a=min(0,a-b);
 }
-
-Menu* setMenu(Menu* newmenu) {
-    newmenu->setLast(menu);
-    return menu=newmenu;
-}
-
-Menu* closeMenu() {
-    if (menu) {
-        Menu* tmp=menu->getLast();
-        delete menu;
-        return menu=tmp;
-    } else {
-        return NULL;
-    }
-}
-
-void closeMenus() {
-    while (menu) {
-        closeMenu();
-    }
-}

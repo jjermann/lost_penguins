@@ -11,161 +11,66 @@
 #include "objects_common.h"
 
 
-InputHandler::InputHandler():
-  state(NOTHING) {
-    paused=false;
+InputHandler::InputHandler() {
     au_pause=sndcache->loadWAV("pause.wav");
+    SDL_PumpEvents();
+    keystate = SDL_GetKeyState(NULL);
 }
 
 InputHandler::~InputHandler() {
 }
 
-void InputHandler::pollMEvents() {
-    SDL_Event event;
+bool InputHandler::keyPressed(ConfigKey key) {
+    return keypressed[config.keybind[key]];
+}
+bool InputHandler::keyState(ConfigKey key) {
+    return keystate[config.keybind[key]];
+}   
 
+void InputHandler::update() {
+    if (menu) {
+        pollMenuEvents();
+    } else if (paused) {
+        pollPausedEvents();
+    } else {
+        pollGameEvents();
+    }
+}
+
+inline void InputHandler::pollMenuEvents() {
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
            // special events
          case SDL_VIDEORESIZE: {
              gfxeng->resize(event.resize.w, event.resize.h);
-             gfxeng->renderScene(true);
-             gfxeng->updateMenu();
-             gfxeng->drawMenu();
              break;
          }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
             }
-            case SDL_KEYUP: {
-                switch(event.key.keysym.sym) {
-                    case SDLK_LEFT: {
-                        if (state&INPUT_LEFT) setState(INPUTR_LEFT);
-                        state&=~INPUT_LEFT;
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        if (state&INPUT_RIGHT) state|=INPUTR_RIGHT;
-                        state&=~INPUT_RIGHT;
-                        break;
-                    }
-                    case SDLK_UP: {
-                        if (state&INPUT_UP) setState(INPUTR_UP);
-                        state&=~INPUT_UP;
-                        break;
-                    }
-                    case SDLK_DOWN: {
-                        if (state&INPUT_DOWN) setState(INPUTR_DOWN);
-                        state&=~INPUT_DOWN;
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        if (state&INPUT_SP1) setState(INPUTR_SP1);
-                        state&=~INPUT_SP1;
-                        break;
-                    }
-                    case SDLK_LSHIFT: {
-                        if (state&INPUT_SP2) setState(INPUTR_SP2);
-                        state&=~INPUT_SP2;
-                        break;
-                    }
-                    case SDLK_RETURN: {
-                        if (state&INPUT_ACT) setState(INPUTR_ACT);
-                        state&=~INPUT_ACT;
-                        break;
-                    }
-                    case SDLK_INSERT: {
-                        if (state&INPUT_USE) setState(INPUTR_USE);
-                        state&=~INPUT_USE;
-                        break;
-                    }
-                    case SDLK_DELETE: {
-                        if (state&INPUT_DEL) setState(INPUTR_DEL);
-                        state&=~INPUT_DEL;
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
-                break;
-            }
             case SDL_KEYDOWN: {
-                switch(event.key.keysym.sym) {
-                    case SDLK_LEFT: {
-                        state|=INPUT_LEFT;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        state|=INPUT_RIGHT;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_UP: {
-                        if (state&INPUT_UP) break;
-                        menu->increaseEntry(false);
-                        state|=INPUT_UP;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_DOWN: {
-                        if (state&INPUT_DOWN) break;
-                        menu->increaseEntry();
-                        state|=INPUT_DOWN;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        state|=INPUT_SP1;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_LSHIFT: {
-                        state|=INPUT_SP2;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_RETURN: {
-                        if (state&INPUT_ACT) break;
-                        state|=INPUT_ACT;
-                        menu->act();
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_INSERT: {
-                        state|=INPUT_USE;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_DELETE: {
-                        state|=INPUT_DEL;
-                        gfxeng->updateMenu();
-                        break;
-                    }
-                    case SDLK_ESCAPE: {
-                         if (!closeMenu()) {
-                             gfxeng->renderScene(true);
-                             scenario->physic->resetTime();
+                SDLKey key=event.key.keysym.sym;
+                if (key==config.keybind[KEY_UP]) {
+                    menu->increaseEntry(false);
+                } else if (key==config.keybind[KEY_DOWN]) {
+                    menu->increaseEntry();  
+                } else if (key==config.keybind[KEY_ACT]) {
+                    menu->act();
+                } else if (key==config.keybind[KEY_MENU]) {
+                     if (!closeMenu()) {
+                         if (running) {
                              sfxeng->resumeMusic();
+                         } else {
+                             quitGame(0);
                          }
-                         gfxeng->updateMenu();
-                         break;
-                    }
-                    case SDLK_f: {
-                         gfxeng->toggleFullScreen();
-                         gfxeng->updateMenu();
-                         break;
-                    }
-                    case SDLK_q: {
-                         quitGame(0);
-                         gfxeng->updateMenu();
-                         break;
-                    }
-                    default: {
-                        break;
-                    }
+                     }
+                } else if (key==config.keybind[KEY_FULL]) { 
+                     gfxeng->toggleFullScreen();
+                } else if (key==config.keybind[KEY_QUIT]) { 
+                     quitGame(0);
                 }
+                gfxeng->update(UPDATE_MENU);
                 break;
             }
             default: {
@@ -175,149 +80,34 @@ void InputHandler::pollMEvents() {
     }    
 }
 
-void InputHandler::pollPEvents() {
-    SDL_Event event;
-
+inline void InputHandler::pollPausedEvents() {
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
            // special events
          case SDL_VIDEORESIZE: {
              gfxeng->resize(event.resize.w, event.resize.h);
-             gfxeng->renderScene(true);
              break;
          }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
             }
-            case SDL_KEYUP: {
-                switch(event.key.keysym.sym) {
-                    case SDLK_LEFT: {
-                        if (state&INPUT_LEFT) setState(INPUTR_LEFT);
-                        state&=~INPUT_LEFT;
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        if (state&INPUT_RIGHT) state|=INPUTR_RIGHT;
-                        state&=~INPUT_RIGHT;
-                        break;
-                    }
-                    case SDLK_UP: {
-                        if (state&INPUT_UP) setState(INPUTR_UP);
-                        state&=~INPUT_UP;
-                        break;
-                    }
-                    case SDLK_DOWN: {
-                        if (state&INPUT_DOWN) setState(INPUTR_DOWN);
-                        state&=~INPUT_DOWN;
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        if (state&INPUT_SP1) setState(INPUTR_SP1);
-                        state&=~INPUT_SP1;
-                        break;
-                    }
-                    case SDLK_LSHIFT: {
-                        if (state&INPUT_SP2) setState(INPUTR_SP2);
-                        state&=~INPUT_SP2;
-                        break;
-                    }
-                    case SDLK_RETURN: {
-                        if (state&INPUT_ACT) setState(INPUTR_ACT);
-                        state&=~INPUT_ACT;
-                        break;
-                    }
-                    case SDLK_INSERT: {
-                        if (state&INPUT_USE) setState(INPUTR_USE);
-                        state&=~INPUT_USE;
-                        break;
-                    }
-                    case SDLK_DELETE: {
-                        if (state&INPUT_DEL) setState(INPUTR_DEL);
-                        state&=~INPUT_DEL;
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
-                break;
-            }
             case SDL_KEYDOWN: {
-                switch(event.key.keysym.sym) {
-                    case SDLK_LCTRL: {
-                        scenario->pool->switchPlayer();
-                        state=NOTHING;
-                        break;
-                    }
-                    case SDLK_LEFT: {
-                        state|=INPUT_LEFT;
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        state|=INPUT_RIGHT;
-                        break;
-                    }
-                    case SDLK_UP: {
-                        state|=INPUT_UP;
-                        break;
-                    }
-                    case SDLK_DOWN: {
-                        state|=INPUT_DOWN;
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        state|=INPUT_SP1;
-                        break;
-                    }
-                    case SDLK_LSHIFT: {
-                        state|=INPUT_SP2;
-                        break;
-                    }
-                    case SDLK_RETURN: {
-                        state|=INPUT_ACT;
-                        break;
-                    }
-                    case SDLK_INSERT: {
-                        state|=INPUT_USE;
-                        break;
-                    }
-                    case SDLK_DELETE: {
-                        state|=INPUT_DEL;
-                        break;
-                    }
-                    //change game state!
-                    case SDLK_TAB: {
-                         paused=false;
-                         scenario->physic->resetTime();
-                         sfxeng->resumeMusic();
-                         break;
-                    }
-                    case SDLK_ESCAPE: {
-                         sfxeng->pauseMusic();
-                         menu=new GameMenu();
-                         break;
-                    }
-                    case SDLK_F1: {
-                         gfxeng->togglePlayerBar();
-                         break;
-                    }
-                    case SDLK_F2: {
-                         gfxeng->toggleFPS();
-                         break;
-                    }
-                    case SDLK_f: {
-                         gfxeng->toggleFullScreen();
-                         break;
-                    }
-                    case SDLK_q: {
-                         quitGame(0);
-                         break;
-                    }
-                    default: {
-                        break;
-                    }
+                SDLKey key=event.key.keysym.sym;
+                if (key==config.keybind[KEY_SWITCH]) {
+                     scenario->pool->switchPlayer();
+                } else if (key==config.keybind[KEY_PAUSE]) {
+                     paused=false;
+                     sfxeng->resumeMusic();
+                } else if (key==config.keybind[KEY_MENU]) {
+                     sfxeng->pauseMusic();
+                     setMenu(new GameMenu());
+                } else if (key==config.keybind[KEY_FULL]) {
+                     gfxeng->toggleFullScreen();
+                } else if (key==config.keybind[KEY_QUIT]) {
+                     quitGame(0);
                 }
+                gfxeng->update(UPDATE_BAR);
                 break;
             }
             default: {
@@ -327,148 +117,42 @@ void InputHandler::pollPEvents() {
     }    
 }
 
-void InputHandler::pollEvents() {
-    SDL_Event event;
-
+inline void InputHandler::pollGameEvents() {
+    for (Uint16 i=0; i<SDLK_LAST; i++) {
+        keypressed[i]=false;
+    }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
            // special events
          case SDL_VIDEORESIZE: {
              gfxeng->resize(event.resize.w, event.resize.h);
-             gfxeng->renderScene(true);
              break;
          }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
             }
-            case SDL_KEYUP: {
-                switch(event.key.keysym.sym) {
-                    case SDLK_LEFT: {
-                        if (state&INPUT_LEFT) setState(INPUTR_LEFT);
-                        state&=~INPUT_LEFT;
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        if (state&INPUT_RIGHT) state|=INPUTR_RIGHT;
-                        state&=~INPUT_RIGHT;
-                        break;
-                    }
-                    case SDLK_UP: {
-                        if (state&INPUT_UP) setState(INPUTR_UP);
-                        state&=~INPUT_UP;
-                        break;
-                    }
-                    case SDLK_DOWN: {
-                        if (state&INPUT_DOWN) setState(INPUTR_DOWN);
-                        state&=~INPUT_DOWN;
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        if (state&INPUT_SP1) setState(INPUTR_SP1);
-                        state&=~INPUT_SP1;
-                        break;
-                    }
-                    case SDLK_LSHIFT: {
-                        if (state&INPUT_SP2) setState(INPUTR_SP2);
-                        state&=~INPUT_SP2;
-                        break;
-                    }
-                    case SDLK_RETURN: {
-                        if (state&INPUT_ACT) setState(INPUTR_ACT);
-                        state&=~INPUT_ACT;
-                        break;
-                    }
-                    case SDLK_INSERT: {
-                        if (state&INPUT_USE) setState(INPUTR_USE);
-                        state&=~INPUT_USE;
-                        break;
-                    }
-                    case SDLK_DELETE: {
-                        if (state&INPUT_DEL) setState(INPUTR_DEL);
-                        state&=~INPUT_DEL;
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
-                break;
-            }
             case SDL_KEYDOWN: {
-                switch(event.key.keysym.sym) {
-                    case SDLK_LCTRL: {
-                        scenario->pool->switchPlayer();
-                        state=NOTHING;
-                        break;
-                    }
-                    case SDLK_LEFT: {
-                        state|=INPUT_LEFT;
-                        break;
-                    }
-                    case SDLK_RIGHT: {
-                        state|=INPUT_RIGHT;
-                        break;
-                    }
-                    case SDLK_UP: {
-                        state|=INPUT_UP;
-                        break;
-                    }
-                    case SDLK_DOWN: {
-                        state|=INPUT_DOWN;
-                        break;
-                    }
-                    case SDLK_SPACE: {
-                        state|=INPUT_SP1;
-                        break;
-                    }
-                    case SDLK_LSHIFT: {
-                        state|=INPUT_SP2;
-                        break;
-                    }
-                    case SDLK_RETURN: {
-                        state|=INPUT_ACT;
-                        break;
-                    }
-                    case SDLK_INSERT: {
-                        state|=INPUT_USE;
-                        break;
-                    }
-                    case SDLK_DELETE: {
-                        state|=INPUT_DEL;
-                        break;
-                    }
-                    //change game state!
-                    case SDLK_TAB: {
-                         paused=true;
-                         sfxeng->playWAV(au_pause);
-                         sfxeng->pauseMusic();
-                         break;
-                    }
-                    case SDLK_ESCAPE: {
-                         sfxeng->pauseMusic();
-                         menu=new GameMenu();
-                         break;
-                    }
-                    case SDLK_F1: {
-                         gfxeng->togglePlayerBar();
-                         break;
-                    }
-                    case SDLK_F2: {
-                         gfxeng->toggleFPS();
-                         break;
-                    }
-                    case SDLK_f: {
-                         gfxeng->toggleFullScreen();
-                         break;
-                    }
-                    case SDLK_q: {
-                         quitGame(0);
-                         break;
-                    }
-                    default: {
-                        break;
-                    }
+                SDLKey key=event.key.keysym.sym;
+                keypressed[key]=true;
+                if (key==config.keybind[KEY_SWITCH]) {
+                     scenario->pool->switchPlayer();
+                } else if (key==config.keybind[KEY_PAUSE]) {  
+                     paused=true;
+                     sfxeng->playWAV(au_pause);
+                     sfxeng->pauseMusic();
+                } else if (key==config.keybind[KEY_MENU]) {
+                     sfxeng->pauseMusic();
+                     setMenu(new GameMenu());
+                     gfxeng->update(UPDATE_ALL); 
+                } else if (key==config.keybind[KEY_BAR]) {   
+                     gfxeng->togglePlayerBar();
+                } else if (key==config.keybind[KEY_FPS]) {
+                     gfxeng->toggleFPS(); 
+                } else if (key==config.keybind[KEY_FULL]) {
+                     gfxeng->toggleFullScreen();
+                } else if (key==config.keybind[KEY_QUIT]) {
+                     quitGame(0);
                 }
                 break;
             }
@@ -477,5 +161,5 @@ void InputHandler::pollEvents() {
             }
         }
     }    
+    keystate = SDL_GetKeyState(NULL);
 }
-

@@ -20,7 +20,8 @@ class Scorch : public Player {
         virtual ~Scorch();
         virtual void fall(Uint16);
         /// \brief Scorch uses his wings
-        virtual void in_sp1(Sint16);
+        virtual void idle(Uint16);
+        virtual void in_sp1();
         virtual void clearStates(bool reset=false);
     private:
         Uint8 left_wings;

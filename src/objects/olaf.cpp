@@ -91,15 +91,15 @@ void Olaf::updateAnimState(bool change) {
     curpos.y=(pos.h-curpos.h);
 }
 
-void Olaf::in_left(Sint16 dt) {
+void Olaf::in_left(Uint16 dt) {
     //No navigation while farting from ground (replace this by a busy event)
-    if ((dt < 0) || (!(state&STATE_ACT_2))) {
+    if (!(state&STATE_ACT_2)) {
         Player::in_left(dt);
     }
 }
-void Olaf::in_right(Sint16 dt) {
+void Olaf::in_right(Uint16 dt) {
     //No navigation while farting from ground (replace this by a busy event)
-    if ((dt < 0) || (!(state&STATE_ACT_2))) {
+    if (!(state&STATE_ACT_2)) {
         Player::in_right(dt);
     }
 }
@@ -135,32 +135,24 @@ inline bool Olaf::trySmall(bool small) {
     } else return false;
 }
 
-void Olaf::in_down(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_DOWN);
+void Olaf::in_down() {
     //TODO: ladder
     if (!(state&STATE_FALL)) trySmall(true);
 }
 
-void Olaf::in_up(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_UP);
+void Olaf::in_up() {
     //TODO: ladder
     if (!(state&STATE_FALL)) trySmall(false);
 }
 
-void Olaf::in_sp1(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_SP1);
+void Olaf::in_sp1() {
     //no specials while small
     if (!(state&STATE_SMALL)) {
         switchState(STATE_SHIELD);
     }
 }
 
-void Olaf::in_sp2(Sint16 dt) {
-    if (dt < 0) return;
-    input->unsetState(INPUT_SP2);
+void Olaf::in_sp2() {
     //no specials while small
     if (!(state&STATE_SMALL)) {
         //Don't fart while falling without shield

@@ -35,6 +35,15 @@ Scorch::~Scorch() {
     delete im_land_right;
 }
 
+void Scorch::idle(Uint16 dt) {
+    Player::idle(dt);
+    if (!input->keyState(KEY_SP1)) {
+        unsetState(STATE_GLIDE);
+    } else if (!(state&STATE_ACT_2)) {
+        setState(STATE_GLIDE);
+    }
+}
+
 void Scorch::fall(Uint16 dt) {
     if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
         if (!getState(STATE_FALL)) hspeed=boost(hspeed,-dt*HSPEED_MULT/100);
@@ -52,29 +61,17 @@ void Scorch::fall(Uint16 dt) {
     }
 }
 
-void Scorch::in_sp1(Sint16 dt) {
-    if (dt < 0) {
-        unsetState(STATE_ACT_1);
-        unsetState(STATE_GLIDE);
-        input->unsetState(INPUT_SP1);
-        return;
-    }
+void Scorch::in_sp1() {
     setState(STATE_FALL);
-    //if not exhausted -> glide
-    if (!(state&STATE_ACT_2)) {
-        setState(STATE_GLIDE);
-    }
     //Can't fly anymore
-    if ((state&STATE_ACT_1)||(state&STATE_ACT_2)) {
+    if (state&STATE_ACT_2) {
     } else if (left_wings<=0) {
-        setState(STATE_ACT_1);
         setState(STATE_ACT_2);
         unsetState(STATE_GLIDE);
         addSpeed(V_FLY);
         setEvent(new CAnimEvent(this,DE_WING,0,0,au_tired));
     //Use Wings
     } else {
-        setState(STATE_ACT_1);
         left_wings--;
         addSpeed(V_FLY);
         setEvent(new CAnimEvent(this,DE_WING,0,0,au_swing));
@@ -85,7 +82,6 @@ void Scorch::clearStates(bool reset) {
     Player::clearStates(reset);
     if (reset) {
         unsetState(STATE_GLIDE);
-        input->unsetState(INPUT_SP1);
         left_wings=SCORCH_MAX_WINGS;
     }
 }

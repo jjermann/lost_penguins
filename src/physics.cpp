@@ -9,100 +9,124 @@
 
 PhysicHandler::PhysicHandler(): 
   tstart(SDL_GetTicks()),
-  dt(0) {
+  dt(0),
+  reset_time(true),
+  Dfps(0),
+  Dframes(0),
+  currentfps(0),
+  minfps(1000) {
     tcurrent=tstart;
 }
 
 PhysicHandler::~PhysicHandler() {
 }
 
-Uint16 PhysicHandler::resetTime() {
-    dt=0;
-    return (tcurrent=SDL_GetTicks());
+void PhysicHandler::update() {
+    if (menu) {
+        reset_time=true;
+    } else if (paused) {
+        reset_time=true;
+        updatePaused();
+    } else {
+        if (reset_time) {
+            Dfps=Dframes=currentfps=dt=0;
+            minfps=1000;
+        } else {
+            dt=(SDL_GetTicks()-tcurrent);
+            updateFPS();
+        }
+        reset_time=false;
+        tcurrent=SDL_GetTicks();
+        updateGame();
+    }
 }
 
-void PhysicHandler::update() {
-    dt=(SDL_GetTicks()-tcurrent);
-    tcurrent=SDL_GetTicks();
-
-    //Game is running normally
-    if (!paused) {
-        //released keys of player
-        if (scenario->player != NULL) {
-            if (input->getState(INPUTR_USE)) scenario->player->in_use(-1);
-            input->unsetState(INPUTR_USE);
-            if (input->getState(INPUTR_ACT)) scenario->player->in_act(-1);
-            input->unsetState(INPUTR_ACT);
-            if (input->getState(INPUTR_RIGHT)) scenario->player->in_right(-1);
-            input->unsetState(INPUTR_RIGHT);
-            if (input->getState(INPUTR_LEFT)) scenario->player->in_left(-1);
-            input->unsetState(INPUTR_LEFT);
-            if (input->getState(INPUTR_SP1)) scenario->player->in_sp1(-1);
-            input->unsetState(INPUTR_SP1);
-            if (input->getState(INPUTR_SP2)) scenario->player->in_sp2(-1);
-            input->unsetState(INPUTR_SP2);
-            if (input->getState(INPUTR_UP)) scenario->player->in_up(-1);
-            input->unsetState(INPUTR_UP);
-            if (input->getState(INPUTR_DOWN)) scenario->player->in_down(-1);
-            input->unsetState(INPUTR_DOWN);
-            input->unsetState(INPUTR_DEL);
-        }
-        object_iterator obit=scenario->pool->objectspool.begin();
-        while (obit!=scenario->pool->objectspool.end()) {
-            //remove marked objects
-            if ((*obit)->isDeleted()) {
-                obit=scenario->pool->removeObject(*obit);
-            } else ++obit;
-        }
-        obit=scenario->pool->objectspool.begin();
-        while (obit!=scenario->pool->objectspool.end()) {
-            (*obit)->idle(dt);
-            (*obit)->updateEvents(dt);
-            ++obit;
-        }
-        //handle current (new) scenario->player
-        if ((scenario->player!=NULL) && (!(scenario->player->getState(ESTATE_BUSY)))) {
-            if (input->getState(INPUT_USE)) scenario->player->in_use(dt);
-            if (input->getState(INPUT_ACT)) scenario->player->in_act(dt);
-            if (input->getState(INPUT_RIGHT)) scenario->player->in_right(dt);
-            if (input->getState(INPUT_LEFT)) scenario->player->in_left(dt);
-            if ((!(scenario->player->getState(ESTATE_RUN)))||scenario->player->getState(ESTATE_ABORT)) {
-                if (input->getState(INPUT_SP1)) scenario->player->in_sp1(dt);
-                if (input->getState(INPUT_SP2)) scenario->player->in_sp2(dt);
-            }
-            if (input->getState(INPUT_UP)) scenario->player->in_up(dt);
-            if (input->getState(INPUT_DOWN)) scenario->player->in_down(dt);
-        }
-        //run end scenario->player effects
-        character_iterator cit=scenario->pool->characterspool.begin();
-        while (cit!=scenario->pool->characterspool.end()) {
-            (*cit)->fall(dt);
-            (*cit)->updateAnimState(!((*cit)->getState(ESTATE_ANIM)));
-            ++cit;
-        }
-        //update the animations of all objects
-        obit=scenario->pool->objectspool.begin();
-        while (obit!=scenario->pool->objectspool.end()) {
-            if ((*obit)->getState(ESTATE_ANIM)) { 
-                bool runs=(*obit)->updateAnim(dt);
-                if (!runs) (*obit)->stopEvent();
-            } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
-            ++obit;
-        }
-    //Game is paused
-    } else {
-        if (input->getState(INPUT_RIGHT)) {
-            input->unsetState(INPUT_RIGHT);
-            scenario->player->switchItem(true);
-        }
-        if (input->getState(INPUT_LEFT)) {
-            input->unsetState(INPUT_LEFT);
-            scenario->player->switchItem(false);
-        }
-        if (input->getState(INPUT_DEL)) {
-            input->unsetState(INPUT_DEL);
-            scenario->player->dropItem();
-            gfxeng->renderScene(true);
-        }
+inline void PhysicHandler::updateGame() {
+    object_iterator obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        //remove marked objects
+        if ((*obit)->isDeleted()) {
+            obit=scenario->pool->removeObject(*obit);
+        } else ++obit;
     }
+    obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        (*obit)->idle(dt);
+        (*obit)->updateEvents(dt);
+        ++obit;
+    }
+    //handle current (new) scenario->player
+
+    if ((scenario->player!=NULL) && (!(scenario->player->getState(ESTATE_BUSY)))) {
+        if (input->keyPressed(KEY_USE)) scenario->player->in_use();
+        if (input->keyPressed(KEY_ACT)) scenario->player->in_act();
+        if (input->keyPressed(KEY_LEFT))   scenario->player->in_left();
+        if (input->keyPressed(KEY_RIGHT))  scenario->player->in_right();
+        if (input->keyPressed(KEY_UP))     scenario->player->in_up();
+        if (input->keyPressed(KEY_DOWN))   scenario->player->in_down();
+        if (input->keyState(KEY_LEFT)) {
+            scenario->player->unsetState(STATE_MRIGHT);
+            scenario->player->setState(STATE_MLEFT);
+        } else {
+            scenario->player->unsetState(STATE_MLEFT);
+        }
+        if (input->keyState(KEY_RIGHT)) {
+            scenario->player->unsetState(STATE_MLEFT);
+            scenario->player->setState(STATE_MRIGHT);
+        } else {
+            scenario->player->unsetState(STATE_MRIGHT);
+        }
+        if ((!(scenario->player->getState(ESTATE_RUN)))||scenario->player->getState(ESTATE_ABORT)) {
+            if (input->keyPressed(KEY_SP1))  scenario->player->in_sp1();
+            if (input->keyPressed(KEY_SP2)) scenario->player->in_sp2();
+        }
+
+        if (input->keyState(KEY_LEFT))  scenario->player->in_left(dt);
+        if (input->keyState(KEY_RIGHT)) scenario->player->in_right(dt);
+        if (input->keyState(KEY_UP))    scenario->player->in_up(dt);
+        if (input->keyState(KEY_DOWN))  scenario->player->in_down(dt);
+    } else {
+        scenario->player->unsetState(STATE_MLEFT);
+        scenario->player->unsetState(STATE_MRIGHT);
+    }
+    //run end scenario->player effects
+    character_iterator cit=scenario->pool->characterspool.begin();
+    while (cit!=scenario->pool->characterspool.end()) {
+        (*cit)->fall(dt);
+        (*cit)->updateAnimState(!((*cit)->getState(ESTATE_ANIM)));
+        ++cit;
+    }
+    //update the animations of all objects
+    obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        if ((*obit)->getState(ESTATE_ANIM)) { 
+            bool runs=(*obit)->updateAnim(dt);
+            if (!runs) (*obit)->stopEvent();
+        } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
+        ++obit;
+    }
+}
+
+inline void PhysicHandler::updatePaused() {
+    if (input->keyPressed(KEY_RIGHT)) {
+        scenario->player->switchItem(true);
+    }
+    if (input->keyPressed(KEY_LEFT)) {
+        scenario->player->switchItem(false);
+    }
+    if (input->keyPressed(KEY_DROP)) {
+        scenario->player->dropItem();
+        gfxeng->update(UPDATE_ALL);
+    }
+}
+
+inline void PhysicHandler::updateFPS() {
+    Dfps+=dt;
+    ++Dframes;
+    if (Dfps>=100) {
+        currentfps=Uint16(Dframes*1000/Dfps);
+        if (currentfps < minfps) minfps=currentfps;
+        Dfps=Dframes=0;
+    }
+
 }

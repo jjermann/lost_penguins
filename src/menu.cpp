@@ -5,6 +5,32 @@
 #include "sfxeng.h"
 #include "menu.h"
 
+Menu* setMenu(Menu* newmenu) {
+    if (menu) gfxeng->update(UPDATE_MENU);
+    else gfxeng->update(UPDATE_ALL);
+    newmenu->setLast(menu);
+    return menu=newmenu;   
+}
+ 
+Menu* closeMenu() {
+    gfxeng->update(UPDATE_MENU);
+    if (menu) {
+        Menu* tmp=menu->getLast();
+        delete menu;
+        if (!tmp) gfxeng->update(UPDATE_ALL);
+        return menu=tmp;
+    } else {
+        gfxeng->update(UPDATE_ALL);
+        return NULL;
+    }
+}
+ 
+void closeMenus() {
+    while (menu) { 
+        closeMenu();
+    }
+}
+
 Menu::Menu():
   title("MENU"),
   last(NULL),
@@ -74,8 +100,7 @@ void GameMenu::act() {
     switch (currententry) {
     case 0: {
         if (!closeMenu()) {
-            gfxeng->renderScene(true);
-            scenario->physic->resetTime();
+            gfxeng->update(UPDATE_ALL);
             sfxeng->resumeMusic();
         }
         break;
@@ -121,21 +146,19 @@ void ConfigMenu::act() {
     switch (currententry) {
     case 0: {
         gfxeng->toggleFPS();
-        update();
-        gfxeng->updateMenu();
+        gfxeng->update(UPDATE_MENU);
         break;
     }
     case 1: {
         gfxeng->togglePlayerBar();
-        gfxeng->renderScene(true);
-        update();
-        gfxeng->updateMenu();
+        gfxeng->update(UPDATE_ALL);
         break;
     }
     default: {
         break;
     }
     }
+    update();
 }
 void ConfigMenu::update() {
     entries[0]="Show FPS: "+string((gfxeng->show_fps) ? "ON" : "OFF");

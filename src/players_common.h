@@ -68,23 +68,27 @@ class Player : public Character {
         //Input methods
         //@{
         /// \brief Called when using the move right key (right arrow)
-        virtual void in_right(Sint16);
+        virtual void in_right() { }
+        virtual void in_right(Uint16);
         /// \brief Called when using the move left key (left arrow)
-        virtual void in_left(Sint16);
+        virtual void in_left() { }
+        virtual void in_left(Uint16);
         /// \brief Called when using the move up key (up arrow)
-        virtual void in_up(Sint16);
+        virtual void in_up() { }
+        virtual void in_up(Uint16) { }
         /// \brief Called when using the move down key (down arrow)
-        virtual void in_down(Sint16);
+        virtual void in_down() { }
+        virtual void in_down(Uint16) { }
         /// \brief Called when using the special 1 key (space)
-        virtual void in_sp1(Sint16);
+        virtual void in_sp1() { }
         /// \brief Called when using the special 2 key (left shift)
-        virtual void in_sp2(Sint16);
+        virtual void in_sp2() { }
         /// \brief Called when using the activation key (enter)
         ///
         /// This should be the same for all players.
-        virtual void in_act(Sint16);
+        virtual void in_act();
         /// \brief Called when using the use key (insert)
-        virtual void in_use(Sint16);
+        virtual void in_use();
         //@}
     protected:
         //@{
