@@ -1,0 +1,32 @@
+Viking				Object
+======				======
+
+private:                        public:
+
+o enter   ----> access ---->	o getSpeedModifier
+
+//idle or fallback speed
+o vector normspeed
+
+//current speed
+o vector speed
+
+
+public:
+
+//used by fall, idle (sets STATE_FALL2)
+o getSpeed()
+
+
+
+
+
+
+
+
+SpeedModifier:
+
+x: dvx
+y: dvy
+w: mvx
+h: mvy

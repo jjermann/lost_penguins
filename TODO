@@ -1,0 +1,87 @@
+TODO:
+=====
+
+ o EVENTS WON'T WORK VIRTUALLY!!!!!!
+   Idea: events for each character as private/protected functions
+
+ o move object creation code (addObjectByName) to the objects
+
+ o create dynamical plugins for all objects (or compile all in)
+
+ o cleanup Speed/tmpspeed mess, idea: only y speed! no x speed
+
+ o cleanup set_difference stuff => targets should be updated if an object
+   dies in an intelligent way...
+
+ o DONE? Fix Memleaks
+ 
+ o pointers => references where possible
+
+ o Structure/Cleanup:  
+     - PART DONE: fall logic including gravity!!
+     - PART_DONE: viking, object, item, ai, weapons, character
+     - IMPROVE: effect management (periodic events, permanent effects, etc)
+     - IDEA: find a better trigger/effect system
+     - DONE: hitlogic
+     - IDEA: remove touch, enter and call them in checkMove?
+     - IDEA: merge otype and ctype and make all moves/etc depend on it
+     - IDEA: allow moves from NULL to NULL
+
+ o Add attributes:
+     - crushable (ie. weapon fart, jump, run destroys them?)
+     - bombable (ie. bomb destroys them)
+     - multistates? => bridges, door, stone block
+
+ o Add new objects:
+     - ladder
+     - rope
+     - "deadly edges"
+     - electric fence
+
+ o Monsters?:
+     - stone?
+     - plant
+     - knight
+     - dragon
+     - skeleton
+     - fish
+     - firetower
+ 
+ o Weapons?:
+    - fireballs
+    - sword
+    - claw
+    - run 
+    - fart
+    - jump
+    - arm
+
+ o Items?:
+    - bomb
+    - life
+    - key
+    - special items
+
+ o Finnish the vikings:
+     - weapons: run, jump2, fart, sword, arm, fire, claws
+     - eric run
+     - baleog swing (hard one)
+
+ o Improve viking bar management
+
+ o Add better graphics
+
+ o finnish the map editor
+
+ o Maybe: Improve the (very simple) image format:
+     - All frame in one sprite sheet for each character (image matrices
+       using two description vectors or even more general: offset matrices)
+     - store rects in an array/vector/whatever or use offset matrices
+     - do some column/row logics to easy the access
+     - eg. set offsets for left, right, mleft, mright...
+
+ o OpenGL
+
+ o Simple AI
+
+ o Menu

@@ -1,0 +1,23 @@
+Requirements
+============
+
+libsdl1.2
+libsdl-mixer1.2 (if compiled with -DSDL_MIXER)
+libsdl-image1.2 (if compiled with -DSDL_IMAGE)
+(libjpeg)
+
+Installation
+============
+
+1. Untar the file
+2. Edit src/Makefile :
+     -DSDL_MIXER is needed for audio support, disable it if you didn't
+      install the SDL_mixer headers.
+     -DSDL_IMAGE is needed for "non BMP" image loading, if you didn't
+      install the SDL_image headers, you unfortunately need to convert
+      all "non BMP" images to bmp images and change the names in the
+      source. It's needed... ;)
+     -Note: libjpeg is needed for jpeg image support
+     -Check the optimization flags.
+3. Run: make lost_vikings
+4. Run: ./lost_vikings

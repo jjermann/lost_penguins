@@ -1,0 +1,136 @@
+CLASS MODEL
+===========
+
+
+OBJECT (virtual base class)
+description:
+  - passive (idle)
+owner:
+  - objectspool
+properties:
+  - name
+  - current animation (animation)
+  - internal position (pos)
+  - visual position (curpos)
+  - (virtual) effects:
+      o object type (movement information)
+      o gravity modifier
+      o act (can be (de)activated)
+      o idle (permanent effects)
+      o touch (can be touched)
+      o enter (can be entered)
+methods:
+  - position checks and/or changes
+  - animation checks and/or changes/updates
+  - effects
+examples:
+  - door
+  - wall
+  - water
+  - geysir
+  - teleporter
+todo:
+  - updateAnimStates belongs here...
+
+  CHARACTER (Object)
+  description:
+    - virtual
+    - active
+  properties:
+    - life points (health)
+    - status (state)
+    - "Trägheit":
+        o gravitation
+        o speed
+        o tmpspeed
+        o fall
+        o speedanims
+        o more basic animation states
+    - intelligence:
+        o idle
+        o maxspeed
+        o swim?
+    - existence _in_ an object (enter)
+    - existence _at_ an object (touch)
+  methods:
+    - check/change life
+    - check/change "Trägheit" (speed, gravity, etc)
+    - check/update existence in/at an object
+
+
+    VIKING (Character)
+    description:
+      - controlled by player
+      - very active
+    owner:
+      - vikingspool
+    properties:
+      - owns items (items, currentitem)
+      - more basic animation states
+      - basic audio effects
+    methods:
+      - handle input events
+      - check/change items
+      - viking bar properties
+    examples:
+      - Eric
+      - Olaf
+      - Scorch
+      - Fang
+      - Baleog
+
+
+    MONSTER (Character)
+    description:
+      - controled by AI
+    owner:
+      - monsterspool
+    properties:
+      - ai stuff
+    methods:
+      - ai stuff
+    examples:
+      - block (very simple, just falls down)
+      - plant
+      - zombie
+
+
+  ITEM (Object)
+  description:
+    - indirectly used
+  owner:
+    - objectspool or viking
+  properties:
+    - owner
+  methods:
+    - owner changes
+  examples:
+    - heart
+    - key
+
+
+
+
+
+
+object:
+  hit(weapon) (default nothing)
+
+characters:
+  weaponspool
+  attack(target,weap) {
+      target->hit(weap)
+  }
+  //or attack(direction, weap) ?
+  example: baleog swing attacks the swing module, if it hits => the swing
+           module hit function fixes baleog to it, in another attack, it
+           won't use the swing but release (state depending), then the
+           swing use is available again
+ 
+  attack(region,weap)
+
+
+special character:
+  fire: creates AI object of type projectile (character)
+
+TODO: direction dependence of touch, make touch real touch (no enter), weapons, projectile

@@ -1,0 +1,190 @@
+Objects (pool):
+===============
+
+ o Common Objects (opool)
+    - normal walls
+    - crushable walls
+    - bombable walls
+    - bridge
+    - geyser
+    - sharp edges, electric fence
+    - water
+    - rope, ladder
+ o Vikings (vpool)
+ o Weapons (wpool? no)
+    - fireballs
+    - swordstrike
+    - fangstrike
+    - run strike
+    - fart strike?
+ o Monsters (mpool)
+    - plants
+    - knights
+    - dragons
+    - fishs
+    - firethrower
+ o Items (ipool? no)
+    - bomb
+    - life
+    - key
+    - special items
+
+
+Effects:
+========
+
+ o Gravity modifier
+ o Teleporter
+ o Exit
+ o Buttom
+ o Door
+
+(Map ->) Pool -> Object -> Ability
+ - state based effects (including permanent effects)
+   controlled by object, called by anim (checks the condition each time)
+ - triggered effects (including periodic effects)
+   controlled by the triggering object?
+   
+
+
+Weapons:
+========
+
+weapon chooses enemies!!!!????
+
+attack(dest,weappool["Fireball"])
+attack(obj,weappoll["Fireball"]) {
+    
+}
+
+
+Character:
+virtual void attack()
+weaponspool
+
+Objects:
+virtual void hit(Weapon* weap)
+
+
+type:
+  - touch (run speedanims):
+      o plant
+      o tomator
+      o fish?
+      o laser barrier
+  - explosion
+      o bomb
+  - pressure:
+      o fart
+      o run
+      o jump
+      o block (sb)
+      o bridge (sb)
+      o dense obj (sb)
+  - strike:
+      o normal hits (zombie, werewolf, sword, vampire, fang)
+      o fire from fireball or scorch
+      o shot from pirat
+      o bow shoot from indians
+      o swing from baleog
+      o special strike bomb item
+      o stuff from rock above
+  - heal:
+      o heal area?
+
+
+effects that trigger a hit in certain conditions:
+   o block fall => if the way is blocked below hit(down, type: pressure, massive damage)
+                => prevented by shield
+   o water      => hit's each idle with water touch????
+   o bridge     => if the way is blocked hit pressure
+   o dense obj  => when hit with state_fall2 (same for left, right)?? =>
+                   l/r/u no damage, down damage
+
+
+
+TODO: add die function for monsters (eg. hamburgers)
+
+
+problem: difference between weapon hit and effect?
+
+solution:
+effects=enter(),touch(),act(),...
+effects are used internally to check what is happening, they are
+triggered by the active element and controlled by the passive element!
+eg. viking falls down with state_fall2 _touching_ (triggering)
+touch(direction) of the ground => ground's touch sends a hit(pressure)
+to the viking => viking checks state_fall2 and takes damage
+
+weapon hits=hit()
+a weapon hit is a response to an attack/effect
+weapon hits are triggered by:
+  - player (active: input)
+  - ai (active: ai program)
+  - effects (passive)
+the hit is controlled by the "damaged" element!
+
+
+problem: when to call hit(weap) and when to call attributes directly
+
+solution1: generally if damage could be involved call hit, otherwise not
+solution2: everything is a hit
+solution3: never call hit
+
+
+
+
+
+
+
+
+
+dense types:
+ - monsters: VIKINGS, DENSE OBJECTS (for non ghosts)
+ - vikings:  MONSTERS, DENSE OBJECTS
+ - tomator:  DENSE OBJECTS
+
+enemy types (only for monsters?):
+ - monsters: VIKINGS
+ - vikings:  MONSTERS
+
+
+example return of checkHit:
+ - dense | dir == VIKING|DENSE|dir
+ - DENSE | dir
+ - VIKING|MONSTER|DENSE|dir
+ - MONSTER|dir
+ - MONSTER|DENSE|dir
+
+if it contains dense => stop
+if it contains enemy => attack
+
+
+
+
+
+
+
+EVENTS
+======
+
+general:
+  - _one_ current event for each object allowed
+  - possible to check if it's empty or not
+  - start, during, end
+  - strikt duration? => tleft?
+  - can be updated (eg. running)
+  - abort if hit/whatever
+
+  - scheduled (with remaining time???)
+  - 
+
+attack:
+  - duration till hit
+  - change image
+  - apply damage at end
+  - abort if hit
+
+
+jump/wing/etc:
+  - duration => fixes the scorch maxspeed hack
