@@ -7,10 +7,6 @@
 #define EV_END       0x00000008
 #define EV_CANCEL    0x00000010
 
-/// \todo: This is already defined in eric's header, either remove it there or find
-///        a more intelligent way to deal with it.
-#define STATE_RUN        0x00400000
-
 /** \brief Base class for events (non instantanious effects)
 
     Organize effects that aren't instantanious. Updated by AnimHandler, usually

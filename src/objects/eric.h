@@ -1,6 +1,5 @@
 #include "players_common.h"
 
-#define STATE_RUN        0x00400000
 #define V_JUMP        -400
 #define V_JUMP2       -500
 #define DE_JUMP        200
@@ -22,6 +21,7 @@ class Eric : public Player {
         virtual void in_sp2(Sint16);
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);
+        virtual void crash(Uint16 dir);
         virtual Uint16 hit(Uint16 direction,Weapon& weap);
     private:
         Mix_Chunk* au_jump;

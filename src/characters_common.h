@@ -10,17 +10,23 @@
 #define T_GRAV_EFFECT   10
 #define T_AI_EFFECT     20
  
-//Character/Player states
+//Character states
 //facing: either left or right (not left)
 #define STATE_LEFT      0x00000001
 //in water
-#define STATE_WATER     0x00000040
+#define STATE_WATER     0x00000004
 //falling
-#define STATE_FALL      0x00000080
+#define STATE_FALL      0x00000008
 //Common Triggers
-#define STATE_ACT_1     0x00000200
-#define STATE_ACT_2     0x00000400
-#define STATE_ACT_3     0x00000800
+#define STATE_ACT_1     0x00000010
+#define STATE_ACT_2     0x00000020
+#define STATE_ACT_3     0x00000040
+
+//Special states
+#define STATE_RUN       0x00000080
+#define STATE_PRESS_LR  0x00000100
+#define STATE_PRESS_UD  0x00000200
+
 
 /** \brief Damagable, non static objects.
 

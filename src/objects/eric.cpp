@@ -2,6 +2,7 @@
 #include "events.h"
 #include "anim.h"
 #include "input.h"
+#include "map.h"
 #include "weapons.h"
 #include "imgcache.h"
 #include "sndcache.h"
@@ -13,6 +14,7 @@ Eric::Eric(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP),
   jump2(V_JUMP2) {
+    weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);
     im_left=new Animation(imgcache->loadImage("eric_left.bmp"));
     im_right=new Animation(60,imgcache->loadImage("kuru.bmp"),12,1000);
     im_fall_left=im_left;
@@ -88,6 +90,15 @@ void Eric::in_right(Sint16 dt) {
         else cancelEvent();
     }
     Player::in_right(dt);
+}
+
+void Eric::crash(Uint16 dir) {
+    if ((state&(STATE_PRESS_LR|STATE_ACT_2)) && (!(dir&DIR_DOWN))) {
+        std::set<Character *> targets=curmap->getCharactersIn(OTYPE_MONSTER,getCenter(),true,pos.w+1,dir);
+        ///\bug This might get the wrong target
+        if (!targets.empty()) (*targets.begin())->hit(dir,weapon);
+    }
+    Player::crash(dir);
 }
 
 Uint16 Eric::hit(Uint16 dir, Weapon& weap) {

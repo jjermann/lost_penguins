@@ -144,7 +144,7 @@ void ESpeed::cancel() {
 
 
 ERun::ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
-  ESpeed(chr,length,0,ahspeed,edelay,switchstate,esound,runanim,delanim),
+  ESpeed(chr,length,0,ahspeed,edelay,(switchstate|STATE_PRESS_LR),esound,runanim,delanim),
   ispeed(inispeed),
   t_reset(0) {
     charowner->setState(STATE_RUN);
