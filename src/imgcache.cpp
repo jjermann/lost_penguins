@@ -2,7 +2,9 @@
 #include "imgcache.h"
 
 
-ImageCache::ImageCache() { }
+ImageCache::ImageCache() {
+    not_found="no_file.bmp";
+}
 ImageCache::~ImageCache() {
     map<string, SDL_Surface*>::iterator imgit=imgcache.begin();
     while (imgit != imgcache.end()) {
@@ -12,6 +14,8 @@ ImageCache::~ImageCache() {
 }
 
 SDL_Surface* ImageCache::loadImage(string imagename) {
+    //default is not_found
+    if (imagename=="") imagename=not_found;
     map<string, SDL_Surface*>::iterator imgit=imgcache.find(imagename);
     
     //load new image
@@ -25,7 +29,13 @@ SDL_Surface* ImageCache::loadImage(string imagename) {
         if ((tmpimg=SDL_LoadBMP(loadfile.c_str())) == NULL) {
         #endif
             cout << "Couldn't load the image: " << imagename << endl;
-            quitGame(3);
+            //Even the fallback image was not found
+            if (not_found==imagename) {
+                quitGame(3);
+            //Try to load the fallback image...
+            } else {
+                return loadImage(not_found);
+            }
         } else {
             if (tmpimg->flags & SDL_SRCCOLORKEY) {
                 SDL_SetColorKey(tmpimg, SDL_SRCCOLORKEY|SDL_RLEACCEL, tmpimg->format->colorkey);
