@@ -22,6 +22,7 @@ Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string pname)
     otype|=OTYPE_CHARACTER;
     t_water=0;
     dense_types=NOTHING;
+    enemy_types=NOTHING;
     weapon=Weapon(0);
     im_die=NULL;
 }

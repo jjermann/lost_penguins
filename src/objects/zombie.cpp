@@ -45,7 +45,9 @@ void Zombie::ai_left(Uint16 dt) {
     } else if (!(hit.touch&DIR_DOWN)) {
         unsetState(STATE_LEFT);
         hspeed=0;
-    } else move(dt);
+    } else {
+        move(dt);
+    }
 }
 
 void Zombie::ai_right(Uint16 dt) {
@@ -60,7 +62,9 @@ void Zombie::ai_right(Uint16 dt) {
     } else if (!(hit.touch&DIR_DOWN)) {
         setState(STATE_LEFT);
         hspeed=0;
-    } else move(dt);
+    } else {
+        move(dt);
+    }
 }
 
 void Zombie::runAI(Uint16 dt) {

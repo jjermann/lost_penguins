@@ -1,9 +1,6 @@
 Bugs
 ====
- o the zombie doesn't turn from a wall
- o hit event
- o zombie attacks too often if nearby
- o in short: rewrite zombie
+ o rewrite zombie (attacks too often, use events, etc...)
  o memleaks, segfaults?
 
 
@@ -50,6 +47,8 @@ Code
         - crushable (ie. weapon fart, jump, run destroys them?)
         - bombable (ie. bomb destroys them)
         - multistates? => bridges, door, stone block
+     o Give each object a serial number and order the pools with it
+       => solves display bug...
 
 
 Progress
