@@ -32,7 +32,7 @@ ObjectsPool::~ObjectsPool() {
     while (i!=objectspool.end()) i=removeObject(i);
 }
 
-Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uint16 x, Uint16 y, const string& arg1, const string& arg2, const string& arg3) {
+Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sint16 x, Sint16 y, const string& arg1, const string& arg2, const string& arg3) {
     //Set names...
     string name=obj;
     if (arg1!="0") {
