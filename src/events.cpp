@@ -13,7 +13,7 @@ Event::Event(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate):
   delay(edelay),
   tleft(delay),
   started(false),
-  state(switchstate) { }
+  state(switchstate|ESTATE_RUN) { }
 Event::~Event() {
     owner->clearEvents();
 }
@@ -40,80 +40,112 @@ Uint16 Event::update(Uint16 dt) {
     return evstate;
 }
 void Event::start() {
-    if (state) owner->switchState(state);
+    owner->switchState(state);
     started=true;
 }
 void Event::end() {
-    if (started && state) owner->switchState(state);
+    if (started) owner->switchState(state);
     delete this;
 }
 void Event::cancel() {
-    if (started && state) owner->switchState(state);
+    if (started) owner->switchState(state);
     delete this;
 }
 
-
-//CharacterEvent
-CharacterEvent::CharacterEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  Event(chr,length,edelay,switchstate),
-  charowner(chr),
-  sound(esound) {
-    state|=ESTATE_RUN;
+AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, Animation* runanim, bool delanim):
+  Event(obj,length,edelay),
+  state(switchstate|ESTATE_ANIM),
+  anim(runanim),
+  del(delanim),
+  sound(asound) {
+    if (anim!=NULL) duration=30000;
 }
-void CharacterEvent::start() {
+Uint16 AnimEvent::update(Uint16 dt) {
+    Uint16 evstate=Event::update(dt);
+    if (anim && (!(anim->isRunning()))) return EV_END;
+    else return evstate; 
+}
+void AnimEvent::start() {
     sfxeng->playWAV(sound);
+    if (anim) owner->setAnim(anim);
     Event::start();
 }
-void CharacterEvent::end() {
+void AnimEvent::end() {
+    if (started && anim) {
+        if (del) delete anim; 
+        owner->resetAnimState();
+    }
     Event::end();
 }
-void CharacterEvent::cancel() {
+void AnimEvent::cancel() {
+    if (started && anim) {
+        if (del) delete anim;
+        owner->resetAnimState();
+    }
     Event::cancel();
 }
 
 
-EAnim::EAnim(Character* chr, Animation* runanim, bool delanim, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  CharacterEvent(chr,30000,edelay,(switchstate|ESTATE_BUSY|ESTATE_ANIM),esound),
+//Character events
+CEvent::CEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate):
+  Event(chr,length,edelay,switchstate),
+  charowner(chr) { }
+  
+//Exactly the same as AnimEvent with Character* instead of Object*
+CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, Animation* runanim, bool delanim):
+  CEvent(chr,length,edelay),
+  state(switchstate|ESTATE_ANIM),
   anim(runanim),
-  del(delanim) {
-    if (anim==NULL) cancel();
+  del(delanim),
+  sound(asound) {
+    if (anim!=NULL) length=30000;
 }
-void EAnim::start() {
-    CharacterEvent::start();
-    charowner->setAnim(anim);
+Uint16 CAnimEvent::update(Uint16 dt) {
+    Uint16 evstate=CEvent::update(dt);
+    if (anim && (!(anim->isRunning()))) return EV_END;
+    else return evstate;
 }
-void EAnim::end() {
-    //hack!!!
-    if (del) delete anim;
-    if (started) charowner->updateAnimState();
-    CharacterEvent::end();
+void CAnimEvent::start() {
+    sfxeng->playWAV(sound);
+    if (anim) charowner->setAnim(anim);
+    CEvent::start();
 }
-void EAnim::cancel() {
-    end();
+void CAnimEvent::end() {
+    if (started && anim) {
+        if (del) delete anim;
+        charowner->resetAnimState();
+    }
+    CEvent::end();
+}
+void CAnimEvent::cancel() {
+    if (started && anim) { 
+        if (del) delete anim;
+        charowner->resetAnimState();
+    }
+    CEvent::cancel();
 }
 
-
-ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  CharacterEvent(chr,length,edelay,switchstate,esound),
+ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
+  CAnimEvent(chr,length,edelay,switchstate,esound,runanim,delanim),
   vspeed(avspeed),
   hspeed(ahspeed) { }
 void ESpeed::start() {
     charowner->addSpeed(vspeed);
     charowner->addHSpeed(hspeed);
-    CharacterEvent::start();
+    CAnimEvent::start();
 }
 void ESpeed::end() {
     if (started) charowner->addHSpeed(-hspeed);
-    CharacterEvent::end();
+    CAnimEvent::end();
 }
 void ESpeed::cancel() {
     if (started) charowner->addHSpeed(-hspeed);
-    CharacterEvent::cancel();
+    CAnimEvent::cancel();
 }
 
 
-ERun::ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  ESpeed(chr,length,0,ahspeed,edelay,switchstate,esound),
+ERun::ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
+  ESpeed(chr,length,0,ahspeed,edelay,switchstate,esound,runanim,delanim),
   ispeed(inispeed),
   t_reset(0) {
     charowner->setState(STATE_RUN);
@@ -122,6 +154,7 @@ ERun::ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint1
 ERun::~ERun() {
     charowner->unsetState(STATE_RUN);
     charowner->addHSpeed(-ispeed);
+    owner->clearEvents();
 }
 void ERun::reset() {
     t_reset=0;
@@ -132,11 +165,7 @@ Uint16 ERun::update(Uint16 dt) {
     if (t_reset>100) {
         evstate=EV_CANCEL;
     } else {
-        evstate=CharacterEvent::update(dt);
+        evstate=ESpeed::update(dt);
     } 
     return evstate;
 }
-
-
-//EFart::EFart(Character* chr, Animation* runanim, Mix_Chunk* esound):
-//  EAnim(chr, runanim, false, 0, 0, esound)

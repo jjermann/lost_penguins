@@ -303,18 +303,18 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
         Character* deadplr=pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
         switch(weap.getSubType()) {
             case WS_FIRE: {
-                if (deadplr && im_die) deadplr->setEvent(new EAnim(deadplr,im_die,false,0,ESTATE_BUSY,au_fire));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,im_die));
                 else sfxeng->playWAV(au_fire);
                 break;
             }
             case WS_WATER: {
-                if (deadplr && im_die) deadplr->setEvent(new EAnim(deadplr,im_die,false,0,ESTATE_BUSY,au_drown));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_drown,im_die));
                 else sfxeng->playWAV(au_drown);
                 break;
             }
             //WS_NORMAL, WS_ELECTRIC, WS_FIRE, WS_PRESSURE
             default: {
-                if (deadplr && im_die) deadplr->setEvent(new EAnim(deadplr,im_die,false,0,ESTATE_BUSY,au_die));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_die,im_die));
                 else sfxeng->playWAV(au_die);
             }
         }
@@ -352,7 +352,7 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
                 break;
             }
             case W_PRESSURE: {
-                setEvent(new EAnim(this,anim_hit,false,0,ESTATE_BUSY,aud_hit));
+                setEvent(new CAnimEvent(this,T_IRR,0,ESTATE_BUSY,aud_hit,anim_hit));
                 break;
             }
             case W_TOUCH: {
