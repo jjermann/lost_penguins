@@ -204,7 +204,7 @@ void Player::in_right(Sint16 dt) {
     }
     unsetState(STATE_LEFT);
     setState(STATE_MRIGHT);
-    if ((hspeed+SPEED_STEP)<maxspeedx) hspeed+=SPEED_STEP;
+    if ((hspeed+HSPEED_MULT*dt/100)<maxspeedx) hspeed+=HSPEED_MULT*dt/100;
     else if (hspeed<maxspeedx) hspeed=maxspeedx;
 }
 
@@ -215,7 +215,7 @@ void Player::in_left(Sint16 dt) {
     }
     setState(STATE_LEFT);
     setState(STATE_MLEFT);
-    if ((hspeed-SPEED_STEP)>(-maxspeedx)) hspeed-=SPEED_STEP;
+    if ((hspeed-HSPEED_MULT*dt/100)>(-maxspeedx)) hspeed-=HSPEED_MULT*dt/100;
     else if (hspeed>(-maxspeedx)) hspeed=-maxspeedx;
 }
 void Player::in_up(Sint16) { }
@@ -229,8 +229,8 @@ Hit Player::move(Uint16 dt, bool check) {
 
 void Player::fall(Uint16 dt) {
     if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
-        if (!getState(STATE_FALL)) hspeed*=0.9;
-        else hspeed*=0.96;
+        if (!getState(STATE_FALL)) hspeed=boost(hspeed,-dt*HSPEED_MULT/100);
+        else hspeed=boost(hspeed,-dt*HSPEED_MULT/200);
     }
     Character::fall(dt);
 }

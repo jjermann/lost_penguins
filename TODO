@@ -1,6 +1,6 @@
 Bugs
 ====
- o rewrite zombie (attacks too often, use events, etc...)
+ o rewrite zombie (bug in movement!, attacks too often, use events, etc...)
  o memleaks, segfaults?
 
 
@@ -15,7 +15,7 @@ Code
        This would help in many ways and should be a frame information and not an
        image as done for players atm!
 
- o Fall/push/crash/collisions:
+ o Move/Fall/push/crash/collisions:
      o the character should have more information what he hits
      o movements into dense objects should involve a push()
      o I have no idea about how the push should look like, elevators can be pushed

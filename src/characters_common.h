@@ -9,7 +9,7 @@
 #define V_KRIT          1000
 #define T_GRAV_EFFECT   10
 #define T_AI_EFFECT     20
-#define SPEED_STEP      10
+#define HSPEED_MULT     100
  
 //Character states
 //facing: either left or right (not left)

@@ -108,6 +108,8 @@ void parseInput(int argc,char* argv[]);
 void usage();
 /// Helper function that converts an integer to a string
 string itos(int);
+/// Helper function boost that increases/decreases the absolute value
+int boost(int,int);
 //@}
 
 //global variables

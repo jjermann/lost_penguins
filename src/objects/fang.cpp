@@ -49,8 +49,8 @@ void Fang::in_right(Sint16 dt) {
 
 void Fang::fall(Uint16 dt) {
     if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
-        if (!getState(STATE_FALL)) hspeed*=0.9;
-        else hspeed*=0.96;  
+        if (!getState(STATE_FALL)) hspeed=boost(hspeed,-dt*HSPEED_MULT/100);
+        else hspeed=boost(hspeed,-dt*HSPEED_MULT/200);
     }
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {

@@ -22,3 +22,9 @@ string itos(int i) {
     s << i;
     return s.str();
 }
+
+int boost(int a, int b) {
+    if (a>=0) return a=max(0,a+b);
+    else return a=min(0,a-b);
+}
+
