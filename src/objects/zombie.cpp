@@ -28,9 +28,7 @@ Zombie::~Zombie() {
 void Zombie::idle(Uint16 dt) {
     hspeed=0;
     Character::idle(dt);
-    if (!(state&STATE_FALL)) {
-        runAI(dt);
-    }
+    runAI(dt);
 }
 
 void Zombie::ai_left(Uint16 dt) {
@@ -42,6 +40,8 @@ void Zombie::ai_left(Uint16 dt) {
     } else if (hit.touch&DIR_LEFT) {
         move(dt);
         unsetState(STATE_LEFT);
+    } else if (state&STATE_FALL) {
+        move(dt);
     } else if (!(hit.touch&DIR_DOWN)) {
         unsetState(STATE_LEFT);
         hspeed=0;
@@ -59,6 +59,8 @@ void Zombie::ai_right(Uint16 dt) {
     } else if (hit.touch&DIR_RIGHT) {
         move(dt);
         setState(STATE_LEFT);
+    } else if (state&STATE_FALL) {
+        move(dt);
     } else if (!(hit.touch&DIR_DOWN)) {
         setState(STATE_LEFT);
         hspeed=0;
