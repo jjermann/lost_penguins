@@ -80,4 +80,22 @@ class ConfigMenu : public Menu {
         void update();
 };
 
+class GraphicConfigMenu : public Menu {
+    public:
+        GraphicConfigMenu();
+        virtual void act();
+    private:
+        /// Helper function
+        void update();
+};
+
+class KeyConfigMenu : public Menu {
+    public:
+        KeyConfigMenu();
+        virtual void act();
+    private:
+        /// Helper function
+        void update();
+};
+
 #endif

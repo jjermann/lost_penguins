@@ -3,6 +3,7 @@
 #include "players_common.h"
 #include "imgcache.h"
 #include "sndcache.h"
+#include "sfxeng.h"
 #include "physics.h"
 #include "scenario.h"
 
@@ -53,6 +54,7 @@ inline void Scenario::reinitMap() {
 
 int Scenario::loadMap(string mapname) {
     reinitMap();
+    sfxeng->playMusic((config.datadir + "01theme.wav").c_str());
     name=mapname;
     ifstream mapfile;
     string tmpline;

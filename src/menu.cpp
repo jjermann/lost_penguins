@@ -139,17 +139,70 @@ void MapMenu::update() {
 
 ConfigMenu::ConfigMenu(): Menu() {
     title="-== CONFIGURATION MENU ==-";
-    entries.resize(2);
+    entries.resize(3);
     update();
 }
 void ConfigMenu::act() {
     switch (currententry) {
     case 0: {
+        setMenu(new GraphicConfigMenu());
+        break;
+    }
+    case 1: {
+        setMenu(new KeyConfigMenu());
+        break;
+    }
+    default: {
+        break;
+    }
+    }
+}
+void ConfigMenu::update() {
+    entries[0]="Graphic settings";
+    entries[1]="Keyboard settings";
+    entries[2]="Save settings";
+}
+
+
+KeyConfigMenu::KeyConfigMenu(): Menu() {
+    title="-== KEYBOARD SETTINGS ==-";
+    entries.resize(11);
+    update();
+}
+void KeyConfigMenu::act() { }
+void KeyConfigMenu::update() {
+    entries[0]="Move left:  [" + string(SDL_GetKeyName(config.keybind[KEY_LEFT])) + "]";
+    entries[1]="Move right:  [" + string(SDL_GetKeyName(config.keybind[KEY_RIGHT])) + "]";
+    entries[2]="Move up:  [" + string(SDL_GetKeyName(config.keybind[KEY_UP])) + "]";
+    entries[3]="Move down:  [" + string(SDL_GetKeyName(config.keybind[KEY_DOWN])) + "]";
+    entries[4]="Special 1:  [" + string(SDL_GetKeyName(config.keybind[KEY_SP1])) + "]";
+    entries[5]="Special 2:  [" + string(SDL_GetKeyName(config.keybind[KEY_SP2])) + "]";
+    entries[6]="Activate:  [" + string(SDL_GetKeyName(config.keybind[KEY_ACT])) + "]";
+    entries[7]="Use item:  [" + string(SDL_GetKeyName(config.keybind[KEY_USE])) + "]";
+    entries[8]="Switch player:  [" + string(SDL_GetKeyName(config.keybind[KEY_SWITCH])) + "]";
+    entries[9]="Drop item:  [" + string(SDL_GetKeyName(config.keybind[KEY_DROP])) + "]";
+    entries[10]="Pause game:  [" + string(SDL_GetKeyName(config.keybind[KEY_PAUSE])) + "]";
+}
+
+
+GraphicConfigMenu::GraphicConfigMenu(): Menu() {
+    title="-== GRAPHIC SETTINGS ==-";
+    entries.resize(4);
+    update();
+}
+void GraphicConfigMenu::act() {
+    switch (currententry) {
+    case 1: {
+        gfxeng->toggleFullScreen();
+        gfxeng->update(UPDATE_ALL);
+        break;
+    }
+    case 2: {
         gfxeng->toggleFPS();
         gfxeng->update(UPDATE_MENU);
         break;
     }
-    case 1: {
+    case 3: {
         gfxeng->togglePlayerBar();
         gfxeng->update(UPDATE_ALL);
         break;
@@ -160,8 +213,9 @@ void ConfigMenu::act() {
     }
     update();
 }
-void ConfigMenu::update() {
-    entries[0]="Show FPS: "+string((gfxeng->show_fps) ? "ON" : "OFF");
-    entries[1]="Show Player Bar: "+string((gfxeng->show_bar) ? "ON" : "OFF");
+void GraphicConfigMenu::update() {
+    entries[0]="Resolution:  " + itos(gfxeng->screen->w) + " x " + itos(gfxeng->screen->h) + "  (" + itos(config.bpp) + " bpp)";
+    entries[1]="Fullscreen:  " + string((gfxeng->fullscreen) ? "ON" : "OFF");
+    entries[2]="Show FPS: "+string((gfxeng->show_fps) ? "ON" : "OFF");
+    entries[3]="Show Player Bar: "+string((gfxeng->show_bar) ? "ON" : "OFF");
 }
-

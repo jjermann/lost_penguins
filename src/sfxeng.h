@@ -12,6 +12,8 @@ class SoundsEngine {
         ~SoundsEngine();
         /// Play the specified sound
         void playWAV(Mix_Chunk* wav);
+        void playMusic(string);
+        void stopMusic();
         void pauseMusic();
         void resumeMusic();
     private:

@@ -14,10 +14,7 @@ SoundsEngine::SoundsEngine() {
         cout << "Opened audio at " << config.audio_rate << " Hz " << (config.audio_format&0xFF) << " bit " << ((config.audio_channels > 1) ? "stereo" : "mono") << endl;
         disabled=false;
     }
-
-    if (!disabled) theme = Mix_LoadMUS("data/01theme.wav");
-    if (!disabled) Mix_FadeInMusic(theme, -1, 5000);
-    if (!disabled) Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+    theme=NULL;
 #endif
 }
 
@@ -26,6 +23,24 @@ SoundsEngine::~SoundsEngine() {
     if(!disabled) {
         Mix_CloseAudio();
         Mix_FreeMusic(theme);
+    }
+#endif
+}
+void SoundsEngine::playMusic(string name) {
+#ifdef SDL_MIXER
+    if (!disabled) {
+        if (theme) Mix_FreeMusic(theme);
+        theme = Mix_LoadMUS(name.c_str());
+        Mix_FadeInMusic(theme, -1, 5000);
+        Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+    }
+#endif
+}
+void SoundsEngine::stopMusic() {
+#ifdef SDL_MIXER
+    if (!disabled) {
+        if (theme) Mix_FreeMusic(theme);
+        theme=NULL;
     }
 #endif
 }

@@ -3,7 +3,7 @@
 
 #define BAR_HEIGHT      138
 #define ICON_SIZE       46
-#define DFONT           40
+#define DFONT           10
 
 #define UPDATE_NOTHING  0x00
 #define UPDATE_BAR      0x01
@@ -16,7 +16,7 @@
     frames per seconds. Always run time resizing and fullscreen switching.
 */
 class GraphicsEngine {
-    friend class ConfigMenu;
+    friend class GraphicConfigMenu;
     public:
         GraphicsEngine();
         ~GraphicsEngine();

@@ -294,9 +294,16 @@ void GraphicsEngine::drawMenu() {
     Uint16 h;
     for (Uint8 i=0; i< menu->getSize(); i++) {
         if (i<=menu->currententry) {
-            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2;
+            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-1)*DFONT-(menu->getSize()-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2
+              -DFONT
+              +i*DFONT
+              +i*(menu->font->getHeight());
         } else {
-            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i)*(menu->font->getHeight()))/2;
+            h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-1)*DFONT-(menu->getSize()-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2
+              -DFONT
+              +i*DFONT
+              +(i-1)*(menu->font->getHeight())
+              +(menu->font_high->getHeight());
         }
         if (i==menu->currententry) menu->font_high->writeCenter(screen,menu->entries[i],h);
         else menu->font->writeCenter(screen,menu->entries[i],h);
