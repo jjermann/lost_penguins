@@ -15,14 +15,6 @@ class CharacterEvent : public Event {
         Mix_Chunk* sound;
 };
 
-class EJump : public CharacterEvent {
-    public:
-        EJump(Character* chr, Uint16 length, Sint16 aspeed, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* au_jump=NULL);
-        virtual void start();
-    protected:
-        Sint16 speed;
-};
-
 class ELand : public CharacterEvent {
     public:
         ELand(Character* chr, Uint16 length, Mix_Chunk* esound=NULL);
@@ -31,9 +23,11 @@ class ELand : public CharacterEvent {
 
 class ESpeed : public CharacterEvent {
     public:
-        ESpeed(Character* chr, Uint16 length, Sint16 ahspeed, Sint16 avspeed, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL);
+        ESpeed(Character* chr, Uint16 length, Sint16 ajspeed, Sint16 ahspeed=0, Sint16 avspeed=0, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL);
+        virtual void start();
         virtual Uint16 update(Uint16 dt);
     protected:
+        Sint16 jspeed;
         Sint16 hspeed;
         Sint16 vspeed;
 };

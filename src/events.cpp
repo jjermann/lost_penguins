@@ -60,15 +60,6 @@ void CharacterEvent::cancel() {
     Event::cancel();
 }
 
-//Jump
-EJump::EJump(Character* chr, Uint16 length, Sint16 aspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* au_jump):
-  CharacterEvent(chr,length,edelay,switchstate,au_jump), speed(aspeed) { }
-void EJump::start() {
-    charowner->setState(STATE_FALL);
-    charowner->addSpeed(speed);
-    CharacterEvent::start();
-}
-
 ELand::ELand(Character* chr, Uint16 length, Mix_Chunk* esound):
   CharacterEvent(chr,length,0,(STATE_IRR|ESTATE_BUSY),esound) { }
 void ELand::start() {
@@ -77,8 +68,13 @@ void ELand::start() {
     CharacterEvent::start();
 }
 
-ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 ahspeed, Sint16 avspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  CharacterEvent(chr,length,edelay,switchstate,esound), hspeed(ahspeed),vspeed(avspeed) { }
+ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 ajspeed, Sint16 ahspeed, Sint16 avspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
+  CharacterEvent(chr,length,edelay,switchstate,esound), jspeed(ajspeed),hspeed(ahspeed),vspeed(avspeed) { }
+void ESpeed::start() {
+    if (jspeed<0) charowner->setState(STATE_FALL);
+    charowner->addSpeed(jspeed);
+    CharacterEvent::start();
+}
 Uint16 ESpeed::update(Uint16 dt) {
     Uint16 evstate=CharacterEvent::update(dt);
     if (evstate&(EV_RUN|EV_START)) {

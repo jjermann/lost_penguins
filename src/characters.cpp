@@ -72,10 +72,10 @@ void Eric::in_sp1(Uint16) {
     if (state&STATE_ACT_2) {
     } else if (state&STATE_ACT_1) {
         setState(STATE_ACT_2);
-        setEvent(new EJump(this,DE_JUMP,jump2,0,0,au_jump));
+        setEvent(new ESpeed(this,DE_JUMP,jump2,0,0,0,0,au_jump));
     } else {
         setState(STATE_ACT_1);
-        setEvent(new EJump(this,DE_JUMP,jump));
+        setEvent(new ESpeed(this,DE_JUMP,jump));
     }
 }
 
@@ -243,7 +243,7 @@ void Olaf::in_sp2(Uint16) {
         //Fart
         } else {
             setState(STATE_ACT_1);
-            setEvent(new EJump(this,DE_JUMP,fart,0,0,au_fart));
+            setEvent(new ESpeed(this,DE_JUMP,fart,0,0,0,0,au_fart));
         }
     }
 }
@@ -274,9 +274,8 @@ Sint16 Olaf::hit(Uint16 dir, Weapon& weap) {
     
     switch (weap.getType()) {   
         case W_STRIKE: {
-            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,DSTRIKE,0,0,0,NULL));
-            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-DSTRIKE,0,0,0,NULL));
-            addSpeed(-60);
+            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,0,NULL));
             break;
         }
         default: {
@@ -352,7 +351,7 @@ void Scorch::in_sp1(Uint16) {
     } else if (!(state&STATE_ACT_1)){
         left_wings--;
         setState(STATE_ACT_1);
-        setEvent(new EJump(this,DE_WING,V_FLY,0,0,au_swing));
+        setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,0,au_swing));
     }
 }
 
@@ -427,21 +426,17 @@ void Fang::in_sp1(Uint16) {
 
     if (state&STATE_CLIMB_L) {
         unsetState(STATE_LEFT);
-        setState(STATE_FALL);
         unsetState(STATE_CLIMB_L);
         setState(STATE_ACT_1);
-        addSpeed(V_JUMPOFF);
-        setEvent(new ESpeed(this,T_JUMPOFF,Sint16(maxspeedx*1.5),0,0,0,au_jump));
+        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(maxspeedx*1.5),0,0,0,au_jump));
     } else if (state&STATE_CLIMB_R) {
         setState(STATE_LEFT);
-        setState(STATE_FALL);
         unsetState(STATE_CLIMB_R);
         setState(STATE_ACT_1);
-        addSpeed(V_JUMPOFF);
-        setEvent(new ESpeed(this,T_JUMPOFF,Sint16(-maxspeedx*1.5),0,0,0,au_jump));
+        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(-maxspeedx*1.5),0,0,0,au_jump));
     } else if ((!(state&STATE_FALL)) && (!(state&STATE_ACT_1))){
         setState(STATE_ACT_1);
-        setEvent(new EJump(this,DE_JUMP,V_JUMP,0,0,au_jump));
+        setEvent(new ESpeed(this,DE_JUMP,V_JUMP,0,0,0,0,au_jump));
     }
 }
 

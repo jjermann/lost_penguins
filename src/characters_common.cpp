@@ -383,9 +383,8 @@ Sint16 Character::hit(Uint16 dir, Weapon& weap) {
     Sint16 dhealth=addHealth(weap.getDamage());
     switch (weap.getType()) {
         case W_STRIKE: {
-            addSpeed(-60);
-            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,DSTRIKE,0,0,0,NULL));
-            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,0,NULL));
             break;
         }
         default: {
