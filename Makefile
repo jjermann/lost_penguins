@@ -1,3 +1,8 @@
+INSTALL = install
+INSTALLSTRIP =
+BINDIR = /usr/local/bin
+SHAREDIR = /usr/local/share
+ETCDIR = /usr/local/etc
 BINS = lost_penguins slvextract
 
 default:
@@ -25,14 +30,14 @@ distclean: clean
 	+$(MAKE) -C docs distclean
 	rm -f *~
 
-install:
-	cp lost_penguins /usr/local/bin
-	mkdir -p /usr/local/share/lost_penguins/
-	mkdir -p /usr/local/etc/
-	cp lost_penguins.conf /usr/local/etc/
-	cp data/* /usr/local/share/lost_penguins/
+install: lost_penguins
+	$(INSTALL) $(INSTALLSTRIP) -m 755 -o root lost_penguins $(BINDIR)
+	if test ! -d $(SHAREDIR)/lost_penguins; then mkdir -p $(SHAREDIR)/lost_penguins; fi
+	$(INSTALL) -m 644 -o root data/* $(SHAREDIR)/lost_penguins/
+	if test ! -d $(ETCDIR); then mkdir -p $(ETCDIR); fi
+	$(INSTALL) -m 644 -o root lost_penguins.conf $(ETCDIR)
 
 uninstall:
-	rm -f /usr/local/bin/lost_penguins
-	rm -rf /usr/local/share/lost_penguins/
-	rm -f /usr/local/etc/lost_penguins.conf
+	rm -f $(BINDIR)/lost_penguins
+	rm -rf $(SHAREDIR)/lost_penguins/
+	rm -f $(ETCDIR)/lost_penguins.conf
