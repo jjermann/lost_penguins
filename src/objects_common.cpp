@@ -40,6 +40,23 @@ bool Object::isIn(const SDL_Rect& rect, bool touch) {
     }
 }
 
+bool Object::setPos(Sint16 xcord,Sint16 ycord) {
+    bool ok=true;
+    //Did we hit a maparea?
+    if (xcord < 0) {
+        pos.x=0;
+        ok=false;
+    } else if (xcord > (maparea->w-pos.w)) {
+        pos.x=maparea->w-pos.w;
+        ok=false;
+    } else pos.x=xcord;
+    if (ycord>(maparea->h-pos.h)) {
+        pos.y=maparea->h-pos.h;
+        ok=false;
+    } else pos.y=ycord;
+    return ok;
+}
+
 const Frame& Object::getFrame() const {
     return animation->getFrame();
 }

@@ -41,24 +41,7 @@ class Object {
         /// Sets the new position. If the coordinates are not in the map area
         /// they are corrected to fit into it.
         /// \return True if no correction was needed
-        bool setPos(Sint16 xcord,Sint16 ycord) {
-            bool ok=true;
-            //Did we hit a maparea?
-            if (xcord < 0) {
-                pos.x=0;
-                ok=false;
-            } else if (xcord > (maparea->w-pos.w)) {
-                pos.x=maparea->w-pos.w;
-                ok=false;
-            } else pos.x=xcord;
-
-            if (ycord>(maparea->h-pos.h)) {
-                pos.y=maparea->h-pos.h;
-                ok=false;
-            } else pos.y=ycord;
-
-            return ok;
-        }
+        bool setPos(Sint16 xcord,Sint16 ycord);
         /// \brief Returns the center of an object
         /// \return Center position of the object with width=height=0
         SDL_Rect getCenter() {
