@@ -10,6 +10,7 @@
 Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP) {
+    weapon=Weapon(-1,W_STRIKE);
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
@@ -18,13 +19,17 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_krit_right=im_right;
     im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
     im_land_right=im_land_left;
+    im_claw_left=new Animation(60,imgcache->loadImage("kuru.bmp"),12,500,true);
+    im_claw_right=im_claw_left;
     au_hit=sndcache->loadWAV("wolfhit.wav");
-    au_jump=NULL;
+    au_claw=sndcache->loadWAV("wolfjmp1.wav");
+    au_jump=sndcache->loadWAV("fangjump.wav");
 }
 Fang::~Fang() {
     delete im_left;
     delete im_right;
     delete im_land_left;
+    delete im_claw_left;
 }
 
 void Fang::in_left(Sint16 dt) {
@@ -73,6 +78,13 @@ void Fang::in_sp1(Sint16 dt) {
         setState(STATE_ACT_1);
         setEvent(new ESpeed(this,DE_JUMP,V_JUMP,0,0,0,au_jump));
     }
+}
+
+void Fang::in_sp2(Sint16 dt) {
+    if (dt < 0) return;
+    input->unsetState(INPUT_SP2);
+
+    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,5,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? im_claw_left : im_claw_right));
 }
 
 void Fang::crash(Uint16 dir) {

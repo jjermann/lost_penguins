@@ -132,6 +132,11 @@ Object* Player::dropItem(Uint8 num) {
     }
 }
 
+void Player::setEvent(Event* ev) {
+    clearStates();
+    Character::setEvent(ev);
+}
+
 void Player::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_LEFT) {

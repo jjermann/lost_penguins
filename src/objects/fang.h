@@ -29,9 +29,14 @@ class Fang : public Player {
         virtual void in_right(Sint16);
         /// \brief Fang jumps
         virtual void in_sp1(Sint16);
+        /// \brief Fang attacks
+        virtual void in_sp2(Sint16);
         virtual void clearStates(bool reset=false);
     private:
         virtual void crash(Uint16 dir=DIR_DOWN);
+        Animation* im_claw_left;
+        Animation* im_claw_right;
         Mix_Chunk* au_jump;
+        Mix_Chunk* au_claw;
         Sint16 jump;
 };

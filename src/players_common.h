@@ -63,6 +63,7 @@ class Player : public Character {
         /// Removes all interactively initiated events and states
         /// \param reset If true reset the states of this player
         virtual void clearStates(bool reset=false);
+        virtual void setEvent(Event* ev);
         //@}
         //Input methods
         //@{

@@ -133,7 +133,7 @@ class Object {
         void clearEvents();
         /// Schedules a new event and cancels any currently running event
         /// \param ev New event
-        void setEvent(Event* ev);
+        virtual void setEvent(Event* ev);
         /// Updates the event (run by the AnimHandler) and react on the new event
         /// state (start, end or cancel an event).
         /// \return New event state
