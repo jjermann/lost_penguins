@@ -14,6 +14,8 @@ class ObjectsPool {
     public:
         ObjectsPool();
         ~ObjectsPool();
+        ///\brief Returns true if no objects were loaded so far...
+        bool empty();
         ///\todo Move this code to the objects
         ///\brief Add objects by their names
         ///

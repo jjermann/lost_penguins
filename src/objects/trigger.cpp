@@ -1,5 +1,6 @@
 #include "common.h"
 #include "objectpools.h"
+#include "map.h"
 #include "objects_common.h"
 #include "trigger.h"
 
@@ -7,7 +8,7 @@
 Trigger::Trigger(string imagename, Sint16 xcord, Sint16 ycord, string targetname, string oname, string keyname):
   Object(imagename,xcord,ycord,oname),
   key(keyname) {
-    target=pool->getObject(targetname);
+    target=scenario->pool->getObject(targetname);
 }
 Trigger::~Trigger() { }
 

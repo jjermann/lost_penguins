@@ -4,6 +4,7 @@
 #include "objectpools.h"
 #include "players_common.h"
 #include "imgcache.h"
+#include "map.h"
 #include "gfxeng.h"
 
 
@@ -66,8 +67,8 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
     SDL_Rect shift=center;
     shift.x=Uint16(vis_map.w/2)-shift.x;
     shift.y=Uint16(vis_map.h/2)-shift.y;
-    if (maparea->w+shift.x<vis_map.w) shift.x=vis_map.w-maparea->w;
-    if (maparea->h+shift.y<vis_map.h) shift.y=vis_map.h-maparea->h;
+    if (scenario->area->w+shift.x<vis_map.w) shift.x=vis_map.w-scenario->area->w;
+    if (scenario->area->h+shift.y<vis_map.h) shift.y=vis_map.h-scenario->area->h;
     if (shift.x>=0) shift.x=0;
     if (shift.y>=0) shift.y=0;
     vis_map.x=-shift.x;
@@ -77,7 +78,7 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
 
 inline void GraphicsEngine::drawPlayerBar() {
     //#players
-    Uint8 pnum=pool->playerspool.size();
+    Uint8 pnum=scenario->pool->playerspool.size();
     //temporary dest pos, source pos, copy of dest pos
     SDL_Rect dpos,spos,ppos;
     dpos.h=BAR_HEIGHT;
@@ -93,13 +94,13 @@ inline void GraphicsEngine::drawPlayerBar() {
     SDL_FillRect(screen,&bar,SDL_MapRGB(screen->format,100,100,100));
 
     //draw each player status
-    player_iterator plit=pool->playerspool.begin();
-    while (plit != pool->playerspool.end()) {
+    player_iterator plit=scenario->pool->playerspool.begin();
+    while (plit != scenario->pool->playerspool.end()) {
         //temp. variables
         spos=(*plit)->getIcon().pos;
         
         //enlight current player
-        if ((*plit)==player) {
+        if ((*plit)==scenario->player) {
             ppos=dpos;
             SDL_FillRect(screen,&ppos,SDL_MapRGB(screen->format,120,120,120));
         }
@@ -132,7 +133,7 @@ inline void GraphicsEngine::drawPlayerBar() {
             ppos.h=ICON_SIZE;
             item=(*plit)->getItem(j);
 
-            if ((j==(*plit)->getItemNum()) && (*plit)==player) {
+            if ((j==(*plit)->getItemNum()) && (*plit)==scenario->player) {
                 SDL_FillRect(screen,&ppos,SDL_MapRGB(screen->format,200,200,200));
             }
             if (item) {
@@ -147,23 +148,23 @@ inline void GraphicsEngine::drawPlayerBar() {
 }
 
 void GraphicsEngine::renderScene(bool insist) {
-    if (!paused || insist) {
+    if (scenario->background && (!paused || insist)) {
         //We don't want to change pos!
         SDL_Rect tmprect,shift,srcpos;
-        if (player!=NULL) {
-            shift=setShift(player->getCenter());
+        if (scenario->player!=NULL) {
+            shift=setShift(scenario->player->getCenter());
         } else {
             shift.x=0;
             shift.y=0;
         }
     
-        tmprect=*maparea;
-        srcpos=background->getFrame().pos;
-        shiftMapArea(tmprect,*background->getCurPos());
-        SDL_BlitSurface(background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+        tmprect=*scenario->area;
+        srcpos=scenario->background->getFrame().pos;
+        shiftMapArea(tmprect,*scenario->background->getCurPos());
+        SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         
-        object_iterator obit=pool->objectspool.begin();
-        while (obit!=pool->objectspool.end()) {
+        object_iterator obit=scenario->pool->objectspool.begin();
+        while (obit!=scenario->pool->objectspool.end()) {
             tmprect=*((*obit)->getPos());
             srcpos=(*obit)->getFrame().pos;
             shiftMapArea(tmprect,*((*obit)->getCurPos()));
@@ -171,11 +172,11 @@ void GraphicsEngine::renderScene(bool insist) {
             ++obit;
         }
     
-        if (player!=NULL) {
-            tmprect=*(player->getPos());
-            srcpos=player->getFrame().pos;
-            shiftMapArea(tmprect,*(player->getCurPos()));
-            SDL_BlitSurface(player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+        if (scenario->player!=NULL) {
+            tmprect=*(scenario->player->getPos());
+            srcpos=scenario->player->getFrame().pos;
+            shiftMapArea(tmprect,*(scenario->player->getCurPos()));
+            SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         }
     }
     

@@ -4,18 +4,12 @@ ImageCache* imgcache;
 SoundCache* sndcache;
 GraphicsEngine* gfxeng;
 SoundsEngine* sfxeng;
-ObjectsPool* pool;
-Player* player;
-Background* background;
-Map* curmap;
+Scenario* scenario;
 InputHandler* input;
-AnimHandler* anim;
 Font* font;
 Font* font2;
-SDL_Rect* maparea;
 Config config;
 bool paused=false;
-bool failed=false;
 
 string itos(int i) {
     std::stringstream s;

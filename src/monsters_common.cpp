@@ -6,6 +6,7 @@
 #include "sndcache.h"
 #include "monsters_common.h"
 //shouldn't be here...
+#include "map.h"
 #include "players_common.h"
 
 
@@ -22,7 +23,7 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     dense_types|=OTYPE_PLAYER;
     im_left=animation;
     im_right=animation;
-    au_hit=sndcache->loadWAV("monhit.wav");
+    au_hit=scenario->sndcache->loadWAV("monhit.wav");
 }
 
 Monster::~Monster() { }

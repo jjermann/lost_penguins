@@ -7,6 +7,7 @@
 #include "imgcache.h"
 #include "sndcache.h"
 #include "objectpools.h"
+#include "map.h"
 #include "players_common.h"
 
 
@@ -33,16 +34,16 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_krit_right=animation;
     im_land_left=animation;
     im_land_right=animation;
-    au_land=sndcache->loadWAV("dizzy.wav");
-    au_act=sndcache->loadWAV("button.wav");
-    au_useerror=sndcache->loadWAV("useerror.wav");
-    au_newitem=sndcache->loadWAV("pickup.wav");
-    au_hit=sndcache->loadWAV("vikhit.wav");
-    au_elec=sndcache->loadWAV("elecdth.wav");
-    au_drown=sndcache->loadWAV("drown.wav");
-    au_fire=sndcache->loadWAV("fireball.wav");
-    au_die=sndcache->loadWAV("bones.wav");
-    au_heal=sndcache->loadWAV("usefood1.wav");
+    au_land=scenario->sndcache->loadWAV("dizzy.wav");
+    au_act=scenario->sndcache->loadWAV("button.wav");
+    au_useerror=scenario->sndcache->loadWAV("useerror.wav");
+    au_newitem=scenario->sndcache->loadWAV("pickup.wav");
+    au_hit=scenario->sndcache->loadWAV("vikhit.wav");
+    au_elec=scenario->sndcache->loadWAV("elecdth.wav");
+    au_drown=scenario->sndcache->loadWAV("drown.wav");
+    au_fire=scenario->sndcache->loadWAV("fireball.wav");
+    au_die=scenario->sndcache->loadWAV("bones.wav");
+    au_heal=scenario->sndcache->loadWAV("usefood1.wav");
 }
 
 Player::~Player() {
@@ -87,7 +88,7 @@ bool Player::pickupItem(Item* newitem) {
             sfxeng->playWAV(au_newitem);
             newitem->setOwner(this);
             newitem->setPos(0,0);
-            pool->moveObject(newitem);
+            scenario->pool->moveObject(newitem);
             items[i]=newitem;
             return true;
         }
@@ -127,7 +128,7 @@ Object* Player::dropItem(Uint8 num) {
     if (state&STATE_LEFT) ok=tmpit->setPos(pos.x - tmpit->getPos()->w - 1, Uint16(getCenter().y-tmpit->getPos()->h/2));
     else ok=tmpit->setPos(pos.x + pos.w + 1, Uint16(getCenter().y-tmpit->getPos()->h/2));
     //new position in map and valid
-    if (ok && ((tmpobj=pool->addObject(tmpit))!=NULL)) return tmpobj;
+    if (ok && ((tmpobj=scenario->pool->addObject(tmpit))!=NULL)) return tmpobj;
     else { 
         pickupItem(tmpit);
         return NULL;
@@ -270,7 +271,7 @@ void Player::crash(Uint16 dir) {
 }
 
 void Player::die() {
-    failed=true;
+    scenario->failed=true;
     Character::die();
 }
 
@@ -296,7 +297,7 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
     if (newhealth==0) {
         die();
         //should be !=NULL or sthg is wrong with the placement code...
-        Character* deadplr=pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
+        Character* deadplr=scenario->pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
         switch(weap.getSubType()) {
             case WS_FIRE: {
                 if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,im_die));

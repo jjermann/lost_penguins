@@ -97,7 +97,7 @@ Object* ObjectsPool::getObject(const string& oname) {
 }
 
 Object* ObjectsPool::addObject(Object* object) {
-    if ( (object!=NULL) && (maparea==NULL || (curmap->checkPlace(*(object->getPos()),*maparea).enter==NOTHING)) ) {
+    if ( (object!=NULL) && (scenario->area==NULL || (scenario->checkPlace(*(object->getPos()),*scenario->area).enter==NOTHING)) ) {
         objectspool.insert(object);
         return object;
     } else {
@@ -118,9 +118,9 @@ object_iterator ObjectsPool::removeObject(object_iterator it) {
                 if (playerspool.erase(ptrv)) {
                     currentplayer=playerspool.begin();
                     if (currentplayer!=playerspool.end()) {
-                        if (player) player->clearStates(false);
-                        player=*currentplayer;
-                    } else player=NULL;
+                        if (scenario->player) scenario->player->clearStates(false);
+                        scenario->player=*currentplayer;
+                    } else scenario->player=NULL;
                 }
             } else if (Monster* ptrm = dynamic_cast<Monster*>(*it)) monsterspool.erase(ptrm);
         }
@@ -142,9 +142,9 @@ Object* ObjectsPool::moveObject(Object* object) {
             if (playerspool.erase(ptrv)) {
                 currentplayer=playerspool.begin();
                 if (currentplayer!=playerspool.end()) {
-                    if (player) player->clearStates(false);
-                    player=*currentplayer;
-                } else player=NULL;
+                    if (scenario->player) scenario->player->clearStates(false);
+                    scenario->player=*currentplayer;
+                } else scenario->player=NULL;
             }
         } else if (Monster* ptrm = dynamic_cast<Monster*>(object)) monsterspool.erase(ptrm);
     }
@@ -153,9 +153,9 @@ Object* ObjectsPool::moveObject(Object* object) {
 
 
 Character* ObjectsPool::addCharacter(Character* newcharacter) {
-    if ( (newcharacter!=NULL) && (curmap->checkPlace(*(newcharacter->getPos()),*maparea).enter==NOTHING) ) {
+    if ( (newcharacter!=NULL) && (scenario->checkPlace(*(newcharacter->getPos()),*scenario->area).enter==NOTHING) ) {
         characterspool.insert(newcharacter);
-        pool->addObject(newcharacter);
+        scenario->pool->addObject(newcharacter);
         return newcharacter;
     } else {
         cout << "Couldn't place character!\n";
@@ -164,10 +164,10 @@ Character* ObjectsPool::addCharacter(Character* newcharacter) {
 }
 
 Player* ObjectsPool::addPlayer(Player* newplayer) {
-    if ( (newplayer!=NULL) && (curmap->checkPlace(*(newplayer->getPos()),*maparea).enter==NOTHING) ) {
+    if ( (newplayer!=NULL) && (scenario->checkPlace(*(newplayer->getPos()),*scenario->area).enter==NOTHING) ) {
         playerspool.insert(newplayer);
         currentplayer=playerspool.begin();
-        pool->addCharacter(newplayer);
+        scenario->pool->addCharacter(newplayer);
         return newplayer;
     } else {
         cout << "Couldn't place player!\n";
@@ -181,22 +181,27 @@ Player* ObjectsPool::switchPlayer() {
         ++currentplayer;
         if (currentplayer == playerspool.end()) currentplayer=playerspool.begin();
         if (currentplayer != playerspool.end()) {
-            if (player) player->clearStates(false);
-            player=*currentplayer;
+            if (scenario->player) scenario->player->clearStates(false);
+            scenario->player=*currentplayer;
         }
-        else player=NULL;
-        return player;
-    } else return (player=NULL);
+        else scenario->player=NULL;
+        return scenario->player;
+    } else return (scenario->player=NULL);
 }
 
 
 Monster* ObjectsPool::addMonster(Monster* newmonster) {
-    if ( (newmonster!=NULL) && (curmap->checkPlace(*(newmonster->getPos()),*maparea).enter==NOTHING) ) {
+    if ( (newmonster!=NULL) && (scenario->checkPlace(*(newmonster->getPos()),*scenario->area).enter==NOTHING) ) {
         monsterspool.insert(newmonster);
-        pool->addCharacter(newmonster);
+        scenario->pool->addCharacter(newmonster);
         return newmonster;
     } else {
         cout << "Couldn't place monster!\n";
         return NULL;
     }
+}
+
+bool ObjectsPool::empty() {
+    if (scenario->pool->objectspool.empty()) return true;
+    else return false;
 }

@@ -1,7 +1,7 @@
 #ifndef _MAP_H
 #define _MAP_H 1
 
-/** \brief Map organization
+/** \brief Scenario organization
 
     Loads the corresponding map data (objects) and performs location checks.
     \remarks MAP FORMAT:
@@ -15,12 +15,14 @@
     \remarks Background background.bmp
     \remarks Teleporter teleporter.bmp 0 0 20 100 teleporter1
     \todo Improve the map format (eg. support headers)
-    \todo Idea: move all map depending things (eg. ObjectsPool) inside Map
+    \todo Move the Caches into the current map as well?
+    \todo Create a map class inside Scenario?
 */
-class Map {
+class Scenario {
     public:
-        Map(string mapname);
-        ~Map();
+        /// Creates a new scenario. To load a specific map, use loadMap(mapname).
+        Scenario();
+        ~Scenario();
         /// Checks where the source rectangle overlaps the destination rectangle.
         /// \param src Source rectangle
         /// \param dest Destination rectangle
@@ -44,13 +46,33 @@ class Map {
         /// \param src Source rectangle
         /// \param dest Destination rectangle
         Uint16 getDirection(const SDL_Rect& src, const SDL_Rect& dest) const;
-    private:
+
+        /// Background
+        Background* background;
+        /// Size of the background (map area)
+        SDL_Rect* area;
+        /// Current player
+        Player* player;
+        /// Image Cache
+        ImageCache* imgcache;
+        /// Sound Cache
+        SoundCache* sndcache;
+        /// Object pool
+        ObjectsPool* pool;
+        /// Animation Handler
+        AnimHandler* anim;
+        /// True if the mission failed
+        bool failed;
         ///\brief Loads and initializes the map data
         ///
         /// Parses the map file and tries to add the objects by using addObjectByName()
         /// \param mapname Map file name without the data directory in it
         /// \return 0 if a Background was found, -1 if not, -2 if the loading failed
-        inline int loadMapData(const string& mapname);
+        int loadMap(string mapname);
+        /// Name of the map file
+        string name;
+    private:
+        inline void reinitMap();
 };
 
 #endif

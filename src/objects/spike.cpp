@@ -17,7 +17,7 @@ Spike::~Spike() { }
 
 void Spike::touch(Object* obj) {
     if(Character* ptr = dynamic_cast<Character*>(obj)) {
-        Uint16 adir=(curmap->getDirection(getCenter(),ptr->getCenter()));
+        Uint16 adir=(scenario->getDirection(getCenter(),ptr->getCenter()));
         if (dir&adir) ptr->hit(adir,weapon);
     }
 }

@@ -14,6 +14,7 @@ Code
      o Idea: _all_ objects should have a "kore" like the players (curpos thing)
        This would help in many ways and should be a frame information and not an
        image as done for players atm!
+     o Use Singletons
 
  o Move/Fall/push/crash/collisions:
      o the character should have more information what he hits

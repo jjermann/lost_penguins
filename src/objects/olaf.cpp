@@ -4,6 +4,7 @@
 #include "input.h"
 #include "imgcache.h"
 #include "sndcache.h"
+#include "map.h"
 #include "sfxeng.h"
 #include "olaf.h"
 
@@ -11,32 +12,32 @@
 Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   fart(V_FART) {
-    im_left=new Animation(imgcache->loadImage("olaf1_left.bmp"));
-    im_right=new Animation(imgcache->loadImage("olaf1_right.bmp"));
-    im_run_left=new Animation(imgcache->loadImage("olaf1-run_left.png"),8,1000);
-    im_run_right=new Animation(imgcache->loadImage("olaf1-run_right.png"),8,1000);
+    im_left=new Animation(scenario->imgcache->loadImage("olaf1_left.bmp"));
+    im_right=new Animation(scenario->imgcache->loadImage("olaf1_right.bmp"));
+    im_run_left=new Animation(scenario->imgcache->loadImage("olaf1-run_left.png"),8,1000);
+    im_run_right=new Animation(scenario->imgcache->loadImage("olaf1-run_right.png"),8,1000);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
-    im_land_right=new Animation(imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
+    im_land_left=new Animation(scenario->imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(scenario->imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
 
-    im_small_left=new Animation(imgcache->loadImage("Olaf_Small_Walk_left.png"),7,0);
-    im_small_right=new Animation(imgcache->loadImage("Olaf_Small_Walk_right.png"),7,0);
-    im_run_small_left=new Animation(imgcache->loadImage("Olaf_Small_Walk_left.png"),7,500);
-    im_run_small_right=new Animation(imgcache->loadImage("Olaf_Small_Walk_right.png"),7,500);
-    im_shield_right=new Animation(imgcache->loadImage("olaf1_fall_shield_right.bmp"));
-    im_shield_left=new Animation(imgcache->loadImage("olaf1_fall_shield_left.bmp"));
+    im_small_left=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_left.png"),7,0);
+    im_small_right=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_right.png"),7,0);
+    im_run_small_left=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_left.png"),7,500);
+    im_run_small_right=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_right.png"),7,500);
+    im_shield_right=new Animation(scenario->imgcache->loadImage("olaf1_fall_shield_right.bmp"));
+    im_shield_left=new Animation(scenario->imgcache->loadImage("olaf1_fall_shield_left.bmp"));
     im_run_shield_right=im_shield_right;
     im_run_shield_left=im_shield_left;
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
-    im_die=new Animation(60,imgcache->loadImage("kuru.bmp"),12,2000,true);
-    au_small=sndcache->loadWAV("blob.wav");
-    au_big=sndcache->loadWAV("unblob.wav");
-    au_fart=sndcache->loadWAV("fart1.wav");
-    au_hit=sndcache->loadWAV("fathit.wav");
+    im_die=new Animation(60,scenario->imgcache->loadImage("kuru.bmp"),12,2000,true);
+    au_small=scenario->sndcache->loadWAV("blob.wav");
+    au_big=scenario->sndcache->loadWAV("unblob.wav");
+    au_fart=scenario->sndcache->loadWAV("fart1.wav");
+    au_hit=scenario->sndcache->loadWAV("fathit.wav");
 }
 Olaf::~Olaf() {
     delete im_left;

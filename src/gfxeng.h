@@ -34,7 +34,7 @@ class GraphicsEngine {
         inline SDL_Rect* shiftMapArea(SDL_Rect& area, const SDL_Rect& shift);
         //draw player bar
         inline void drawPlayerBar();
-        //currently visible part of the maparea
+        //currently visible part of the map area
         SDL_Rect vis_map;
         //main screen
         SDL_Surface* screen;

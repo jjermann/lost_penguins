@@ -1,6 +1,7 @@
 #include "common.h"
 #include "objectpools.h"
 //shouldn't be here...
+#include "map.h"
 #include "players_common.h"
 #include "exit.h"
 
@@ -10,12 +11,12 @@ Exit::Exit(string imagename, Sint16 xcord, Sint16 ycord, string oname):
 Exit::~Exit() { }
 
 bool Exit::act(Object*) {
-    player_iterator it=pool->playerspool.begin();
-    while (it!=pool->playerspool.end()) {
+    player_iterator it=scenario->pool->playerspool.begin();
+    while (it!=scenario->pool->playerspool.end()) {
         if (!((*it)->isIn(pos))) return false;
         ++it;
     }
-    if (failed) cout << "Again?\n"; 
+    if (scenario->failed) cout << "Again?\n"; 
     else cout << "You won!!!!\n";
     quitGame(0);
     return true;

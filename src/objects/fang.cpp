@@ -4,6 +4,7 @@
 #include "input.h"
 #include "imgcache.h"
 #include "sndcache.h"
+#include "map.h"
 #include "fang.h"
 
 
@@ -11,21 +12,21 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
-    im_left=new Animation(imgcache->loadImage("Fang_Breath_left.png"),4,1000);
-    im_right=new Animation(imgcache->loadImage("Fang_Breath_right.png"),4,1000);
-    im_run_left=new Animation(imgcache->loadImage("Fang_walk_left.png"),8,1000);
-    im_run_right=new Animation(imgcache->loadImage("Fang_walk_right.png"),8,1000);
+    im_left=new Animation(scenario->imgcache->loadImage("Fang_Breath_left.png"),4,1000);
+    im_right=new Animation(scenario->imgcache->loadImage("Fang_Breath_right.png"),4,1000);
+    im_run_left=new Animation(scenario->imgcache->loadImage("Fang_walk_left.png"),8,1000);
+    im_run_right=new Animation(scenario->imgcache->loadImage("Fang_walk_right.png"),8,1000);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
-    im_land_right=new Animation(imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
-    im_claw_left=new Animation(imgcache->loadImage("Fang_Clawslash_left.png"),8,1000,true);
-    im_claw_right=new Animation(imgcache->loadImage("Fang_Clawslash_right.png"),8,1000,true);
-    au_hit=sndcache->loadWAV("wolfhit.wav");
-    au_claw=sndcache->loadWAV("wolfjmp1.wav");
-    au_jump=sndcache->loadWAV("fangjump.wav");
+    im_land_left=new Animation(scenario->imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(scenario->imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
+    im_claw_left=new Animation(scenario->imgcache->loadImage("Fang_Clawslash_left.png"),8,1000,true);
+    im_claw_right=new Animation(scenario->imgcache->loadImage("Fang_Clawslash_right.png"),8,1000,true);
+    au_hit=scenario->sndcache->loadWAV("wolfhit.wav");
+    au_claw=scenario->sndcache->loadWAV("wolfjmp1.wav");
+    au_jump=scenario->sndcache->loadWAV("fangjump.wav");
 }
 Fang::~Fang() {
     delete im_left;

@@ -12,11 +12,11 @@
 
 Zombie::Zombie(string imagename, Sint16 xcord, Sint16 ycord, string mname):
   Monster(imagename,xcord,ycord,mname),
-  au_attack(sndcache->loadWAV("clang.wav")),
+  au_attack(scenario->sndcache->loadWAV("clang.wav")),
   T_Attack_Bite(1500) {
     maxspeedx=80;
-    im_left=new Animation(imgcache->loadImage("olaf1_left.bmp"),2,1000);
-    im_right=new Animation(imgcache->loadImage("olaf1_right.bmp"),2,1000);
+    im_left=new Animation(scenario->imgcache->loadImage("olaf1_left.bmp"),2,1000);
+    im_right=new Animation(scenario->imgcache->loadImage("olaf1_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
 }
 
@@ -82,7 +82,7 @@ void Zombie::runAI(Uint16 dt) {
                 unsetState(STATE_ATTACK);
             } else {
                 Player* target=*(targets.begin());
-                Uint16 dir=curmap->getDirection(getCenter(),target->getCenter());
+                Uint16 dir=scenario->getDirection(getCenter(),target->getCenter());
                 dir&=~(DIR_UP|DIR_DOWN);
                 if (dir&DIR_LEFT) setState(STATE_LEFT);
                 else unsetState(STATE_LEFT);

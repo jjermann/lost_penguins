@@ -1,6 +1,7 @@
 #include "common.h"
 //shouldn't be here...
 #include "objectpools.h"
+#include "map.h"
 #include "players_common.h"
 #include "triggered_bomb.h"
 #include "bomb.h"
@@ -11,7 +12,7 @@ Bomb::Bomb(string imagename, Sint16 xcord, Sint16 ycord, Uint16 explode_time, st
 Bomb::~Bomb() { }
 
 bool Bomb::act(Object*) {
-    if (pool->addCharacter(new TriggeredBomb("bomb_fire.bmp",owner->getPos()->x,owner->getPos()->y,countdown,"TriggeredBomb"))) {
+    if (scenario->pool->addCharacter(new TriggeredBomb("bomb_fire.bmp",owner->getPos()->x,owner->getPos()->y,countdown,"TriggeredBomb"))) {
         owner->removeItem();
         return true;
     } else {

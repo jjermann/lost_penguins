@@ -142,8 +142,8 @@ void Character::crash(Uint16 dir) {
 void Character::die() {
     mark_delete();
 
-    character_iterator cit=pool->characterspool.begin();
-    while (cit != pool->characterspool.end()) {
+    character_iterator cit=scenario->pool->characterspool.begin();
+    while (cit != scenario->pool->characterspool.end()) {
         (*cit)->removedObject(this);
         ++cit;
     }
@@ -218,7 +218,7 @@ inline Hit Character::checkHit(const SDL_Rect& dest, Object* destobj, bool tele)
         if (pos.x<(opos->x+opos->w)) hitdir.enter&=~DIR_LEFT;
         if (pos.y<(opos->y+opos->h)) hitdir.enter&=~DIR_UP;
         if ((pos.y+pos.h)>opos->y) hitdir.enter&=~DIR_DOWN;
-        hitdir.enter&=curmap->getDirection(pos,dest);
+        hitdir.enter&=scenario->getDirection(pos,dest);
     }
 
     //=== From this point on movement hit directions are set ===//
@@ -258,8 +258,8 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     std::set<Object *> newenter;
     
     //Change destination based on enter hits on normal objects
-    object_iterator obit=pool->objectspool.begin();
-    while (obit!=pool->objectspool.end()) {
+    object_iterator obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
         //blocked directions == movement direction in this case
         if (!((*obit)->isDeleted())) {
             opos=*((*obit)->getPos());
@@ -275,18 +275,18 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     }
 
     //Check map boundary
-    hit=curmap->checkPlace(dest,(*maparea));
+    hit=scenario->checkPlace(dest,(*scenario->area));
     if (hit.enter&DIR_RIGHT) {
         colltype.enter|=DIR_RIGHT;
         colltype.touch|=DIR_RIGHT;
-        dest.x=maparea->x+maparea->w-dest.w;
+        dest.x=scenario->area->x+scenario->area->w-dest.w;
     } else if (hit.touch&DIR_RIGHT) {
         colltype.touch|=DIR_RIGHT;
     }
     if (hit.enter&DIR_LEFT) {
         colltype.enter|=DIR_LEFT;
         colltype.touch|=DIR_LEFT;
-        dest.x=maparea->x;
+        dest.x=scenario->area->x;
     } else if (hit.touch&DIR_LEFT) {
         colltype.touch|=DIR_LEFT;
     }
@@ -294,7 +294,7 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     if (hit.enter&DIR_DOWN) {
         colltype.enter|=DIR_DOWN;
         colltype.touch|=DIR_DOWN;
-        dest.y=maparea->y+maparea->h-dest.h;
+        dest.y=scenario->area->y+scenario->area->h-dest.h;
     } else if (hit.touch&DIR_DOWN) {
         colltype.touch|=DIR_DOWN;
     }
@@ -302,8 +302,8 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     //=== From this point on the new destination is calculated ===//
     
     //check touching
-    obit=pool->objectspool.begin();
-    while (obit!=pool->objectspool.end()) {
+    obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
         //blocked directions == movement direction in this case
         if (!((*obit)->isDeleted())) {
             hit=checkHit(dest,(*obit));

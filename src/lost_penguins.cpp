@@ -33,25 +33,23 @@ int main(int argc, char* argv[]) {
     SDL_ShowCursor(SDL_DISABLE);
     SDL_SetEventFilter(filterEvents);
 
-    maparea=NULL;
     cout << "ImageCache...\n";
     imgcache=new ImageCache();
     cout << "SoundCache...\n";
     sndcache=new SoundCache();
     cout << "GraphicsEngine...\n";
     gfxeng=new GraphicsEngine();
+    cout << "SoundEngine...\n";
+    sfxeng=new SoundsEngine();
     cout << "Fonts...\n";
     font=new Font(imgcache->loadImage("font_arial_white_16_01.png"));
     font2=new Font(imgcache->loadImage("font_arial_12_01.bmp"));
-    cout << "SoundEngine...\n";
-    sfxeng=new SoundsEngine();
-    cout << "ObjectsPool and Map...\n";
-    pool=new ObjectsPool();
-    curmap=new Map(config.map);
     cout << "InputHandler...\n";
     input=new InputHandler();
-    cout << "AnimHandler...\n";
-    anim=new AnimHandler();
+    //TODO: menu, szenarios, etc
+    cout << "Initializing Scenario...\n";
+    scenario=new Scenario();
+    scenario->loadMap(config.map);
 
     cout << "Starting game...\n" << endl;
     while (true) {
@@ -60,7 +58,7 @@ int main(int argc, char* argv[]) {
         //Check input
         input->pollEvents();
         //Run Animations
-        anim->runAnims();
+        scenario->anim->runAnims();
     }
 
     quitGame(-2);
@@ -68,16 +66,13 @@ int main(int argc, char* argv[]) {
 
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
-    delete curmap;
-    delete pool;
-    cout << "Pools deleted...\n";
+    delete scenario;
+    cout << "Scenario closed...\n";
     delete sfxeng;
     delete gfxeng;
     cout << "GraphicsEngine deleted...\n";
     delete input;
-    delete anim;
     delete font;
-    delete background;
     cout << "Deleting SoundCache...\n";
     delete sndcache;
     cout << "Deleting ImageCache...\n";

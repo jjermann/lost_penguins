@@ -3,13 +3,15 @@
 #include "anim.h"
 #include "events.h"
 #include "objects_common.h"
+//HACK!
+#include "map.h"
 
 
 Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   tbirth(SDL_GetTicks()),
   state(NOTHING),
   event(NULL),
-  im_orig(new Animation(imgcache->loadImage(imagename))),
+  im_orig(new Animation(scenario->imgcache->loadImage(imagename))),
   otype(NOTHING),
   name(oname),
   delete_flag(false) {
@@ -42,16 +44,16 @@ bool Object::isIn(const SDL_Rect& rect, bool touch) {
 
 bool Object::setPos(Sint16 xcord,Sint16 ycord) {
     bool ok=true;
-    //Did we hit a maparea?
+    //Did we hit a map area?
     if (xcord < 0) {
         pos.x=0;
         ok=false;
-    } else if (xcord > (maparea->w-pos.w)) {
-        pos.x=maparea->w-pos.w;
+    } else if (xcord > (scenario->area->w-pos.w)) {
+        pos.x=scenario->area->w-pos.w;
         ok=false;
     } else pos.x=xcord;
-    if (ycord>(maparea->h-pos.h)) {
-        pos.y=maparea->h-pos.h;
+    if (ycord>(scenario->area->h-pos.h)) {
+        pos.y=scenario->area->h-pos.h;
         ok=false;
     } else pos.y=ycord;
     return ok;

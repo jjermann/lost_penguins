@@ -15,18 +15,18 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   jump(V_JUMP),
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);
-    im_left=new Animation(imgcache->loadImage("erik1_left.bmp"));
-    im_right=new Animation(imgcache->loadImage("erik1_right.bmp"));
+    im_left=new Animation(scenario->imgcache->loadImage("erik1_left.bmp"));
+    im_right=new Animation(scenario->imgcache->loadImage("erik1_right.bmp"));
     im_run_right=im_right;
     im_run_left=im_left;
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
-    im_land_right=new Animation(imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
-    au_jump=sndcache->loadWAV("rboots.wav");
-    au_hit=sndcache->loadWAV("erikhit.wav");
+    im_land_left=new Animation(scenario->imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(scenario->imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
+    au_jump=scenario->sndcache->loadWAV("rboots.wav");
+    au_hit=scenario->sndcache->loadWAV("erikhit.wav");
     au_run=NULL;
 }
 Erik::~Erik() {
@@ -97,7 +97,7 @@ void Erik::in_right(Sint16 dt) {
 
 void Erik::crash(Uint16 dir) {
     if ((state&(STATE_PRESS_LR|STATE_ACT_2)) && (!(dir&DIR_DOWN))) {
-        std::set<Character *> targets=curmap->getCharactersIn(OTYPE_MONSTER,getCenter(),true,pos.w+1,dir);
+        std::set<Character *> targets=scenario->getCharactersIn(OTYPE_MONSTER,getCenter(),true,pos.w+1,dir);
         ///\bug This might get the wrong target
         if (!targets.empty()) (*targets.begin())->hit(dir,weapon);
     }

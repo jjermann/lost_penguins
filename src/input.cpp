@@ -5,6 +5,7 @@
 #include "sndcache.h"
 #include "gfxeng.h"
 #include "sfxeng.h"
+#include "map.h"
 #include "objectpools.h"
 #include "objects_common.h"
 
@@ -93,7 +94,7 @@ void InputHandler::pollEvents() {
             case SDL_KEYDOWN: {
                 switch(event.key.keysym.sym) {
                     case SDLK_LCTRL: {
-                        pool->switchPlayer();
+                        scenario->pool->switchPlayer();
                         state=NOTHING;
                         break;
                     }
@@ -140,7 +141,7 @@ void InputHandler::pollEvents() {
                          } else if (paused) {
                              state|=INPUT_PAUSE;
                              paused=false;
-                             anim->resetTime();
+                             scenario->anim->resetTime();
                              sfxeng->resumeMusic();
                          } else {
                              state|=INPUT_PAUSE;

@@ -10,7 +10,7 @@ Door::Door(string imagename, Sint16 xcord, Sint16 ycord, string keyname, string 
   Object(imagename,xcord,ycord,oname),
   open(false),
   key(keyname),
-  au_open(sndcache->loadWAV("dooropn.wav")),
+  au_open(scenario->sndcache->loadWAV("dooropn.wav")),
   au_close(au_open) {
     otype=OTYPE_DENSE;
 }
@@ -19,7 +19,7 @@ Door::~Door() { }
 bool Door::act(Object* obj) {
     //sanity check
     if (!(obj && obj->getName()==key)) return false;
-    if (!(curmap->getCharactersIn(OTYPE_PLAYER|OTYPE_MONSTER,pos,true).empty())) return false;
+    if (!(scenario->getCharactersIn(OTYPE_PLAYER|OTYPE_MONSTER,pos,true).empty())) return false;
 
     //switch state
     if (open) {

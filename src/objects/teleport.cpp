@@ -4,12 +4,13 @@
 #include "objects_common.h"
 //shouldn't be here...
 #include "players_common.h"
+#include "map.h"
 #include "teleport.h"
 
 
 Teleporter::Teleporter(string imagename, Sint16 xcord, Sint16 ycord, Sint16 xExit, Sint16 yExit, string oname):
   Object(imagename,xcord,ycord,oname),
-  au_tele(sndcache->loadWAV("teleprt.wav")) {
+  au_tele(scenario->sndcache->loadWAV("teleprt.wav")) {
     exit.x=xExit;
     exit.y=yExit;
     exit.w=exit.h=0;

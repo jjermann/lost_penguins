@@ -172,7 +172,7 @@ EAttack::EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Ui
   range(weap_range),
   mask(target_mask) { }
 void EAttack::end() {
-    std::set<Character *> targets=curmap->getCharactersIn(mask,*owner->getPos(),true,range,direction);
+    std::set<Character *> targets=scenario->getCharactersIn(mask,*owner->getPos(),true,range,direction);
     if (!targets.empty()) {
         (*targets.begin())->hit(direction,*weapon);
     }

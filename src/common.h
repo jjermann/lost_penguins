@@ -30,7 +30,7 @@ class GraphicsEngine;
 class SoundsEngine;
 class ObjectsPool;
 class Background;
-class Map;
+class Scenario;
 class InputHandler;
 class AnimHandler;
 class Font;
@@ -117,8 +117,6 @@ int boost(int,int);
 //@{
 /// Game configuration
 extern Config config;
-/// Size of the background (map area)
-extern SDL_Rect* maparea;
 /// Image Cache
 extern ImageCache* imgcache;
 /// Sound Cache
@@ -127,26 +125,16 @@ extern SoundCache* sndcache;
 extern GraphicsEngine* gfxeng;
 /// Sounds Engine
 extern SoundsEngine* sfxeng;
-/// Object pool
-extern ObjectsPool* pool;
-/// Current player
-extern Player* player;
-/// Background
-extern Background* background;
 /// Current map
-extern Map* curmap;
+extern Scenario* scenario;
 /// Input Handler
 extern InputHandler* input;
-/// Animation Handler
-extern AnimHandler* anim;
 /// Font1
 extern Font* font;
 /// Font2
 extern Font* font2;
 /// True if the game is paused
 extern bool paused;
-/// True if the mission failed
-extern bool failed;
 //@}
 
 #endif
