@@ -10,14 +10,19 @@ lost_penguins:
 tools:
 	+$(MAKE) -C tools
 
+docs:
+	+$(MAKE) -C docs
+
 clean:
 	rm -f $(BINS)
 	+$(MAKE) -C src clean
 	+$(MAKE) -C tools clean
+	+$(MAKE) -C docs clean
 
 distclean: clean
 	+$(MAKE) -C src distclean
 	+$(MAKE) -C tools distclean
+	+$(MAKE) -C docs distclean
 	rm -f *~
 
 install:
