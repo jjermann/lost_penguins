@@ -1,29 +1,31 @@
-CXX = g++
-CXX_FLAGS = -W -Wall -pedantic
-CXX_DEBUG = -g #-fno-inline
-CXX_OPT = -O2 -march=pentium4 -ffast-math
-CXX_GAME = -DSDL_MIXER -DSDL_IMAGE -DALPHA
-SDL = `sdl-config --cflags`
-SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image
+CC         = gcc
+CC_FLAGS   = -pedantic -W -Wall
+CC_DEBUG   = -g #-fno-inline
+CC_OPT     = -O2 -march=pentium4 -ffast-math
+CC_LVL     = `Magick-config --ldflags --libs`
 
-OBJS = slvextract.o
-BIN = slvextract
+SLV        = lvlextract
+SLV_OBJS   = slvextract.o
+LVL        = lvl2magick
+LVL_OBJS   = lvl2magick.o
 
-default:
-	$(MAKE) -C lvl_tools
-	$(MAKE) $(BIN)
-		
-$(BIN): $(OBJS)
-	$(CXX) $(OBJS) $(SDL_LINK) -o $(BIN)
+default: $(SLV) $(LVL)
 
-%.o: %.cpp
-	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) $(CXX_GAME) $(SDL) -c $< -o $@
+all: $(SLV) $(LVL)
+
+$(SLV): $(SLV_OBJS)
+	$(CC) $(SLV_OBJS) -o $(SLV)
+
+$(LVL): $(LVL_OBJS)
+	$(CC) $(CC_LVL) $(LVL_OBJS) -o $(LVL)
+
+%.o: %.c
+	$(CC) $(CC_FLAGS) $(CC_DEBUG) $(CC_OPT) -c $< -o $@
 
 clean:
-	rm -f *.o
-	rm -f $(BIN)
-	+$(MAKE) -C lvl_tools clean
+	rm -f $(SLV)
+	rm -f $(LVL)
+	rm -f *.o *.a
 
 distclean: clean
 	rm -f *~
-	+$(MAKE) -C lvl_tools distclean
