@@ -16,7 +16,6 @@ SDL_Rect* maparea;
 Config config;
 bool paused=false;
 bool failed=false;
-bool fps=true;
 
 //convert int to string
 string itos(int i) {

@@ -12,7 +12,8 @@ GraphicsEngine::GraphicsEngine():
   Dfps(0),
   Dframes(0),
   currentfps(0),
-  tcurrent(SDL_GetTicks()) {
+  tcurrent(SDL_GetTicks()),
+  show_fps(true) {
     if ((screen=SDL_SetVideoMode(config.width,config.height,16,SDL_HWSURFACE|SDL_DOUBLEBUF|config.full)) != NULL) {
         cout << "Set VideoMode...\n";
     } else {
@@ -176,7 +177,7 @@ void GraphicsEngine::renderScene(bool insist) {
     
     //TODO don't draw the whole screen, just till bar, just upgrade certain regions of the bar
     if (pbar) drawPlayerBar();
-    if (fps) {
+    if (show_fps) {
         Dfps+=(SDL_GetTicks()-tcurrent);
         tcurrent=SDL_GetTicks();
         ++Dframes;
@@ -199,5 +200,15 @@ void GraphicsEngine::togglePlayerBar() {
     } else {
         pbar=true;
         backpos.h-=BAR_HEIGHT;
+    }
+}
+
+void GraphicsEngine::toggleFPS() {
+    //on  -> off
+    if (show_fps) {
+        show_fps=false;
+    //off -> on
+    } else {   
+        show_fps=true;
     }
 }

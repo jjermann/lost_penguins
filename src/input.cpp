@@ -149,8 +149,7 @@ void InputHandler::pollEvents() {
                          break;
                     }
                     case SDLK_F2: {
-                         if (fps) fps=false;
-                         else fps=true;
+                         gfxeng->toggleFPS();
                          break;
                     }
                     case SDLK_q: {

@@ -31,6 +31,7 @@ class GraphicsEngine {
         Animation* lifeimage;
         //fps stuff
         Uint16 Dfps,Dframes,currentfps,tcurrent;
+        bool show_fps;
 };
 
 #endif
