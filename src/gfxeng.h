@@ -21,16 +21,16 @@ class GraphicsEngine {
         //draw player bar
         inline void drawPlayerBar();
         //currently visible part of the maparea
-        SDL_Rect backpos;
+        SDL_Rect vis_map;
         //main screen
         SDL_Surface* screen;
         //player bar
         SDL_Rect bar;
         //player bar
-        bool pbar;
         Animation* lifeimage;
         //fps stuff
         Uint16 Dfps,Dframes,currentfps,tcurrent;
+        bool show_bar;
         bool show_fps;
 };
 

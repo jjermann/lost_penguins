@@ -8,11 +8,11 @@
 
 
 GraphicsEngine::GraphicsEngine():
-  pbar(true),
   Dfps(0),
   Dframes(0),
   currentfps(0),
   tcurrent(SDL_GetTicks()),
+  show_bar(true),
   show_fps(true) {
     if ((screen=SDL_SetVideoMode(config.width,config.height,16,SDL_HWSURFACE|SDL_DOUBLEBUF|config.full)) != NULL) {
         cout << "Set VideoMode...\n";
@@ -20,18 +20,16 @@ GraphicsEngine::GraphicsEngine():
         cout << "Couldn't set VideoMode: " << SDL_GetError() << endl;
         quitGame(-1);
     }
-
-    pbar=true;
-    backpos.x=0;
-    backpos.y=0;
-    backpos.w=config.width;
-    backpos.h=config.height-BAR_HEIGHT;
+    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
+    vis_map.x=0;
+    vis_map.y=0;
+    vis_map.w=screen->w;
+    vis_map.h=screen->h-BAR_HEIGHT;
     //player bar
     bar.x=0;
-    bar.y=backpos.y+backpos.h;
-    bar.w=config.width;
+    bar.y=vis_map.y+vis_map.h;
+    bar.w=screen->w;
     bar.h=BAR_HEIGHT;
-    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
 }
 
 GraphicsEngine::~GraphicsEngine() {
@@ -39,15 +37,14 @@ GraphicsEngine::~GraphicsEngine() {
     SDL_FreeSurface(screen);
 }
 
-
 inline SDL_Rect GraphicsEngine::clipToBG(SDL_Rect dest) const {
-    if (dest.x < backpos.x) {
-        dest.w -= backpos.x-dest.x;
-        dest.x = backpos.x;
+    if (dest.x < vis_map.x) {
+        dest.w -= vis_map.x-dest.x;
+        dest.x = vis_map.x;
     }
-    if (dest.y < backpos.y) {
-        dest.h = backpos.y - dest.y;
-        dest.y = backpos.y;
+    if (dest.y < vis_map.y) {
+        dest.h = vis_map.y - dest.y;
+        dest.y = vis_map.y;
     }
     return dest;
 }
@@ -60,14 +57,14 @@ inline SDL_Rect* GraphicsEngine::shiftMapArea(SDL_Rect& area,const SDL_Rect& shi
 
 inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
     SDL_Rect shift=center;
-    shift.x=Uint16(backpos.w/2)-shift.x;
-    shift.y=Uint16(backpos.h/2)-shift.y;
-    if (maparea->w+shift.x<backpos.w) shift.x=backpos.w-maparea->w;
-    if (maparea->h+shift.y<backpos.h) shift.y=backpos.h-maparea->h;
+    shift.x=Uint16(vis_map.w/2)-shift.x;
+    shift.y=Uint16(vis_map.h/2)-shift.y;
+    if (maparea->w+shift.x<vis_map.w) shift.x=vis_map.w-maparea->w;
+    if (maparea->h+shift.y<vis_map.h) shift.y=vis_map.h-maparea->h;
     if (shift.x>=0) shift.x=0;
     if (shift.y>=0) shift.y=0;
-    backpos.x=-shift.x;
-    backpos.y=-shift.y;
+    vis_map.x=-shift.x;
+    vis_map.y=-shift.y;
     return shift;    
 }
 
@@ -77,10 +74,10 @@ inline void GraphicsEngine::drawPlayerBar() {
     //temporary dest pos, source pos, copy of dest pos
     SDL_Rect dpos,spos,ppos;
     dpos.h=BAR_HEIGHT;
-    if (pnum>0) dpos.w=(Uint16)(config.width/pnum);
+    if (pnum>0) dpos.w=(Uint16)(screen->w/pnum);
     else dpos.w=0;
     dpos.x=0;
-    dpos.y=config.height-BAR_HEIGHT;
+    dpos.y=screen->h-BAR_HEIGHT;
     //more temporary variables
     Item* item=NULL;
     Frame frame;
@@ -117,7 +114,7 @@ inline void GraphicsEngine::drawPlayerBar() {
 
         //Write text stuff
         //font->write(screen,itos(plr->getHealth()),dpos.x,dpos.y);
-        font->write(screen,(*plit)->getName(),dpos.x,config.height-font->getHeight());
+        font->write(screen,(*plit)->getName(),dpos.x,screen->h-font->getHeight());
 
         //draw the items of the current player
         for (Uint8 j=0; j<MAX_ITEMS; j++) {
@@ -176,7 +173,7 @@ void GraphicsEngine::renderScene(bool insist) {
     }
     
     //TODO don't draw the whole screen, just till bar, just upgrade certain regions of the bar
-    if (pbar) drawPlayerBar();
+    if (show_bar) drawPlayerBar();
     if (show_fps) {
         Dfps+=(SDL_GetTicks()-tcurrent);
         tcurrent=SDL_GetTicks();
@@ -186,20 +183,20 @@ void GraphicsEngine::renderScene(bool insist) {
             Dfps=0;
             Dframes=0;
         }
-        font->write(screen,"FPS: " + itos(currentfps),config.width-150,0);
+        font->write(screen,"FPS: " + itos(currentfps),screen->w-150,0);
     }
     SDL_Flip(screen);
 }
 
 void GraphicsEngine::togglePlayerBar() {
     //on  -> off
-    if (pbar) {
-        pbar=false;
-        backpos.h+=BAR_HEIGHT;
+    if (show_bar) {
+        show_bar=false;
+        vis_map.h+=BAR_HEIGHT;
     //off -> on
     } else {
-        pbar=true;
-        backpos.h-=BAR_HEIGHT;
+        show_bar=true;
+        vis_map.h-=BAR_HEIGHT;
     }
 }
 
