@@ -1,19 +1,27 @@
-CXX = gcc
-CXX_FLAGS = -W -Wall -ansi -pedantic
-CXX_DEBUG = -g #-fno-inline
-CXX_OPT = -O2 -march=pentium4 -ffast-math
-CXX_TOOL = -lpng
+CC         = gcc
+CC_FLAGS   = -ansi -pedantic -W -Wall
+CC_DEBUG   = -g #-fno-inline
+CC_OPT     = -O2 -march=pentium4 -ffast-math
+CC_TOOL    = -lpng
+CC_MAGICK  = `Magick-config --ldflags --libs`
 
-OBJS  = png_out.o xpm_out.o pgm_out.o png_xpm_out.o lvlextract.o
-BIN   = ../lvlextract
+OBJS        = png_out.o xpm_out.o pgm_out.o png_xpm_out.o lvlextract.o
+OBJS_MAGICK = lvl2magick.o
+BIN         = ../lvlextract
+BIN_MAGICK  = ../lvl2magick
 
-default: $(BIN)
+default: $(BIN_MAGICK)
+
+all: $(BIN) $(BIN_MAGICK)
 
 $(BIN): $(OBJS)
-	$(CXX) $(CXX_TOOL) $(OBJS) -o $(BIN)
+	$(CC) $(CC_TOOL) $(OBJS) -o $(BIN)
+
+$(BIN_MAGICK): $(OBJS_MAGICK)
+	$(CC) $(CC_MAGICK) $(OBJS_MAGICK) -o $(BIN_MAGICK)
 
 %.o: %.c
-	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) -c $< -o $@
+	$(CC) $(CC_FLAGS) $(CC_DEBUG) -c $< -o $@
 
 clean:
 	rm -f $(BIN)
