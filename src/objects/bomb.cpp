@@ -7,7 +7,7 @@
 
 //TODO: this adds a new object (TriggeredBomb), how to handle this with dynamical plugins?
 
-Bomb::Bomb(string imagename, Uint16 xcord, Uint16 ycord, Uint16 explode_time, string iname):
+Bomb::Bomb(string imagename, Sint16 xcord, Sint16 ycord, Uint16 explode_time, string iname):
   Item(imagename,xcord,ycord,iname),
   countdown(explode_time) { }
 Bomb::~Bomb() { }

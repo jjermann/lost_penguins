@@ -7,7 +7,7 @@
 
 class Eric : public Player {
     public:
-        Eric(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Eric");
+        Eric(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Eric");
         virtual ~Eric();
         virtual void in_sp1(Sint16);
         virtual void in_sp2(Sint16);

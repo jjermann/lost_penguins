@@ -6,7 +6,7 @@
 #include "baleog.h"
 
 
-Baleog::Baleog(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname) {
     im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;

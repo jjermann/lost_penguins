@@ -6,7 +6,7 @@
 
 class Geyser : public Object {
     public:
-        Geyser(string imagename, Uint16 xpos=0, Uint16 ypos=0, Sint16 yAdd=0, string name="Geyser");
+        Geyser(string imagename, Sint16 xpos=0, Sint16 ypos=0, Sint16 yAdd=0, string name="Geyser");
         virtual ~Geyser();
         virtual void idle(Uint16 dt);
     private:

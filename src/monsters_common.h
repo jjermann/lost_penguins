@@ -6,7 +6,7 @@
 //Monsters
 class Monster : public Character {
     public:
-        Monster(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Monster");
+        Monster(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Monster");
         virtual ~Monster();
         virtual void removedObject(Object*);
         //updates the current animation state

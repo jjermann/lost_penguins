@@ -5,7 +5,7 @@
  
 class Zombie : public Monster {
     public:
-        Zombie(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Zombie");
+        Zombie(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Zombie");
         virtual ~Zombie();
         virtual void idle(Uint16);
     private:

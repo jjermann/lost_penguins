@@ -7,7 +7,7 @@
 #include "fang.h"
 
 
-Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));

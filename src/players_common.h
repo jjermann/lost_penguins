@@ -26,7 +26,7 @@
 //TODO: somehow differentiate between characters, players and AI players or objects
 class Player : public Character {
     public:
-        Player(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Player");
+        Player(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Player");
         virtual ~Player();
         //Items
         //returns icon for the player bar
@@ -46,8 +46,8 @@ class Player : public Character {
             removeItem(currentitem);
         }
         void switchItem(bool right=true);
-        Object* dropItem(bool right=true) {
-            return dropItem(currentitem,right);
+        Object* dropItem() {
+            return dropItem(currentitem);
         }
         //VIRTUAL METHODS
         //updates the current animation state
@@ -78,7 +78,7 @@ class Player : public Character {
         //Items
         void removeItem(Uint8 num);
         Item* moveItem(Uint8 num);
-        Object* dropItem(Uint8 num, bool right=true);
+        Object* dropItem(Uint8 num);
         //crash into another object (default: ground)  
         virtual void crash(Uint16 dir=DIR_DOWN);
         //when it dies...
@@ -111,7 +111,7 @@ class Player : public Character {
 
 class DeadPlayer : public Character {
     public:
-        DeadPlayer(string imagename, Uint16 xcord=0, Uint16 ycord=0, string name="DeadPlayer");
+        DeadPlayer(string imagename, Sint16 xcord=0, Sint16 ycord=0, string name="DeadPlayer");
         virtual ~DeadPlayer();
 };
 

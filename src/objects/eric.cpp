@@ -9,7 +9,7 @@
 #include "eric.h"
 
 
-Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Eric::Eric(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP),
   jump2(V_JUMP2) {
@@ -94,6 +94,7 @@ void Eric::in_right(Sint16 dt) {
 
 Uint16 Eric::hit(Uint16 dir, Weapon& weap) {
     if (weap.getType()==W_WATER) {
+        cancelEvent();
         return health;
     } else return Player::hit(dir,weap);
 }

@@ -30,7 +30,7 @@
 
 class Character : public Object {
     public:
-        Character(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Character");
+        Character(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Character");
         virtual ~Character();
         Uint8 getHealth();
         Sint16 getSpeed() const {

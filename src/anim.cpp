@@ -148,8 +148,7 @@ void AnimHandler::runAnims() {
         }
         if (input->getState(INPUT_DEL)) {
             input->unsetState(INPUT_DEL);
-            if (player->getState(STATE_LEFT)) player->dropItem(false);
-            else player->dropItem(true);
+            player->dropItem();
             gfxeng->renderScene(true);
         }
     }

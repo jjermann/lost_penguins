@@ -10,7 +10,7 @@
 #include "zombie.h"
 
 
-Zombie::Zombie(string imagename, Uint16 xcord, Uint16 ycord, string mname):
+Zombie::Zombie(string imagename, Sint16 xcord, Sint16 ycord, string mname):
   Monster(imagename,xcord,ycord,mname),
   au_attack(sndcache->loadWAV("clang.wav")),
   T_Attack_Bite(1500) {

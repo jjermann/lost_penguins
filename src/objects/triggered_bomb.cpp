@@ -6,7 +6,7 @@
 #include "map.h"
 #include "triggered_bomb.h"
 
-TriggeredBomb::TriggeredBomb(string imagename, Uint16 xcord, Uint16 ycord, Uint16 tleft, string cname):
+TriggeredBomb::TriggeredBomb(string imagename, Sint16 xcord, Sint16 ycord, Uint16 tleft, string cname):
   Character(imagename,xcord,ycord,cname),
   countdown(tleft),
   au_bomb(sndcache->loadWAV("explsn.wav")) {

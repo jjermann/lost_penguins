@@ -2,7 +2,7 @@
 
 class Teleporter : public Object {
     public:
-        Teleporter(string imagename, Uint16 xpos=0, Uint16 ypos=0, Uint16 xExit=0, Uint16 yExit=0, string name="Teleporter");
+        Teleporter(string imagename, Sint16 xpos=0, Sint16 ypos=0, Sint16 xExit=0, Sint16 yExit=0, string name="Teleporter");
         virtual ~Teleporter();
         virtual bool act(Object* obj);
     private:

@@ -6,7 +6,7 @@
 #include "door.h"
 
 
-Door::Door(string imagename, Uint16 xcord, Uint16 ycord, string keyname, string oname):
+Door::Door(string imagename, Sint16 xcord, Sint16 ycord, string keyname, string oname):
   Object(imagename,xcord,ycord,oname),
   open(false),
   key(keyname),

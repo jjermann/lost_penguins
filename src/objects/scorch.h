@@ -11,7 +11,7 @@
  
 class Scorch : public Player {
     public:
-        Scorch(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Scorch");
+        Scorch(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Scorch");
         virtual ~Scorch();
         virtual void idle(Uint16);
         virtual void fall(Uint16);

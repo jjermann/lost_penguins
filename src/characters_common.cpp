@@ -8,7 +8,7 @@
 
 
 //CHARACTER (Object)
-Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Object(imagename,xcord,ycord,pname),
   health(1),
   maxhealth(1),
@@ -111,8 +111,7 @@ Hit Character::move(Uint16 dt, bool check) {
     
     if (!check) {
         //temporary changes (changes hspeed)
-        pos.x=dest.x; 
-        pos.y=dest.y; 
+        setPos(dest.x,dest.y);
 
         if ((hit.enter&DIR_LEFT)) crash(DIR_LEFT);
         if ((hit.enter&DIR_RIGHT)) crash(DIR_RIGHT);

@@ -8,7 +8,7 @@
 #include "geyser.h"
 
 
-Geyser::Geyser(string imagename, Uint16 xcord, Uint16 ycord, Sint16 yAdd, string oname):
+Geyser::Geyser(string imagename, Sint16 xcord, Sint16 ycord, Sint16 yAdd, string oname):
   Object(imagename,xcord,ycord,oname),
   aspeed(yAdd),
   au_geyser(sndcache->loadWAV("geyser.wav")),

@@ -8,7 +8,7 @@
 #include "water.h"
 
 
-Water::Water(string imagename, Uint16 xcord, Uint16 ycord, string oname):
+Water::Water(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   Object(imagename,xcord,ycord,oname),
   au_water(sndcache->loadWAV("splash2.wav")) {
     weapon=Weapon(-1,W_WATER,WS_WATER);

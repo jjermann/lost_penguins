@@ -5,7 +5,7 @@
 #include "exit.h"
 
 
-Exit::Exit(string imagename, Uint16 xcord, Uint16 ycord, string oname):
+Exit::Exit(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   Object(imagename,xcord,ycord,oname) { }
 Exit::~Exit() { }
 

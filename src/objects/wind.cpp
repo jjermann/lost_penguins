@@ -4,7 +4,7 @@
 #include "characters_common.h"
 #include "wind.h"
 
-Wind::Wind(string imagename, Uint16 xcord, Uint16 ycord, Sint16 Accel, string oname):
+Wind::Wind(string imagename, Sint16 xcord, Sint16 ycord, Sint16 Accel, string oname):
   Object(imagename,xcord,ycord,oname),
   gravitymod(Accel) { }
 Wind::~Wind() { }

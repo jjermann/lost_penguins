@@ -11,7 +11,7 @@
  
 class Olaf : public Player {
     public:
-        Olaf(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Olaf");
+        Olaf(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Olaf");
         virtual ~Olaf();
         virtual void updateAnimState(bool change=true);
         virtual void in_left(Sint16);

@@ -2,6 +2,6 @@
 
 class Wall : public Object {
     public:
-        Wall(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Wall");
+        Wall(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Wall");
         virtual ~Wall();
 };

@@ -6,7 +6,7 @@
 #include "key.h"
 
 
-Key::Key(string imagename, Uint16 xcord, Uint16 ycord, string iname):
+Key::Key(string imagename, Sint16 xcord, Sint16 ycord, string iname):
   Item(imagename,xcord,ycord,iname),
   au_key(NULL) { }
 Key::~Key() { }

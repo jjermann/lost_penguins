@@ -1,6 +1,9 @@
 Requirements
 ============
 
+You need the data files from a game (atm only lost vikings), put the data
+directory into your lost_penguins/ directory...
+
 libsdl1.2
 libsdl-mixer1.2 (if compiled with -DSDL_MIXER)
 libsdl-image1.2 (if compiled with -DSDL_IMAGE)

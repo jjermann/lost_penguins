@@ -5,7 +5,7 @@
 #include "objects_common.h"
 
 
-Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname):
+Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   tbirth(SDL_GetTicks()),
   state(NOTHING),
   event(NULL),
@@ -96,7 +96,7 @@ void Object::stopEvent() {
 }
 
 
-Item::Item(string imagename, Uint16 xcord, Uint16 ycord, string iname):
+Item::Item(string imagename, Sint16 xcord, Sint16 ycord, string iname):
   Object(imagename,xcord,ycord,iname), owner(NULL) {
     otype|=OTYPE_ITEM;
 }

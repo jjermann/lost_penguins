@@ -31,15 +31,26 @@
 //Base class of almost everything
 class Object {
     public:
-        Object(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Object");
+        Object(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Object");
         virtual ~Object();
         //uper-left
-        bool setPos(Uint16 xcord,Uint16 ycord) {
-            if ((xcord<=(maparea->w-pos.w)) && (ycord<=(maparea->h-pos.h))) {
-                pos.x=xcord;
-                pos.y=ycord;
-                return true;
-            } else return false;
+        bool setPos(Sint16 xcord,Sint16 ycord) {
+            bool ok=true;
+            //Did we hit a maparea?
+            if (xcord < 0) {
+                pos.x=0;
+                ok=false;
+            } else if (xcord > (maparea->w-pos.w)) {
+                pos.x=maparea->w-pos.w;
+                ok=false;
+            } else pos.x=xcord;
+
+            if (ycord>(maparea->h-pos.h)) {
+                pos.y=maparea->h-pos.h;
+                ok=false;
+            } else pos.y=ycord;
+
+            return ok;
         }
         //center
         SDL_Rect getCenter() {
@@ -146,7 +157,7 @@ class Object {
 
 class Item : public Object {
     public:
-        Item(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Item");
+        Item(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Item");
         virtual ~Item();
         virtual bool act(Object*) { return false; }
         void setOwner(Player* plr) {

@@ -8,7 +8,7 @@
 #include "olaf.h"
 
 
-Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   fart(V_FART) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));

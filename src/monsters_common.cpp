@@ -11,7 +11,7 @@
   Monster (Object)
 ==================*/
 
-Monster::Monster(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Character(imagename,xcord,ycord,pname),
   Dai(0),
   Dattack(0) {

@@ -7,7 +7,7 @@
 #include "scorch.h"
 
 
-Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   left_wings(SCORCH_MAX_WINGS),
   wing(V_FLY) {

@@ -4,7 +4,7 @@
 #include "trigger.h"
 
 
-Trigger::Trigger(string imagename, Uint16 xcord, Uint16 ycord, string targetname, string oname, string keyname):
+Trigger::Trigger(string imagename, Sint16 xcord, Sint16 ycord, string targetname, string oname, string keyname):
   Object(imagename,xcord,ycord,oname),
   key(keyname) {
     target=pool->getObject(targetname);

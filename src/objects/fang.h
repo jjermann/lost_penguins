@@ -17,7 +17,7 @@
  
 class Fang : public Player {
     public:
-        Fang(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Fang");
+        Fang(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Fang");
         virtual ~Fang();
         virtual void fall(Uint16);
         virtual void in_left(Sint16);

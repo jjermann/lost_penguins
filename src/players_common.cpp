@@ -10,7 +10,7 @@
 #include "players_common.h"
 
 
-Player::Player(string imagename, Uint16 xcord, Uint16 ycord, string pname):
+Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Character(imagename,xcord,ycord,pname),
   currentitem(0) {
     health=3;
@@ -118,15 +118,14 @@ void Player::switchItem(bool right) {
     }
 }
 
-Object* Player::dropItem(Uint8 num, bool right) {
+Object* Player::dropItem(Uint8 num) {
     Item* tmpit=moveItem(num);
     Object* tmpobj=NULL;
     bool ok=false;
     if (tmpit == NULL) return NULL;
     //check right/left according to (bool right)
-    if (right) ok=tmpit->setPos(pos.x + pos.w + 1, Uint16(getCenter().y-tmpit->getPos()->h/2));
-    else ok=tmpit->setPos(pos.x - tmpit->getPos()->w - 1, Uint16(getCenter().y-tmpit->getPos()->h/2));
-    
+    if (state&STATE_LEFT) ok=tmpit->setPos(pos.x - tmpit->getPos()->w - 1, Uint16(getCenter().y-tmpit->getPos()->h/2));
+    else ok=tmpit->setPos(pos.x + pos.w + 1, Uint16(getCenter().y-tmpit->getPos()->h/2));
     //new position in map and valid
     if (ok && ((tmpobj=pool->addObject(tmpit))!=NULL)) return tmpobj;
     else { 
@@ -361,6 +360,6 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
     return newhealth;
 }
 
-DeadPlayer::DeadPlayer(string imagename, Uint16 xcord, Uint16 ycord, string name):
+DeadPlayer::DeadPlayer(string imagename, Sint16 xcord, Sint16 ycord, string name):
   Character(imagename,xcord,ycord,name) { }
 DeadPlayer::~DeadPlayer() { }
