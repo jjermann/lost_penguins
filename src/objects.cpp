@@ -74,12 +74,10 @@ void Wind::leave(Object *obj) {
 Geysir::Geysir(string imagename, Uint16 xcord, Uint16 ycord, Sint16 yAdd, string oname):
   Object(imagename,xcord,ycord,oname) {
     aspeed=yAdd;
-    au_geysir=loadWAV("geyser.wav");
+    au_geysir=sndcache->loadWAV("geyser.wav");
     Deffect=0;
 }
-Geysir::~Geysir() {
-    if (au_geysir) Mix_FreeChunk(au_geysir);
-}
+Geysir::~Geysir() { }
 
 void Geysir::idle(Uint16 dt) {
     Object::idle(dt);
@@ -104,11 +102,9 @@ Teleporter::Teleporter(string imagename, Uint16 xcord, Uint16 ycord, Uint16 xExi
   Object(imagename,xcord,ycord,oname) {
     exit.x=xExit;
     exit.y=yExit;
-    au_tele=loadWAV("teleprt.wav");
+    au_tele=sndcache->loadWAV("teleprt.wav");
 }
-Teleporter::~Teleporter() {
-    if (au_tele) Mix_FreeChunk(au_tele);
-}
+Teleporter::~Teleporter() { }
 
 bool Teleporter::act(Object* obj) {
     SDL_Rect newpos=exit;
@@ -147,7 +143,7 @@ Door::Door(string imagename, Uint16 xcord, Uint16 ycord, string keyname, string 
     open=false;
     otype=OTYPE_DENSE;
     key=keyname;
-    au_open=loadWAV("dooropn.wav");
+    au_open=sndcache->loadWAV("dooropn.wav");
     au_close=au_open;
 }
 Door::~Door() { }
@@ -178,11 +174,9 @@ bool Door::act(Object* obj) {
 //HEART (Item)
 Heart::Heart(string imagename, Uint16 xcord, Uint16 ycord, string iname):
   Item(imagename,xcord,ycord,iname) {
-    au_heal=loadWAV("usefood1.wav");
+    au_heal=sndcache->loadWAV("usefood1.wav");
 }
-Heart::~Heart() {
-    if (au_heal) Mix_FreeChunk(au_heal);
-}
+Heart::~Heart() { }
 
 bool Heart::act(Object* obj) {
     if ((obj==NULL) || (obj!=owner)) return false;
@@ -197,9 +191,7 @@ Key::Key(string imagename, Uint16 xcord, Uint16 ycord, string iname):
   Item(imagename,xcord,ycord,iname) {
     au_key=NULL;
 }
-Key::~Key() {
-    if (au_key) Mix_FreeChunk(au_key);
-}
+Key::~Key() { }
 
 bool Key::act(Object* obj) {
     if ((obj==NULL) || (obj!=owner)) return false;

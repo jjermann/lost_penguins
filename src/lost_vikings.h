@@ -647,6 +647,16 @@ class ImageCache {
         std::map<string,SDL_Surface*> imgcache;    
 };
 
+//sndcache.cpp
+class SoundCache {
+    public:
+        SoundCache();
+        ~SoundCache();
+        Mix_Chunk* loadWAV(string soundfile);
+    private:
+        std::map<string,Mix_Chunk*> sndcache;    
+};
+
 
 //sfxeng.cpp
 class SoundsEngine {
@@ -724,6 +734,7 @@ int filterEvents(const SDL_Event *event);
 string itos(int);
 
 extern ImageCache* imgcache;
+extern SoundCache* sndcache;
 extern GraphicsEngine* gfxeng;
 extern SoundsEngine* sfxeng;
 extern ObjectsPool* pool;

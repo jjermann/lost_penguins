@@ -26,6 +26,8 @@ int main(int argc, char* argv[]) {
     maparea=NULL;
     cout << "ImageCache...\n";
     imgcache=new ImageCache();
+    cout << "SoundCache...\n";
+    sndcache=new SoundCache();
     cout << "GraphicsEngine...\n";
     gfxeng=new GraphicsEngine();
     cout << "Fonts...\n";
@@ -67,6 +69,8 @@ int quitGame(int errorcode=0) {
     delete anim;
     delete font;
     delete background;
+    cout << "Deleting SoundCache...\n";
+    delete sndcache;
     cout << "Deleting ImageCache...\n";
     delete imgcache;
     cout << "Quiting SDL...\n";

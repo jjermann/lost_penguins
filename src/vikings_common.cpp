@@ -27,9 +27,9 @@ Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_krit_right=animation;
     im_land_left=animation;
     im_land_right=animation;
-    au_land=loadWAV("dizzy.wav");
-    au_act=loadWAV("button.wav");
-    au_newitem=loadWAV("pickup.wav");
+    au_land=sndcache->loadWAV("dizzy.wav");
+    au_act=sndcache->loadWAV("button.wav");
+    au_newitem=sndcache->loadWAV("pickup.wav");
     au_hit=NULL;
 }
 
@@ -39,8 +39,6 @@ Viking::~Viking() {
             removeItem(i);
         }
     }
-    if (au_land) Mix_FreeChunk(au_land);
-    if (au_act) Mix_FreeChunk(au_act);
 }
 
 //updates the entered based states and values (includes updateTouch)

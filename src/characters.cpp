@@ -12,11 +12,9 @@ using namespace std;
 TriggeredBomb::TriggeredBomb(string imagename, Uint16 xcord, Uint16 ycord, Uint16 tleft, string cname):
   Character(imagename,xcord,ycord,cname), countdown(tleft) {
     weapon=Weapon(-1,W_EXPLOSION);
-    au_bomb=loadWAV("explsn.wav");
+    au_bomb=sndcache->loadWAV("explsn.wav");
 }
-TriggeredBomb::~TriggeredBomb() {
-    if (au_bomb) Mix_FreeChunk(au_bomb);
-}
+TriggeredBomb::~TriggeredBomb() { }
 
 void TriggeredBomb::idle(Uint16 dt) {
     countdown-=dt;
@@ -49,7 +47,7 @@ Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_krit_right=im_right;
     im_land_left=im_left;
     im_land_right=im_right;
-    au_jump=loadWAV("rboots.wav");
+    au_jump=sndcache->loadWAV("rboots.wav");
     au_run=NULL;
     t_water=60000;
     jump=V_JUMP;
@@ -58,8 +56,6 @@ Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
 Eric::~Eric() {
     delete im_left;
     delete im_right;
-    if (au_jump) Mix_FreeChunk(au_jump);
-    if (au_run) Mix_FreeChunk(au_run);
 }
 
 //Eric1: Jump
@@ -137,10 +133,10 @@ Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_shield_left=new Animation(imgcache->loadImage("olaf_fall_shield_left.bmp"));
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
-    au_small=loadWAV("blob.wav");
-    au_big=loadWAV("unblob.wav");
-    au_fart=loadWAV("fart1.wav");
-    au_hit=loadWAV("fathit.wav");
+    au_small=sndcache->loadWAV("blob.wav");
+    au_big=sndcache->loadWAV("unblob.wav");
+    au_fart=sndcache->loadWAV("fart1.wav");
+    au_hit=sndcache->loadWAV("fathit.wav");
     fart=V_FART;
 }
 Olaf::~Olaf() {
@@ -150,9 +146,6 @@ Olaf::~Olaf() {
     delete im_small_left;
     delete im_shield_right;
     delete im_shield_left;
-    if (au_small) Mix_FreeChunk(au_small);
-    if (au_big) Mix_FreeChunk(au_big);
-    if (au_fart) Mix_FreeChunk(au_fart);
 }
 
 void Olaf::updateAnimState() {
@@ -344,8 +337,6 @@ Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
 }
 Scorch::~Scorch() {
     delete im_left;
-    if (au_swing) Mix_FreeChunk(au_swing);
-    if (au_tired) Mix_FreeChunk(au_tired);
 }
 
 void Scorch::idle(Uint16 dt) {
@@ -422,7 +413,6 @@ Fang::~Fang() {
     delete im_left;
     delete im_right;
     delete im_land_left;
-    if (au_jump) Mix_FreeChunk(au_jump);
 }
 
 void Fang::in_left(Sint16 dt) {
@@ -501,7 +491,6 @@ Baleog::Baleog(string imagename, Uint16 xcord, Uint16 ycord, string vname):
 
 Baleog::~Baleog() {
     delete im_left;
-    if (au_hit) Mix_FreeChunk(au_hit);
 }
 
 
@@ -517,7 +506,7 @@ Zombie::Zombie(string imagename, Uint16 xcord, Uint16 ycord, string mname):
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"),2,1000);
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
-    au_attack=loadWAV("clang.wav");
+    au_attack=sndcache->loadWAV("clang.wav");
 }
 
 Zombie::~Zombie() {

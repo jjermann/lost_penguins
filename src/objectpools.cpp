@@ -10,7 +10,7 @@ using namespace std;
 
 ObjectsPool::ObjectsPool():
   currentviking(vikingspool.begin()) {
-    au_switch=loadWAV("newchar.wav");
+    au_switch=sndcache->loadWAV("newchar.wav");
 }
 ObjectsPool::~ObjectsPool() {
     object_iterator i=objectspool.begin();

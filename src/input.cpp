@@ -7,7 +7,7 @@ using namespace std;
 InputHandler::InputHandler() {
     paused=false;
     state=NOTHING;
-    au_pause=loadWAV("pause.wav");
+    au_pause=sndcache->loadWAV("pause.wav");
 }
 
 InputHandler::~InputHandler() {

@@ -9,7 +9,7 @@ SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image
 OBJS = common.o anim.o gfxeng.o input.o font.o lost_vikings.o map.o\
        objects_common.o objects.o sfxeng.o vikings_common.o\
        monsters_common.o characters_common.o characters.o objectpools.o\
-       weapons.o events.o imgcache.o
+       weapons.o events.o imgcache.o sndcache.o
 BIN = ../lost_vikings
 
 

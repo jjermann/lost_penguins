@@ -1,6 +1,7 @@
 #include "lost_vikings.h"
 
 ImageCache* imgcache;
+SoundCache* sndcache;
 GraphicsEngine* gfxeng;
 SoundsEngine* sfxeng;
 ObjectsPool* pool;
