@@ -1,7 +1,7 @@
 TODO:
 =====
 
- o imagechache => solves the big sound bug
+ o clenup the files (move out objects, separate .h, etc)
 
  o allow an event length depending on animation length, or: relate events more with animations!!!
 
@@ -10,9 +10,6 @@ TODO:
 
  o FIX ALL BUGS! hahaha:
      - sometimes the zombie doesn't turn from a wall
-     - (BIG) sound files of deleted objects aren't played => no explosion, no heal, etc...
-
- o IDEA: extend input functions to accept Sint16, values < 0 indicate that they key was released
 
  o IDEA: add horizontal gravity that slows objects down??
 
