@@ -62,10 +62,16 @@ class Character : public Object {
         //@}
         //@{
         Uint16 addMaxSpeed(Sint16 dmax) {
-            return maxspeedx=max(0,maxspeedx+dmax);
+            maxspeedx=max(0,maxspeedx+dmax);
+            if (hspeed>maxspeedx) hspeed=maxspeedx;
+            if (hspeed<-maxspeedx) hspeed=-maxspeedx;
+            return maxspeedx;
         }
         Uint16 setMaxSpeed(Uint16 maxs) {
-            return maxspeedx=maxs;
+            maxspeedx=maxs;
+            if (hspeed>maxspeedx) hspeed=maxspeedx;
+            if (hspeed<-maxspeedx) hspeed=-maxspeedx;
+            return maxspeedx;
         }
         //@}
         //@{
