@@ -7,12 +7,18 @@
 
 /** \brief Eric (Viking)
 
+    Act1: first jump\n
+    Act2: second jump
+    \todo Implement water (STATE_WATER)
+    \todo Add jump and run attacks
 */
 class Eric : public Player {
     public:
         Eric(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Eric");
         virtual ~Eric();
+        /// \brief Eric jumps
         virtual void in_sp1(Sint16);
+        // \brief Eric runs
         virtual void in_sp2(Sint16);
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);

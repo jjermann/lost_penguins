@@ -65,9 +65,14 @@ class Character : public Object {
         ///\brief Collision detection
         ///
         /// Checks and correspondingly updates a movement and the regions the character is in.
-        /// The destination parameter is changed to be before any dense obstacles in the way
+        /// It therefore performs a collision check for all objects in the objectspool and
+        /// the map boundary on the left, right and downside. If check is false it updates the
+        /// regions accordingly. The destination parameter is changed to be before any dense
+        /// obstacles in the way.
+        /// \pre The character didn't hit anything
         /// \param dest Designated movement position of the object
-        /// \param tele True if it's not a smooth movement but an instant jump
+        /// \param tele True if it's not a smooth movement but an instant jump, it will
+        ///   then check all directions
         /// \param check True if no region updates should be performed
         /// \return Hit type of the movement
         Hit checkMove(SDL_Rect& dest, bool tele=false, bool check=false);
@@ -109,18 +114,33 @@ class Character : public Object {
         virtual Uint16 hit(Uint16 direction, Weapon& weap);
         //@}
     protected:
-        //add places
-        virtual void addTouch(std::set<Object *>&);
-        virtual void addEnter(std::set<Object *>&);
-        //remove places
-        virtual void removeTouch(std::set<Object *>&);
-        virtual void removeEnter(std::set<Object *>&);
-        //helper functions
+        ///\brief Checks the type of the impact into the destination object
+        ///
+        /// Helper function (run by checkMove()) that checks the type of the
+        /// collision into one specific object.
+        ///\pre The character didn't hit anything
+        ///\param dest Destination rectangle of the movement
+        ///\param destobj Target object to check
+        ///\param tele If true an instant movement (no smooth movement) is assumed
+        ///\return Hit type of the collision, HIT_NOTHING if no valid destobj
+        ///   was specified or if the destobj is the character himself.
         inline Hit checkHit(const SDL_Rect& dest, Object* destobj, bool tele=false) const;
+        ///\brief Updates the regions
+        ///
+        /// A helper function (run by checkMove()) that updates the touch and
+        /// enter regions of the character. It adds the new regions and removes
+        /// the old ones.
+        /// \param newtouch Set of all touched objects
+        /// \param newenter Set of all entered objects
         inline void updateRegions(std::set<Object *>& newtouch, std::set<Object *>& newenter);
-        //health
+        //@{
+        /// Sets the health of the character to a minimum of 0
+        /// \return New health
         Uint8 setHealth(Uint8);
+        /// Adds the specified amount of life to the health of the character to a minimum of 0
+        /// \return New health
         Uint8 addHealth(Sint8);
+        //@}
         //crash into another object (default: ground)
         virtual void crash(Uint16 dir=DIR_DOWN);
         //move
@@ -152,6 +172,16 @@ class Character : public Object {
         Uint16 enemy_types;
         //current weapon (updated for each attack)
         Weapon weapon;
+        //@{
+        /// Adds the specified set to the touch set
+        virtual void addTouch(std::set<Object *>&);
+        /// Adds the specified set to the enter set
+        virtual void addEnter(std::set<Object *>&);
+        /// Removes the specified sets from the touch set
+        virtual void removeTouch(std::set<Object *>&);
+        /// Removes the specified sets from the enter set
+        virtual void removeEnter(std::set<Object *>&);
+        //@}
     private:
         Uint16 dt_fall2;
 };

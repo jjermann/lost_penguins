@@ -93,8 +93,15 @@ struct Frame {
 /// Quits the game with a error code
 /// \return Error code, 0 if successfull
 int quitGame(int);
-/// Parse the configuration file
+
+/// \brief Parse the configuration file
+///
+/// Sets the default values, reads and parses the configuration file
+/// afterwards
+/// \return 1 if the file was found, 0 otherwise
+/// \todo Create a better config format
 int readConfig(const string& filename);
+
 /// Parse the command line options
 void parseInput(int argc,char* argv[]);
 /// Print the usage

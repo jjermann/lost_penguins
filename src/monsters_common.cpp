@@ -9,11 +9,6 @@
 #include "players_common.h"
 
 
-
-/*==================
-  Monster (Object)
-==================*/
-
 Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Character(imagename,xcord,ycord,pname),
   Dai(0),
@@ -32,17 +27,14 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 
 Monster::~Monster() { }
 
-//updates the entered based states and values (includes updateTouch)
 void Monster::addEnter(std::set<Object *>& aset) {
     Character::addEnter(aset);    
 }
 
-//updates the touched based states and values
 void Monster::addTouch(std::set<Object *>& aset) {
     Character::addTouch(aset);
     Player* ptr=NULL;
     object_iterator obit=aset.begin();
-    //TODO: clean up this mess
     while (obit != aset.end()) {
         if ((*obit)->getType()&enemy_types) {
             if((ptr = dynamic_cast<Player*>(*obit))) {
@@ -80,8 +72,6 @@ void Monster::removedObject(Object* obj) {
     }
 }
 
-//check the states and change the image correspondingly
-//TODO: add left, right, up, down, etc movement animations
 void Monster::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_LEFT) {

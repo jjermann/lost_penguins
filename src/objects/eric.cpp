@@ -31,11 +31,8 @@ Eric::~Eric() {
     delete im_land_left;
 }
 
-//Eric1: Jump
-//Act1: first jump
-//Act2: 2nd jump
-//TODO: check STATE_WATER
 void Eric::in_sp1(Sint16 dt) {
+    //TODO: check STATE_WATER
     if (dt < 0) return;
     input->unsetState(INPUT_SP1);
 
@@ -51,8 +48,8 @@ void Eric::in_sp1(Sint16 dt) {
     }
 }
 
-//TODO: check STATE_WATER
 void Eric::in_sp2(Sint16 dt) {
+    //TODO: check STATE_WATER
     if (dt < 0) {
         input->unsetState(INPUT_SP2);
         if (state&STATE_RUN) cancelEvent();

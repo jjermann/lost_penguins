@@ -7,7 +7,6 @@
 #include "characters_common.h"
 
 
-//CHARACTER (Object)
 Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Object(imagename,xcord,ycord,pname),
   health(1),
@@ -29,7 +28,6 @@ Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname)
 
 Character::~Character() { }
 
-//add a set of regions to the enter set
 void Character::addEnter(std::set<Object *>& aset) {
     object_iterator obit=aset.begin();
     while (obit != aset.end()) {
@@ -38,7 +36,6 @@ void Character::addEnter(std::set<Object *>& aset) {
     }
 }
 
-//add a set of regions to the touch set
 void Character::addTouch(std::set<Object *>& aset) {
     object_iterator obit=aset.begin();
     while (obit != aset.end()) {
@@ -47,7 +44,6 @@ void Character::addTouch(std::set<Object *>& aset) {
     }
 }
 
-//remove a set of regions from the enter set
 void Character::removeEnter(std::set<Object *>& rset) {
     object_iterator obit=rset.begin();
     while (obit != rset.end()) {
@@ -56,7 +52,6 @@ void Character::removeEnter(std::set<Object *>& rset) {
     }
 }
 
-//remove a set of regions from the touch set
 void Character::removeTouch(std::set<Object *>& rset) {
     object_iterator obit=rset.begin();
     while (obit != rset.end()) {
@@ -70,8 +65,6 @@ void Character::removedObject(Object* obj) {
     enter.erase(obj);
 }
 
-//check the states and change the image correspondingly
-//TODO: add left, right, up, down, etc movement animations
 void Character::updateAnimState(bool change) {
     if (change) animation=im_orig;
     curpos.w=animation->getWidth();
@@ -161,9 +154,6 @@ Uint8 Character::getHealth() {
     return health;
 }
 
-//PRE:  new health of player
-//ACT:  changes health, deletes object if health=0
-//POST: returns new health
 Uint8 Character::setHealth(Uint8 newhealth) {
     if (newhealth==0) {
         cout << name << " died!\n";
@@ -182,11 +172,6 @@ Uint8 Character::addHealth(Sint8 dhealth) {
     else return health;
 }
 
-//PRE:  movement (to dest), target object (pointer) destobj, the character itself should
-//      _not_ be hitting. tele (default false) deactivates a direction check and checks
-//      all directions
-//ACT:  checks the type of impact and touch
-//POST: hit type of movement into destobj, if this==destobj or destobj==NULL: HIT_NOTHING
 inline Hit Character::checkHit(const SDL_Rect& dest, Object* destobj, bool tele) const {
     //Initialize
     Hit hit;
@@ -263,11 +248,6 @@ inline Hit Character::checkHit(const SDL_Rect& dest, Object* destobj, bool tele)
    return hit;
 }
 
-//PRE:  movement (to dest) with checkHit() ok
-//      tele (default false) deactivates a direction check and checks all direction
-//ACT:  checks if the movement hits an object or map boundary, changes the destination respectively
-//      updates the entered/touched objects of obj
-//POST: directions of a collision/touching (type HIT_DENSE + map boundaries), NOTHING if the obj pointer is NULL
 Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     Hit colltype;
     colltype.enter=NOTHING;
@@ -374,7 +354,6 @@ inline void Character::updateRegions(std::set<Object *>& newtouch, std::set<Obje
 }
 
 
-//gets hit by a weapon
 Uint16 Character::hit(Uint16, Weapon&) {
     return health;
 }

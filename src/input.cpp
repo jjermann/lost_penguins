@@ -6,7 +6,7 @@
 #include "gfxeng.h"
 #include "sfxeng.h"
 #include "objectpools.h"
-//hack the player calls should be in anim.cpp
+///\todo The player calls should be in anim.cpp
 #include "objects_common.h"
 #include "players_common.h"
 
@@ -181,7 +181,6 @@ void InputHandler::pollEvents() {
 }
 
 
-//SDL event filter
 int filterEvents(const SDL_Event*) {
 /*
 int filterEvents(const SDL_Event *event) {

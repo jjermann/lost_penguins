@@ -17,6 +17,8 @@ class Monster : public Character {
         virtual void fall(Uint16);
         virtual Uint16 hit(Uint16 direction, Weapon& weap);
     protected:
+        /// Runs Character::addTouch() and updates the targets
+        /// \todo Clean up this mess
         virtual void addTouch(std::set<Object *>&);
         virtual void addEnter(std::set<Object *>&);
         virtual void removeTouch(std::set<Object *>&);

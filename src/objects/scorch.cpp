@@ -49,9 +49,6 @@ void Scorch::fall(Uint16 dt) {
     }
 }
 
-//Scorch1: Fly
-//Act1: no wings, but key down
-//Act2: exhausted
 void Scorch::in_sp1(Sint16 dt) {
     if (dt < 0) {
         input->unsetState(INPUT_SP1);

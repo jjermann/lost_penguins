@@ -66,28 +66,31 @@ class Player : public Character {
         //@}
         //Input methods
         //@{
-        /// \brief Called when using the right arrow (move right)
+        /// \brief Called when using the move right key (right arrow)
         virtual void in_right(Sint16);
-        /// \brief Called when using the left arrow (move left)
+        /// \brief Called when using the move left key (left arrow)
         virtual void in_left(Sint16);
-        /// \brief Called when using the up arrow (move up)
+        /// \brief Called when using the move up key (up arrow)
         virtual void in_up(Sint16);
-        /// \brief Called when using the down arrow (move down)
+        /// \brief Called when using the move down key (down arrow)
         virtual void in_down(Sint16);
-        /// \brief Called when using the space bar (special 1)
+        /// \brief Called when using the special 1 key (space)
         virtual void in_sp1(Sint16);
-        /// \brief Called when using the left shift key (special 2)
+        /// \brief Called when using the special 2 key (left shift)
         virtual void in_sp2(Sint16);
-        /// \brief Called when using the enter key (activate)
+        /// \brief Called when using the activation key (enter)
         ///
         /// This should be the same for all players.
         virtual void in_act(Sint16);
-        /// \brief Called when using the insert key (use)
+        /// \brief Called when using the use key (insert)
         virtual void in_use(Sint16);
         //@}
     protected:
         //@{
         virtual void addTouch(std::set<Object *>&);
+        /// Runs Character::addEnter() and tries to pickup any Items
+        /// it finds
+        /// \todo dynamic_casts are not nice solutions
         virtual void addEnter(std::set<Object *>&);
         virtual void removeTouch(std::set<Object *>&);
         virtual void removeEnter(std::set<Object *>&);

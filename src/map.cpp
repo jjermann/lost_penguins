@@ -4,9 +4,7 @@
 #include "map.h"
 
 
-//TODO: load map from a file
 Map::Map(string mapname) {
-    //Load map data
     if (loadMapData(mapname)==0) {
         cout << "Map loaded.\n";
     } else {
@@ -21,17 +19,6 @@ Map::~Map() {
 }
 
 
-//PRE:  map filename
-//ACT:  parses the file, adds all objects, sets maparea
-//      Map format (x,y = 0 if omitted):
-//      <Object name> <Image name> <x position> <y position> <Arg1> <Arg2> <Arg3>
-//      For normal options Arg1 is interpreted as object name (id)
-//      For Teleporter Arg1,Arg3 are the destination coordinates
-//      Example:
-//      Background background.bmp
-//      Teleporter teleporter.bmp 0 0 20 100 teleporter1
-//POST: returns 0 if a background could be loaded, -1 otherwise
-//TODO: better map format, eg. support headers
 inline int Map::loadMapData(const string& mapname) {
     ifstream mapfile;
     string tmpline;
@@ -105,8 +92,6 @@ inline int Map::loadMapData(const string& mapname) {
     }
 }
 
-//PRE:  movement (src,dest)
-//POST: direction of movement, note: that may include an enlargment, etc...
 Uint16 Map::getDirection(const SDL_Rect& src, const SDL_Rect& dest) const {
     Uint16 dir=NOTHING;
     if ((src.x+src.w) < (dest.x+dest.w)) dir|=DIR_RIGHT;
@@ -116,10 +101,6 @@ Uint16 Map::getDirection(const SDL_Rect& src, const SDL_Rect& dest) const {
     return dir;
 }
 
-//PRE:  rectangles src, dest
-//ACT:  checks where src overlaps dest and where it touches dest
-//POST: directions of overlapping
-//      Note: DIR_ALL means that dest is contained in src
 Hit Map::checkPlace(const SDL_Rect& src, const SDL_Rect& dest) const {
     Hit hit;
     hit.enter=NOTHING;

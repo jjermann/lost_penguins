@@ -66,7 +66,6 @@ int main(int argc, char* argv[]) {
     quitGame(-2);
 }
 
-//Clean quit with optional errorcode (default 0)
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
     delete curmap;
@@ -89,10 +88,6 @@ int quitGame(int errorcode=0) {
     exit(errorcode);
 }
 
-//PRE:  file name of configuration file
-//ACT:  sets default values and reads the configuration file
-//POST: 1 if the file was found 0 otherwise
-//TODO: better config format
 int readConfig(const string& filename) {
     ifstream configfile;
     string tmpline, option, arg1;

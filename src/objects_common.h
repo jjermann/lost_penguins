@@ -175,8 +175,8 @@ class Object {
         /// Leave an object, called when the object center no longer is inside another
         /// object.
         virtual void leave(Object*) { }
-        /// What should the object do all the time? This should be called by all derived
-        /// classes.
+        /// What should the object do all the time? This is run first of all.
+        /// \remark This should be called downwards by all derived classes
         virtual void idle(Uint16) { }
         //@}
     protected:

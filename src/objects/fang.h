@@ -17,6 +17,8 @@
  
 /** \brief Fang (Viking)
 
+    Act1: jump
+    \todo Add claw attack
 */
 class Fang : public Player {
     public:
@@ -25,6 +27,7 @@ class Fang : public Player {
         virtual void fall(Uint16);
         virtual void in_left(Sint16);
         virtual void in_right(Sint16);
+        /// \brief Fang jumps
         virtual void in_sp1(Sint16);
         virtual void clearStates(bool reset=false);
     private:

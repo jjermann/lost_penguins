@@ -4,6 +4,18 @@
 /** \brief Map organization
 
     Loads the corresponding map data (objects) and performs location checks.
+    \remarks MAP FORMAT:
+    \remarks "Object class name" "Base image name" "x position" "y position"
+      "Arg1" "Arg2" "Arg3"
+    \remarks Each Object handels the arguments for itself, usually "Arg1"
+      specifies the object name (if the object has no further parameters)
+    \remarks Defaults:
+    \remarks x and y default to 0
+    \remarks Example:
+    \remarks Background background.bmp
+    \remarks Teleporter teleporter.bmp 0 0 20 100 teleporter1
+    \todo Improve the map format (eg. support headers)
+    \todo Idea: move all map depending things (eg. ObjectsPool) inside Map
 */
 class Map {
     public:
@@ -28,10 +40,16 @@ class Map {
         ///   and that match the specified mask.
         std::set<Character *> getCharactersIn(Uint16 mask, const SDL_Rect& rect, bool touch=false, Uint16 radius=0, Uint16 dir=DIR_ALL) const;
         /// Returns the directions from the source rectangle to the destination rectangle
+        /// \remark This may include an enlargment (eg. Olaf)
         /// \param src Source rectangle
         /// \param dest Destination rectangle
         Uint16 getDirection(const SDL_Rect& src, const SDL_Rect& dest) const;
     private:
+        ///\brief Loads and initializes the map data
+        ///
+        /// Parses the map file and tries to add the objects by using addObjectByName()
+        /// \param mapname Map file name without the data directory in it
+        /// \return 0 if a Background was found, -1 if not, -2 if the loading failed
         inline int loadMapData(const string& mapname);
 };
 

@@ -17,7 +17,6 @@ Config config;
 bool paused=false;
 bool failed=false;
 
-//convert int to string
 string itos(int i) {
     std::stringstream s;
     s << i;

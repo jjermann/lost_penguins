@@ -24,10 +24,6 @@
 #include "objects/zombie.h"
 
 
-/*==================
-    Objectspool
-==================*/
-
 ObjectsPool::ObjectsPool():
   currentplayer(playerspool.begin()),
   au_switch(sndcache->loadWAV("newchar.wav")) { }
@@ -36,9 +32,6 @@ ObjectsPool::~ObjectsPool() {
     while (i!=objectspool.end()) i=removeObject(i);
 }
 
-//PRE:  name of object (obj), imagename of object (image), placing position of object (x,y)
-//ACT:  adds the object to the corresponding pool if it was recognized
-//POST: return a pointer to the created object, return NULL if not recognized
 Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uint16 x, Uint16 y, const string& arg1, const string& arg2, const string& arg3) {
     //Set names...
     string name=obj;
@@ -87,8 +80,6 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Uin
     }
 }
 
-//PRE:  object name, MUST be unique
-//POST: pointer to object or NULL
 Object* ObjectsPool::getObject(const string& oname) {
     object_iterator i=objectspool.begin();
     while (i != objectspool.end()) {
@@ -98,7 +89,6 @@ Object* ObjectsPool::getObject(const string& oname) {
     return NULL;
 }
 
-//FIX: find a way to detect failed image loading (rather in Object constructor?)
 Object* ObjectsPool::addObject(Object* object) {
     if ( (object!=NULL) && (maparea==NULL || (curmap->checkPlace(*(object->getPos()),*maparea).enter==NOTHING)) ) {
         objectspool.insert(object);
@@ -111,6 +101,7 @@ Object* ObjectsPool::addObject(Object* object) {
 
 //yeah, a pyramide... ;) serious, this is _NOT_ good
 //hmm, but it can be used as a bad example on how "_not_ to do things"... ;-)
+///\todo Fix this mess
 object_iterator ObjectsPool::removeObject(object_iterator it) {
     if (it!=objectspool.end()) {
         objectspool.erase(*it);
@@ -154,7 +145,6 @@ Object* ObjectsPool::moveObject(Object* object) {
 }
 
 
-//only used internally by the objects -> Fix!!
 Character* ObjectsPool::addCharacter(Character* newcharacter) {
     if ( (newcharacter!=NULL) && (curmap->checkPlace(*(newcharacter->getPos()),*maparea).enter==NOTHING) ) {
         characterspool.insert(newcharacter);
@@ -166,7 +156,6 @@ Character* ObjectsPool::addCharacter(Character* newcharacter) {
     }
 }
 
-//only used internally by the objects -> Fix!!
 Player* ObjectsPool::addPlayer(Player* newplayer) {
     if ( (newplayer!=NULL) && (curmap->checkPlace(*(newplayer->getPos()),*maparea).enter==NOTHING) ) {
         playerspool.insert(newplayer);
@@ -179,7 +168,6 @@ Player* ObjectsPool::addPlayer(Player* newplayer) {
     }
 }
 
-//POST: rotates players returns a non NULL pointer if possible
 Player* ObjectsPool::switchPlayer() {
     if (currentplayer != playerspool.end()) {
         sfxeng->playWAV(au_switch);
@@ -195,7 +183,6 @@ Player* ObjectsPool::switchPlayer() {
 }
 
 
-//only used internally by the objects -> Fix!!
 Monster* ObjectsPool::addMonster(Monster* newmonster) {
     if ( (newmonster!=NULL) && (curmap->checkPlace(*(newmonster->getPos()),*maparea).enter==NOTHING) ) {
         monsterspool.insert(newmonster);

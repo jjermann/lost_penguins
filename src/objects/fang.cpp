@@ -55,8 +55,6 @@ void Fang::fall(Uint16 dt) {
     }
 }
 
-//Fang1: Jump
-//Act1: jumped
 void Fang::in_sp1(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_SP1);

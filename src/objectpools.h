@@ -6,6 +6,9 @@
     Contains a pool for each important derived object class,
     manages adding/deleting objects and switching players.
     Each derived type is contained in all it's super type pools.
+    \todo Move the Object creation code to the objects and remove all
+      dependencies to the objects/ headers.
+    \todo Cleanup the whole mess.
 */
 class ObjectsPool {
     public:
@@ -14,8 +17,8 @@ class ObjectsPool {
         ///\todo Move this code to the objects
         ///\brief Add objects by their names
         ///
-        /// Add an Object by it's name to the corresponding pool,
-        /// initialized with the parsed options.
+        /// Add an Object by it's name to the corresponding pool if it was
+        /// recognized, initialized with the parsed options.
         /// \param obj Name of the Object class
         /// \param image Name of the base image to be load
         /// \param x x coordinate
@@ -23,7 +26,8 @@ class ObjectsPool {
         /// \param arg1 First argument as string
         /// \param arg2 Second argument as string
         /// \param arg3 Third argument as string
-        /// \return Pointer to the new entry in the objectspool or NULL if it failed
+        /// \return Pointer to the new entry in the objectspool or NULL if
+        ///   the object was not recognized
         Object* addObjectbyName(const string& obj, const string& image, Uint16 x=0, Uint16 y=0, const string& arg1="0", const string& arg2="0", const string& arg3="0");
         //@{
         /// Add an Object to the objectspool
@@ -40,9 +44,11 @@ class ObjectsPool {
         Monster*           addMonster(Monster* newmonster);
         //@}
         /// Gets an object by it's name
+        /// \pre The name must be unique (otherwise it's basically random)
+        /// \return Pointer to the Object or NULL if it wasn't found
         Object*            getObject(const string& oname);
         //@{
-        /// Remove an Object (using an object_iterator)
+        /// Remove an Object (using an object_iterator) from all pools it belongs to
         /// \return object_iterator to the next entry in the pool or the end()
         object_iterator    removeObject(object_iterator it);
         /// Remove an Object (using a pointer to it)
@@ -52,7 +58,7 @@ class ObjectsPool {
         /// \return Pointer to the detached Object
         Object*            moveObject(Object* object);
         //@}
-        /// Selects a new current player (circular from left to right)
+        /// Selects a new current player (circular from left to right) if possible
         Player* switchPlayer();
 
         //@{

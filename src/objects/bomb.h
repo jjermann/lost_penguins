@@ -3,7 +3,8 @@
 /** \brief Bomb item
 
     Becomes a dangerous bomb character when used exploding after a certain
-    countdown period.  
+    countdown period.
+    \todo How to create TriggeredBomb when we use dynamic plugins, etc? (ok for now)
 */
 class Bomb : public Item {
     public:

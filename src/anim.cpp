@@ -6,8 +6,6 @@
 #include "anim.h"
 
 
-//Initialize an animation: animation image, number of frames,
-//time intervall for the animation, if (total_time==0) it is considered a frames series
 Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time, bool an_once):
   size(max_num),
   time(total_time),
@@ -25,8 +23,6 @@ Animation::Animation(SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time,
     frame.pos.h=h;
 }
 
-//Initialize an animation: animation image, width of a frame, number of frames,
-//time intervall for the animation, if (total_time==0) it is considered a frames series
 Animation::Animation(Uint16 width, SDL_Surface* anim_image, Uint16 max_num, Uint16 total_time, bool an_once):
   size(max_num),
   time(total_time),
@@ -46,8 +42,6 @@ Animation::Animation(Uint16 width, SDL_Surface* anim_image, Uint16 max_num, Uint
 
 Animation::~Animation() { }
 
-//TODO: this should be more advanced
-//updates a running animation, returns true if it's running
 bool Animation::updateAnim(Uint16 dt) {
     if (!running) return false;
     tcurrent+=dt;
@@ -83,8 +77,6 @@ AnimHandler::AnimHandler():
 AnimHandler::~AnimHandler() {
 }
 
-//ACT:  Resets the current time
-//POST: new current time
 Uint16 AnimHandler::resetTime() {
     dt=0;
     return (tcurrent=SDL_GetTicks());

@@ -11,6 +11,8 @@
  
 /** \brief Scorch (Viking)
 
+    Act1: Gliding\n
+    Act2: Exhausted
 */
 class Scorch : public Player {
     public:
@@ -18,6 +20,7 @@ class Scorch : public Player {
         virtual ~Scorch();
         virtual void idle(Uint16);
         virtual void fall(Uint16);
+        /// \brief Scorch uses his wings
         virtual void in_sp1(Sint16);
         virtual void clearStates(bool reset=false);
     private:

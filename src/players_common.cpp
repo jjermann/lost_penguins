@@ -55,7 +55,6 @@ Frame Player::getIcon() const {
     return (im_right->getFrame(0));
 }
 
-//updates the entered based states and values (includes updateTouch)
 void Player::addEnter(std::set<Object *>& aset) {
     Character::addEnter(aset);
     object_iterator obit=aset.begin();
@@ -69,7 +68,6 @@ void Player::addEnter(std::set<Object *>& aset) {
     }
 }
 
-//updates the touched based states and values
 void Player::addTouch(std::set<Object *>& aset) {
     Character::addTouch(aset);
 }
@@ -134,8 +132,6 @@ Object* Player::dropItem(Uint8 num) {
     }
 }
 
-//check the states and change the image correspondingly
-//TODO: add left, right, up, down, etc movement animations
 void Player::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_LEFT) {
@@ -165,12 +161,10 @@ void Player::updateAnimState(bool change) {
     curpos.y=(pos.h-curpos.h);
 }
 
-//first thing to do
 void Player::idle(Uint16 dt) {
     Character::idle(dt);
 }
 
-//input: activation key (return)
 void Player::in_act(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_ACT);
@@ -184,14 +178,12 @@ void Player::in_act(Sint16 dt) {
     }
 }
 
-//input: use key (insert)
 void Player::in_use(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_USE);
     if (items[currentitem]) items[currentitem]->act(this);
 }
 
-//input: right key
 void Player::in_right(Sint16 dt) {
     if (dt < 0) {
         if (state&STATE_MRIGHT) {
@@ -207,7 +199,6 @@ void Player::in_right(Sint16 dt) {
     }
 }
 
-//input: left key
 void Player::in_left(Sint16 dt) {
     if (dt < 0) {
         if (state&STATE_MLEFT) {
@@ -222,13 +213,9 @@ void Player::in_left(Sint16 dt) {
         setState(STATE_MLEFT);
     }
 }
-//input: up key
 void Player::in_up(Sint16) { }
-//input: down key
 void Player::in_down(Sint16) { }
-//input: special1 key (SPACE)
 void Player::in_sp1(Sint16) { }
-//input: special2 key (SHIFT)
 void Player::in_sp2(Sint16) { }
 
 Hit Player::move(Uint16 dt, bool check) {
@@ -278,7 +265,6 @@ void Player::die() {
     Character::die();
 }
 
-//unset all interactiplity
 void Player::clearStates(bool reset) {
     if (getState(STATE_MLEFT)) in_left(-1);
     if (getState(STATE_MRIGHT)) in_right(-1);

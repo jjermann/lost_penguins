@@ -84,7 +84,6 @@ void Olaf::in_right(Sint16 dt) {
     }
 }
 
-//try to change the small state to small, returns true if successfull
 inline bool Olaf::trySmall(bool small) {
     //Are we already small?
     if ((small && (state&STATE_SMALL)) || ((!small) && (!(state&STATE_SMALL)))) return true;
@@ -128,7 +127,6 @@ void Olaf::in_up(Sint16 dt) {
     if (!(state&STATE_FALL)) trySmall(false);
 }
 
-//Olaf1: Shield
 void Olaf::in_sp1(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_SP1);
@@ -138,9 +136,6 @@ void Olaf::in_sp1(Sint16 dt) {
     }
 }
 
-//Olaf2: Fart
-//Act1: farted
-//Act2: no left, right movement (farting from ground)
 void Olaf::in_sp2(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_SP2);

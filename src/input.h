@@ -39,7 +39,7 @@ class InputHandler {
 };
 
 /// \obsolete This isn't used at the moment
-/// \brief Filter events
+/// \brief SDL event filter
 int filterEvents(const SDL_Event *event);
 
 #endif

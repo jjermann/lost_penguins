@@ -7,7 +7,6 @@
 #include "characters_common.h"
 
 
-//Common Events (basically sets the events idle for length)
 Event::Event(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate):
   owner(obj),
   duration(length),
@@ -87,7 +86,6 @@ void AnimEvent::cancel() {
 }
 
 
-//Character events
 CEvent::CEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate):
   Event(chr,length,edelay,switchstate),
   charowner(chr) { }
