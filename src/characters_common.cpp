@@ -238,7 +238,7 @@ inline Hit Character::checkHit(const SDL_Rect& dest, Object* destobj, bool tele)
         if (pos.x<(opos->x+opos->w)) hitdir.enter&=~DIR_LEFT;
         if (pos.y<(opos->y+opos->h)) hitdir.enter&=~DIR_UP;
         if ((pos.y+pos.h)>opos->y) hitdir.enter&=~DIR_DOWN;
-        hitdir.enter&=map->getDirection(pos,dest);
+        hitdir.enter&=curmap->getDirection(pos,dest);
     }
 
     //=== From this point on movement hit directions are set ===//
@@ -300,7 +300,7 @@ Hit Character::checkMove(SDL_Rect& dest, bool tele, bool check) {
     }
 
     //Check map boundary (i=0)
-    hit=map->checkPlace(dest,(*maparea));
+    hit=curmap->checkPlace(dest,(*maparea));
     if (hit.enter&DIR_RIGHT) {
         colltype.enter|=DIR_RIGHT;
         colltype.touch|=DIR_RIGHT;

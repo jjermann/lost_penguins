@@ -5,7 +5,7 @@
 using namespace std;
 
 Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname) {
-    animation=new Animation(loadImage(imagename));
+    animation=new Animation(imgcache->loadImage(imagename));
     pos.x=xcord; 
     pos.y=ycord;
     pos.w=animation->getWidth();

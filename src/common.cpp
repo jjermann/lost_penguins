@@ -1,11 +1,12 @@
 #include "lost_vikings.h"
 
+ImageCache* imgcache;
 GraphicsEngine* gfxeng;
 SoundsEngine* sfxeng;
 ObjectsPool* pool;
 Viking* viking;
 Background* background;
-Map* map;
+Map* curmap;
 InputHandler* input;
 AnimHandler* anim;
 Font* font;

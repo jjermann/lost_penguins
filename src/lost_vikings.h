@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <set>
+#include <map>
 #include <math.h>
 #include <string>
 #include <SDL.h>
@@ -635,6 +636,18 @@ class GraphicsEngine {
         Uint16 Dfps,Dframes,currentfps,tcurrent;
 };
 
+
+//imgcache.cpp
+class ImageCache {
+    public:
+        ImageCache();
+        ~ImageCache();
+        SDL_Surface* loadImage(string imagename);
+    private:
+        std::map<string,SDL_Surface*> imgcache;    
+};
+
+
 //sfxeng.cpp
 class SoundsEngine {
     public:
@@ -700,8 +713,7 @@ class Map {
 
 //cleanup
 int quitGame(int);
-//bmp/wav loading
-SDL_Surface* loadImage(string imagename);
+//wav loading
 Mix_Chunk* loadWAV(string wavname);
 //parse command line arguments and config files
 int readConfig(const string& filename);
@@ -711,12 +723,13 @@ void usage();
 int filterEvents(const SDL_Event *event);
 string itos(int);
 
+extern ImageCache* imgcache;
 extern GraphicsEngine* gfxeng;
 extern SoundsEngine* sfxeng;
 extern ObjectsPool* pool;
 extern Viking* viking;
 extern Background* background;
-extern Map* map;
+extern Map* curmap;
 extern InputHandler* input;
 extern AnimHandler* anim;
 extern Font* font;

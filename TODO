@@ -1,6 +1,10 @@
 TODO:
 =====
 
+ o imagechache => solves the big sound bug
+
+ o allow an event length depending on animation length, or: relate events more with animations!!!
+
  o change hit to play the right death animation/sound, change water to hit
    characters...
 

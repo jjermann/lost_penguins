@@ -39,9 +39,7 @@ Animation::Animation(SDL_Surface* anim_image, Uint16 width, Uint16 max_num, Uint
     frame.pos.h=h;
 }
 
-Animation::~Animation() {
-    SDL_FreeSurface(frame.image);
-}
+Animation::~Animation() { }
 
 //updates a running animation
 const Frame& Animation::updateAnim(Uint16 dt) {

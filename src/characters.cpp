@@ -23,10 +23,10 @@ void TriggeredBomb::idle(Uint16 dt) {
     if (countdown<=0) {
         cout << "Booom!\n";
         sfxeng->playWAV(au_bomb);
-        std::set<Character *> cset=map->getCharactersIn(pos,true,20);
+        std::set<Character *> cset=curmap->getCharactersIn(pos,true,20);
         character_iterator cit=cset.begin();
         while (cit!=cset.end()) {
-            (*cit)->hit(map->getDirection(pos,*(*cit)->getPos()),weapon);
+            (*cit)->hit(curmap->getDirection(pos,*(*cit)->getPos()),weapon);
             ++cit;
         }
         die();
@@ -41,8 +41,8 @@ void TriggeredBomb::idle(Uint16 dt) {
 //ERIC (Viking)
 Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Viking(imagename,xcord,ycord,vname) {
-    im_left=new Animation(loadImage("eric_left.bmp"));
-    im_right=new Animation(loadImage("kuru.bmp"),60,12,1000);
+    im_left=new Animation(imgcache->loadImage("eric_left.bmp"));
+    im_right=new Animation(imgcache->loadImage("kuru.bmp"),60,12,1000);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
@@ -122,19 +122,19 @@ void Eric::in_right(Sint16 dt) {
 //OLAF (Viking)
 Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Viking(imagename,xcord,ycord,vname) {
-    im_left=new Animation(loadImage("olaf_left.bmp"));
-    im_right=new Animation(loadImage("olaf_right.bmp"));
+    im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
+    im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(loadImage("olaf_land.bmp"));
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"));
     im_land_right=im_land_left;
 
-    im_small_left=new Animation(loadImage("gun.bmp"),9,1000);
+    im_small_left=new Animation(imgcache->loadImage("gun.bmp"),9,1000);
     im_small_right=im_small_left;
-    im_shield_right=new Animation(loadImage("olaf_fall_shield_right.bmp"));
-    im_shield_left=new Animation(loadImage("olaf_fall_shield_left.bmp"));
+    im_shield_right=new Animation(imgcache->loadImage("olaf_fall_shield_right.bmp"));
+    im_shield_left=new Animation(imgcache->loadImage("olaf_fall_shield_left.bmp"));
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
     au_small=loadWAV("blob.wav");
@@ -329,7 +329,7 @@ Sint16 Olaf::hit(Uint16 dir, Weapon& weap) {
 //SCORCH (Viking)
 Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Viking(imagename,xcord,ycord,vname) {
-    im_left=new Animation(loadImage("baleog_right.bmp"));
+    im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;
     im_fall_left=im_left;
     im_fall_right=im_left;
@@ -407,13 +407,13 @@ void Scorch::land() {
 //FANG (Viking)
 Fang::Fang(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Viking(imagename,xcord,ycord,vname) {
-    im_left=new Animation(loadImage("olaf_left.bmp"));
-    im_right=new Animation(loadImage("olaf_right.bmp"));
+    im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
+    im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(loadImage("olaf_land.bmp"));
+    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"));
     im_land_right=im_land_left;
     au_jump=NULL;
     jump=V_JUMP;
@@ -488,7 +488,7 @@ void Fang::land() {
 //BALEOG (Viking)
 Baleog::Baleog(string imagename, Uint16 xcord, Uint16 ycord, string vname):
   Viking(imagename,xcord,ycord,vname) {
-    im_left=new Animation(loadImage("baleog_right.bmp"));
+    im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;
     im_fall_left=im_left;
     im_fall_right=im_left;
@@ -514,8 +514,8 @@ Zombie::Zombie(string imagename, Uint16 xcord, Uint16 ycord, string mname):
   Monster(imagename,xcord,ycord,mname) {
     maxspeedx=100;
     T_Attack_Bite=1500;
-    im_left=new Animation(loadImage("olaf_left.bmp"),2,1000);
-    im_right=new Animation(loadImage("olaf_right.bmp"),2,1000);
+    im_left=new Animation(imgcache->loadImage("olaf_left.bmp"),2,1000);
+    im_right=new Animation(imgcache->loadImage("olaf_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
     au_attack=loadWAV("clang.wav");
 }
@@ -574,7 +574,7 @@ void Zombie::runAI(Uint16 dt) {
                 unsetState(STATE_ATTACK);
             } else {
                 Viking* target=*(targets.begin());
-                Uint16 dir=map->getDirection(getCenter(),target->getCenter());
+                Uint16 dir=curmap->getDirection(getCenter(),target->getCenter());
                 if (dir&DIR_LEFT) setState(STATE_LEFT);
                 else unsetState(STATE_LEFT);
                 

@@ -82,7 +82,7 @@ Object* ObjectsPool::getObject(const string& oname) {
 
 //FIX: find a way to detect failed image loading (rather in Object constructor?)
 Object* ObjectsPool::addObject(Object* object) {
-    if ( (object!=NULL) && (maparea==NULL || (map->checkPlace(*(object->getPos()),*maparea).enter==NOTHING)) ) {
+    if ( (object!=NULL) && (maparea==NULL || (curmap->checkPlace(*(object->getPos()),*maparea).enter==NOTHING)) ) {
         objectspool.insert(object);
         return object;
     } else {
@@ -130,7 +130,7 @@ Object* ObjectsPool::moveObject(Object* object) {
 
 //only used internally by the objects -> Fix!!
 Character* ObjectsPool::addCharacter(Character* newcharacter) {
-    if ( (newcharacter!=NULL) && (map->checkPlace(*(newcharacter->getPos()),*maparea).enter==NOTHING) ) {
+    if ( (newcharacter!=NULL) && (curmap->checkPlace(*(newcharacter->getPos()),*maparea).enter==NOTHING) ) {
         characterspool.insert(newcharacter);
         pool->addObject(newcharacter);
         return newcharacter;
@@ -142,7 +142,7 @@ Character* ObjectsPool::addCharacter(Character* newcharacter) {
 
 //only used internally by the objects -> Fix!!
 Viking* ObjectsPool::addViking(Viking* newviking) {
-    if ( (newviking!=NULL) && (map->checkPlace(*(newviking->getPos()),*maparea).enter==NOTHING) ) {
+    if ( (newviking!=NULL) && (curmap->checkPlace(*(newviking->getPos()),*maparea).enter==NOTHING) ) {
         vikingspool.insert(newviking);
         currentviking=vikingspool.begin();
         pool->addCharacter(newviking);
@@ -167,7 +167,7 @@ Viking* ObjectsPool::switchViking() {
 
 //only used internally by the objects -> Fix!!
 Monster* ObjectsPool::addMonster(Monster* newmonster) {
-    if ( (newmonster!=NULL) && (map->checkPlace(*(newmonster->getPos()),*maparea).enter==NOTHING) ) {
+    if ( (newmonster!=NULL) && (curmap->checkPlace(*(newmonster->getPos()),*maparea).enter==NOTHING) ) {
         monsterspool.insert(newmonster);
         pool->addCharacter(newmonster);
         return newmonster;

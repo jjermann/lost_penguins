@@ -39,7 +39,6 @@ Font::Font(SDL_Surface* surface) {
 }
 
 Font::~Font() {
-    SDL_FreeSurface(font->surface);
     free(font);
 }
             

@@ -87,7 +87,7 @@ void Geysir::idle(Uint16 dt) {
     if (Deffect>T_GEYSIR) {
         Deffect=0;
         sfxeng->playWAV(au_geysir);
-        std::set<Viking *> vikings=map->getVikingsIn(pos,true);
+        std::set<Viking *> vikings=curmap->getVikingsIn(pos,true);
         std::set<Viking *>::iterator vkit=vikings.begin();
         while (vkit!=vikings.end()) {
 cout << (*vkit)->getName() << endl;
@@ -155,7 +155,7 @@ Door::~Door() { }
 bool Door::act(Object* obj) {
     //sanity check
     if (!(obj && obj->getName()==key)) return false;
-    if (!(map->getCharactersIn(pos,true).empty())) return false;
+    if (!(curmap->getCharactersIn(pos,true).empty())) return false;
 
     //switch state
     if (open) {

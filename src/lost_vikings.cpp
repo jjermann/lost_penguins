@@ -24,16 +24,18 @@ int main(int argc, char* argv[]) {
     SDL_SetEventFilter(filterEvents);
 
     maparea=NULL;
+    cout << "ImageCache...\n";
+    imgcache=new ImageCache();
     cout << "GraphicsEngine...\n";
     gfxeng=new GraphicsEngine();
     cout << "Fonts...\n";
-    font=new Font(loadImage("font_arial_white_16_01.png"));
-    font2=new Font(loadImage("font_arial_12_01.bmp"));
+    font=new Font(imgcache->loadImage("font_arial_white_16_01.png"));
+    font2=new Font(imgcache->loadImage("font_arial_12_01.bmp"));
     cout << "SoundEngine...\n";
     sfxeng=new SoundsEngine();
     cout << "ObjectsPool and Map...\n";
     pool=new ObjectsPool();
-    map=new Map(config.map);
+    curmap=new Map(config.map);
     cout << "InputHandler...\n";
     input=new InputHandler();
     cout << "AnimHandler...\n";
@@ -55,7 +57,7 @@ int main(int argc, char* argv[]) {
 //Clean quit with optional errorcode (default 0)
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
-    delete map;
+    delete curmap;
     delete pool;
     cout << "Pools deleted...\n";
     delete sfxeng;
@@ -65,41 +67,12 @@ int quitGame(int errorcode=0) {
     delete anim;
     delete font;
     delete background;
+    cout << "Deleting ImageCache...\n";
+    delete imgcache;
     cout << "Quiting SDL...\n";
     
     SDL_Quit();
     exit(errorcode);
-}
-
-//PRE:  bmp image filename in the data directory
-//POST: pointer to SDL_Surface of the image loaded
-SDL_Surface* loadImage(string imagename) {
-    string loadfile=config.datadir+imagename;
-    SDL_Surface* tmpimg=NULL;
-    SDL_Surface* returnimg=NULL;
-#ifdef SDL_IMAGE
-    if ((tmpimg=IMG_Load(loadfile.c_str())) == NULL) {
-#else
-    if ((tmpimg=SDL_LoadBMP(loadfile.c_str())) == NULL) {
-#endif
-        cout << "Couldn't load the image: " << imagename << endl;
-        quitGame(3);
-    } else {
-        if (tmpimg->flags & SDL_SRCCOLORKEY) {
-            SDL_SetColorKey(tmpimg, SDL_SRCCOLORKEY|SDL_RLEACCEL, tmpimg->format->colorkey);
-            returnimg=SDL_DisplayFormat(tmpimg);
-#ifdef ALPHA
-        } else if (tmpimg->flags & SDL_SRCALPHA) {
-            SDL_SetAlpha(tmpimg, SDL_SRCALPHA|SDL_RLEACCEL, tmpimg->format->alpha);
-            returnimg=SDL_DisplayFormatAlpha(tmpimg);
-#endif
-        } else {
-            SDL_SetColorKey(tmpimg, SDL_SRCCOLORKEY|SDL_RLEACCEL, SDL_MapRGB(tmpimg->format,255,0,255));
-            returnimg=SDL_DisplayFormat(tmpimg);
-        }
-        SDL_FreeSurface(tmpimg);
-    }
-    return returnimg;
 }
 
 //PRE:  wav filename in the data directory

@@ -21,7 +21,7 @@ GraphicsEngine::GraphicsEngine() {
     bar.y=backpos.y+backpos.h;
     bar.w=config.width;
     bar.h=BAR_HEIGHT;
-    lifeimage=new Animation(loadImage("life.bmp"));
+    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
     
     Dframes=Dfps=currentfps=0;
     tcurrent=SDL_GetTicks();
