@@ -1,6 +1,7 @@
 #ifndef _COMMON_H
 #define _COMMON_H 1
 
+/// Common header file
 #include <iostream>
 #include <fstream>
 #include <sstream>

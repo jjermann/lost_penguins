@@ -25,6 +25,11 @@
 #define DSTRIKE          100
 #define TSTRIKE          600
 
+/** \brief Weapons
+
+    Describe the type of the damage when reaching a target. It does _not_ contain
+    any information about the range, direction, animation, etc!
+*/
 class Weapon {
     public:
         Weapon(Sint16 dmg=-1, Uint16 weaptype=NOTHING, Uint16 subtype=WS_NORMAL);

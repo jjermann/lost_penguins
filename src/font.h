@@ -25,6 +25,10 @@ typedef struct {
 	int maxPos;
 } SFont_Font;
 
+/** \brief Font engine.
+
+    A simple font engine, called SFont, that uses special .pngs as fonts.
+*/
 class Font {
     public:
         Font(SDL_Surface* surface);

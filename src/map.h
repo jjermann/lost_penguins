@@ -1,6 +1,10 @@
 #ifndef _MAP_H
 #define _MAP_H 1
 
+/** \brief Map organization
+
+    Loads the corresponding map data (objects) and performs location checks.
+*/
 class Map {
     public:
         Map(string mapname);

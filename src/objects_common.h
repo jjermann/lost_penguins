@@ -28,7 +28,11 @@
 //OBSOLETE: attack anim (remove this once the attack anim is done)
 #define STATE_ATTACK    0x10000000
 
-//Base class of almost everything
+/** \brief Base class of all objects on the map.
+
+    An object has a graphical representation (animation), a position, an object type,
+    a type and can be entered/left/touched/untouched/activated.
+*/
 class Object {
     public:
         Object(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Object");
@@ -155,6 +159,11 @@ class Object {
         bool delete_flag;
 };
 
+/** \brief Item
+
+    An item doesn't interact with other objects besides players who can pick them
+    up and store, use or drop them
+*/
 class Item : public Object {
     public:
         Item(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Item");

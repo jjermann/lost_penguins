@@ -1,27 +1,29 @@
 #ifndef _ANIM_H
 #define _ANIM_H 1
 
-//Animation format: a horizontal strip (image) with (num) frames
-//Eventually change this to a matrix of frames: each row a different animation
+/** \brief A container for frames.
+
+    Animation format: a horizontal strip (image) with (num) frames
+    \todo Change this to an offset matrix or something similar or give each row a different animation
+*/
 class Animation {
     public:
         Animation(SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool once=false);
         Animation(Uint16 width, SDL_Surface* image, Uint16 max_num=1, Uint16 total_time=0, bool an_once=false);
         ~Animation();
-        //update a running animation, returns true if the animation is running
+        /// Updates a running animation.
         bool updateAnim(Uint16 dt);
-        //update frame status of a frame series (not running)
+        /// Updates the frame status of a frame series (usually when not running)
         const Frame& setFrame(Uint16 nr);
+        /// Starts an (usually non running) animation
         void start() {
             num=0;
             tcurrent=0;
             running=true;
         }
-        //return current frame
         const Frame& getFrame() const {
             return frame;
         }
-        //return frame by number
         Frame getFrame(Uint16 nr) const {
             Frame newframe=frame;
             newframe.pos.x=nr*w;
@@ -37,22 +39,22 @@ class Animation {
             return running;
         }
     private:
-        //Frame pointer
+        /// Frame pointer
         Frame frame;
-        //Number of frames
+        /// Number of frames
         Uint16 size;
-        //Total time (in ms)
+        /// Total time (in ms)
         Uint16 time;
-        //Frame size
+        /// Frame size
         Uint16 w;
         Uint16 h;
-        //Current frame number
+        /// Current frame number
         Uint16 num;
-        //Current time position (in ms)
+        /// Current time position (in ms)
         Uint16 tcurrent;
-        //frame series or running?
+        /// frame series or running?
         bool running;
-        //play the animation only once?
+        /// play the animation only once?
         bool once;
 };
 
@@ -60,7 +62,7 @@ class AnimHandler {
     public:
         AnimHandler();
         ~AnimHandler();
-        //run animations
+        /// run animations
         void runAnims();
         Uint16 resetTime();
     private:

@@ -13,6 +13,9 @@
 #define INPUT_DEL       0x00000100
 #define INPUT_PAUSE     0x10000000
 
+/** \brief Handels keyboard events
+
+*/
 class InputHandler {
     public:
         InputHandler();

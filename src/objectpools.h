@@ -1,6 +1,11 @@
 #ifndef _OBJECTPOOLS_H
 #define _OBJECTPOOLS_H 1
 
+/** \brief Container for objects.
+
+    Contains a pool for each important derived object class,
+    manages adding/deleting objects and switching players.
+*/
 class ObjectsPool {
     public:
         ObjectsPool();

@@ -77,8 +77,8 @@ WARN_LOGFILE           =
 INPUT                  = ../src/
 #CHANGED
 FILE_PATTERNS          = *.cpp *.h
-#RECURSIVE              = YES
-RECURSIVE              = NO
+RECURSIVE              = YES
+#RECURSIVE              = NO
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
@@ -200,7 +200,8 @@ PERL_PATH              = /usr/bin/perl
 
 CLASS_DIAGRAMS         = YES
 HIDE_UNDOC_RELATIONS   = YES
-HAVE_DOT               = NO
+#CHANGED
+HAVE_DOT               = YES
 CLASS_GRAPH            = YES
 COLLABORATION_GRAPH    = YES
 UML_LOOK               = NO

@@ -7,9 +7,16 @@
 #define EV_END       0x00000008
 #define EV_CANCEL    0x00000010
 
-//ALREADY DEFINED!!! fix this
+/// \todo: This is already defined in eric's header, either remove it there or find
+///        a more intelligent way to deal with it.
 #define STATE_RUN        0x00400000
 
+/** \brief Base class for events (non instantanious effects)
+
+    Organize effects that aren't instantanious. Updated by AnimHandler, usually
+    a member of an Object (controlled by the object). An effect can be delayed and has a
+    certain run period (marked by a state).
+*/
 class Event {
     public:
         Event(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING);
@@ -28,6 +35,10 @@ class Event {
         Uint32 state;
 };
 
+/** \brief Character event
+
+    Same as Event for characters.
+*/
 class CEvent : public Event {
     public:
         CEvent(Character* chr, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING);
@@ -35,6 +46,10 @@ class CEvent : public Event {
         Character* charowner;
 };
 
+/** \brief Animation event
+
+    An animated effect that usually ends when the animation is finnished.
+*/
 class AnimEvent : public Event {
     public:
         AnimEvent(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING, Mix_Chunk* asound=NULL, Animation* runanim=NULL, bool delanim=false);
@@ -48,6 +63,10 @@ class AnimEvent : public Event {
         Mix_Chunk* sound;
 };
   
+/** \brief Character animation event
+
+    Same as Animation event for characters.
+*/
 class CAnimEvent : public CEvent {
     public:
         CAnimEvent(Character* chr, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING, Mix_Chunk* asound=NULL, Animation* runanim=NULL, bool delanim=false);
@@ -61,6 +80,11 @@ class CAnimEvent : public CEvent {
         Mix_Chunk* sound;
 };
 
+/** \brief Attack event
+
+    Describes a full attack including weapons used, direction of attack, weapon range,
+    targets to (try to) hit.
+*/
 class EAttack : public CAnimEvent {
     public:
         EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0, Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
@@ -72,6 +96,10 @@ class EAttack : public CAnimEvent {
         Uint16 mask;
 };
 
+/** \brief Speed modification event
+
+    Modifies the vertical and/or the horizontal speed.
+*/
 class ESpeed : public CAnimEvent {
     public:
         ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed=0, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
@@ -83,6 +111,11 @@ class ESpeed : public CAnimEvent {
         Sint16 hspeed;
 };
 
+/** \brief Delayed (accelerated) run event
+
+    A special speed event that increases the horizontal speed after a while,
+    has to be constantly maintained using reset().
+*/
 class ERun : public ESpeed {
     public:
         ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);

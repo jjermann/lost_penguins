@@ -3,7 +3,9 @@
 
 #include "characters_common.h"
 
-//Monsters
+/** \brief Intelligent opponents
+
+*/
 class Monster : public Character {
     public:
         Monster(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Monster");

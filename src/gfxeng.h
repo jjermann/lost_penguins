@@ -4,6 +4,11 @@
 #define BAR_HEIGHT      138
 #define ICON_SIZE       46
 
+/** \brief Graphics engine
+
+    Draws each object in the pool and optionally a player bar and/or
+    frames per seconds. Always run time resizing and fullscreen switching.
+*/
 class GraphicsEngine {
     public:
         GraphicsEngine();

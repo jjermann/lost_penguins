@@ -22,6 +22,10 @@
 #define STATE_ACT_2     0x00000400
 #define STATE_ACT_3     0x00000800
 
+/** \brief Damagable, non static objects.
+
+    A character can get hit, can move and fall, can die, etc...
+*/
 class Character : public Object {
     public:
         Character(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Character");
@@ -45,6 +49,7 @@ class Character : public Object {
         void addGravity(Sint16 addgravity) {
             gravity+=addgravity;
         }
+        /// Changes the general movement of the character by a supplied percentage value.
         void applySpeedMod(Uint16 speedm) {
             speedmod=Uint16(speedmod*speedm/100);
         }

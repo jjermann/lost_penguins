@@ -12,7 +12,9 @@
 #define STATE_MUP       0x00000010
 #define STATE_MDOWN     0x00000020
 
-//TODO: somehow differentiate between characters, players and AI players or objects
+/** \brief Interactively controlled characters
+
+*/
 class Player : public Character {
     public:
         Player(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Player");
