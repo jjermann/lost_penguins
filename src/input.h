@@ -21,16 +21,22 @@
 #define INPUTR_USE      0x00800000
 #define INPUTR_DEL      0x01000000
 #define INPUT_PAUSE     0x10000000
+#define INPUT_MENU      0x20000000
 
 /** \brief Handels keyboard events
 
+    \remark A key release event which is passed on to the AnimHandler
+      mustn't be cummulative (see player code as well). Ie. If the event
+      is triggered twice it should do the same as if once... 
 */
 class InputHandler {
     public:
         InputHandler();
         ~InputHandler();
-        /// Check for keyboard events
+        /// Check for keyboard events in game
         void pollEvents();
+        /// Check for keyboard events in menu
+        void pollMEvents();
         bool getState(Uint32 cstate) {
             return (state&cstate);
         }
@@ -39,6 +45,9 @@ class InputHandler {
         }
         void unsetState(Uint32 cstate) {
             state&=~cstate;
+        }
+        void clearStates() {
+            state=NOTHING;
         }
     private:
         /// Information about which buttons are pressed

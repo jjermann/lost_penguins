@@ -2,6 +2,9 @@
 #define _COMMON_H 1
 
 /// Common header file
+///
+/// \todo Create a game class and move almost all remaining global
+///   variables/functions there...
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -37,6 +40,7 @@ class Font;
 class Event;
 class Weapon;
 class Animation;
+class Menu;
 
 typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
@@ -111,6 +115,13 @@ void usage();
 string itos(int);
 /// Helper function boost that increases/decreases the absolute value
 int boost(int,int);
+
+/// Set the current menu
+Menu* setMenu(Menu* newmenu);
+/// Close the current menus
+Menu* closeMenu();
+/// Close all menus (menu=NULL)
+void closeMenus();
 //@}
 
 //global variables
@@ -135,6 +146,10 @@ extern Font* font;
 extern Font* font2;
 /// True if the game is paused
 extern bool paused;
+/// True if a map is currently running
+extern bool running;
+/// Currently used menu, NULL if not inside a menu
+extern Menu* menu;
 //@}
 
 #endif

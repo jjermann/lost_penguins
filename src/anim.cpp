@@ -87,6 +87,7 @@ void AnimHandler::runAnims() {
     dt=(SDL_GetTicks()-tcurrent);
     tcurrent=SDL_GetTicks();
 
+    //Game is running normally
     if (!paused) {
         //released keys of player
         if (scenario->player != NULL) {
@@ -150,6 +151,7 @@ void AnimHandler::runAnims() {
             } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
             ++obit;
         }
+    //Game is paused
     } else {
         if (input->getState(INPUT_RIGHT)) {
             input->unsetState(INPUT_RIGHT);

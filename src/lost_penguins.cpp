@@ -9,6 +9,7 @@
 #include "gfxeng.h"
 #include "sfxeng.h"
 #include "objectpools.h"
+#include "menu.h"
 #include "players_common.h"
 
 
@@ -43,22 +44,33 @@ int main(int argc, char* argv[]) {
     sfxeng=new SoundsEngine();
     cout << "Fonts...\n";
     font=new Font(imgcache->loadImage("font_arial_white_16_01.png"));
-    font2=new Font(imgcache->loadImage("font_arial_12_01.bmp"));
+    font2=new Font(imgcache->loadImage("font_arial_red_16_01.png"));
     cout << "InputHandler...\n";
     input=new InputHandler();
-    //TODO: menu, szenarios, etc
     cout << "Initializing Scenario...\n";
     scenario=new Scenario();
-    scenario->loadMap(config.map);
 
+    //TODO: menu, szenarios, etc
+
+    //gfxeng->setMenuBG();
+    //menu=new TestMenu();
+
+    scenario->loadMap(config.map);
     cout << "Starting game...\n" << endl;
+
     while (true) {
-        //Drawing
-        gfxeng->renderScene();
-        //Check input
-        input->pollEvents();
-        //Run Animations
-        scenario->anim->runAnims();
+        if (menu) {
+            gfxeng->drawMenu();
+            input->pollMEvents();
+        } else if (running) {
+            gfxeng->renderScene();
+            //Check input
+            input->pollEvents();
+            //Run Animations
+            scenario->anim->runAnims();
+        } else {
+            quitGame(-6);
+        }
     }
 
     quitGame(-2);
@@ -66,6 +78,7 @@ int main(int argc, char* argv[]) {
 
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
+    closeMenus();
     delete scenario;
     cout << "Scenario closed...\n";
     delete sfxeng;

@@ -5,23 +5,39 @@
 #include "players_common.h"
 #include "imgcache.h"
 #include "scenario.h"
+#include "menu.h"
 #include "gfxeng.h"
 
 
 GraphicsEngine::GraphicsEngine():
+  screen(NULL),
+  menubg(NULL),
   Dfps(0),
   Dframes(0),
   currentfps(0),
   tcurrent(SDL_GetTicks()),
+  menu_done(false),
   show_bar(true),
   show_fps(true),
   fullscreen(config.full) {
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
     resize(config.width, config.height);
     lifeimage=new Animation(imgcache->loadImage("life.bmp"));
 }
 
 GraphicsEngine::~GraphicsEngine() {
     delete lifeimage;
+    if (menubg) SDL_FreeSurface(menubg);
     SDL_FreeSurface(screen);
 }
 
@@ -148,6 +164,7 @@ inline void GraphicsEngine::drawPlayerBar() {
 }
 
 void GraphicsEngine::renderScene(bool insist) {
+    resetMenuBG();
     if (scenario->background && (!paused || insist)) {
         //We don't want to change pos!
         SDL_Rect tmprect,shift,srcpos;
@@ -229,5 +246,82 @@ void GraphicsEngine::toggleFullScreen() {
     } else {   
         fullscreen=true;
         resize(screen->w,screen->h);
+    }
+}
+
+void GraphicsEngine::drawMenu() {
+    if (!menu_done) {
+        menu_done=true;
+        //Semitransparent background
+        setGameMenuBG();
+        SDL_BlitSurface(menubg,NULL,screen,NULL);
+
+        menu->font_title->writeCenter(screen,menu->title,0);
+
+        Uint16 h;
+        for (Uint8 i=0; i< menu->getSize(); i++) {
+            if (i<=menu->currententry) {
+                h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i-1)*(menu->font->getHeight())-menu->font_high->getHeight())/2;
+            } else {
+                h=(screen->h+menu->font_title->getHeight()-(menu->getSize()-i-1)*DFONT-(menu->getSize()-i)*(menu->font->getHeight()))/2;
+            }
+            if (i==menu->currententry) menu->font_high->writeCenter(screen,menu->entries[i],h);
+            else menu->font->writeCenter(screen,menu->entries[i],h);
+        }
+
+        SDL_Flip(screen);
+    }
+}
+
+//this could probably be done much easier ;)
+inline void GraphicsEngine::setGameMenuBG() {
+    if (!menubg) {
+        SDL_Surface* tmp = SDL_CreateRGBSurface (
+          SDL_HWSURFACE,
+          screen->w,
+          screen->h,
+          32,
+          rmask,gmask,bmask,0);
+#ifdef ALPHA
+        menubg = SDL_CreateRGBSurface (
+          SDL_HWSURFACE,
+          screen->w,
+          screen->h,
+          32,
+          rmask,gmask,bmask,0);
+        SDL_BlitSurface(screen,NULL,menubg,NULL);
+        SDL_SetAlpha(menubg,SDL_SRCALPHA,60);
+        SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
+        SDL_BlitSurface(menubg,NULL,tmp,NULL);
+        SDL_FreeSurface(menubg);
+        menubg=SDL_DisplayFormatAlpha(tmp);
+#else
+        SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
+        menubg=SDL_DisplayFormat(tmp);
+#endif
+        SDL_FreeSurface(tmp);
+    }
+}
+
+void GraphicsEngine::setMenuBG(SDL_Surface* menu_background) {
+    if (menubg) SDL_FreeSurface(menubg);
+    if (menu_background) {
+        menubg=menu_background;
+    } else {
+        SDL_Surface* tmp = SDL_CreateRGBSurface (
+          SDL_HWSURFACE,
+          screen->w,
+          screen->h,
+          32,
+          rmask,gmask,bmask,0);
+        SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
+        menubg=SDL_DisplayFormat(tmp);
+    }
+}
+
+void GraphicsEngine::resetMenuBG() {
+    if (menubg) {
+        SDL_FreeSurface(menubg);
+        menubg=NULL;
     }
 }
