@@ -74,7 +74,7 @@ void Wind::leave(Object *obj) {
 Geysir::Geysir(string imagename, Uint16 xcord, Uint16 ycord, Sint16 yAdd, string oname):
   Object(imagename,xcord,ycord,oname) {
     aspeed=yAdd;
-    au_geysir=NULL;
+    au_geysir=loadWAV("geyser.wav");
     Deffect=0;
 }
 Geysir::~Geysir() {
@@ -90,6 +90,7 @@ void Geysir::idle(Uint16 dt) {
         std::set<Viking *> vikings=map->getVikingsIn(pos,true);
         std::set<Viking *>::iterator vkit=vikings.begin();
         while (vkit!=vikings.end()) {
+cout << (*vkit)->getName() << endl;
             (*vkit)->addSpeed(aspeed);
             ++vkit;
         }
@@ -103,7 +104,7 @@ Teleporter::Teleporter(string imagename, Uint16 xcord, Uint16 ycord, Uint16 xExi
   Object(imagename,xcord,ycord,oname) {
     exit.x=xExit;
     exit.y=yExit;
-    au_tele=loadWAV("tele.wav");
+    au_tele=loadWAV("teleprt.wav");
 }
 Teleporter::~Teleporter() {
     if (au_tele) Mix_FreeChunk(au_tele);
@@ -146,6 +147,8 @@ Door::Door(string imagename, Uint16 xcord, Uint16 ycord, string keyname, string 
     open=false;
     otype=OTYPE_DENSE;
     key=keyname;
+    au_open=loadWAV("dooropn.wav");
+    au_close=au_open;
 }
 Door::~Door() { }
 
@@ -155,8 +158,13 @@ bool Door::act(Object* obj) {
     if (!(map->getCharactersIn(pos,true).empty())) return false;
 
     //switch state
-    if (open) open=false;
-    else open=true;
+    if (open) {
+        sfxeng->playWAV(au_close);
+        open=false;
+    } else {
+        sfxeng->playWAV(au_open);
+        open=true;
+    }
     
     //TODO: check if closing is ok
     //open or close the door
@@ -170,7 +178,7 @@ bool Door::act(Object* obj) {
 //HEART (Item)
 Heart::Heart(string imagename, Uint16 xcord, Uint16 ycord, string iname):
   Item(imagename,xcord,ycord,iname) {
-    au_heal=loadWAV("health.wav");
+    au_heal=loadWAV("usefood1.wav");
 }
 Heart::~Heart() {
     if (au_heal) Mix_FreeChunk(au_heal);

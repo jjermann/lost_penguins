@@ -1,6 +1,15 @@
 TODO:
 =====
 
+ o change hit to play the right death animation/sound, change water to hit
+   characters...
+
+ o FIX ALL BUGS! hahaha:
+     - sometimes the zombie doesn't turn from a wall
+     - (BIG) sound files of deleted objects aren't played => no explosion, no heal, etc...
+
+ o IDEA: extend input functions to accept Sint16, values < 0 indicate that they key was released
+
  o IDEA: add horizontal gravity that slows objects down??
 
  o move object creation code (addObjectByName) to the objects

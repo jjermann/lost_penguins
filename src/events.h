@@ -2,6 +2,7 @@
 #define EV_START     0x00000002
 #define EV_RUN       0x00000004
 #define EV_END       0x00000008
+#define EV_CANCEL    0x00000010
 
 class CharacterEvent : public Event {
     public:
@@ -23,11 +24,22 @@ class ELand : public CharacterEvent {
 
 class ESpeed : public CharacterEvent {
     public:
-        ESpeed(Character* chr, Uint16 length, Sint16 ajspeed, Sint16 ahspeed=0, Sint16 avspeed=0, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL);
+        ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed=0, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL);
         virtual void start();
+        virtual void end();
+        virtual void cancel();
+    protected:
+        Sint16 vspeed;
+        Sint16 hspeed;
+};
+
+class ERun : public ESpeed {
+    public:
+        ERun(Character* chr, Uint16 length, Sint16 inispeed, Sint16 ahspeed, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL);
+        virtual ~ERun();
+        virtual void reset();
         virtual Uint16 update(Uint16 dt);
     protected:
-        Sint16 jspeed;
-        Sint16 hspeed;
-        Sint16 vspeed;
+        Sint16 ispeed;
+        Sint16 t_reset;
 };

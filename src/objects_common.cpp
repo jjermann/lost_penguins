@@ -49,6 +49,10 @@ Uint16 Object::updateEvents(Uint16 dt) {
     Uint16 evstate=NOTHING;
     if (event) evstate=event->update(dt);
     switch (evstate) {
+        case EV_CANCEL: {
+            event->cancel();
+            break;
+        }
         case EV_START: {
             event->start();
             break;

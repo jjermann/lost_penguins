@@ -11,7 +11,7 @@ Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname)
     health=1;
     maxspeedx=300;
     maxspeedy=0;
-    speed=hspeed=vspeed=0;
+    speed=hspeed=0;
     gravity=900;
     Dgrav=0;
     state=STATE_FALL;
@@ -71,10 +71,6 @@ void Character::updateAnimState() { }
 
 //first thing to do
 void Character::idle(Uint16 dt) {
-    //reset/update stuff
-    unsetState(STATE_MLEFT);  
-    unsetState(STATE_MRIGHT); 
-    hspeed=vspeed=0;
     //check if we have ground below us...
     Hit hit;
     hit=checkMove(pos);
@@ -109,7 +105,7 @@ Hit Character::move(Uint16 dt, bool check) {
 
     SDL_Rect dest=pos;
     dest.x+=Sint16((hspeed*dt)/1000);
-    dest.y+=Sint16(((speed+vspeed)*dt)/1000);
+    dest.y+=Sint16((speed*dt)/1000);
     
     Hit hit=checkMove(dest,check);
     
@@ -119,10 +115,14 @@ Hit Character::move(Uint16 dt, bool check) {
         pos.y=dest.y; 
 
         if ((hit.enter&DIR_LEFT) || (hit.enter&DIR_RIGHT)) {
+            if (event) event->cancel();
+            unsetState(STATE_MLEFT);
+            unsetState(STATE_MRIGHT);
             hspeed=0;     
         }
         if (hit.enter&DIR_UP) {
-            speed=vspeed=0;
+            if (event) event->cancel();
+            speed=0;
         }
     }
     
@@ -146,7 +146,7 @@ void Character::fall(Uint16 dt) {
 //landing
 void Character::land() {
     if (event) event->cancel();
-    speed=hspeed=vspeed=0;
+    speed=0;
     unsetState(STATE_FALL);
     Dgrav=0;
 }
@@ -383,8 +383,8 @@ Sint16 Character::hit(Uint16 dir, Weapon& weap) {
     Sint16 dhealth=addHealth(weap.getDamage());
     switch (weap.getType()) {
         case W_STRIKE: {
-            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,0,NULL));
-            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,NULL));
+            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,NULL));
             break;
         }
         default: {

@@ -6,7 +6,7 @@ using namespace std;
 SoundsEngine::SoundsEngine() {
 #ifdef SDL_MIXER
     /* Open the audio device */
-    if (Mix_OpenAudio(config.audio_rate, config.audio_format, config.audio_channels, 4096) < 0) {
+    if (Mix_OpenAudio(config.audio_rate, config.audio_format, config.audio_channels, 512) < 0) {
         cout << "Couldn't open audio: " <<  SDL_GetError() << endl;
         cout << "Audio disabled!\n";
         disabled=true;
@@ -44,8 +44,6 @@ void SoundsEngine::resumeMusic() {
 
 void SoundsEngine::playWAV(Mix_Chunk* wav) {
 #ifdef SDL_MIXER
-    if (wav) {
-    Mix_PlayChannel(-1, wav, 0);
-    }
+    if (wav) Mix_PlayChannel(-1, wav, 0);
 #endif
 }

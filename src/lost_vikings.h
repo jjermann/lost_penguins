@@ -147,6 +147,7 @@ class Event {
         virtual void cancel();
         virtual void start();
         virtual void end();
+        virtual void reset() { }
     protected:
         Object* owner;
         Uint16 duration;
@@ -370,9 +371,6 @@ class Character : public Object {
         Sint16 addHSpeed(Sint16 dspeed) {
             return hspeed+=dspeed;
         }
-        Sint16 addVSpeed(Sint16 dspeed) {
-            return vspeed+=dspeed;
-        }
         void setGravity(Sint16 setgravity) {
             gravity=setgravity;
         }
@@ -412,7 +410,7 @@ class Character : public Object {
         Uint16 maxspeedx;
         Uint16 maxspeedy;
         //temporary speed (x direction)
-        Sint16 hspeed,vspeed;
+        Sint16 hspeed;
         //current permanent speed (y direction)
         Sint16 speed;
         //current gravity
@@ -472,15 +470,15 @@ class Viking : public Character {
         //Define these for each viking...
         virtual void idle(Uint16);
         virtual void fall(Uint16);
-        virtual void in_right(Uint16);
-        virtual void in_left(Uint16);
-        virtual void in_up(Uint16);
-        virtual void in_down(Uint16);
-        virtual void in_sp1(Uint16);
-        virtual void in_sp2(Uint16);
+        virtual void in_right(Sint16);
+        virtual void in_left(Sint16);
+        virtual void in_up(Sint16);
+        virtual void in_down(Sint16);
+        virtual void in_sp1(Sint16);
+        virtual void in_sp2(Sint16);
         //This should be the same for all vikings
-        virtual void in_act(Uint16);
-        virtual void in_use(Uint16);
+        virtual void in_act(Sint16);
+        virtual void in_use(Sint16);
     protected:
         //add places
         virtual void addTouch(std::set<Object *>&);
@@ -510,6 +508,8 @@ class Viking : public Character {
         //Common audio chunks
         Mix_Chunk*  au_land;
         Mix_Chunk*  au_act;
+        Mix_Chunk*  au_newitem;
+        Mix_Chunk*  au_hit;
         //Items
         Item* items[MAX_ITEMS];
         Uint8 currentitem;
@@ -581,6 +581,7 @@ class ObjectsPool {
     private:
         //viking number of the currently selected viking
         viking_iterator currentviking;
+        Mix_Chunk* au_switch;
 };
 
 
@@ -667,6 +668,7 @@ class InputHandler {
     private:
         int filterEvents(const SDL_Event *event);
         Uint16 state;
+        Mix_Chunk* au_pause;
 };
 
 //anim.cpp

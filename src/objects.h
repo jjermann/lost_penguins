@@ -62,8 +62,10 @@ class Eric : public Viking {
     public:
         Eric(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Eric");
         virtual ~Eric();
-        virtual void in_sp1(Uint16);
-        virtual void in_sp2(Uint16);
+        virtual void in_sp1(Sint16);
+        virtual void in_sp2(Sint16);
+        virtual void in_left(Sint16);
+        virtual void in_right(Sint16);
     private:
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;
@@ -75,13 +77,13 @@ class Olaf : public Viking {
         Olaf(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Olaf");
         virtual ~Olaf();
         virtual void updateAnimState();
-        virtual void in_left(Uint16);
-        virtual void in_right(Uint16);
-        virtual void in_down(Uint16);
-        virtual void in_up(Uint16);
+        virtual void in_left(Sint16);
+        virtual void in_right(Sint16);
+        virtual void in_down(Sint16);
+        virtual void in_up(Sint16);
         virtual void fall(Uint16);
-        virtual void in_sp1(Uint16);
-        virtual void in_sp2(Uint16);
+        virtual void in_sp1(Sint16);
+        virtual void in_sp2(Sint16);
         virtual Sint16 hit(Uint16,Weapon&);
     private:
         inline bool trySmall(bool small);
@@ -110,9 +112,9 @@ class Fang : public Viking {
         Fang(string imagename, Uint16 xpos=0, Uint16 ypos=0, string name="Fang");
         virtual ~Fang();
         virtual void fall(Uint16);
-        virtual void in_left(Uint16);
-        virtual void in_right(Uint16);
-        virtual void in_sp1(Uint16);
+        virtual void in_left(Sint16);
+        virtual void in_right(Sint16);
+        virtual void in_sp1(Sint16);
     private:
         virtual void land();
         Mix_Chunk* au_jump;
@@ -125,7 +127,7 @@ class Scorch : public Viking {
         virtual ~Scorch();
         virtual void idle(Uint16);
         virtual void fall(Uint16);
-        virtual void in_sp1(Uint16);
+        virtual void in_sp1(Sint16);
     private:
         virtual void land();
         Uint8 left_wings;
@@ -150,6 +152,7 @@ class Zombie : public Monster {
         virtual void ai_right(Uint16);
         virtual void ai_attack(Viking*, Uint16);
         Uint16 T_Attack_Bite;
+        Mix_Chunk* au_attack;
 };
 
 
@@ -227,6 +230,8 @@ class Door : public Object {
     private:
         bool open;
         string key;
+        Mix_Chunk* au_open;
+        Mix_Chunk* au_close;
 };
 
 

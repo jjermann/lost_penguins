@@ -9,7 +9,8 @@ using namespace std;
 ==================*/
 
 ObjectsPool::ObjectsPool():
-    currentviking(vikingspool.begin()) {
+  currentviking(vikingspool.begin()) {
+    au_switch=loadWAV("newchar.wav");
 }
 ObjectsPool::~ObjectsPool() {
     object_iterator i=objectspool.begin();
@@ -155,6 +156,7 @@ Viking* ObjectsPool::addViking(Viking* newviking) {
 //POST: rotates vikings returns a non NULL pointer if possible
 Viking* ObjectsPool::switchViking() {
     if (currentviking != vikingspool.end()) {
+        sfxeng->playWAV(au_switch);
         ++currentviking;
         if (currentviking == vikingspool.end()) currentviking=vikingspool.begin();
         if (currentviking != vikingspool.end()) return (viking=*currentviking);

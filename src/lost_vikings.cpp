@@ -109,7 +109,7 @@ Mix_Chunk* loadWAV(string wavname) {
     string loadfile=config.datadir+wavname;
     Mix_Chunk* tmpwav=NULL;
     if ((tmpwav=Mix_LoadWAV(loadfile.c_str())) == NULL) {
-        cout << "Couldn't load the wav file: " << wavname << endl;
+        cout << "Couldn't load the wav file: " << wavname << " (" << Mix_GetError() << ")" << endl;
         quitGame(3);
     }
     return tmpwav;

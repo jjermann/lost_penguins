@@ -12,7 +12,7 @@ using namespace std;
 TriggeredBomb::TriggeredBomb(string imagename, Uint16 xcord, Uint16 ycord, Uint16 tleft, string cname):
   Character(imagename,xcord,ycord,cname), countdown(tleft) {
     weapon=Weapon(-1,W_EXPLOSION);
-    au_bomb=NULL;
+    au_bomb=loadWAV("explsn.wav");
 }
 TriggeredBomb::~TriggeredBomb() {
     if (au_bomb) Mix_FreeChunk(au_bomb);
@@ -49,7 +49,7 @@ Eric::Eric(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_krit_right=im_right;
     im_land_left=im_left;
     im_land_right=im_right;
-    au_jump=loadWAV("eric_jump.wav");
+    au_jump=loadWAV("rboots.wav");
     au_run=NULL;
     t_water=60000;
     jump=V_JUMP;
@@ -65,14 +65,15 @@ Eric::~Eric() {
 //Eric1: Jump
 //Act1: first jump
 //Act2: 2nd jump
-void Eric::in_sp1(Uint16) {
+void Eric::in_sp1(Sint16 dt) {
+    if (dt < 0) return;
     input->unsetState(INPUT_SP1);
     if (state&STATE_FALL) setState(STATE_ACT_1);
 
     if (state&STATE_ACT_2) {
     } else if (state&STATE_ACT_1) {
         setState(STATE_ACT_2);
-        setEvent(new ESpeed(this,DE_JUMP,jump2,0,0,0,0,au_jump));
+        setEvent(new ESpeed(this,DE_JUMP,jump2,0,0,0,au_jump));
     } else {
         setState(STATE_ACT_1);
         setEvent(new ESpeed(this,DE_JUMP,jump));
@@ -80,17 +81,43 @@ void Eric::in_sp1(Uint16) {
 }
 
 //TODO: change this to a horizontal gravitiy modifier
-void Eric::in_sp2(Uint16) {
-    if (!(state&STATE_FALL)) {
-        setState(STATE_RUN);
-        sfxeng->playWAV(au_run);
-        if (state&STATE_MLEFT) {
-            hspeed-=2*maxspeedx;
+void Eric::in_sp2(Sint16 dt) {
+    if (state&STATE_RUN) {
+        if ((dt < 0) || (state&STATE_FALL)) cancelEvent();
+    } else {
+        if ((dt < 0) || (state&STATE_FALL)) {
+        } else if (state&STATE_MLEFT) {
+            setEvent(new ERun(this,10000,Sint16(-1/2*maxspeedx),-maxspeedx,500,ESTATE_ABORT,au_run));
         } else if (state&STATE_MRIGHT) {
-            hspeed+=2*maxspeedx;
+            setEvent(new ERun(this,10000,Sint16(1/2*maxspeedx),maxspeedx,500,ESTATE_ABORT,au_run));
         }
     }
 }
+
+void Eric::in_left(Sint16 dt) {
+    if (state&STATE_RUN) {
+        if (dt < 0) {
+            cancelEvent();
+        } else {
+            if (state&STATE_LEFT) event->reset();
+            else cancelEvent();
+        }
+    }
+    Viking::in_left(dt);
+}
+
+void Eric::in_right(Sint16 dt) {
+    if (state&STATE_RUN) {
+        if (dt < 0) {
+            cancelEvent();
+        } else {
+            if (state&STATE_LEFT) cancelEvent();
+            else event->reset();
+        }
+    }
+    Viking::in_right(dt);
+}
+
 
 //OLAF (Viking)
 Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
@@ -110,9 +137,10 @@ Olaf::Olaf(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_shield_left=new Animation(loadImage("olaf_fall_shield_left.bmp"));
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
-    au_small=NULL;
-    au_big=NULL;
-    au_fart=NULL;
+    au_small=loadWAV("blob.wav");
+    au_big=loadWAV("unblob.wav");
+    au_fart=loadWAV("fart1.wav");
+    au_hit=loadWAV("fathit.wav");
     fart=V_FART;
 }
 Olaf::~Olaf() {
@@ -160,13 +188,21 @@ void Olaf::updateAnimState() {
     }
 }
 
-void Olaf::in_left(Uint16 dt) {
+void Olaf::in_left(Sint16 dt) {
+    if (dt < 0) {
+        Viking::in_left(dt);
+        return;
+    }
     //No navigation while farting from ground
     if (!(state&STATE_ACT_2)) {
         Viking::in_left(dt);
     }
 }
-void Olaf::in_right(Uint16 dt) {
+void Olaf::in_right(Sint16 dt) {
+    if (dt < 0) {
+        Viking::in_right(dt);
+        return;
+    }
     //No navigation while farting from ground
     if (!(state&STATE_ACT_2)) {
         Viking::in_right(dt);
@@ -203,20 +239,23 @@ inline bool Olaf::trySmall(bool small) {
     } else return false;
 }
 
-void Olaf::in_down(Uint16) {
+void Olaf::in_down(Sint16 dt) {
+    if (dt < 0) return;
     //no ladder (TODO: ladder)
     input->unsetState(INPUT_DOWN);
     if (!(state&STATE_FALL)) trySmall(true);
 }
 
-void Olaf::in_up(Uint16) {
+void Olaf::in_up(Sint16 dt) {
+    if (dt < 0) return;
     //no ladder (TODO: ladder)
     input->unsetState(INPUT_UP);
     if (!(state&STATE_FALL)) trySmall(false);
 }
 
 //Olaf1: Shield
-void Olaf::in_sp1(Uint16) {
+void Olaf::in_sp1(Sint16 dt) {
+    if (dt < 0) return;
     //no specials while small
     if (!(state&STATE_SMALL)) {
         input->unsetState(INPUT_SP1);
@@ -227,7 +266,8 @@ void Olaf::in_sp1(Uint16) {
 //Olaf2: Fart
 //Act1: farted
 //Act2: no left, right movement (farting from ground)
-void Olaf::in_sp2(Uint16) {
+void Olaf::in_sp2(Sint16 dt) {
+    if (dt < 0) return;
     input->unsetState(INPUT_SP2);
     //no specials while small
     if (!(state&STATE_SMALL)) {
@@ -243,7 +283,7 @@ void Olaf::in_sp2(Uint16) {
         //Fart
         } else {
             setState(STATE_ACT_1);
-            setEvent(new ESpeed(this,DE_JUMP,fart,0,0,0,0,au_fart));
+            setEvent(new ESpeed(this,DE_JUMP,fart,0,0,0,au_fart));
         }
     }
 }
@@ -274,8 +314,8 @@ Sint16 Olaf::hit(Uint16 dir, Weapon& weap) {
     
     switch (weap.getType()) {   
         case W_STRIKE: {
-            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,0,NULL));
-            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,0,NULL));
+            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,au_hit));
+            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,au_hit));
             break;
         }
         default: {
@@ -332,7 +372,8 @@ void Scorch::fall(Uint16 dt) {
 //Scorch1: Fly
 //Act1: no wings, but key down
 //Act2: exhausted
-void Scorch::in_sp1(Uint16) {
+void Scorch::in_sp1(Sint16 dt) {
+    if (dt < 0) return;
     setState(STATE_FALL);
     //if not exhausted -> glide
     if (!(state&STATE_ACT_2)) {
@@ -351,7 +392,7 @@ void Scorch::in_sp1(Uint16) {
     } else if (!(state&STATE_ACT_1)){
         left_wings--;
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,0,au_swing));
+        setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,au_swing));
     }
 }
 
@@ -384,17 +425,13 @@ Fang::~Fang() {
     if (au_jump) Mix_FreeChunk(au_jump);
 }
 
-void Fang::in_left(Uint16) {
-    unsetState(STATE_CLIMB_R);
-    setState(STATE_LEFT);
-    setState(STATE_MLEFT);
-    hspeed-=maxspeedx;
+void Fang::in_left(Sint16 dt) {
+    Viking::in_left(dt);
+    if (dt >= 0) unsetState(STATE_CLIMB_R);
 }
-void Fang::in_right(Uint16) {
-    unsetState(STATE_CLIMB_L);
-    unsetState(STATE_LEFT);
-    setState(STATE_MRIGHT);
-    hspeed+=maxspeedx;
+void Fang::in_right(Sint16 dt) {
+    Viking::in_right(dt);
+    if (dt >= 0) unsetState(STATE_CLIMB_L);
 }
 
 void Fang::fall(Uint16 dt) {
@@ -421,22 +458,23 @@ void Fang::fall(Uint16 dt) {
 
 //Fang1: Jump
 //Act1: jumped
-void Fang::in_sp1(Uint16) {
+void Fang::in_sp1(Sint16 dt) {
+    if (dt < 0) return;
     input->unsetState(INPUT_SP1);
 
     if (state&STATE_CLIMB_L) {
         unsetState(STATE_LEFT);
         unsetState(STATE_CLIMB_L);
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(maxspeedx*1.5),0,0,0,au_jump));
+        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(maxspeedx*1.5),0,0,au_jump));
     } else if (state&STATE_CLIMB_R) {
         setState(STATE_LEFT);
         unsetState(STATE_CLIMB_R);
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(-maxspeedx*1.5),0,0,0,au_jump));
+        setEvent(new ESpeed(this,T_JUMPOFF,V_JUMPOFF,Sint16(-maxspeedx*1.5),0,0,au_jump));
     } else if ((!(state&STATE_FALL)) && (!(state&STATE_ACT_1))){
         setState(STATE_ACT_1);
-        setEvent(new ESpeed(this,DE_JUMP,V_JUMP,0,0,0,0,au_jump));
+        setEvent(new ESpeed(this,DE_JUMP,V_JUMP,0,0,0,au_jump));
     }
 }
 
@@ -479,6 +517,7 @@ Zombie::Zombie(string imagename, Uint16 xcord, Uint16 ycord, string mname):
     im_left=new Animation(loadImage("olaf_left.bmp"),2,1000);
     im_right=new Animation(loadImage("olaf_right.bmp"),2,1000);
     weapon=Weapon(-1,W_STRIKE);
+    au_attack=loadWAV("clang.wav");
 }
 
 Zombie::~Zombie() {
@@ -551,6 +590,7 @@ void Zombie::runAI(Uint16 dt) {
 
 void Zombie::ai_attack(Viking* vik, Uint16 dir) {
     cout << name << " attacks " << vik->getName() << " into " << dir << endl;
+    sfxeng->playWAV(au_attack);
     vik->hit(dir,weapon);
     Dattack=0;
 }

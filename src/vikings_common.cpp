@@ -27,8 +27,10 @@ Viking::Viking(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_krit_right=animation;
     im_land_left=animation;
     im_land_right=animation;
-    au_land=NULL;
+    au_land=loadWAV("dizzy.wav");
     au_act=loadWAV("button.wav");
+    au_newitem=loadWAV("pickup.wav");
+    au_hit=NULL;
 }
 
 Viking::~Viking() {
@@ -70,6 +72,7 @@ bool Viking::pickupItem(Item* newitem) {
     if (newitem==NULL) return false;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         if (items[i] == NULL) {
+            sfxeng->playWAV(au_newitem);
             newitem->setOwner(this);
             newitem->setPos(0,0);
             pool->moveObject(newitem);
@@ -160,7 +163,8 @@ void Viking::idle(Uint16 dt) {
 }
 
 //input: activation key (return)
-void Viking::in_act(Uint16) {
+void Viking::in_act(Sint16 dt) {
+    if (dt < 0) return;
     input->unsetState(INPUT_ACT);
     object_iterator i=enter.begin();
     while (i!=enter.end()) {
@@ -173,32 +177,51 @@ void Viking::in_act(Uint16) {
 }
 
 //input: use key (insert)
-void Viking::in_use(Uint16) {
+void Viking::in_use(Sint16 dt) {
+    if (dt < 0) return;
     input->unsetState(INPUT_USE);
     if (items[currentitem]) items[currentitem]->act(this);
 }
 
 //input: right key
-void Viking::in_right(Uint16) {
+void Viking::in_right(Sint16 dt) {
+    if (dt < 0) {
+        if (state&STATE_MRIGHT) {
+            unsetState(STATE_MRIGHT);
+            hspeed-=maxspeedx;
+        }
+        return;
+    }
     unsetState(STATE_LEFT);
-    setState(STATE_MRIGHT);
-    hspeed+=maxspeedx;
+    if (!(state&STATE_MRIGHT)) {
+        hspeed+=maxspeedx;
+        setState(STATE_MRIGHT);
+    }
 }
 
 //input: left key
-void Viking::in_left(Uint16) {
+void Viking::in_left(Sint16 dt) {
+    if (dt < 0) {
+        if (state&STATE_MLEFT) {
+            unsetState(STATE_MLEFT);
+            hspeed+=maxspeedx;
+        }
+        return;
+    }
     setState(STATE_LEFT);
-    setState(STATE_MLEFT);
-    hspeed-=maxspeedx;
+    if (!(state&STATE_MLEFT)) {
+        hspeed-=maxspeedx;
+        setState(STATE_MLEFT);
+    }
 }
 //input: up key
-void Viking::in_up(Uint16) { }
+void Viking::in_up(Sint16) { }
 //input: down key
-void Viking::in_down(Uint16) { }
+void Viking::in_down(Sint16) { }
 //input: special1 key (SPACE)
-void Viking::in_sp1(Uint16) { }
+void Viking::in_sp1(Sint16) { }
 //input: special2 key (SHIFT)
-void Viking::in_sp2(Uint16) { }
+void Viking::in_sp2(Sint16) { }
 
 //moving (help function)
 Hit Viking::move(Uint16 dt, bool check) {

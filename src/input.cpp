@@ -7,6 +7,7 @@ using namespace std;
 InputHandler::InputHandler() {
     paused=false;
     state=NOTHING;
+    au_pause=loadWAV("pause.wav");
 }
 
 InputHandler::~InputHandler() {
@@ -23,26 +24,32 @@ void InputHandler::pollEvents() {
             case SDL_KEYUP: {
                 switch(event.key.keysym.sym) {
                     case SDLK_LEFT: {
+                        if (state&INPUT_LEFT) viking->in_left(-1);
                         state&=~INPUT_LEFT;
                         break;
                     }
                     case SDLK_RIGHT: {
+                        if (state&INPUT_RIGHT) viking->in_right(-1);
                         state&=~INPUT_RIGHT;
                         break;
                     }
                     case SDLK_UP: {
+                        if (state&INPUT_UP) viking->in_up(-1);
                         state&=~INPUT_UP;
                         break;
                     }
                     case SDLK_DOWN: {
+                        if (state&INPUT_DOWN) viking->in_down(-1);
                         state&=~INPUT_DOWN;
                         break;
                     }
                     case SDLK_SPACE: {
+                        if (state&INPUT_SP1) viking->in_sp1(-1);
                         state&=~INPUT_SP1;
                         break;
                     }
                     case SDLK_LSHIFT: {
+                        if (state&INPUT_SP2) viking->in_sp2(-1);
                         state&=~INPUT_SP2;
                         break;
                     }
@@ -51,10 +58,12 @@ void InputHandler::pollEvents() {
                         break;
                     }
                     case SDLK_RETURN: {
+                        if (state&INPUT_ACT) viking->in_act(-1);
                         state&=~INPUT_ACT;
                         break;
                     }
                     case SDLK_INSERT: {
+                        if (state&INPUT_USE) viking->in_use(-1);
                         state&=~INPUT_USE;
                         break;
                     }
@@ -123,6 +132,7 @@ void InputHandler::pollEvents() {
                          } else {
                              state|=INPUT_PAUSE;
                              paused=true;
+                             sfxeng->playWAV(au_pause);
                              sfxeng->pauseMusic();
                          }
                          break;
