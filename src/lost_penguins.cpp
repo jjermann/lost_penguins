@@ -13,7 +13,7 @@
 
 
 int main(int argc, char* argv[]) {
-    cout << "Starting Lost Players!\n";
+    cout << "Starting Lost Penguins!\n";
     //Clean exit on Windows close...
     atexit(SDL_Quit);
 
