@@ -395,7 +395,7 @@ int main(int argc, char *argv[]) {
         if (!strncmp(off_ptr,entry_id,4)) {
             counter++;
             /* write_pgm, write_png, write_xpm, write_png_xpm */
-            last_ptr=write_png_xpm(off_ptr,counter);
+            last_ptr=write_xpm(off_ptr,counter);
         } else {
             last_ptr=off_ptr+1;
         }
