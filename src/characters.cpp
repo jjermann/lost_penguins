@@ -293,8 +293,9 @@ void Olaf::fall(Uint16 dt) {
 }
 
 Uint16 Olaf::hit(Uint16 dir, Weapon& weap) {
+    //TODO fix the small->big thing...
     trySmall(false);
-    if ((!state&STATE_SMALL) && (weap.getType()&(W_STRIKE|W_EXPLOSION))) {
+    if ((!(state&STATE_SMALL)) && (weap.getType()&(W_STRIKE|W_EXPLOSION))) {
         if (state&STATE_SHIELD) {
             if (dir==DIR_DOWN) return health;
             else return Viking::hit(dir,weap);
