@@ -13,6 +13,7 @@ Character::Character(string imagename, Uint16 xcord, Uint16 ycord, string vname)
     maxspeedy=0;
     speed=hspeed=0;
     gravity=900;
+    speedmod=100;
     Dgrav=0;
     state=STATE_FALL;
     otype|=OTYPE_CHARACTER;
@@ -109,8 +110,8 @@ Hit Character::move(Uint16 dt, bool check) {
     }
 
     SDL_Rect dest=pos;
-    dest.x+=Sint16((hspeed*dt)/1000);
-    dest.y+=Sint16((speed*dt)/1000);
+    dest.x+=Sint16((hspeed*speedmod*dt)/100000);
+    dest.y+=Sint16((speed*speedmod*dt)/100000);
     
     Hit hit=checkMove(dest,check);
     
@@ -397,6 +398,6 @@ inline void Character::updateRegions(std::set<Object *>& newtouch, std::set<Obje
 
 
 //gets hit by a weapon
-Uint16 Character::hit(Uint16, Weapon& weap) {
-    return addHealth(weap.getDamage());
+Uint16 Character::hit(Uint16, Weapon&) {
+    return health;
 }

@@ -271,7 +271,7 @@ void Viking::clearStates(bool reset) {
 Uint16 Viking::hit(Uint16 direction, Weapon& weap) {
     Uint16 newhealth;
     if (weap.getType()&W_WATER) newhealth=setHealth(0);
-    else newhealth=Character::hit(direction,weap);
+    else newhealth=addHealth(weap.getDamage());
     
     //died
     if (newhealth==0) {

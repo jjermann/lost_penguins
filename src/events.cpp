@@ -7,8 +7,8 @@ using namespace std;
 
 
 //Common Events (basically sets the events idle for length)
-Event::Event(Object* obj, Uint16 length, Uint16 edelay):
-  owner(obj),duration(length),delay(edelay),tleft(delay),started(false) { }
+Event::Event(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate):
+  owner(obj),duration(length),delay(edelay),tleft(delay),started(false),state(switchstate) { }
 Event::~Event() {
     owner->clearEvents();
 }
@@ -35,33 +35,52 @@ Uint16 Event::update(Uint16 dt) {
     return evstate;
 }
 void Event::start() {
+    if (state) owner->switchState(state);
     started=true;
 }
 void Event::end() {
+    if (started && state) owner->switchState(state);
     delete this;
 }
 void Event::cancel() {
+    if (started && state) owner->switchState(state);
     delete this;
 }
 
 
 //CharacterEvent
 CharacterEvent::CharacterEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  Event(chr,length,edelay), charowner(chr), state(switchstate), sound(esound) {
+  Event(chr,length,edelay,switchstate), charowner(chr), sound(esound) {
     state|=ESTATE_RUN;
 }
 void CharacterEvent::start() {
-    if (state) charowner->switchState(state);
     sfxeng->playWAV(sound);
     Event::start();
 }
 void CharacterEvent::end() {
-    if (started && state) charowner->switchState(state);
     Event::end();
 }
 void CharacterEvent::cancel() {
-    if (started && state) charowner->switchState(state);
     Event::cancel();
+}
+
+
+EAnim::EAnim(Character* chr, Animation* runanim, bool delanim, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
+  CharacterEvent(chr,30000,edelay,(switchstate|ESTATE_BUSY|ESTATE_ANIM),esound),anim(runanim),del(delanim) {
+    if (anim==NULL) cancel();
+}
+void EAnim::start() {
+    CharacterEvent::start();
+    charowner->setAnim(anim);
+}
+void EAnim::end() {
+    //hack!!!
+    if (del) delete anim;
+    if (started) charowner->updateAnimState();
+    CharacterEvent::end();
+}
+void EAnim::cancel() {
+    end();
 }
 
 
@@ -106,20 +125,5 @@ Uint16 ERun::update(Uint16 dt) {
 }
 
 
-EAnim::EAnim(Character* chr, Animation* runanim, bool delanim, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
-  CharacterEvent(chr,30000,edelay,(switchstate|ESTATE_BUSY|ESTATE_ANIM),esound),anim(runanim),del(delanim) {
-    if (anim==NULL) cancel();
-}
-void EAnim::start() {
-    CharacterEvent::start();
-    charowner->setAnim(anim);
-}
-void EAnim::end() {
-    //hack!!!
-    if (del) delete anim;
-    if (started) charowner->updateAnimState();
-    CharacterEvent::end();
-}
-void EAnim::cancel() {
-    end();
-}
+//EFart::EFart(Character* chr, Animation* runanim, Mix_Chunk* esound):
+//  EAnim(chr, runanim, false, 0, 0, esound)

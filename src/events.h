@@ -12,7 +12,6 @@ class CharacterEvent : public Event {
         virtual void end();
     protected:
         Character* charowner;
-        Uint32 state;
         Mix_Chunk* sound;
 };
 

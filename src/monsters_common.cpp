@@ -118,6 +118,6 @@ void Monster::die() {
     Character::die();
 }
 
-Uint16 Monster::hit(Uint16 dir, Weapon& weap) {
-    return Character::hit(dir,weap);
+Uint16 Monster::hit(Uint16, Weapon& weap) {
+    return (addHealth(weap.getDamage()));
 }

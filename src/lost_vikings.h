@@ -125,7 +125,7 @@ struct Hit {
 //Events
 class Event {
     public:
-        Event(Object* obj, Uint16 length, Uint16 edelay=0);
+        Event(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING);
         virtual ~Event();
         virtual Uint16 update(Uint16 dt);
         virtual void cancel();
@@ -138,6 +138,7 @@ class Event {
         Uint16 delay;
         Sint16 tleft;
         bool started;
+        Uint32 state;
 };
 
 #define WS_NORMAL 0x00000001
@@ -299,6 +300,10 @@ class Object {
             animation=anim;
             animation->start();
         }
+        virtual void resetAnimState() {
+            animation=im_orig;
+            animation->setFrame(0);
+        }
         bool isRunning() const {
             return animation->isRunning();
         }
@@ -365,9 +370,7 @@ class Character : public Object {
     public:
         Character(string img, Uint16 xpos=0, Uint16 ypos=0, string name="Character");
         virtual ~Character();
-        //health
         Uint8 getHealth();
-        //Speed
         Sint16 getSpeed() const {
             return speed;
         }
@@ -386,8 +389,13 @@ class Character : public Object {
         void addGravity(Sint16 addgravity) {
             gravity+=addgravity;
         }
+        void applySpeedMod(Uint16 speedm) {
+            speedmod=Uint16(speedmod*speedm/100);
+        }
+        void setSpeedMod(Uint16 speedm) {
+            speedmod=speedm;
+        }
         Hit checkMove(SDL_Rect& dest, bool tele=false, bool check=false);
-        //regions
         const std::set<Object *>& getEnter() const {
             return enter;
         }
@@ -398,6 +406,10 @@ class Character : public Object {
         virtual void removedObject(Object*);
         //updates the current animation state
         virtual void updateAnimState(bool change=true);
+        virtual void resetAnimState() {
+            Object::resetAnimState();
+            updateAnimState(true);
+        }
         //Define these for each character, the base function must be run for all derived classes
         virtual void idle(Uint16);
         virtual void fall(Uint16);
@@ -432,6 +444,8 @@ class Character : public Object {
         Sint16 speed;
         //current gravity
         Sint16 gravity;
+        //current speedmod
+        Uint16 speedmod;
         //temporary attributes
         Sint16 Dgrav,Dwater;
         //Die animation

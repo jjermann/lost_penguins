@@ -66,9 +66,11 @@ Eric::~Eric() {
 //Eric1: Jump
 //Act1: first jump
 //Act2: 2nd jump
+//TODO: check STATE_WATER
 void Eric::in_sp1(Sint16 dt) {
     if (dt < 0) return;
     input->unsetState(INPUT_SP1);
+
     if (state&STATE_FALL) setState(STATE_ACT_1);
 
     if (state&STATE_ACT_2) {
@@ -81,7 +83,7 @@ void Eric::in_sp1(Sint16 dt) {
     }
 }
 
-//TODO: change this to a horizontal gravitiy modifier
+//TODO: check STATE_WATER
 void Eric::in_sp2(Sint16 dt) {
     if (dt < 0) {
         input->unsetState(INPUT_SP2);
@@ -91,8 +93,10 @@ void Eric::in_sp2(Sint16 dt) {
     if ((state&STATE_RUN) && (state&STATE_FALL)) {
         cancelEvent();
     } else if (state&STATE_MLEFT) {
+        sfxeng->playWAV(au_run);
         setEvent(new ERun(this,10000,Sint16(-1/2*maxspeedx),-maxspeedx,500,ESTATE_ABORT,au_run));
     } else if (state&STATE_MRIGHT) {
+        sfxeng->playWAV(au_run);
         setEvent(new ERun(this,10000,Sint16(1/2*maxspeedx),maxspeedx,500,ESTATE_ABORT,au_run));
     }
 }
@@ -321,8 +325,8 @@ Scorch::Scorch(string imagename, Uint16 xcord, Uint16 ycord, string vname):
     im_krit_right=im_left;
     im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
     im_land_right=im_land_left;
-    au_swing=NULL;
-    au_tired=NULL;
+    au_swing=sndcache->loadWAV("flapwngs.wav");
+    au_tired=sndcache->loadWAV("flwings.wav");
     left_wings=SCORCH_MAX_WINGS;
     wing=V_FLY;
 }
@@ -374,6 +378,7 @@ void Scorch::in_sp1(Sint16 dt) {
         setState(STATE_ACT_2);
         unsetState(STATE_GLIDE);
         setState(STATE_ACT_1);
+        setEvent(new ESpeed(this,DE_WING,V_FLY,0,0,0,au_tired));
     //Use Wings
     } else if (!(state&STATE_ACT_1)){
         left_wings--;
