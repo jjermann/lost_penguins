@@ -84,10 +84,10 @@ class Player : public Character {
         Animation* im_land_left;
         Animation* im_land_right;
         //Common audio chunks
+        Mix_Chunk*  au_hit;
         Mix_Chunk*  au_land;
         Mix_Chunk*  au_act;
         Mix_Chunk*  au_newitem;
-        Mix_Chunk*  au_hit;
         Mix_Chunk*  au_die;
         Mix_Chunk*  au_elec;
         Mix_Chunk*  au_drown;

@@ -35,7 +35,7 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_land=sndcache->loadWAV("dizzy.wav");
     au_act=sndcache->loadWAV("button.wav");
     au_newitem=sndcache->loadWAV("pickup.wav");
-    au_hit=sndcache->loadWAV("plrhit.wav");
+    au_hit=sndcache->loadWAV("vikhit.wav");
     au_elec=sndcache->loadWAV("elecdth.wav");
     au_drown=sndcache->loadWAV("drown.wav");
     au_fire=sndcache->loadWAV("fireball.wav");
@@ -292,6 +292,7 @@ void Player::clearStates(bool reset) {
 }
 
 Uint16 Player::hit(Uint16 direction, Weapon& weap) {
+    cancelEvent();
     Uint16 newhealth;
     if (weap.getType()&W_WATER) newhealth=setHealth(0);
     else newhealth=addHealth(weap.getDamage());

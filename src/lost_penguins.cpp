@@ -121,7 +121,6 @@ int readConfig(const string& filename) {
         if (option[0]=='#') continue;
         if (option=="datadir") {
             config.datadir=arg1;
-            cout << arg1 << endl;
         } else if (option=="width") {
             config.width=atoi(arg1.c_str());
         } else if (option=="height") {

@@ -43,7 +43,6 @@ class AnimEvent : public Event {
         virtual void end();  
         virtual void cancel();
     protected:
-        Uint32 state;
         Animation* anim;
         bool del;
         Mix_Chunk* sound;
@@ -57,10 +56,20 @@ class CAnimEvent : public CEvent {
         virtual void end();  
         virtual void cancel();
     protected:
-        Uint32 state;
         Animation* anim;
         bool del;
         Mix_Chunk* sound;
+};
+
+class EAttack : public CAnimEvent {
+    public:
+        EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0, Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
+        virtual void end();
+    protected:
+        Weapon* weapon;
+        Uint16 direction;
+        Uint16 range;
+        Uint16 mask;
 };
 
 class ESpeed : public CAnimEvent {

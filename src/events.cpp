@@ -2,6 +2,7 @@
 #include "events.h"
 #include "anim.h"
 #include "weapons.h"
+#include "map.h"
 #include "sfxeng.h"
 #include "characters_common.h"
 
@@ -53,16 +54,16 @@ void Event::cancel() {
 }
 
 AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, Animation* runanim, bool delanim):
-  Event(obj,length,edelay),
-  state(switchstate|ESTATE_ANIM),
+  Event(obj,length,edelay,switchstate),
   anim(runanim),
   del(delanim),
   sound(asound) {
+    state|=ESTATE_ANIM;
     if (anim!=NULL) duration=30000;
 }
 Uint16 AnimEvent::update(Uint16 dt) {
     Uint16 evstate=Event::update(dt);
-    if (anim && (!(anim->isRunning()))) return EV_END;
+    if (started && anim && (!(anim->isRunning()))) return EV_END;
     else return evstate; 
 }
 void AnimEvent::start() {
@@ -93,16 +94,16 @@ CEvent::CEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate)
   
 //Exactly the same as AnimEvent with Character* instead of Object*
 CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, Animation* runanim, bool delanim):
-  CEvent(chr,length,edelay),
-  state(switchstate|ESTATE_ANIM),
+  CEvent(chr,length,edelay,switchstate),
   anim(runanim),
   del(delanim),
   sound(asound) {
-    if (anim!=NULL) length=30000;
+    state|=ESTATE_ANIM;
+    if (anim!=NULL) duration=30000;
 }
 Uint16 CAnimEvent::update(Uint16 dt) {
     Uint16 evstate=CEvent::update(dt);
-    if (anim && (!(anim->isRunning()))) return EV_END;
+    if (started && anim && (!(anim->isRunning()))) return EV_END;
     else return evstate;
 }
 void CAnimEvent::start() {
@@ -168,4 +169,19 @@ Uint16 ERun::update(Uint16 dt) {
         evstate=ESpeed::update(dt);
     } 
     return evstate;
+}
+
+
+EAttack::EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weap_range, Uint16 target_mask, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, Animation* runanim, bool delanim):
+  CAnimEvent(chr,length,edelay,switchstate|ESTATE_BUSY,esound,runanim,delanim),
+  weapon(atweapon),
+  direction(dir),
+  range(weap_range),
+  mask(target_mask) { }
+void EAttack::end() {
+    std::set<Character *> targets=curmap->getCharactersIn(mask,*owner->getPos(),true,range,direction);
+    if (!targets.empty()) {
+        (*targets.begin())->hit(direction,*weapon);
+    }
+    CAnimEvent::end();
 }

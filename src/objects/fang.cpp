@@ -18,6 +18,7 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_krit_right=im_right;
     im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
     im_land_right=im_land_left;
+    au_hit=sndcache->loadWAV("wolfhit.wav");
     au_jump=NULL;
 }
 Fang::~Fang() {

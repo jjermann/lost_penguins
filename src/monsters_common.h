@@ -40,6 +40,7 @@ class Monster : public Character {
         //common animations
         Animation* im_left;
         Animation* im_right;
+        Mix_Chunk* au_hit;
         Sint16 Dai,Dattack;
 };
 

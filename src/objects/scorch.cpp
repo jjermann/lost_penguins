@@ -21,6 +21,7 @@ Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_land_right=im_land_left;
     au_swing=sndcache->loadWAV("flapwngs.wav");
     au_tired=sndcache->loadWAV("flwings.wav");
+    au_hit=sndcache->loadWAV("draghit.wav");
 }
 Scorch::~Scorch() {
     delete im_left;

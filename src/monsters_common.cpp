@@ -2,6 +2,8 @@
 #include "anim.h"
 #include "weapons.h"
 #include "events.h"
+#include "sfxeng.h"
+#include "sndcache.h"
 #include "monsters_common.h"
 //shouldn't be here...
 #include "players_common.h"
@@ -25,6 +27,7 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     enemy_types|=OTYPE_PLAYER;
     im_left=animation;
     im_right=animation;
+    au_hit=sndcache->loadWAV("monhit.wav");
 }
 
 Monster::~Monster() { }
@@ -125,6 +128,7 @@ void Monster::die() {
 }
 
 Uint16 Monster::hit(Uint16, Weapon& weap) {
+    sfxeng->playWAV(au_hit);
     Uint16 newhealth=addHealth(weap.getDamage());
     if (newhealth==0) die();
     return newhealth;
