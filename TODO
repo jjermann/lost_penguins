@@ -3,6 +3,9 @@ TODO:
 
  o clenup the files (move out objects, separate .h, etc)
 
+ o introduce animation events that play an animation and end when it's
+   finnished (always ESTATE_BUSY or abort animation?)
+
  o allow an event length depending on animation length, or: relate events more with animations!!!
 
  o change hit to play the right death animation/sound, change water to hit
@@ -12,6 +15,7 @@ TODO:
      - sometimes the zombie doesn't turn from a wall
      - hit event
      - zombie attacks too often if nearby
+     - in short: rewrite zombie
 
  o IDEA: add horizontal gravity that slows objects down??
 

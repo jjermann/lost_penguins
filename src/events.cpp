@@ -76,7 +76,6 @@ void ELand::start() {
 ESpeed::ESpeed(Character* chr, Uint16 length, Sint16 avspeed, Sint16 ahspeed, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound):
   CharacterEvent(chr,length,edelay,switchstate,esound),vspeed(avspeed),hspeed(ahspeed) { }
 void ESpeed::start() {
-    if (vspeed<0) charowner->setState(STATE_FALL);
     charowner->addSpeed(vspeed);
     charowner->addHSpeed(hspeed);
     CharacterEvent::start();

@@ -10,5 +10,5 @@
 #define WS_DIE           0x00000002
 #define WS_FIRE          0x00000004
 
-#define DSTRIKE          400
-#define TSTRIKE          60
+#define DSTRIKE          100
+#define TSTRIKE          600

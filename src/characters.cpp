@@ -307,8 +307,8 @@ Sint16 Olaf::hit(Uint16 dir, Weapon& weap) {
     
     switch (weap.getType()) {   
         case W_STRIKE: {
-            if (dir&DIR_RIGHT) setEvent(new ESpeed(this,TSTRIKE,-60,DSTRIKE,0,0,au_hit));
-            if (dir&DIR_LEFT)  setEvent(new ESpeed(this,TSTRIKE,-60,-DSTRIKE,0,0,au_hit));
+            if (dir&DIR_LEFT) setEvent(new ESpeed(this,TSTRIKE,-100,-DSTRIKE,0,ESTATE_BUSY,au_hit));
+            else setEvent(new ESpeed(this,TSTRIKE,-100,DSTRIKE,0,ESTATE_BUSY,au_hit));
             break;
         }
         default: {
