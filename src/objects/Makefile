@@ -13,13 +13,13 @@ OBJS  = baleog.o bomb.o door.o erik.o exit.o fang.o geyser.o heart.o\
 PLUGS = ../objects.a
 
 
-all:
+default:
 	+$(MAKE) depend
 	+$(MAKE) $(OBJS)
 	+$(MAKE) $(PLUGS)
 
 %.o: %.cpp
-	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) $(CXX_GAME) $(SDL) -c $< -o $@
+	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) $(CXX_GAME) $(CXX_OPT) $(SDL) -c $< -o $@
 
 $(PLUGS): $(OBJS)
 	$(AR) r $(PLUGS) $(OBJS)

@@ -7,8 +7,6 @@
     virtual function act(), overload it in the child classes. Only the base class
     is needed to draw the menu in gfxeng. The background depends from where the
     menu is called.
-
-    \todo Create the actual menus (StartMenu, etc)...
 */
 class Menu {
     friend class GraphicsEngine;

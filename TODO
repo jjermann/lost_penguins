@@ -8,6 +8,7 @@ Code
 ====
 
  o General:
+     o (BIG) move drawing to the objects/menus/etc (create a draw() function)!
      o pointers => references where possible
      o Describe everything using Doxygen styles, move the documentation from
       *.cpp to the headers...
@@ -25,6 +26,10 @@ Code
        character down or better: an elevator should push the characters up
      o In case of the elevator, the players are somehow "bound" to the elevator (ie.
        it's not like: the elevator moves, the character falls, but they move together)
+       Solution: The elevators move function checks all objects it would
+         hit, if they are pushable (not dense) they are moved first if
+         possible. If it's not possible, do sthg else (stop the elevator and hit the
+         object/whatever)...
      o the collision detection and the move/fall code is all a big mess
 
  o Animations/Events:

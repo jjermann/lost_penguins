@@ -14,7 +14,7 @@ PLUGS = objects.a
 BIN   = ../lost_penguins
 
 
-all:
+default:
 	+$(MAKE) depend
 	+$(MAKE) -C objects
 	+$(MAKE) $(BIN)
@@ -23,7 +23,7 @@ $(BIN): $(OBJS) $(PLUGS)
 	$(CXX) $(OBJS) $(PLUGS) $(SDL_LINK) -o $(BIN)
 
 %.o: %.cpp
-	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) $(CXX_GAME) $(SDL) -c $< -o $@
+	$(CXX) $(CXX_FLAGS) $(CXX_DEBUG) $(CXX_GAME) $(CXX_OPT) $(SDL) -c $< -o $@
 
 $(PLUGS):
 	+$(MAKE) -C objects
