@@ -1,5 +1,5 @@
 CC         = gcc
-CC_FLAGS   = -ansi -pedantic -W -Wall
+CC_FLAGS   = -pedantic -W -Wall
 CC_DEBUG   = -g #-fno-inline
 CC_OPT     = -O2 -march=pentium4 -ffast-math
 CC_TOOL    = -lpng

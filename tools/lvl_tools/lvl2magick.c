@@ -8,11 +8,14 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>  
 #include <sys/mman.h>
-#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <magick/api.h>
+
+#define EXIT(a) { errno=(a); goto end; }
 
 enum {
     red=0,
@@ -21,24 +24,34 @@ enum {
 };
 
 enum {
-    img_x=0,
-    img_y=1,
-    img_w=2,
-    img_h=3
-};
-
-enum {
     errno_ok=0,
     errno_quit=1,
     errno_parse=2,
     errno_open=3,
     errno_invalid=4,
-    errno_misc=5
+    errno_alloc=5,
+    errno_misc=6
 };
 
-struct config_s {
+typedef struct {
+    unsigned int x;
+    unsigned int y;
+    unsigned int w;
+    unsigned int h;
+} Rectangle;
+
+typedef struct {
+    unsigned int start_num;
+    unsigned int size;
+    char name[32];
+    Rectangle* geometry;
+} LVLAnim;
+
+typedef struct {
     /* create unknown.bin chunk files if != 0 */
     int debug;
+    /* Write the individial animations */
+    int write;
     /* input lvl file */
     char lvl_file[20];
     /* input data file */
@@ -53,7 +66,10 @@ struct config_s {
     PixelPacket colorkey;
     /* background color */
     PixelPacket bg;
-} config;
+} Config;
+
+Config config;
+int errno=errno_ok;
 
 /* RGB palette */
 unsigned char lvl_palette[256][3] = {
@@ -130,17 +146,22 @@ unsigned char lvl_palette[256][3] = {
 
 void usage() {
     printf("Usage: lvl2magick [options] file.lvl\n");
-    printf("Extracts images from file.lvl.\n");
-    printf("\n");
+    printf("Extracts images from file.lvl.\n\n\n");
     printf("Options:\n");
-    printf("  -h, --help             Print this help message\n");
-    printf("  -debug <n>             Create additional files if n>0 (default: 0)\n");
-    printf("  -colorkey \"#rrggbb\"  Use the specified color for the colorkey. The numbers\n");
-    printf("                         rr, gg, bb are hex values from 0 to ff. (default: #ff00ff)\n");
-    printf("  -bg \"#rrggbb\"        Use the specified color for the background (default: colorkey)\n");
-    printf("  -dir, -o <basename>    Name of the output directory (default: file)\n");
-    printf("  -format <format>       Name of the output image format (default: png)\n");
-    printf("  -data_file <filename>  Data filename for file.lvl (default: file.dat)\n");
+    printf("  -h, --help             Print this help message\n\n");
+    printf("  -debug                 Create additional debug files (default: off)\n\n");
+    printf("  -write <0-7>           n=0: Just create the geometry data (no images)\n");
+    printf("                         n=1: Create one big image with all animations in it\n");
+    printf("                         n=2: Create one image for each animation\n");
+    printf("                         n=4: Create one image for each frame\n");
+    printf("                         Values can be added to achieve the desired combination\n");
+    printf("                           (default: 3)\n\n");
+    printf("  -colorkey \"#rrggbb\"    Use the specified color for the colorkey. The numbers\n");
+    printf("                         rr, gg, bb are hex values from 0 to ff. (default: #ff00ff)\n\n");
+    printf("  -bg \"#rrggbb\"          Use the specified color for the background (default: colorkey)\n\n");
+    printf("  -dir, -o <basename>    Name of the output directory (default: file)\n\n");
+    printf("  -format <format>       Name of the output image format (default: png)\n\n");
+    printf("  -data_file <filename>  Data filename for file.lvl (default: file.dat)\n\n");
 }
 
 int parse(int argc, char* argv[]) {
@@ -153,6 +174,7 @@ int parse(int argc, char* argv[]) {
     strncpy(config.basename,"",16);
     strncpy(config.format,"png",4);
     config.debug=0;
+    config.write=3;
     config.colorkey.red=MaxRGB;
     config.colorkey.green=0;
     config.colorkey.blue=MaxRGB;
@@ -169,18 +191,24 @@ int parse(int argc, char* argv[]) {
                 usage();
                 return errno_quit;
             } else if (strcmp(argv[i],"-debug")==0) {
+                config.debug=1;
+            } else if (strcmp(argv[i],"-write")==0) {
                 i++;
                 if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
-                config.debug=atoi(argv[i]);
+                config.write=atoi(argv[i]);
+                if (config.write>7 || config.write<0) {
+                    usage();
+                    return errno_parse;
+                }
             } else if (strcmp(argv[i],"-colorkey")==0) {
                 i++;
                 if (!strncmp(argv[i],"#",1)==0) { usage(); return errno_parse; }
                 strcpy(buf,argv[i]+1); buf[2]=0;
-                config.colorkey.red=MaxRGB*strtol(buf,NULL,16)/255;
+                config.colorkey.red=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                 strcpy(buf,argv[i]+3); buf[2]=0;
-                config.colorkey.green=MaxRGB*strtol(buf,NULL,16)/255;
+                config.colorkey.green=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                 strcpy(buf,argv[i]+5); buf[2]=0;
-                config.colorkey.blue=MaxRGB*strtol(buf,NULL,16)/255;
+                config.colorkey.blue=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                 config.bg.blue=config.colorkey.blue;
                 config.bg.red=config.colorkey.red;
                 config.bg.green=config.colorkey.green;
@@ -188,11 +216,11 @@ int parse(int argc, char* argv[]) {
                 i++;
                 if (strncmp(argv[i],"#",1)==0) {
                     strcpy(buf,argv[i]+1); buf[2]=0;
-                    config.bg.red=MaxRGB*strtol(buf,NULL,16)/255;
+                    config.bg.red=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                     strcpy(buf,argv[i]+3); buf[2]=0;
-                    config.bg.green=MaxRGB*strtol(buf,NULL,16)/255;
+                    config.bg.green=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                     strcpy(buf,argv[i]+5); buf[2]=0;
-                    config.bg.blue=MaxRGB*strtol(buf,NULL,16)/255;
+                    config.bg.blue=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                     config.bg.opacity=0;
                 } else {
                     usage();
@@ -239,20 +267,106 @@ int parse(int argc, char* argv[]) {
         }
     }
     if (strcmp(config.data_file,"")==0) {
-        sprintf(config.data_file,"%s.dat",config.basename);
+        snprintf(config.data_file,16,"%s.dat",config.basename);
     }
-    sprintf(config.geom_file,"%s.txt",config.basename);
+    snprintf(config.geom_file,16,"%s.txt",config.basename);
 
     /* set colorkey in palette */
-    lvl_palette[0][red]   = config.colorkey.red*255/MaxRGB;
-    lvl_palette[0][green] = config.colorkey.green*255/MaxRGB;
-    lvl_palette[0][blue]  = config.colorkey.blue*255/MaxRGB;
-    lvl_palette[1][red]   = config.colorkey.red*255/MaxRGB;
-    lvl_palette[1][green] = config.colorkey.green*255/MaxRGB;
-    lvl_palette[1][blue]  = config.colorkey.blue*255/MaxRGB;
+    lvl_palette[0][red]   = (unsigned char)(config.colorkey.red*255/MaxRGB);
+    lvl_palette[0][green] = (unsigned char)(config.colorkey.green*255/MaxRGB);
+    lvl_palette[0][blue]  = (unsigned char)(config.colorkey.blue*255/MaxRGB);
+    lvl_palette[1][red]   = (unsigned char)(config.colorkey.red*255/MaxRGB);
+    lvl_palette[1][green] = (unsigned char)(config.colorkey.green*255/MaxRGB);
+    lvl_palette[1][blue]  = (unsigned char)(config.colorkey.blue*255/MaxRGB);
 
     return errno_ok;
 }
+
+void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
+    unsigned int i;
+    for (i=0; i< size; i++) {
+        if (lvlanims[i].geometry!=NULL) free(lvlanims[i].geometry);
+    }
+    free(lvlanims);
+}
+
+/* Parses the specified data file and stores the result (array of LVLAnim) in
+ * lvlanims. The return value is the size of the array (number of animations).
+ * Usage: anim_size=parseDataFile("image.dat",&lvlanims);
+ *
+ * Data file Format:
+ *
+ * -----------------
+ * LVLDATA
+ *
+ * start_offset size name
+ * ...
+ *
+ * -----------------
+ *
+ * start_offset is the image index off all images in the file
+ * size is the number of frames of the animation
+ * name is the unique name of the animation
+ *
+ */
+unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
+    const char data_id[]="LVLDATA";
+    unsigned int start_num, size, data_size=0;
+    char name[32], line[80];
+    int match=0;
+    unsigned int i=0;
+
+    FILE* data_file = fopen(data_file_name,"r");
+    *lvlanims=NULL;
+
+    if (data_file == NULL) {
+        printf("Data file %s not found!\n",data_file_name);
+        return 0;
+    }
+
+    if (!fgets(line,80,data_file) || strncmp(line,data_id,7)) {
+        printf("Data file %s is invalid!!\n",data_file_name);
+        fclose(data_file);
+        return 0;
+    }
+
+    /* get the number of entries */
+    while (fgets(line,80,data_file)) {
+        match=sscanf(line, "%u %u %s\n", &start_num, &size, name);
+        if (match==3) data_size++;
+    }
+    if (data_size==0) {
+        printf("Data file %s is invalid (no entries)!\n",data_file_name);
+        fclose(data_file);
+        return 0;
+    }
+    /* rewind to the beginning */
+    rewind(data_file);
+    (void)fgets(line,80,data_file);
+
+    /* allocate memory */
+    if ((*lvlanims=(LVLAnim*)malloc(data_size*sizeof(LVLAnim))) == NULL) {
+        printf("Memory allocation of LVLAnim* failed! Couldn't read data file %s!\n", data_file_name);
+        *lvlanims=NULL;
+        return 0;
+    }
+
+    i=0;
+    while (fgets(line,80,data_file)) {
+        match=sscanf(line, "%u %u %s\n", &start_num, &size, name);
+        if (match!=3) continue;
+        (*lvlanims)[i].start_num=start_num;
+        (*lvlanims)[i].size=size;
+        strncpy((*lvlanims)[i].name,name,32);
+
+        (*lvlanims)[i].geometry=NULL;
+        i++;
+    }
+
+    fclose(data_file);
+    return data_size;
+}
+
 
 /*
  * Create an ImageMagick image of size width x height
@@ -260,10 +374,10 @@ int parse(int argc, char* argv[]) {
  * image_info is an initialized ImageMagick ImageInfo* ptr
  * ptr is the pointer to the image data offset
  */
-Image* write_magick(unsigned char* ptr, ImageInfo* image_info, unsigned int width, unsigned int height) {
+Image* getFrame(unsigned char* ptr, ImageInfo* image_info, unsigned int width, unsigned int height) {
     Image* image;
-    unsigned int y;
-    register unsigned int x;
+    unsigned long int y;
+    register unsigned long int x;
     register PixelPacket *q;
     register unsigned char *p;
 
@@ -274,12 +388,12 @@ Image* write_magick(unsigned char* ptr, ImageInfo* image_info, unsigned int widt
 
     p=ptr;
     for (y=0; y < image->rows; y++) {
-        q=SetImagePixels(image,0,y,image->columns,1);
+        q=SetImagePixels(image,0,(long int)y,image->columns,1);
         if (q == (PixelPacket *) NULL) break;
         for (x=0; x < image->columns; x++) { 
-            q->red=MaxRGB*(lvl_palette[*p][red])/255;
-            q->green=MaxRGB*(lvl_palette[*p][green])/255;
-            q->blue=MaxRGB*(lvl_palette[*p][blue])/255; 
+            q->red=(Quantum)(MaxRGB*(lvl_palette[*p][red])/255);
+            q->green=(Quantum)(MaxRGB*(lvl_palette[*p][green])/255);
+            q->blue=(Quantum)(MaxRGB*(lvl_palette[*p][blue])/255); 
             p++;
             q++;
         }
@@ -288,21 +402,28 @@ Image* write_magick(unsigned char* ptr, ImageInfo* image_info, unsigned int widt
     return image;
 }
 
-
 int main(int argc, char *argv[]) {
     /* ImageMagick stuff */
-    Image* image_list=NULL;
+    Image *image_list=NULL, *anim_list=NULL;
     ImageInfo *image_info=NULL;
-    MontageInfo montage_info;
+    MontageInfo montage_info, montage_anim_info;
     ExceptionInfo exception;
-    Image *big_image, *tmp_img;
+    Image *big_image=NULL, *anim_image=NULL, *tmp_image=NULL;
+
+    /* temporary variables */
+    char buf[20];
+    struct stat sb;
+    unsigned int i,j,width,height,x_off=0,y_off=0,maxh=0;
+    int d_exception=0;
 
     const char entry_id[]="TRPS";
-    unsigned int data_size, num_entries, unknown=0;
-    FILE *lvl_file, *data_file, *unknown_file, *geom_file;
+    unsigned int data_size=0, tot_entries=0, num_entries=0, unknown=0;
+    FILE *lvl_file=NULL, *unknown_file=NULL, *geom_file=NULL;
+    LVLAnim* lvlanims=NULL;
+    unsigned int lvlanim_size=0;
 
     /* Initial start pointer to the beginning of the file */
-    unsigned char *data;
+    unsigned char *data=NULL;
     /* Temporary variable to indicate the last offset to start searching from:
      * Either after (1+) an invalid "T" or after the image of a valid "TRPS" */
     unsigned char *last_ptr;
@@ -311,45 +432,46 @@ int main(int argc, char *argv[]) {
     /* Iterates through all offsets at a "T" */
     unsigned char *off_ptr;
 
-    /* temporary variables */
-    char buf[20];
-    struct stat sb;
-    unsigned int i,width,height,x_off=0;
+    const unsigned int img_off_size_step=32;
+    unsigned int img_off_size=0;
+    unsigned char **img_offsets=NULL;
+    unsigned char **tmp=NULL;
 
     /* -------------------------------------------------------------------- */
 
     /* parse command line options and set config */
-    i=parse(argc,argv);
+    errno=parse(argc,argv);
 
-    if (i==errno_quit) return errno_ok;
-    else if (i==errno_parse) return errno_parse;
-    else if (i!=errno_ok) return i;
+    if (errno==errno_quit)
+        EXIT(errno_ok)
+    else if (errno==errno_parse)
+        EXIT(errno_parse)
+    else if (errno!=errno_ok)
+        EXIT(errno)
 
     /* Check lvl_file */
     lvl_file = fopen(config.lvl_file,"r");
 
     if (lvl_file == NULL) {
         printf("Error opening file\n");
-        return errno_open;
+        EXIT(errno_open)
     }
 
-    fread(buf,1,12,lvl_file);
+    (void)fread(buf,1,12,lvl_file);
 
     if ((buf[0] != 'D') && (buf[1] != 'A') &&
       (buf[2] != 'T') && (buf[3] != 'A')) {
         printf("Invalid file\n");
         fclose(lvl_file);
-        return errno_invalid;
+        EXIT(errno_invalid)
     }
 
     /* get file size */
     fstat(fileno(lvl_file), &sb);
-    data_size = sb.st_size;
+    data_size = (unsigned int)(sb.st_size);
 
     /* Check data_file */
-    data_file = fopen(config.data_file,"r");
-
-    if (data_file == NULL) printf("No data file %s found!\n",config.data_file);
+    lvlanim_size=parseDataFile(config.data_file, &lvlanims);
 
     /* Change to the base directory */
     mkdir(config.basename, 0777);
@@ -361,69 +483,44 @@ int main(int argc, char *argv[]) {
     geom_file = fopen(buf,"w");
     geom_file = freopen(buf,"a",geom_file);
 
-    /* ImageMagick stuff */
-    image_list=NewImageList(); 
-    image_info=CloneImageInfo((ImageInfo *) NULL);
-    image_info->colorspace = RGBColorspace;
-
     /* Map the entire file into process memory space */
-    data = mmap(NULL, data_size, PROT_READ, MAP_PRIVATE, fileno(lvl_file), 0);
+    if ((data = mmap(NULL, data_size, PROT_READ, MAP_PRIVATE, fileno(lvl_file), 0)) == MAP_FAILED) {
+        printf("ERROR: Unable to mmap the file content!\n");
+        EXIT(errno_alloc)
+    }
 
     /* Iterate through all image data offsets to get the number of entries and the
      * size of the unknown chunk */
-    num_entries=0;
+    tot_entries=0;
     last_ptr=data;
     save_ptr=data;
-    while (off_ptr=(unsigned char*)memchr(last_ptr,'T',(data_size-(last_ptr-data)))) {
+    while (!((off_ptr=(unsigned char*)memchr(last_ptr,'T',(data_size-(last_ptr-data)))) == NULL)) {
         unknown+=(off_ptr-last_ptr);
         if (!strncmp((char*)off_ptr,entry_id,4)) {
-            num_entries++;
-            width=*((unsigned int *)(off_ptr+4));
-            height=*((unsigned int *)(off_ptr+8));
-            last_ptr=off_ptr+12+width*height;
-            save_ptr=last_ptr;
-        } else {
-            last_ptr=off_ptr+1;
-        }
-    }
-
-    unsigned short geometry[num_entries][4];
-
-    /* Iterate through all image data offsets */
-    i=0;
-    last_ptr=data;
-    save_ptr=data;
-    while (off_ptr=(unsigned char*)memchr(last_ptr,'T',(data_size-(last_ptr-data)))) {
-        unknown+=(off_ptr-last_ptr);
-        if (!strncmp((char*)off_ptr,entry_id,4)) {
-            i++;
+            /* Create an image offset table */
+            if (img_off_size<=tot_entries) {
+                if ((tmp = realloc(img_offsets, sizeof(unsigned char*) * (img_off_size += img_off_size_step))) == NULL) {
+                    printf("ERROR: Realloc failed (img_offsets)!\n");
+                    free(img_offsets);
+                    EXIT(errno_alloc)
+                }
+                img_offsets = tmp;
+            }
+            img_offsets[tot_entries]=off_ptr;
+            tot_entries++;
             /*
              * Write unknown content (up to this image position (off_ptr)) to a file.
              * If the file size would be 0, skip it.
              */
             if (config.debug && (off_ptr-save_ptr > 0)) {
-                snprintf(buf, 16, "%08d.bin", i);
+                snprintf(buf, 16, "%08u.bin", unknown);
                 unknown_file = fopen(buf, "wb");
-                fwrite(save_ptr,1,(off_ptr-save_ptr),unknown_file);
+                (void)fwrite(save_ptr,1,(size_t)(off_ptr-save_ptr),unknown_file);
                 fclose(unknown_file);
             }
-
-            /* --== Parse header ==-- */
+            /* skip the image */
             width=*((unsigned int *)(off_ptr+4));
             height=*((unsigned int *)(off_ptr+8));
-            geometry[i-1][img_x]=x_off;
-            geometry[i-1][img_y]=0;
-            geometry[i-1][img_w]=width;
-            geometry[i-1][img_h]=height;
-            x_off+=width;
-
-            /* update last_ptr, get the image and append it to the list */
-            tmp_img=write_magick(off_ptr+12,image_info,width,height);
-            snprintf(buf,16,"%08d.%s",i,config.format);
-            strcpy(tmp_img->filename,buf);
-            AppendImageToList(&image_list,tmp_img);
-
-            /* update pointers */
             last_ptr=off_ptr+12+width*height;
             save_ptr=last_ptr;
         } else {
@@ -431,45 +528,159 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /* Montage the image and save it */
-    GetMontageInfo(image_info,&montage_info);
-    GetExceptionInfo(&exception);
-    montage_info.tile="3000x1";
-    montage_info.geometry="+0+0";
-    montage_info.background_color=config.bg;
-    montage_info.matte_color=config.colorkey;
-    montage_info.gravity=NorthWestGravity;
+    if (lvlanims==NULL) {
+        if ( (lvlanims=(LVLAnim*)malloc(sizeof(LVLAnim))) == NULL) {
+            printf("Memory allocation of LVLAnim* failed!\n");
+            lvlanims=NULL;
+            EXIT(errno_alloc)
+        } else {
+            lvlanims->start_num=0;
+            lvlanims->size=tot_entries;
+            strncpy(lvlanims->name,config.basename,32);
+            lvlanims->geometry=NULL;
+        }
+        lvlanim_size=1;
+    }
+    if (lvlanim_size<=1) config.write&=~2;
 
-    big_image=MontageImages(image_list,&montage_info,&exception);
-    big_image->matte_color=config.colorkey;
+    /* ImageMagick: global stuff */
+    if (config.write!=0) {
+        image_info=CloneImageInfo((ImageInfo *) NULL);
+        image_info->colorspace = RGBColorspace;
+        image_list=NewImageList();
+        GetExceptionInfo(&exception);
+        d_exception=1;
+        GetMontageInfo(image_info,&montage_info);
+        montage_info.tile="1x3000";
+        montage_info.geometry="+0+0";
+        montage_info.background_color=config.bg;
+        montage_info.matte_color=config.colorkey;
+        montage_info.gravity=NorthWestGravity;
+        GetMontageInfo(image_info,&montage_anim_info);
+        montage_anim_info.tile="3000x1";
+        montage_anim_info.geometry="+0+0";
+        montage_anim_info.background_color=config.bg;
+        montage_anim_info.matte_color=config.colorkey;
+        montage_anim_info.gravity=NorthWestGravity;
+    }
+    y_off=0;
 
-    snprintf(buf, 16, "%s.%s",config.basename,config.format);
-    strcpy(big_image->filename,buf);
-    WriteImage(image_info,big_image);
-    DestroyImage(big_image);
+    /* Main loop: Process each animation */
+    for (i=0; i<lvlanim_size; i++) {
+        if ( (lvlanims[i].geometry=(Rectangle*)malloc(lvlanims[i].size*sizeof(Rectangle))) == NULL ) {
+            printf("Memory allocation of geometry entry %u failed!\n",i);
+            EXIT(errno_alloc)
+        }
+        x_off=0;
+        maxh=0;
 
-    /* Create geom_file */
-    fprintf(geom_file,"%d\n",num_entries);
-    for (i=0; i<num_entries;i++) {
-        fprintf(geom_file,"%d %d %d %d\n",geometry[i][0],geometry[i][1],geometry[i][2],geometry[i][3]);
+        /* Process each frame of the current animation */
+        for (j=lvlanims[i].start_num; j<(lvlanims[i].start_num+lvlanims[i].size); j++) {
+            if (j>=tot_entries) {
+                printf("Illegal animation data file (image number %u does not exist)!\n",j);
+                break;
+            }
+            /* --== Parse header ==-- */
+            width=*((unsigned int *)(img_offsets[j]+4));
+            height=*((unsigned int *)(img_offsets[j]+8));
+            if (height>maxh) maxh=height;
+
+            lvlanims[i].geometry[j-lvlanims[i].start_num].x=x_off;
+            lvlanims[i].geometry[j-lvlanims[i].start_num].y=y_off;
+            lvlanims[i].geometry[j-lvlanims[i].start_num].w=width;
+            lvlanims[i].geometry[j-lvlanims[i].start_num].h=height;
+
+            if (width*height>0) num_entries++;
+
+            /* get the frame and append it to the animation image list */
+            if (config.write!=0) {
+                tmp_image=getFrame(img_offsets[j]+12,image_info,width,height);
+                if (config.write&4) {
+                    snprintf(buf, 32, "%s_%04u.%s",lvlanims[i].name,(j-lvlanims[i].start_num)+1,config.format);
+                    strcpy(tmp_image->filename,buf);
+                    (void)WriteImage(image_info,tmp_image);
+                }
+                AppendImageToList(&anim_list,tmp_image);
+            }
+
+            x_off+=width;
+        }
+
+        /* Montage the image and append it to the big image list */
+        if (config.write!=0) {
+            if (anim_list!=(Image *) ((void *)0)) {
+                anim_image=MontageImages(anim_list,&montage_anim_info,&exception);
+                anim_image->matte_color=config.colorkey;
+
+                DestroyImageList(anim_list);
+                anim_list=NULL;
+                if (config.write&2) {
+                    snprintf(buf, 32, "%s.%s",lvlanims[i].name,config.format);
+                    strcpy(anim_image->filename,buf);
+                    (void)WriteImage(image_info,anim_image);
+                }
+                AppendImageToList(&image_list,anim_image);
+            } else {
+                printf("Empty animation: %s!\n",lvlanims[i].name);
+            }
+        }
+        y_off+=maxh;
+    }
+
+    /* Create a big image (montage) using the big image list */
+    if (config.write!=0) {
+        big_image=MontageImages(image_list,&montage_info,&exception);
+        big_image->matte_color=config.colorkey;
+        DestroyImageList(image_list);
+        image_list=NULL;
+
+        if (config.write&1) {
+            snprintf(buf, 16, "%s.%s",config.basename,config.format);
+            strcpy(big_image->filename,buf);
+            (void)WriteImage(image_info,big_image);
+        }
+        DestroyImage(big_image);
+        big_image=NULL;
+    }
+
+    /* Create the geometry file */
+    fprintf(geom_file,"LVLGEOM\n");
+    fprintf(geom_file,"Size %u %u\n\n",lvlanim_size,num_entries);
+    for (i=0; i<lvlanim_size; i++) {
+        fprintf(geom_file,"%s %u {\n",lvlanims[i].name,lvlanims[i].size);
+        for (j=0; j<lvlanims[i].size; j++) {
+            fprintf(geom_file,"  %5u %5u %5u %5u\n",lvlanims[i].geometry[j].x,lvlanims[i].geometry[j].y,lvlanims[i].geometry[j].w,lvlanims[i].geometry[j].h);
+        }
+        fprintf(geom_file,"}\n\n");
     }
 
     /* Summary */
-    printf("Contains %d extracted images, unknown content: %d bytes\n",num_entries,unknown);
+    printf("%s/ Contains: ",config.basename);
+    if (config.write&1) printf("1 big animation composition image, ");
+    if (config.write&2) printf("%u extracted animation images, ", lvlanim_size);
+    if (config.write&4) printf("%u extracted frame images, ", num_entries);
+    if (config.debug)   printf("unknown chunk files, ");
+    printf("1 geometry files\n");
+    printf("Total images: %u, Extracted images: %u, Unknown content: %u bytes\n",tot_entries,num_entries,unknown);
 
-    /* Cleanup */
-/*
-    DestroyMontageInfo(&montage_info);
-*/
-    DestroyImageList(image_list);
-    DestroyImageInfo(image_info);
-    DestroyExceptionInfo(&exception);
-    DestroyMagick();
+    end:
+/*    DestroyMontageInfo(&montage_info);
+ *    DestroyMontageInfo(&montage_anim_info);
+ */
+    if (config.write!=0) {
+        if (anim_list)   DestroyImageList(anim_list);
+        if (image_list)  DestroyImageList(image_list);
+        if (big_image)   DestroyImage(big_image);
+        if (image_info)  DestroyImageInfo(image_info);
+        if (d_exception) DestroyExceptionInfo(&exception);
+    }
+                         DestroyMagick();
 
-    munmap(data, data_size);
+    if (data)            munmap(data, data_size);
+                         free(img_offsets);
+    if (lvlanims)        freeLVLAnimList(lvlanims,lvlanim_size);
     if (lvl_file!=NULL)  fclose(lvl_file);
     if (geom_file!=NULL) fclose(geom_file);
-    if (data_file!=NULL) fclose(data_file);
 
-    return errno_ok;
+    return errno;
 }
