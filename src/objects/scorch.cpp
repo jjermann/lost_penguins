@@ -11,23 +11,27 @@ Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   left_wings(SCORCH_MAX_WINGS),
   wing(V_FLY) {
-    im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
-    im_right=im_left;
-    im_run_left=im_left;
-    im_run_right=im_right;
+    im_left=new Animation(imgcache->loadImage("baleog_left.bmp"));
+    im_right=new Animation(imgcache->loadImage("baleog_right.bmp"));
+    im_run_left=new Animation(imgcache->loadImage("baleog-run_left.png"),8,1000);
+    im_run_right=new Animation(imgcache->loadImage("baleog-run_right.png"),8,1000);
     im_fall_left=im_left;
     im_fall_right=im_left;
     im_krit_left=im_left;
     im_krit_right=im_left;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
-    im_land_right=im_land_left;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(imgcache->loadImage("olaf_land_right.bmp"),1,T_IRR,true);
     au_swing=sndcache->loadWAV("flapwngs.wav");
     au_tired=sndcache->loadWAV("flwings.wav");
     au_hit=sndcache->loadWAV("draghit.wav");
 }
 Scorch::~Scorch() {
     delete im_left;
+    delete im_right;
+    delete im_run_left;
+    delete im_run_right;
     delete im_land_left;
+    delete im_land_right;
 }
 
 void Scorch::fall(Uint16 dt) {

@@ -9,16 +9,16 @@
 
 Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname) {
-    im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
-    im_right=im_left;
-    im_run_right=new Animation(imgcache->loadImage("baleog-run.png"),8,1000);
-    im_run_left=im_left;
+    im_left=new Animation(imgcache->loadImage("baleog_left.bmp"));
+    im_right=new Animation(imgcache->loadImage("baleog_right.bmp"));
+    im_run_left=new Animation(imgcache->loadImage("baleog-run_left.png"),8,1000);
+    im_run_right=new Animation(imgcache->loadImage("baleog-run_right.png"),8,1000);
     im_fall_left=im_left;
     im_fall_right=im_left;
     im_krit_left=im_left;
     im_krit_right=im_left;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
-    im_land_right=im_land_left;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(imgcache->loadImage("olaf_land_right.bmp"),1,T_IRR,true);
     weapon=Weapon(-1,W_STRIKE);
     im_sword_left=new Animation(60,imgcache->loadImage("kuru.bmp"),12,500,true);
     im_sword_right=im_sword_left;
@@ -27,8 +27,11 @@ Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 
 Baleog::~Baleog() {
     delete im_left;
+    delete im_right;
+    delete im_run_left;
     delete im_run_right;
     delete im_land_left;
+    delete im_land_right;
     delete im_sword_left;
 }
 

@@ -16,15 +16,15 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);
     im_left=new Animation(imgcache->loadImage("erik_left.bmp"));
-    im_right=new Animation(60,imgcache->loadImage("kuru.bmp"),12,1000);
+    im_right=new Animation(imgcache->loadImage("erik_right.bmp"));
     im_run_right=im_right;
     im_run_left=im_left;
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
-    im_land_right=im_land_left;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(imgcache->loadImage("olaf_land_right.bmp"),1,T_IRR,true);
     au_jump=sndcache->loadWAV("rboots.wav");
     au_hit=sndcache->loadWAV("erikhit.wav");
     au_run=NULL;
@@ -33,6 +33,7 @@ Erik::~Erik() {
     delete im_left;
     delete im_right;
     delete im_land_left;
+    delete im_land_right;
 }
 
 void Erik::in_sp1(Sint16 dt) {

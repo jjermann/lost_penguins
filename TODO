@@ -11,10 +11,19 @@ Code
      o pointers => references where possible
      o Describe everything using Doxygen styles, move the documentation from
       *.cpp to the headers...
+     o Idea: _all_ objects should have a "kore" like the players (curpos thing)
+       This would help in many ways and should be a frame information and not an
+       image as done for players atm!
 
  o Fall/push/crash/collisions:
      o the character should have more information what he hits
      o movements into dense objects should involve a push()
+     o I have no idea about how the push should look like, elevators can be pushed
+       up, even though you don't collide with them on top
+     o characters should be "pushable", eg. a stone that falls down pushes the
+       character down or better: an elevator should push the characters up
+     o In case of the elevator, the players are somehow "bound" to the elevator (ie.
+       it's not like: the elevator moves, the character falls, but they move together)
      o the collision detection and the move/fall code is all a big mess
 
  o Animations/Events:
@@ -26,6 +35,8 @@ Code
         - store rects in an array/vector/whatever or use offset matrices
         - do some column/row logics to easy the access
         - eg. set offsets for left, right, mleft, mright...
+        - IDEA: just store one side and add some flipping logic to the image
+          loading process...
      o IDEA: change Animation* pointers to Animation (or references), leave only
        animation as a pointer and get the address each time...
      o introduce animation events that play an animation and end when it's

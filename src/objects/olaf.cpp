@@ -13,14 +13,14 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   fart(V_FART) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
-    im_run_right=new Animation(imgcache->loadImage("olaf-run.png"),8,1000);
-    im_run_left=im_left;
+    im_run_left=new Animation(imgcache->loadImage("olaf-run_left.png"),8,1000);
+    im_run_right=new Animation(imgcache->loadImage("olaf-run_right.png"),8,1000);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(imgcache->loadImage("olaf_land.bmp"),1,T_IRR,true);
-    im_land_right=im_land_left;
+    im_land_left=new Animation(imgcache->loadImage("olaf_land_left.bmp"),1,T_IRR,true);
+    im_land_right=new Animation(imgcache->loadImage("olaf_land_right.bmp"),1,T_IRR,true);
 
     im_small_left=new Animation(imgcache->loadImage("gun.bmp"),9,1000);
     im_small_right=im_small_left;
@@ -41,8 +41,10 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 Olaf::~Olaf() {
     delete im_left;
     delete im_right;
+    delete im_run_left;
     delete im_run_right;
     delete im_land_left;
+    delete im_land_right;
     delete im_small_left;
     delete im_shield_right;
     delete im_shield_left;
