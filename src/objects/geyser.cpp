@@ -21,11 +21,11 @@ void Geyser::idle(Uint16 dt) {
     if (Deffect>T_GEYSIR) {
         Deffect=0;
         sfxeng->playWAV(au_geyser);
-        std::set<Player *> players=curmap->getPlayersIn(pos,true);
-        std::set<Player *>::iterator plit=players.begin();
-        while (plit!=players.end()) {
-            (*plit)->addSpeed(aspeed);
-            ++plit;
+        std::set<Character *> characters=curmap->getCharactersIn(OTYPE_PLAYER,pos,true);
+        std::set<Character *>::iterator chrit=characters.begin();
+        while (chrit!=characters.end()) {
+            (*chrit)->addSpeed(aspeed);
+            ++chrit;
         }
     }
 }

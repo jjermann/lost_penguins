@@ -19,7 +19,7 @@ Door::~Door() { }
 bool Door::act(Object* obj) {
     //sanity check
     if (!(obj && obj->getName()==key)) return false;
-    if (!(curmap->getCharactersIn(pos,true).empty())) return false;
+    if (!(curmap->getCharactersIn(OTYPE_PLAYER|OTYPE_MONSTER,pos,true).empty())) return false;
 
     //switch state
     if (open) {

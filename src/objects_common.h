@@ -63,7 +63,7 @@ class Object {
         }
         //is the Object in the rectangle rect
         //touch: a touch (partially entered) is enough
-        bool isIn(const SDL_Rect& rect, bool touch=false, Uint16 radius=0);
+        bool isIn(const SDL_Rect& rect, bool touch=false);
         //uper-left
         SDL_Rect* getPos() {
             return &pos;

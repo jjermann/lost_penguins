@@ -136,22 +136,29 @@ Hit Map::checkPlace(const SDL_Rect& src, const SDL_Rect& dest) const {
 }
 
 
-std::set<Character *> Map::getCharactersIn(const SDL_Rect& rect, bool touch, Uint16 radius) const {
+std::set<Character *> Map::getCharactersIn(Uint16 mask, const SDL_Rect& rect, bool touch, Uint16 distance, Uint16 dir) const {
+    SDL_Rect tmprect=rect;
+    if (dir&DIR_LEFT) {
+        tmprect.x-=distance;
+        tmprect.w+=distance;
+    }
+    if (dir&DIR_RIGHT) {
+        tmprect.x+=distance;
+        tmprect.w+=distance;
+    }
+    if (dir&DIR_UP) {
+        tmprect.y-=distance;
+        tmprect.h+=distance;
+    }
+    if (dir&DIR_DOWN) {
+        tmprect.y+=distance;
+        tmprect.h+=distance;
+    }
     std::set<Character *> tmpset;
     character_iterator cit=pool->characterspool.begin();
     while (cit != pool->characterspool.end()) {
-        if ((*cit)->isIn(rect,touch,radius)) tmpset.insert(*cit);
+        if ((((*cit)->getType())&mask) && ((*cit)->isIn(tmprect,touch))) tmpset.insert(*cit);
         ++cit;
-    }
-    return tmpset;
-}
-
-std::set<Player *> Map::getPlayersIn(const SDL_Rect& rect, bool touch, Uint16 radius) const {
-    std::set<Player *> tmpset;
-    player_iterator plit=pool->playerspool.begin();
-    while (plit != pool->playerspool.end()) {
-        if ((*plit)->isIn(rect,touch,radius)) tmpset.insert(*plit);
-        ++plit;
     }
     return tmpset;
 }

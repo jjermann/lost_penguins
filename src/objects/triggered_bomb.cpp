@@ -11,6 +11,7 @@ TriggeredBomb::TriggeredBomb(string imagename, Sint16 xcord, Sint16 ycord, Uint1
   countdown(tleft),
   au_bomb(sndcache->loadWAV("explsn.wav")) {
     weapon=Weapon(-1,W_EXPLOSION);
+    enemy_types|=(OTYPE_PLAYER|OTYPE_MONSTER);
 }
 TriggeredBomb::~TriggeredBomb() { }
 
@@ -19,7 +20,7 @@ void TriggeredBomb::idle(Uint16 dt) {
     if (countdown<=0) {
         cout << "Booom!\n";
         sfxeng->playWAV(au_bomb);
-        std::set<Character *> cset=curmap->getCharactersIn(pos,true,20);
+        std::set<Character *> cset=curmap->getCharactersIn(enemy_types,pos,true,20);
         character_iterator cit=cset.begin();
         while (cit!=cset.end()) {
             (*cit)->hit(curmap->getDirection(pos,*(*cit)->getPos()),weapon);

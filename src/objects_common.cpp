@@ -29,14 +29,14 @@ Object::~Object() {
     if (!(otype&OTYPE_CHARACTER)) delete animation;
 }
 
-bool Object::isIn(const SDL_Rect& rect, bool touch, Uint16 radius) {
-    SDL_Rect center=getCenter();
+bool Object::isIn(const SDL_Rect& rect, bool touch) {
     if (touch) {
-    if ((pos.x+pos.w+radius) > rect.x && pos.x < (rect.x+rect.w+radius) && (pos.y+pos.h+radius) > rect.y && pos.y < (rect.y+rect.h+radius)) return true;
-    else return false;
+        if ((pos.x+pos.w) > rect.x && pos.x < (rect.x+rect.w) && (pos.y+pos.h) > rect.y && pos.y < (rect.y+rect.h)) return true;
+        else return false;
     } else {
-    if ((center.x+radius)>rect.x && center.x<(rect.x+rect.w+radius) && (center.y+radius)>rect.y && center.y<(rect.y+rect.h+radius)) return true;
-    else return false;
+        SDL_Rect center=getCenter();
+        if (center.x>rect.x && center.x<(rect.x+rect.w) && center.y>rect.y && center.y<(rect.y+rect.h)) return true;
+        else return false;
     }
 }
 

@@ -6,8 +6,7 @@ class Map {
         Map(string mapname);
         ~Map();
         Hit checkPlace(const SDL_Rect& src, const SDL_Rect& dest) const;
-        std::set<Character *> getCharactersIn(const SDL_Rect& rect, bool touch=false, Uint16 radius=0) const;
-        std::set<Player *> getPlayersIn(const SDL_Rect& rect, bool touch=false, Uint16 radius=0) const;
+        std::set<Character *> getCharactersIn(Uint16 mask, const SDL_Rect& rect, bool touch=false, Uint16 radius=0, Uint16 dir=DIR_ALL) const;
         Uint16 getDirection(const SDL_Rect& src, const SDL_Rect& dest) const;
     private:
         //map loading
