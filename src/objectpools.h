@@ -1,5 +1,5 @@
 #ifndef _OBJECTPOOLS_H
-#define _OBJECTPOOLS_H
+#define _OBJECTPOOLS_H 1
 
 class ObjectsPool {
     public:

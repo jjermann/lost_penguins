@@ -1,5 +1,5 @@
 #ifndef _PLAYERS_COMMON_H
-#define _PLAYERS_COMMON_H
+#define _PLAYERS_COMMON_H 1
 
 #include "characters_common.h"
 

@@ -1,5 +1,5 @@
 #ifndef _OBJECTS_COMMON_H
-#define _OBJECTS_COMMON_H
+#define _OBJECTS_COMMON_H 1
 
 //Object types
 #define OTYPE_DENSE_R   0x00000001

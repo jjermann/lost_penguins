@@ -1,5 +1,5 @@
 #ifndef _MAP_H
-#define _MAP_H
+#define _MAP_H 1
 
 class Map {
     public:

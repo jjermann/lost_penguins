@@ -1,5 +1,5 @@
 #ifndef _ANIM_H
-#define _ANIM_H
+#define _ANIM_H 1
 
 //Animation format: a horizontal strip (image) with (num) frames
 //Eventually change this to a matrix of frames: each row a different animation

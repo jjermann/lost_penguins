@@ -1,5 +1,5 @@
 #ifndef _SOUNDSENGINE_H
-#define _SOUNDSENGINE_H
+#define _SOUNDSENGINE_H 1
 
 class SoundsEngine {
     public:

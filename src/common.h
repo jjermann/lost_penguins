@@ -1,5 +1,5 @@
 #ifndef _COMMON_H
-#define _COMMON_H
+#define _COMMON_H 1
 
 #include <iostream>
 #include <fstream>

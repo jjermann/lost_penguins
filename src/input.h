@@ -1,5 +1,5 @@
 #ifndef _INPUT_H
-#define _INPUT_H
+#define _INPUT_H 1
 
 //Input events
 #define INPUT_LEFT      0x00000001

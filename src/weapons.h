@@ -1,5 +1,5 @@
 #ifndef _WEAPONS_H
-#define _WEAPONS_H
+#define _WEAPONS_H 1
 
 //normal hit
 #define W_STRIKE         0x00000001

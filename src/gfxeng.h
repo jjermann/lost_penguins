@@ -1,5 +1,5 @@
 #ifndef _GFXENG_H
-#define _GFXENG_H
+#define _GFXENG_H 1
 
 #define BAR_HEIGHT      138
 #define ICON_SIZE       46
@@ -11,6 +11,7 @@ class GraphicsEngine {
         //drawing
         void renderScene(bool insist=true);
         void togglePlayerBar();
+        void toggleFPS();
     private:
         inline SDL_Rect clipToBG(SDL_Rect dest) const;
         //updates backpos and returns the new shift vector (ignore w,h)

@@ -1,5 +1,5 @@
 #ifndef _MONSTERS_COMMON_H
-#define _MONSTERS_COMMON_H
+#define _MONSTERS_COMMON_H 1
 
 #include "characters_common.h"
 

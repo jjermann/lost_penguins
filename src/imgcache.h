@@ -1,5 +1,5 @@
 #ifndef _IMGCACHE_H
-#define _IMGCACHE_H
+#define _IMGCACHE_H 1
 
 class ImageCache {
     public:

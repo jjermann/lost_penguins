@@ -1,5 +1,5 @@
 #ifndef _SOUNDCACHE_H
-#define _SOUNDCACHE_H
+#define _SOUNDCACHE_H 1
 
 class SoundCache {
     public:
