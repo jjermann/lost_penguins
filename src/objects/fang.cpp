@@ -55,7 +55,7 @@ void Fang::fall(Uint16 dt) {
             if (!(hit.touch&DIR_LEFT)) unsetState(STATE_CLIMB_L);
             if (!(hit.touch&DIR_RIGHT)) unsetState(STATE_CLIMB_R);
         }
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
+        if ((hit.enter&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }

@@ -167,7 +167,7 @@ void Olaf::fall(Uint16 dt) {
             if ((state&STATE_SHIELD) && (speed > V_SHIELD)) setSpeed(V_SHIELD);
         }
         Hit hit=move(Dgrav);
-        if ((hit.enter&DIR_DOWN || hit.touch&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
+        if ((hit.enter&DIR_DOWN) && (state&STATE_FALL)) crash(DIR_DOWN);
         Dgrav=0;
     }
 }

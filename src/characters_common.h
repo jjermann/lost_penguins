@@ -107,6 +107,8 @@ class Character : public Object {
         }
         //Define these for each character, the base function must be run for all derived classes
         virtual void idle(Uint16);
+        /// Calculates the speed of the character
+        /// \todo clean up this mess with fall/move
         virtual void fall(Uint16);
         //when it dies...
         virtual void die();
@@ -149,7 +151,8 @@ class Character : public Object {
         //@}
         //crash into another object (default: ground)
         virtual void crash(Uint16 dir=DIR_DOWN);
-        //move
+        /// Updates the position of the character depending on it's velocity, checks for crashes
+        /// \todo clean up this mess with move and fall
         virtual Hit move(Uint16 dt, bool check=false);
         Uint8 health;
         Uint8 maxhealth;
