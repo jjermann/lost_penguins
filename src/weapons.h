@@ -20,7 +20,8 @@
 #define WS_FIRE          0x00000004
 #define WS_WATER         0x00000008
 #define WS_PRESSURE      0x00000010
-#define WS_HEAL          0x00000020
+#define WS_SPIKE         0x00000020
+#define WS_HEAL          0x00000040
 
 #define TSTRIKE          600
 

@@ -5,24 +5,26 @@
 #include "objectpools.h"
 //HACK!!!!!!
 #include "monsters_common.h"
-#include "objects/baleog.h"
 #include "objects/bomb.h"
 #include "objects/door.h"
-#include "objects/eric.h"
 #include "objects/exit.h"
-#include "objects/fang.h"
 #include "objects/geyser.h"
 #include "objects/heart.h"
 #include "objects/key.h"
-#include "objects/olaf.h"
-#include "objects/scorch.h"
 #include "objects/teleport.h"
 #include "objects/trigger.h"
-#include "objects/triggered_bomb.h"
-#include "objects/plant.h"
 #include "objects/wall.h"
 #include "objects/water.h"
 #include "objects/wind.h"
+#include "objects/spike.h"
+//Characters
+#include "objects/triggered_bomb.h"
+#include "objects/plant.h"
+#include "objects/baleog.h"
+#include "objects/eric.h"
+#include "objects/olaf.h"
+#include "objects/scorch.h"
+#include "objects/fang.h"
 #include "objects/zombie.h"
 
 
@@ -39,7 +41,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sin
     string name=obj;
     if (arg1!="0") {
         //one additional parameter
-        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Plant" || name=="Geyser" || name=="Wind") {
+        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Plant" || name=="Geyser" || name=="Wind" || name=="Spike") {
             if (arg2!="0") name=arg2;
         //two additional parameter
         } else if (name=="Teleporter") {
@@ -58,6 +60,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sin
     else if (obj=="Geyser")  return (addObject(new Geyser(image,x,y,atoi(arg1.c_str()),name)));
     else if (obj=="Trigger") return (addObject(new Trigger(image,x,y,arg1,name,arg3)));
     else if (obj=="Door")    return (addObject(new Door(image,x,y,arg1,name)));
+    else if (obj=="Spike")   return (addObject(new Spike(image,x,y,atoi(arg1.c_str()),name)));
     //Items
     else if (obj=="Heart")   return (addObject(new Heart(image,x,y,name)));
     else if (obj=="Key")     return (addObject(new Key(image,x,y,name)));

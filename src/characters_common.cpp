@@ -169,7 +169,7 @@ Uint8 Character::setHealth(Uint8 newhealth) {
 Uint8 Character::addHealth(Sint8 dhealth) {
     if (health==0) return 0;
     if ((health+dhealth)>=0) return setHealth(health+dhealth);
-    else return health;
+    else return setHealth(0);
 }
 
 inline Hit Character::checkHit(const SDL_Rect& dest, Object* destobj, bool tele) const {

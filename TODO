@@ -8,9 +8,14 @@ Code
 ====
 
  o General:
-    o pointers => references where possible
-    o Describe everything using Doxygen styles, move the documentation from
+     o pointers => references where possible
+     o Describe everything using Doxygen styles, move the documentation from
       *.cpp to the headers...
+
+ o Fall/push/crash/collisions:
+     o the character should have more information what he hits
+     o movements into dense objects should involve a push()
+     o the collision detection and the move/fall code is all a big mess
 
  o Animations/Events:
      o Make all events quite short, ie. almost all events become animation

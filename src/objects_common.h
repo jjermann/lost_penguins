@@ -2,6 +2,7 @@
 #define _OBJECTS_COMMON_H 1
 
 //Object types
+//dense types are the same as directions (that fact is beeing used)
 #define OTYPE_DENSE_R   0x00000001
 #define OTYPE_DENSE_L   0x00000002
 #define OTYPE_DENSE_U   0x00000004

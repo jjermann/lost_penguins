@@ -9,7 +9,7 @@ AR = ar
 
 OBJS  = baleog.o bomb.o door.o eric.o exit.o fang.o geyser.o heart.o\
         key.o olaf.o scorch.o teleport.o trigger.o triggered_bomb.o\
-        wall.o water.o wind.o zombie.o plant.o
+        wall.o water.o wind.o zombie.o plant.o spike.o
 PLUGS = ../objects.a
 
 
