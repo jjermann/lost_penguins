@@ -50,6 +50,8 @@ typedef struct {
 typedef struct {
     /* create unknown.bin chunk files if != 0 */
     int debug;
+    /* start index (for the frame names) */
+    unsigned int start_index;
     /* Write the individial animations */
     int write;
     /* input lvl file */
@@ -150,6 +152,7 @@ void usage() {
     printf("Options:\n");
     printf("  -h, --help             Print this help message\n\n");
     printf("  -debug                 Create additional debug files (default: off)\n\n");
+    printf("  -start_index <n>       Start index of the frame image names (default: 0)\n\n");
     printf("  -write <0-7>           n=0: Just create the geometry data (no images)\n");
     printf("                         n=1: Create one big image with all animations in it\n");
     printf("                         n=2: Create one image for each animation\n");
@@ -174,6 +177,7 @@ int parse(int argc, char* argv[]) {
     strncpy(config.basename,"",16);
     strncpy(config.format,"png",4);
     config.debug=0;
+    config.start_index=0;
     config.write=3;
     config.colorkey.red=MaxRGB;
     config.colorkey.green=0;
@@ -192,6 +196,10 @@ int parse(int argc, char* argv[]) {
                 return errno_quit;
             } else if (strcmp(argv[i],"-debug")==0) {
                 config.debug=1;
+            } else if (strcmp(argv[i],"-start_index")==0) {
+                i++;
+                if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
+                config.start_index=(unsigned int)atoi(argv[i]);
             } else if (strcmp(argv[i],"-write")==0) {
                 i++;
                 if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
@@ -594,7 +602,7 @@ int main(int argc, char *argv[]) {
             if (config.write!=0) {
                 tmp_image=getFrame(img_offsets[j]+12,image_info,width,height);
                 if (config.write&4) {
-                    snprintf(buf, 80, "%s_%04u.%s",lvlanims[i].name,(j-lvlanims[i].start_num)+1,config.format);
+                    snprintf(buf, 80, "%s_%04u.%s",lvlanims[i].name,(j-lvlanims[i].start_num)+config.start_index,config.format);
                     strcpy(tmp_image->filename,buf);
                     (void)WriteImage(image_info,tmp_image);
                 }
