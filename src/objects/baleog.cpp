@@ -14,9 +14,9 @@ Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_run_left=new Animation(imgcache->loadImage("baleog-run_left.png"),8,1000);
     im_run_right=new Animation(imgcache->loadImage("baleog-run_right.png"),8,1000);
     im_fall_left=im_left;
-    im_fall_right=im_left;
+    im_fall_right=im_right;
     im_krit_left=im_left;
-    im_krit_right=im_left;
+    im_krit_right=im_right;
     im_land_left=new Animation(imgcache->loadImage("olaf_land_left.bmp"),1,T_IRR,true);
     im_land_right=new Animation(imgcache->loadImage("olaf_land_right.bmp"),1,T_IRR,true);
     weapon=Weapon(-1,W_STRIKE);
