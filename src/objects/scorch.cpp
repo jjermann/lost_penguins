@@ -13,6 +13,8 @@ Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   wing(V_FLY) {
     im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;
+    im_run_left=im_left;
+    im_run_right=im_right;
     im_fall_left=im_left;
     im_fall_right=im_left;
     im_krit_left=im_left;

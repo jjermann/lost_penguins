@@ -11,6 +11,8 @@ Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname) {
     im_left=new Animation(imgcache->loadImage("baleog_right.bmp"));
     im_right=im_left;
+    im_run_right=new Animation(imgcache->loadImage("baleog-run.png"),8,1000);
+    im_run_left=im_left;
     im_fall_left=im_left;
     im_fall_right=im_left;
     im_krit_left=im_left;
@@ -25,6 +27,7 @@ Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 
 Baleog::~Baleog() {
     delete im_left;
+    delete im_run_right;
     delete im_land_left;
     delete im_sword_left;
 }

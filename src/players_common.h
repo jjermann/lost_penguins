@@ -112,6 +112,8 @@ class Player : public Character {
         //@{
         Animation* im_left;
         Animation* im_right;
+        Animation* im_run_left;
+        Animation* im_run_right;
         Animation* im_fall_left;
         Animation* im_fall_right;
         Animation* im_krit_left;

@@ -43,8 +43,12 @@ class Olaf : public Player {
         //@{
         Animation* im_small_left;
         Animation* im_small_right;
+        Animation* im_run_small_left;
+        Animation* im_run_small_right;
         Animation* im_shield_left;
         Animation* im_shield_right;
+        Animation* im_run_shield_left;
+        Animation* im_run_shield_right;
         Animation* im_fall_shield_left;
         Animation* im_fall_shield_right;
         //@}

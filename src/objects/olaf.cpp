@@ -13,6 +13,8 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   fart(V_FART) {
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
+    im_run_right=new Animation(imgcache->loadImage("olaf-run.png"),8,1000);
+    im_run_left=im_left;
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
@@ -22,8 +24,12 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 
     im_small_left=new Animation(imgcache->loadImage("gun.bmp"),9,1000);
     im_small_right=im_small_left;
+    im_run_small_left=im_small_left;
+    im_run_small_right=im_small_right;
     im_shield_right=new Animation(imgcache->loadImage("olaf_fall_shield_right.bmp"));
     im_shield_left=new Animation(imgcache->loadImage("olaf_fall_shield_left.bmp"));
+    im_run_shield_right=im_shield_right;
+    im_run_shield_left=im_shield_left;
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
     im_die=new Animation(60,imgcache->loadImage("kuru.bmp"),12,2000,true);
@@ -35,6 +41,7 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 Olaf::~Olaf() {
     delete im_left;
     delete im_right;
+    delete im_run_right;
     delete im_land_left;
     delete im_small_left;
     delete im_shield_right;
@@ -44,21 +51,28 @@ Olaf::~Olaf() {
 void Olaf::updateAnimState(bool change) {
     if (!change) {
     } else if (state&STATE_SMALL) {
-        if (state&STATE_LEFT) animation=im_small_left;
-        else animation=im_small_right;
+        if (state&STATE_LEFT) {
+            if (state&STATE_MLEFT) animation=im_run_small_left;
+            else animation=im_small_left;
+        } else {
+            if (state&STATE_MRIGHT) animation=im_run_small_right;
+            else animation=im_small_right;
+        }
     } else if (state&STATE_SHIELD) {
         otype|=OTYPE_DENSE_D;
         if (state&STATE_LEFT) {
             if (state&STATE_FALL) {
                 animation=im_fall_shield_left;
             } else {
-                animation=im_shield_left;
+                if (state&STATE_MLEFT) animation=im_run_shield_left;
+                else animation=im_shield_left;
             }
         } else {
             if (state&STATE_FALL) {
                 animation=im_fall_shield_right;
             } else {
-                animation=im_shield_right;
+                if (state&STATE_MRIGHT) animation=im_run_shield_right;
+                else animation=im_shield_right;
             }
         }
     } else {

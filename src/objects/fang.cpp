@@ -13,6 +13,8 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     weapon=Weapon(-1,W_STRIKE);
     im_left=new Animation(imgcache->loadImage("olaf_left.bmp"));
     im_right=new Animation(imgcache->loadImage("olaf_right.bmp"));
+    im_run_right=im_right;
+    im_run_left=im_left;
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;

@@ -21,7 +21,7 @@
 #include "objects/triggered_bomb.h"
 #include "objects/plant.h"
 #include "objects/baleog.h"
-#include "objects/eric.h"
+#include "objects/erik.h"
 #include "objects/olaf.h"
 #include "objects/scorch.h"
 #include "objects/fang.h"
@@ -70,7 +70,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sin
     else if (obj=="TriggeredBomb") return (addCharacter(new TriggeredBomb(image,x,y,atoi(arg1.c_str()),name)));
 
     //Players
-    else if (obj=="Eric")    return (addPlayer(new Eric(image,x,y,name)));
+    else if (obj=="Erik")    return (addPlayer(new Erik(image,x,y,name)));
     else if (obj=="Olaf")    return (addPlayer(new Olaf(image,x,y,name)));
     else if (obj=="Baleog")  return (addPlayer(new Baleog(image,x,y,name)));
     else if (obj=="Fang")    return (addPlayer(new Fang(image,x,y,name)));  

@@ -25,6 +25,8 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     enemy_types|=OTYPE_MONSTER;
     im_left=animation;
     im_right=animation;
+    im_run_left=animation;
+    im_run_right=animation;
     im_fall_left=animation;
     im_fall_right=animation;
     im_krit_left=animation;
@@ -146,6 +148,8 @@ void Player::updateAnimState(bool change) {
             } else {
                 animation=im_fall_left;
             }
+        } else if (state&STATE_MLEFT) {
+            animation=im_run_left;
         } else {
             animation=im_left;
         }
@@ -156,6 +160,8 @@ void Player::updateAnimState(bool change) {
             } else {
                 animation=im_fall_right;
             }
+        } else if (state&STATE_MRIGHT) {
+            animation=im_run_right;
         } else {
             animation=im_right;
         }
