@@ -1,6 +1,4 @@
-#ifndef _PLAYERS_COMMON_H_
-    #include "players_common.h"
-#endif
+#include "players_common.h"
 
 class Baleog : public Player {
     public:

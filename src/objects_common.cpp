@@ -8,8 +8,8 @@
 Object::Object(string imagename, Uint16 xcord, Uint16 ycord, string oname):
   tbirth(SDL_GetTicks()),
   state(NOTHING),
-  im_orig(new Animation(imgcache->loadImage(imagename))),
   event(NULL),
+  im_orig(new Animation(imgcache->loadImage(imagename))),
   otype(NOTHING),
   name(oname),
   delete_flag(false) {

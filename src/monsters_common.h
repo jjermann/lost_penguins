@@ -1,9 +1,7 @@
-#ifndef _MONSTERS_COMMON_H_
-    #define _MONSTERS_COMMON_H_
-#endif
-#ifndef _CHARACTERS_COMMON_H_
-    #include "characters_common.h"
-#endif
+#ifndef _MONSTERS_COMMON_H
+#define _MONSTERS_COMMON_H
+
+#include "characters_common.h"
 
 //Monsters
 class Monster : public Character {
@@ -44,3 +42,5 @@ class Monster : public Character {
         Animation* im_right;
         Sint16 Dai,Dattack;
 };
+
+#endif

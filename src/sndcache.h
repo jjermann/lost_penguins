@@ -1,6 +1,5 @@
-#ifndef _SOUNDCACHE_H_
-    #define _SOUNDCACHE_H_
-#endif
+#ifndef _SOUNDCACHE_H
+#define _SOUNDCACHE_H
 
 class SoundCache {
     public:
@@ -10,3 +9,5 @@ class SoundCache {
     private:
         std::map<string,Mix_Chunk*> sndcache;    
 };
+
+#endif

@@ -1,6 +1,5 @@
-#ifndef _COMMON_H_
-    #define _COMMON_H_
-#endif
+#ifndef _COMMON_H
+#define _COMMON_H
 
 #include <iostream>
 #include <fstream>
@@ -104,3 +103,5 @@ extern Font* font2;
 extern bool paused;
 extern bool failed;
 extern bool fps;
+
+#endif

@@ -1,9 +1,7 @@
-#ifndef _PLAYERS_COMMON_H_
-    #define _PLAYERS_COMMON_H_
-#endif
-#ifndef _CHARACTERS_COMMON_H_
-    #include "characters_common.h"
-#endif
+#ifndef _PLAYERS_COMMON_H
+#define _PLAYERS_COMMON_H
+
+#include "characters_common.h"
 
 #define MAX_ITEMS       3
    
@@ -116,3 +114,5 @@ class DeadPlayer : public Character {
         DeadPlayer(string imagename, Uint16 xcord=0, Uint16 ycord=0, string name="DeadPlayer");
         virtual ~DeadPlayer();
 };
+
+#endif

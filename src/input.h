@@ -1,6 +1,5 @@
-#ifndef _INPUT_H_
-    #define _INPUT_H_
-#endif
+#ifndef _INPUT_H
+#define _INPUT_H
 
 //Input events
 #define INPUT_LEFT      0x00000001
@@ -37,3 +36,5 @@ class InputHandler {
 
 //filter events
 int filterEvents(const SDL_Event *event);
+
+#endif

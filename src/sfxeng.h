@@ -1,6 +1,5 @@
-#ifndef _SOUNDSENGINE_H_
-    #define _SOUNDSENGINE_H_
-#endif
+#ifndef _SOUNDSENGINE_H
+#define _SOUNDSENGINE_H
 
 class SoundsEngine {
     public:
@@ -13,3 +12,5 @@ class SoundsEngine {
         Mix_Music* theme;
         bool disabled;
 };
+
+#endif

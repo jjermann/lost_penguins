@@ -1,6 +1,4 @@
-#ifndef _PLAYERS_COMMON_H_
-    #include "players_common.h"
-#endif
+#include "players_common.h"
 
 #define STATE_RUN        0x00400000
 #define V_JUMP        -400

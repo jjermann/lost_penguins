@@ -1,6 +1,4 @@
-#ifndef _PLAYERS_COMMON_H_
-    #include "players_common.h"
-#endif
+#include "players_common.h"
 
 #define STATE_CLIMB_L    0x00010000
 #define STATE_CLIMB_R    0x00020000

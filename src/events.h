@@ -1,6 +1,5 @@
-#ifndef _EVENTS_H_
-    #define _EVENTS_H_
-#endif
+#ifndef _EVENTS_H
+#define _EVENTS_H
 
 #define EV_DELAY     0x00000001
 #define EV_START     0x00000002
@@ -78,3 +77,5 @@ class EAnim : public CharacterEvent {
         Animation* anim;
         bool del;
 };
+
+#endif

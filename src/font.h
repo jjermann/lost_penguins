@@ -1,6 +1,5 @@
-#ifndef _FONT_H_
-    #define _FONT_H_
-#endif
+#ifndef _FONT_H
+#define _FONT_H
 
 /*
 Copyright (C) 2003 Matthias Braun
@@ -39,3 +38,5 @@ class Font {
         static Uint32 getPixel(SDL_Surface* surface, Sint32 X, Sint32 Y);
         SFont_Font* font;
 };
+
+#endif

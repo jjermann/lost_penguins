@@ -1,6 +1,4 @@
-#ifndef _CHARACTERS_COMMON_H_
-    #include "characters_common.h"
-#endif
+#include "characters_common.h"
 
 class TriggeredBomb : public Character {
     public:

@@ -1,6 +1,5 @@
-#ifndef _OBJECTS_COMMON_H_
-    #define _OBJECTS_COMMON_H_
-#endif
+#ifndef _OBJECTS_COMMON_H
+#define _OBJECTS_COMMON_H
 
 //Object types
 #define OTYPE_DENSE_R   0x00000001
@@ -162,3 +161,5 @@ class Background : public Object {
         Background(string imagename);
         virtual ~Background();
 };
+
+#endif

@@ -1,6 +1,5 @@
-#ifndef _ANIM_H_
-    #define _ANIM_H_
-#endif
+#ifndef _ANIM_H
+#define _ANIM_H
 
 //Animation format: a horizontal strip (image) with (num) frames
 //Eventually change this to a matrix of frames: each row a different animation
@@ -67,3 +66,5 @@ class AnimHandler {
     private:
         Uint16 tstart, tcurrent, dt;
 };
+
+#endif

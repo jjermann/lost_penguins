@@ -1,6 +1,4 @@
-#ifndef _MONSTERS_COMMON_H_
-    #include "monsters_common.h"
-#endif
+#include "monsters_common.h"
 
 #define DE_ATT1        400
 

@@ -1,6 +1,4 @@
-#ifndef _PLAYERS_COMMON_H_
-    #include "players_common.h"
-#endif
+#include "players_common.h"
 
 #define STATE_SHIELD     0x00040000
 #define STATE_SMALL      0x00200000

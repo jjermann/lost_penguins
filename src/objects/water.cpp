@@ -17,8 +17,9 @@ Water::~Water() { }
 
 void Water::enter(Object* obj) {
     if(Character* ptr = dynamic_cast<Character*>(obj)) {
-        ptr->setState(STATE_WATER);
         sfxeng->playWAV(au_water);
+        ptr->setState(STATE_WATER);
+        ptr->applySpeedMod(25);
         ptr->hit(DIR_ALL,weapon);
     }
 }
@@ -26,6 +27,7 @@ void Water::enter(Object* obj) {
 void Water::leave(Object* obj) {
     if(Character* ptr = dynamic_cast<Character*>(obj)) {
         sfxeng->playWAV(au_water);
+        ptr->applySpeedMod(400);
         ptr->unsetState(STATE_WATER);
     }
 }

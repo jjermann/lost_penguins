@@ -1,12 +1,8 @@
-#ifndef _CHARACTERS_COMMON_H_
-    #define _CHARACTERS_COMMON_H_
-#endif
-#ifndef _WEAPONS_H_
-    #include "weapons.h"
-#endif
-#ifndef _OBJECTS_COMMON_H_
-    #include "objects_common.h"
-#endif
+#ifndef _CHARACTERS_COMMON_H
+#define _CHARACTERS_COMMON_H
+
+#include "weapons.h"
+#include "objects_common.h"
 
 //Falling, Landing
 #define T_IRR           2000
@@ -130,3 +126,4 @@ class Character : public Object {
     private:
         Uint16 dt_fall2;
 };
+#endif

@@ -1,6 +1,5 @@
-#ifndef _WEAPONS_H_
-    #define _WEAPONS_H_
-#endif
+#ifndef _WEAPONS_H
+#define _WEAPONS_H
 
 //normal hit
 #define W_STRIKE         0x00000001
@@ -44,3 +43,5 @@ class Weapon {
         Uint16 stype;
         Uint16 damage;
 };
+
+#endif

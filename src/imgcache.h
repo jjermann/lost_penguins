@@ -1,6 +1,5 @@
-#ifndef _IMGCACHE_H_
-    #define _IMGCACHE_H_
-#endif
+#ifndef _IMGCACHE_H
+#define _IMGCACHE_H
 
 class ImageCache {
     public:
@@ -10,3 +9,5 @@ class ImageCache {
     private:
         std::map<string,SDL_Surface*> imgcache;    
 };
+
+#endif

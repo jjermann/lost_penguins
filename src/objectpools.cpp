@@ -2,9 +2,7 @@
 #include "map.h"
 #include "sfxeng.h"
 #include "sndcache.h"
-#ifndef _OBJECTPOOLS_H_
-    #include "objectpools.h"
-#endif
+#include "objectpools.h"
 //HACK!!!!!!
 #include "objects/baleog.h"
 #include "objects/bomb.h"

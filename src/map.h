@@ -1,6 +1,5 @@
-#ifndef _MAP_H_
-    #define _MAP_H_
-#endif
+#ifndef _MAP_H
+#define _MAP_H
 
 class Map {
     public:
@@ -14,3 +13,5 @@ class Map {
         //map loading
         inline int loadMapData(const string& mapname);
 };
+
+#endif

@@ -1,6 +1,5 @@
-#ifndef _GFXENG_H_
-    #define _GFXENG_H_
-#endif
+#ifndef _GFXENG_H
+#define _GFXENG_H
 
 #define BAR_HEIGHT      138
 #define ICON_SIZE       46
@@ -32,3 +31,5 @@ class GraphicsEngine {
         //fps stuff
         Uint16 Dfps,Dframes,currentfps,tcurrent;
 };
+
+#endif

@@ -1,6 +1,4 @@
-#ifndef _PLAYERS_COMMON_H_
-    #include "players_common.h"
-#endif
+#include "players_common.h"
 
 #define STATE_GLIDE      0x00040000
 #define SCORCH_MAX_WINGS 5

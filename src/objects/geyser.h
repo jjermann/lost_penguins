@@ -1,6 +1,4 @@
-#ifndef _OBJECTS_COMMON_H_
-    #include "objects_common.h"
-#endif
+#include "objects_common.h"
 
 #define T_GEYSIR      3000
 #define T_GEYSIR_DUR  1000

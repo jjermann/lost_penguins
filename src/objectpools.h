@@ -1,6 +1,5 @@
-#ifndef _OBJECTPOOLS_H_
-    #define _OBJECTPOOLS_H_
-#endif
+#ifndef _OBJECTPOOLS_H
+#define _OBJECTPOOLS_H
 
 class ObjectsPool {
     public:
@@ -31,3 +30,5 @@ class ObjectsPool {
         player_iterator currentplayer;
         Mix_Chunk* au_switch;
 };
+
+#endif

@@ -1,6 +1,4 @@
-#ifndef _OBJECTS_COMMON_H_
-    #include "objects_common.h"
-#endif
+#include "objects_common.h"
 
 class Bomb : public Item {
     public:
