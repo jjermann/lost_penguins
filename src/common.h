@@ -64,7 +64,7 @@ struct Hit {
 struct Config {
     Uint16 width;
     Uint16 height;
-    Uint32 full;
+    bool full;
     Uint16 audio_format;
     int audio_rate;
     int audio_channels;

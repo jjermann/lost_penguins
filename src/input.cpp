@@ -25,6 +25,13 @@ void InputHandler::pollEvents() {
 
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
+           // special events
+         case SDL_VIDEORESIZE: {
+             gfxeng->resize(event.resize.w, event.resize.h);
+             gfxeng->renderScene(true);
+             break;
+         }
+           // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
             }
@@ -150,6 +157,10 @@ void InputHandler::pollEvents() {
                     }
                     case SDLK_F2: {
                          gfxeng->toggleFPS();
+                         break;
+                    }
+                    case SDLK_f: {
+                         gfxeng->toggleFullScreen();
                          break;
                     }
                     case SDLK_q: {

@@ -100,7 +100,7 @@ int readConfig(const string& filename) {
     //default values
     config.width=640;
     config.height=480;
-    config.full=0;
+    config.full=false;
     config.audio_rate = MIX_DEFAULT_FREQUENCY;
     config.audio_format = MIX_DEFAULT_FORMAT;
     config.audio_channels = 2;
@@ -127,7 +127,7 @@ int readConfig(const string& filename) {
         } else if (option=="height") {
             config.height=atoi(arg1.c_str());
         } else if (option=="full" && arg1=="1") {
-            config.full=SDL_FULLSCREEN;
+            config.full=true;
         } else if (option=="map") {
             config.map=arg1;
         } else {

@@ -13,9 +13,21 @@ GraphicsEngine::GraphicsEngine():
   currentfps(0),
   tcurrent(SDL_GetTicks()),
   show_bar(true),
-  show_fps(true) {
-    if ((screen=SDL_SetVideoMode(config.width,config.height,16,SDL_HWSURFACE|SDL_DOUBLEBUF|config.full)) != NULL) {
-        cout << "Set VideoMode...\n";
+  show_fps(true),
+  fullscreen(config.full) {
+    resize(config.width, config.height);
+    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
+}
+
+GraphicsEngine::~GraphicsEngine() {
+    delete lifeimage;
+    SDL_FreeSurface(screen);
+}
+
+void GraphicsEngine::resize(Uint16 width, Uint16 height) {
+    if (screen) SDL_FreeSurface(screen);
+    
+    if ((screen=SDL_SetVideoMode(width,height,16,SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|(fullscreen ? SDL_FULLSCREEN : 0))) != NULL) {
     } else {
         cout << "Couldn't set VideoMode: " << SDL_GetError() << endl;
         quitGame(-1);
@@ -30,12 +42,6 @@ GraphicsEngine::GraphicsEngine():
     vis_map.y=0;
     vis_map.w=screen->w;
     vis_map.h=screen->h-bar.h;
-    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
-}
-
-GraphicsEngine::~GraphicsEngine() {
-    delete lifeimage;
-    SDL_FreeSurface(screen);
 }
 
 inline SDL_Rect GraphicsEngine::clipToBG(SDL_Rect dest) const {
@@ -210,5 +216,17 @@ void GraphicsEngine::toggleFPS() {
     //off -> on
     } else {   
         show_fps=true;
+    }
+}
+
+void GraphicsEngine::toggleFullScreen() {
+    //on  -> off
+    if (fullscreen) {
+        fullscreen=false;
+        resize(screen->w,screen->h);
+    //off -> on
+    } else {   
+        fullscreen=true;
+        resize(screen->w,screen->h);
     }
 }

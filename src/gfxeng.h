@@ -8,10 +8,11 @@ class GraphicsEngine {
     public:
         GraphicsEngine();
         ~GraphicsEngine();
-        //drawing
+        void resize(Uint16 width, Uint16 height);
         void renderScene(bool insist=true);
         void togglePlayerBar();
         void toggleFPS();
+        void toggleFullScreen();
     private:
         inline SDL_Rect clipToBG(SDL_Rect dest) const;
         //updates backpos and returns the new shift vector (ignore w,h)
@@ -32,6 +33,7 @@ class GraphicsEngine {
         Uint16 Dfps,Dframes,currentfps,tcurrent;
         bool show_bar;
         bool show_fps;
+        bool fullscreen;
 };
 
 #endif
