@@ -38,6 +38,9 @@ void InputHandler::update() {
 }
 
 inline void InputHandler::pollMenuEvents() {
+    for (Uint16 i=0; i<SDLK_LAST; i++) {
+        keypressed[i]=false;
+    }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
            // special events
@@ -51,6 +54,7 @@ inline void InputHandler::pollMenuEvents() {
             }
             case SDL_KEYDOWN: {
                 SDLKey key=event.key.keysym.sym;
+                keypressed[key]=true;
                 if (key==config.keybind[KEY_UP]) {
                     menu->increaseEntry(false);
                 } else if (key==config.keybind[KEY_DOWN]) {
@@ -78,9 +82,13 @@ inline void InputHandler::pollMenuEvents() {
             }
         }
     }    
+    keystate = SDL_GetKeyState(NULL);
 }
 
 inline void InputHandler::pollPausedEvents() {
+    for (Uint16 i=0; i<SDLK_LAST; i++) {
+        keypressed[i]=false;
+    }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
            // special events
@@ -94,6 +102,7 @@ inline void InputHandler::pollPausedEvents() {
             }
             case SDL_KEYDOWN: {
                 SDLKey key=event.key.keysym.sym;
+                keypressed[key]=true;
                 if (key==config.keybind[KEY_SWITCH]) {
                      scenario->pool->switchPlayer();
                 } else if (key==config.keybind[KEY_PAUSE]) {
@@ -115,6 +124,7 @@ inline void InputHandler::pollPausedEvents() {
             }
         }
     }    
+    keystate = SDL_GetKeyState(NULL);
 }
 
 inline void InputHandler::pollGameEvents() {
