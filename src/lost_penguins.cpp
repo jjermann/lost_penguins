@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
     }
     SDL_ShowCursor(SDL_DISABLE);
     SDL_SetEventFilter(filterEvents);
+    system(config.datadir.c_str());
 
     cout << "ImageCache...\n";
     imgcache=new ImageCache();
@@ -50,13 +51,8 @@ int main(int argc, char* argv[]) {
     cout << "Initializing Scenario...\n";
     scenario=new Scenario();
 
-    //TODO: menu, szenarios, etc
-
-    //gfxeng->setMenuBG();
-    //menu=new TestMenu();
-
-    scenario->loadMap(config.map);
-    cout << "Starting game...\n" << endl;
+    gfxeng->setMenuBG();
+    menu=new StartMenu();
 
     while (true) {
         if (menu) {

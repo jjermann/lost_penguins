@@ -135,7 +135,9 @@ void InputHandler::pollMEvents() {
                         break;
                     }
                     case SDLK_RETURN: {
+                        if (state&INPUT_ACT) break;
                         state|=INPUT_ACT;
+                        menu->act();
                         gfxeng->updateMenu();
                         break;
                     }
@@ -162,7 +164,7 @@ void InputHandler::pollMEvents() {
                          } else {
                              state|=INPUT_MENU;
                              sfxeng->pauseMusic();
-                             menu=new TestMenu();
+                             menu=new GameMenu();
                          }
                          gfxeng->updateMenu();
                          break;
@@ -339,7 +341,7 @@ void InputHandler::pollEvents() {
                          } else {
                              state|=INPUT_MENU;
                              sfxeng->pauseMusic();
-                             menu=new TestMenu();
+                             menu=new GameMenu();
                          }
                          break;
                     }

@@ -11,6 +11,7 @@
     frames per seconds. Always run time resizing and fullscreen switching.
 */
 class GraphicsEngine {
+    friend class ConfigMenu;
     public:
         GraphicsEngine();
         ~GraphicsEngine();
@@ -42,7 +43,7 @@ class GraphicsEngine {
             if (show_fps) return currentfps;
             else return 0;
         }
-    private:
+    protected:
         Uint32 rmask;
         Uint32 gmask;
         Uint32 bmask;

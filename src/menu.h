@@ -47,20 +47,37 @@ class Menu {
 class StartMenu : public Menu {
     public:
         StartMenu();
-        virtual ~StartMenu();
         virtual void act();
     private:
         /// Helper function
-        void init();
+        void update();
 };
 
-class TestMenu : public Menu {
+class GameMenu : public Menu {
     public:
-        TestMenu();
+        GameMenu();
         virtual void act();
     private:
         /// Helper function
-        void init();
+        void update();
+};
+
+class MapMenu : public Menu {
+    public:
+        MapMenu();
+        virtual void act();
+    private:
+        /// Helper function
+        void update();
+};
+
+class ConfigMenu : public Menu {
+    public:
+        ConfigMenu();
+        virtual void act();
+    private:
+        /// Helper function
+        void update();
 };
 
 #endif
