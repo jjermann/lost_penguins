@@ -43,6 +43,8 @@ inline void Scenario::reinitMap() {
         pool=new ObjectsPool();
     } else if (!pool) pool=new ObjectsPool();
     if (background) delete background;
+    if (anim) delete anim;
+    anim=new AnimHandler();
     background=NULL;
     area=NULL;
     player=NULL;
@@ -51,7 +53,6 @@ inline void Scenario::reinitMap() {
 
 int Scenario::loadMap(string mapname) {
     reinitMap();
-    cout << "Loading Map data...\n";
     name=mapname;
     ifstream mapfile;
     string tmpline;
@@ -65,9 +66,9 @@ int Scenario::loadMap(string mapname) {
     
     mapfile.open(loadfile.c_str());
     if (mapfile) {
-        cout << "Loading map configuration file...\n";
+        cout << "Loading new map: " << loadfile << endl;
     } else {
-        cout << "Map loading failed: " << (config.datadir+name) << " not found!\n";
+        cout << "Map loading failed: " << loadfile << " not found!\n";
         return -2;
     }
 
