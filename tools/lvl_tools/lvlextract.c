@@ -322,43 +322,50 @@ char* xpm_map[256] = {
 
 
 int main(int argc, char *argv[]) {
-    int fd_in;
-/*    FILE* append_file; */
-    char buf[16];
+    FILE* lvl_file;
+    FILE* unknown_file;
+    char buf[100];
     char *data;
+    /*
+     * Temporary variable to indicate the last offset to start searching from:
+     * Either after (1+) an invalid "T" or after the image of a valid "TRPS"
+     */
     char *last_ptr;
+    /* Either index position (start) or the last known position after an image */
+    char *save_ptr;
+    /* Iterates through all offsets at a "T" */
     char *off_ptr;
     struct stat sb;
     int data_size;
     int counter=0;
     int unknown=0;
-    char entry_id[]="TRPS";
+    const char entry_id[]="TRPS";
 
     if (argc < 2) {
     	printf("Usage: %s input.lvl [destination]\n", argv[0]);
 	    exit(1);
     }
     
-    fd_in = open(argv[1], O_RDONLY);
+    lvl_file = fopen(argv[1],"r");
     
-    if (fd_in < 0) {
-    	perror("error opening file");
+    if (lvl_file == NULL) {
+    	perror("Error opening file");
 	    exit(1);
     }
 
-    read(fd_in, buf, 12);
+    fread(buf,1,12,lvl_file);
 
     if ((buf[0] != 'D') && (buf[1] != 'A') &&
         (buf[2] != 'T') && (buf[3] != 'A')) {
         printf("Invalid file\n");
-        close(fd_in);
+        fclose(lvl_file);
         exit(1);
     }
 
     if (argc > 2) {
         mkdir(argv[2], 0777);
         chdir(argv[2]);
-        printf("directory: %s\n", argv[2]);
+        printf("Directory: %s\n", argv[2]);
     } else {
         /* copy the filename */
         if (strrchr(argv[1], '/')) strncpy(buf, strrchr(argv[1], '/')+1, 16);
@@ -373,29 +380,38 @@ int main(int argc, char *argv[]) {
         mkdir(buf, 0777);
         chdir(buf);
 
-        printf("directory: %s\n", buf);
+        printf("Directory: %s\n", buf);
     }
 
     /* get file size */
-    fstat(fd_in, &sb);
+    fstat(fileno(lvl_file), &sb);
     data_size = sb.st_size;
 
-    /* File for unknown content */
-/*    append_file = fopen("unknown.bin", "a"); */
-
     /* map the entire file into process memory space */
-    data = mmap(NULL, data_size, PROT_READ, MAP_PRIVATE, fd_in, 0);
+    data = mmap(NULL, data_size, PROT_READ, MAP_PRIVATE, fileno(lvl_file), 0);
     last_ptr=data;
+    save_ptr=data;
     while (off_ptr=memchr(last_ptr,'T',(data_size-(last_ptr-data)))) {
-/*
-        if (!strncmp(off_ptr,entry_id,4)) fprintf(append_file,"****************");
-        fwrite(last_ptr,1,(off_ptr-last_ptr),append_file);
-*/
         unknown+=(off_ptr-last_ptr);
         if (!strncmp(off_ptr,entry_id,4)) {
             counter++;
-            /* write_pgm, write_png, write_xpm, write_png_xpm */
+            /*
+             * Write unknown content (up to this image position (off_ptr)) to a file.
+             * If the file size would be 0, skip it.
+             */
+            if ((off_ptr-save_ptr > 0)) {
+                snprintf(buf, 100, "%08d.bin", counter);
+                unknown_file = fopen(buf, "wb");
+                fwrite(save_ptr,1,(off_ptr-save_ptr),unknown_file);
+                fclose(unknown_file);
+            }
+
+            /*
+             * Write the image file: write_pgm, write_png, write_xpm or write_png_xpm
+             * and update the pointers
+             */
             last_ptr=write_xpm(off_ptr,counter);
+            save_ptr=last_ptr;
         } else {
             last_ptr=off_ptr+1;
         }
@@ -404,8 +420,7 @@ int main(int argc, char *argv[]) {
     printf("Contains %d extracted images, unknown content: %d bytes\n",counter,unknown);
 
     munmap(data, data_size);
-    close(fd_in);
-/*  fclose(append_file); */
+    fclose(lvl_file);
 
     return 0;
 }
