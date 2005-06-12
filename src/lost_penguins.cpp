@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         exit(-1);
     }
     SDL_ShowCursor(SDL_DISABLE);
-    system(config.datadir.c_str());
+    //Change directory to datadir
 
     cout << "ImageCache...\n";
     imgcache=new ImageCache();
@@ -173,11 +173,11 @@ void parseInput(int, char* argv[]) {
 }
 
 void usage() {
-    cout << "Usage: lost_penguins [OPTIONS]\n";
+    cout << "Usage: lost_penguins [OPTIONS]\n\n";
     cout << "  -w, -width   Changes resolution (width) of game.    Default: 640\n";
     cout << "  -h, -height  Changes resolution (height) of game.   Default: 480\n";
     cout << "  -bpp         Specifies color depth (bpp) of screen. Default: 16\n";
-    cout << "  -fs, -full	Enable fullscreen.                     Default: disabled\n";
+    cout << "  -fs, -full   Enable fullscreen.                     Default: disabled\n";
     cout << "  -map         Load specified map from data dir.      Default: map1\n";
     cout << "  -h, --help   Show this text \n";
     quitGame(4);
