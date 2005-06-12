@@ -31,10 +31,10 @@ class GraphicsEngine {
         void toggleFullScreen();
         void setMenuBG(SDL_Surface* menu_background=NULL);
     protected:
-        Uint32 rmask;
-        Uint32 gmask;
-        Uint32 bmask;
-        Uint32 amask;
+        const Uint32 rmask;
+        const Uint32 gmask;
+        const Uint32 bmask;
+        const Uint32 amask;
         /// currently visible part of the map area
         SDL_Rect vis_map;
         /// main screen
