@@ -16,6 +16,9 @@ class SoundsEngine {
         void stopMusic();
         void pauseMusic();
         void resumeMusic();
+        bool isEnabled() {
+            return (!disabled);
+        }
     private:
         /// Music: Theme of the current map
         Mix_Music* theme;
