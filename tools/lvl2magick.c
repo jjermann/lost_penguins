@@ -148,7 +148,7 @@ unsigned char lvl_palette[256][3] = {
 
 void usage() {
     printf("Usage: lvl2magick [options] file.lvl\n");
-    printf("Extracts images from file.lvl.\n\n\n");
+    printf("Extracts images from file.lvl.\n\n");
     printf("Options:\n");
     printf("  -h, --help             Print this help message\n\n");
     printf("  -debug                 Create additional debug files (default: off)\n\n");
