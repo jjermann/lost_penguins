@@ -33,12 +33,68 @@ Code
      o the collision detection and the move/fall code is all a big mess
 
  o Animations/Events:
+     o Allow as complex Images as possible:
+       Introduce some image info structure that gives an array of subimages
+       Animations can then easily be specified by giving the start and end number in the
+       array. A subimage is defined by sthg like SDL_rect relative to the base image
+     o As the images of an animation (as in above) may vary in size we should introduce
+       sthg like a "base point" type: center/left/right (x) center/top/bottom (y)
+       => total: 9 types. Find a default base point...
+       which is a point in the animation that stays fixed (related to pos)
+     o Using the "base point" type => introduce corresponding drawing methode, which
+       consists of a rule on how to map the base point to the position (allignment):
+         center/left/right (x) center/top/bottom (y)
+         maybe introduce delta values for correction shifts
+       => most times the x-alignment probably corresponds to the base point, but the
+          y-allignment will almost always be bottom (top: sthg that hangs on a rope)
+     o Is the alignment a property of the object (state) or of the animation? => suggest animation
+     o Idea: introduce two type of animation for a simple triggered anim:
+         still anim: eg. 1 image, trig anim:  animation starting with the still one
+       => get rid of once, running
+       More generally: do the logic about that outside of the animation structure
+     o Maybe introduce an animation base class and do the base_point/allignment logic
+       in derived classes somehow? Or use another pattern for this...
+     o Allow empty animation, decouple (put more logic in) these relations:
+       object (pos, draw?), game(time, state, handler), gfxeng(draw), animation(empty,
+       frame, update, time, draw)?, frame, global/current (public, private) properties
+
+     o New anim class/struct:
+        /* Global properties */
+        SDL_Surface* base_image (or in Frame struct)
+        Uint16 start_pos
+        Uint16 end_pos / or Uint16 frames
+        enum base_point_type
+        enum allignment_type
+        Uint16 allignment_delta
+        Uint16 length
+        /* Global Helper values */
+        // maybe: bool empty?
+        bool still (if frames==1)
+        (see above) Uint16 frames / or Uint16 end_pos
+
+        /* (Current) public properties */
+	void update(Uint16 dt)
+        void draw() <- friend in gfxeng (shift, screen, etc)?
+          //information about the current graphic (frame)
+          //information about where to draw it (draw_pos)
+
+        /* Current private properties */
+        Uint16 cur_im_pos / or Uint16 cur_frame / or Uint16 cur_time
+        SDL_Rect* owner_pos (position of the owner) / or const SDL_Rect& owner_pos
+        /* Current helper values */
+        Frame cur_frame (using private + image info) => w,h (or + Base Image)
+        (see above) Uint16 cur_pos / or Uint16 cur_frame / or Uint16 cur_time
+        SDL_Rect* (or SDL_Rect& ) draw_pos (using
+          (allignment/base_point)_(type/delta) + frame + owner_pos)
+
      o Make all events quite short, ie. almost all events become animation
        events
      o Maybe: Improve the (very simple) image format:
         - All frame in one sprite sheet for each character (image matrices
           using two description vectors or even more general: offset matrices)
+          => see above
         - store rects in an array/vector/whatever or use offset matrices
+          => see above
         - do some column/row logics to easy the access
         - eg. set offsets for left, right, mleft, mright...
         - IDEA: just store one side and add some flipping logic to the image
