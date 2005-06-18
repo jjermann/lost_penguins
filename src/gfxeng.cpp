@@ -50,14 +50,14 @@ void GraphicsEngine::draw() {
     if (menu) {
         //Assure we have a (correct) menu background
         if (!menubg) {
-            if (running) {
+            if (game_mode&GAME_PLAY) {
                 setGameMenuBG();
             } else {
                 setMenuBG();
             }
         }
         if (updatetype==UPDATE_ALL) {
-            if (running) {
+            if (game_mode&GAME_PLAY) {
                 setGameMenuBG();
                 drawMenu();
             } else {
@@ -68,7 +68,7 @@ void GraphicsEngine::draw() {
             drawMenu();
         }
     //Paused game
-    } else if (paused) {
+    } else if (game_mode&GAME_PAUSED) {
         if (updatetype==UPDATE_ALL) {
             drawScene();
             drawPlayerBar();
@@ -76,7 +76,7 @@ void GraphicsEngine::draw() {
             drawPlayerBar();
         }
     //Not paused running game
-    } else if (running) {
+    } else if (game_mode&GAME_PLAY) {
         drawScene();
         drawPlayerBar();
         drawFPS();
@@ -142,7 +142,7 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
 }
 
 void GraphicsEngine::drawScene() {
-    if (!running) return;
+    if (!(game_mode&GAME_PLAY)) return;
 
     //We don't want to change pos!
     SDL_Rect tmprect,shift,srcpos;

@@ -10,8 +10,7 @@ InputHandler* input;
 Font* font;
 Font* font2;
 Config config;
-bool paused=false;
-bool running=false;
+Uint8 game_mode=NOTHING;
 Menu* menu;
 
 string itos(int i) {

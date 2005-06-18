@@ -30,7 +30,7 @@ bool InputHandler::keyState(ConfigKey key) {
 void InputHandler::update() {
     if (menu) {
         pollMenuEvents();
-    } else if (paused) {
+    } else if (game_mode&GAME_PAUSED) {
         pollPausedEvents();
     } else {
         pollGameEvents();
@@ -63,7 +63,7 @@ inline void InputHandler::pollMenuEvents() {
                     menu->act();
                 } else if (key==config.keybind[KEY_MENU]) {
                      if (!closeMenu()) {
-                         if (running) {
+                         if (game_mode&GAME_PLAY) {
                              sfxeng->resumeMusic();
                          } else {
                              quitGame(0);
@@ -106,7 +106,7 @@ inline void InputHandler::pollPausedEvents() {
                 if (key==config.keybind[KEY_SWITCH]) {
                      scenario->pool->switchPlayer();
                 } else if (key==config.keybind[KEY_PAUSE]) {
-                     paused=false;
+                     game_mode&=~GAME_PAUSED;
                      sfxeng->resumeMusic();
                 } else if (key==config.keybind[KEY_MENU]) {
                      sfxeng->pauseMusic();
@@ -148,7 +148,7 @@ inline void InputHandler::pollGameEvents() {
                 if (key==config.keybind[KEY_SWITCH]) {
                      scenario->pool->switchPlayer();
                 } else if (key==config.keybind[KEY_PAUSE]) {  
-                     paused=true;
+                     game_mode|=GAME_PAUSED;
                      sfxeng->playWAV(au_pause);
                      sfxeng->pauseMusic();
                 } else if (key==config.keybind[KEY_MENU]) {

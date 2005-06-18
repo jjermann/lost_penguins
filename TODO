@@ -16,6 +16,8 @@ Code
        This would help in many ways and should be a frame information and not an
        image as done for players atm!
      o Use Singletons
+     o Introduce abstract classes for all engines and load the corresponding
+       concrete class depending on the game_mode instead of using if...
 
  o Move/Fall/push/crash/collisions:
      o the character should have more information what he hits

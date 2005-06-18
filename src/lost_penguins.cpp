@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
     while (true) {
         input->update();
-        if (running) scenario->physic->update();
+        if (game_mode&GAME_PLAY) scenario->physic->update();
         gfxeng->draw();
     }
 

@@ -24,7 +24,7 @@ PhysicHandler::~PhysicHandler() {
 void PhysicHandler::update() {
     if (menu) {
         reset_time=true;
-    } else if (paused) {
+    } else if (game_mode&GAME_PAUSED ) {
         reset_time=true;
         updatePaused();
     } else {

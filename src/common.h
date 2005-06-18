@@ -61,6 +61,11 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define DIR_DWL         0x0000000A
 #define DIR_LR          0x00000003
 
+#define GAME_PAUSED     0x00000001
+#define GAME_PLAY       0x00000002
+#define GAME_EDIT       0x00000004
+#define GAME_MENU       0x00000008
+
 enum ConfigKey {
     KEY_START,
     KEY_LEFT,
@@ -165,10 +170,8 @@ extern InputHandler* input;
 extern Font* font;
 /// Font2
 extern Font* font2;
-/// True if the game is paused
-extern bool paused;
-/// True if a map is currently running
-extern bool running;
+/// Game state
+extern Uint8 game_mode;
 /// Currently used menu, NULL if not inside a menu
 extern Menu* menu;
 //@}

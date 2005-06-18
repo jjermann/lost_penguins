@@ -60,6 +60,7 @@ void StartMenu::act() {
     case 0: {
         if ((config.map!="") && (scenario->loadMap(config.map)==0)) {
             closeMenu();
+            game_mode|=GAME_PLAY;
             cout << "Starting game...\n" << endl;
         } else {
             cout << "Select a valid map first...\n" << endl;

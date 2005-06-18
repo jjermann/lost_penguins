@@ -126,7 +126,6 @@ int Scenario::loadMap(string mapname) {
         if (pool->playerspool.size()>0) player=*pool->playerspool.begin();
         else player=NULL;
         if (player==NULL) cout << "No player found!\n";
-        running=true;
         return 0;
     } else {
        cout << "Map loading failed: No background found!\n";
