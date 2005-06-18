@@ -30,6 +30,8 @@ class GraphicsEngine {
         void toggleFPS();
         void toggleFullScreen();
         void setMenuBG(SDL_Surface* menu_background=NULL);
+        const SDL_Rect& addShift(Sint16,Sint16);
+        const SDL_Rect& setShift(Sint16,Sint16);
     protected:
         const Uint32 rmask;
         const Uint32 gmask;
@@ -53,10 +55,15 @@ class GraphicsEngine {
         Uint8 updatetype;
         //video flags
         Uint32 vflags;
+        // current shift
+        SDL_Rect shift;
     protected:
         /// Draw the background and all objects in the pool. This is a very time
         /// consuming function...
         inline void drawScene();
+        /// Draw the background and all objects in the pool in map editor mode.
+        /// This is a very time consuming function...
+        inline void drawEditScene();
         /// Draw player bar
         inline void drawPlayerBar();
         /// Draw the frames per second

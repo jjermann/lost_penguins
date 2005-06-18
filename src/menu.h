@@ -60,6 +60,15 @@ class GameMenu : public Menu {
         void update();
 };
 
+class EditMenu : public Menu {
+    public:
+        EditMenu();
+        virtual void act();
+    private:
+        /// Helper function
+        void update();
+};
+
 class MapMenu : public Menu {
     public:
         MapMenu();

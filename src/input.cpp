@@ -34,6 +34,8 @@ void InputHandler::update() {
         pollPausedEvents();
     } else if (game_mode&GAME_PLAY) {
         pollGameEvents();
+    } else if (game_mode&GAME_EDIT) {
+        pollEditEvents();
     } else {
     }
 }
@@ -173,4 +175,50 @@ inline void InputHandler::pollGameEvents() {
         }
     }    
     keystate = SDL_GetKeyState(NULL);
+}
+
+inline void InputHandler::pollEditEvents() {
+    for (Uint16 i=0; i<SDLK_LAST; i++) {
+        keypressed[i]=false;
+    }
+    while(SDL_PollEvent(&event)) {
+        switch(event.type) {
+           // special events
+         case SDL_VIDEORESIZE: {
+             gfxeng->resize(event.resize.w, event.resize.h);
+             break;
+         }
+            // keyboard events
+            case SDL_QUIT: {
+                quitGame(0);
+            }
+            case SDL_KEYDOWN: {
+                SDLKey key=event.key.keysym.sym;
+                keypressed[key]=true;
+                if (key==config.keybind[KEY_FULL]) {
+                     gfxeng->toggleFullScreen();
+                } else if (key==config.keybind[KEY_MENU]) {
+                     sfxeng->pauseMusic();
+                     setMenu(new EditMenu());
+                     gfxeng->update(UPDATE_ALL);
+                } else if (key==config.keybind[KEY_QUIT]) {
+                     quitGame(0);
+                }
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }    
+    keystate = SDL_GetKeyState(NULL);
+    if (keyState(KEY_LEFT)) {
+        gfxeng->addShift(-1,0);
+    } else if (keyState(KEY_RIGHT)) {
+        gfxeng->addShift(1,0);
+    } else if (keyState(KEY_UP)) {
+        gfxeng->addShift(0,-1);   
+    } else if (keyState(KEY_DOWN)) {
+        gfxeng->addShift(0,1);
+    }
 }

@@ -38,6 +38,15 @@ void PhysicHandler::update() {
         reset_time=false;
         tcurrent=SDL_GetTicks();
         updateGame();
+    } else if (game_mode&GAME_EDIT) {
+        if (reset_time) {
+            dt=0;
+        } else {
+            dt=(SDL_GetTicks()-tcurrent);
+        }
+        reset_time=false;
+        tcurrent=SDL_GetTicks();
+        updateEdit();
     } else {
     }
 }
@@ -89,6 +98,38 @@ inline void PhysicHandler::updateGame() {
     } else {
         scenario->player->unsetState(STATE_MLEFT);
         scenario->player->unsetState(STATE_MRIGHT);
+    }
+    //run end scenario->player effects
+    character_iterator cit=scenario->pool->characterspool.begin();
+    while (cit!=scenario->pool->characterspool.end()) {
+        (*cit)->fall(dt);
+        (*cit)->updateAnimState(!((*cit)->getState(ESTATE_ANIM)));
+        ++cit;
+    }
+    //update the animations of all objects
+    obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        if ((*obit)->getState(ESTATE_ANIM)) { 
+            bool runs=(*obit)->updateAnim(dt);
+            if (!runs) (*obit)->stopEvent();
+        } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
+        ++obit;
+    }
+}
+
+inline void PhysicHandler::updateEdit() {
+    object_iterator obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        //remove marked objects
+        if ((*obit)->isDeleted()) {
+            obit=scenario->pool->removeObject(*obit);
+        } else ++obit;
+    }
+    obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        (*obit)->idle(dt);
+        (*obit)->updateEvents(dt);
+        ++obit;
     }
     //run end scenario->player effects
     character_iterator cit=scenario->pool->characterspool.begin();

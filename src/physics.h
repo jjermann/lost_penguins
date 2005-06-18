@@ -22,6 +22,7 @@ class PhysicHandler  {
         Uint16 Dfps,Dframes,currentfps,minfps;
     private:
         inline void updateGame();
+        inline void updateEdit();
         inline void updatePaused();
         inline void updateFPS();
 };

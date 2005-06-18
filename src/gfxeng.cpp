@@ -30,6 +30,8 @@ GraphicsEngine::GraphicsEngine():
   show_fps(true),
   fullscreen(config.full),
   vflags(SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF) {
+    shift.x=0;
+    shift.y=0;
     resize(config.width, config.height);
     lifeimage=new Animation(imgcache->loadImage("life.bmp"));
 }
@@ -50,14 +52,14 @@ void GraphicsEngine::draw() {
     if (game_mode&GAME_MENU) {
         //Assure we have a (correct) menu background
         if (!menubg) {
-            if (game_mode&GAME_PLAY) {
+            if (game_mode&(GAME_PLAY|GAME_EDIT)) {
                 setGameMenuBG();
             } else {
                 setMenuBG();
             }
         }
         if (updatetype==UPDATE_ALL) {
-            if (game_mode&GAME_PLAY) {
+            if (game_mode&(GAME_PLAY|GAME_EDIT)) {
                 setGameMenuBG();
             } else {
                 setMenuBG();
@@ -68,10 +70,7 @@ void GraphicsEngine::draw() {
         }
     //Paused game
     } else if (game_mode&GAME_PAUSED) {
-        if (updatetype==UPDATE_ALL) {
-            drawScene();
-            drawPlayerBar();
-        } else if (updatetype==UPDATE_BAR) {
+        if (updatetype==UPDATE_ALL || updatetype==UPDATE_BAR) {
             drawPlayerBar();
         }
     //Not paused running game
@@ -79,6 +78,11 @@ void GraphicsEngine::draw() {
         drawScene();
         drawPlayerBar();
         drawFPS();
+        updatetype=UPDATE_ALL;
+    } else if (game_mode&GAME_EDIT) {
+        if (show_fps) toggleFPS();
+        if (show_bar) togglePlayerBar();
+        drawEditScene();
         updatetype=UPDATE_ALL;
     } else return;
     //This is the most time consuming operation
@@ -141,10 +145,8 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
 }
 
 void GraphicsEngine::drawScene() {
-    if (!(game_mode&GAME_PLAY)) return;
-
     //We don't want to change pos!
-    SDL_Rect tmprect,shift,srcpos;
+    SDL_Rect tmprect,srcpos;
     if (scenario->player!=NULL) {
         shift=setShift(scenario->player->getCenter());
     } else {
@@ -171,6 +173,26 @@ void GraphicsEngine::drawScene() {
         srcpos=scenario->player->getFrame().pos;
         shiftMapArea(tmprect,*(scenario->player->getCurPos()));
         SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+    }
+}
+
+void GraphicsEngine::drawEditScene() {
+    //We don't want to change pos!
+    SDL_Rect tmprect,srcpos;
+
+    SDL_FillRect(screen,NULL,0);
+    tmprect=*scenario->area;
+    srcpos=scenario->background->getFrame().pos;
+    shiftMapArea(tmprect,*scenario->background->getCurPos());
+    SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+    
+    object_iterator obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        tmprect=*((*obit)->getPos());
+        srcpos=(*obit)->getFrame().pos;
+        shiftMapArea(tmprect,*((*obit)->getCurPos()));
+        SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+        ++obit;
     }
 }
 
@@ -334,8 +356,10 @@ void GraphicsEngine::drawMenu() {
 //this could probably be done much easier ;)
 inline void GraphicsEngine::setGameMenuBG() {
     if (menubg) SDL_FreeSurface(menubg);
-    drawScene();
-    drawPlayerBar();
+    if (game_mode&GAME_PLAY) {
+        drawScene();
+        drawPlayerBar();
+    } else if (game_mode&GAME_EDIT) drawEditScene();
     SDL_Flip(screen);
     
     SDL_Surface* tmp = SDL_CreateRGBSurface (
@@ -385,4 +409,16 @@ void GraphicsEngine::resetMenuBG() {
         SDL_FreeSurface(menubg);
         menubg=NULL;
     }
+}
+
+const SDL_Rect& GraphicsEngine::addShift(Sint16 shiftx, Sint16 shifty) {
+    shift.x+=shiftx;
+    shift.y+=shifty;
+    return shift;
+}
+
+const SDL_Rect& GraphicsEngine::setShift(Sint16 shiftx, Sint16 shifty) {
+    shift.x=shiftx;
+    shift.y=shifty; 
+    return shift;   
 }

@@ -56,7 +56,7 @@ void Menu::increaseEntry(bool forward) {
 
 StartMenu::StartMenu(): Menu() {
     title="-== MAIN MENU ==-";
-    entries.resize(4);
+    entries.resize(5);
     update();
 }
 void StartMenu::act() {
@@ -72,14 +72,25 @@ void StartMenu::act() {
         break;
     }
     case 1: {
-        setMenu(new MapMenu());
+        //Add a proper Map creation menu, etc..., FIXME
+        if ((config.map!="") && (scenario->loadMap(config.map)==0)) {
+            closeMenu();
+            game_mode|=GAME_EDIT;
+            cout << "Starting game...\n" << endl;
+        } else {
+            cout << "Select a valid map first...\n" << endl;
+        }
         break;
     }
     case 2: {
-        setMenu(new ConfigMenu());
+        setMenu(new MapMenu());
         break;
     }
     case 3: {
+        setMenu(new ConfigMenu());
+        break;
+    }
+    case 4: {
         quitGame(0);
         break;
     }
@@ -90,9 +101,10 @@ void StartMenu::act() {
 }
 void StartMenu::update() {
     entries[0]="Start Game";
-    entries[1]="Map selection";
-    entries[2]="Configuration";
-    entries[3]="Quit";
+    entries[1]="Edit Map";
+    entries[2]="Map selection";
+    entries[3]="Configuration";
+    entries[4]="Quit";
 }
 
 
@@ -124,6 +136,40 @@ void GameMenu::act() {
     }
 }
 void GameMenu::update() {
+    entries[0]="Resume";
+    entries[1]="Configuration";
+    entries[2]="Quit";
+}
+
+
+EditMenu::EditMenu(): Menu() {
+    title="-== EDIT MENU ==-";
+    entries.resize(3);
+    update();
+}
+void EditMenu::act() {
+    switch (currententry) {
+    case 0: {
+        if (!closeMenu()) {
+            gfxeng->update(UPDATE_ALL);
+            sfxeng->resumeMusic();
+        }
+        break;
+    }
+    case 1: {
+        setMenu(new ConfigMenu());
+        break;
+    }
+    case 2: {
+        quitGame(0);
+        break;
+    }
+    default: {
+        break;
+    }
+    }
+}
+void EditMenu::update() {
     entries[0]="Resume";
     entries[1]="Configuration";
     entries[2]="Quit";

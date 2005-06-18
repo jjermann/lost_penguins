@@ -161,7 +161,6 @@ void Olaf::in_sp2() {
         else if (!(state&STATE_FALL)) {
             setState(STATE_ACT_2);
         }
-
         //Can't fart anymore
         if (state&STATE_ACT_1) {
         //Fart

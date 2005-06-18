@@ -5,7 +5,7 @@
 SoundsEngine::SoundsEngine() {
 #ifdef SDL_MIXER
     /* Open the audio device */
-    if (Mix_OpenAudio(config.audio_rate, config.audio_format, config.audio_channels, 512) < 0) {
+    if (Mix_OpenAudio(config.audio_rate, config.audio_format, config.audio_channels, 256) < 0) {
         cout << "Couldn't open audio: " <<  SDL_GetError() << endl;
         cout << "Audio disabled!\n";
         disabled=true;
@@ -32,7 +32,7 @@ void SoundsEngine::playMusic(string name) {
         if (theme) Mix_FreeMusic(theme);
         theme = Mix_LoadMUS(name.c_str());
         Mix_FadeInMusic(theme, -1, 5000);
-        Mix_VolumeMusic(MIX_MAX_VOLUME/4);
+        Mix_VolumeMusic(MIX_MAX_VOLUME/2);
     }
 #endif
 }

@@ -28,6 +28,8 @@ class InputHandler {
         inline void pollPausedEvents();
         /// Check for keyboard events in menu
         inline void pollMenuEvents();
+        /// Check for keyboard events in editing mode
+        inline void pollEditEvents();
 };
 
 #endif

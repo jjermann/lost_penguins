@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
     while (true) {
         input->update();
-        if (game_mode&GAME_PLAY) scenario->physic->update();
+        scenario->physic->update();
         gfxeng->draw();
     }
 
@@ -135,8 +135,9 @@ int readConfig(const string& filename) {
             config.height=atoi(arg1.c_str());
         } else if (option=="bpp") {
             config.bpp=atoi(arg1.c_str());
-        } else if (option=="full" && arg1=="1") {
-            config.full=true;
+        } else if (option=="full") {
+            if (arg1=="1") config.full=true;
+            else config.full=false;
         } else if (option=="map") {
             config.map=arg1;
         //TODO: add keybindings
