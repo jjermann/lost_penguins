@@ -47,7 +47,7 @@ void GraphicsEngine::update(Uint8 upd) {
 
 void GraphicsEngine::draw() {
     //Menu
-    if (menu) {
+    if (game_mode&GAME_MENU) {
         //Assure we have a (correct) menu background
         if (!menubg) {
             if (game_mode&GAME_PLAY) {
@@ -59,11 +59,10 @@ void GraphicsEngine::draw() {
         if (updatetype==UPDATE_ALL) {
             if (game_mode&GAME_PLAY) {
                 setGameMenuBG();
-                drawMenu();
             } else {
                 setMenuBG();
-                drawMenu();
             }
+            drawMenu();
         } else if (updatetype==UPDATE_MENU) {
             drawMenu();
         }

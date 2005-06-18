@@ -9,6 +9,8 @@ Menu* setMenu(Menu* newmenu) {
     if (menu) gfxeng->update(UPDATE_MENU);
     else gfxeng->update(UPDATE_ALL);
     newmenu->setLast(menu);
+    if (newmenu) game_mode|=GAME_MENU;
+    else game_mode&=~GAME_MENU;
     return menu=newmenu;   
 }
  
@@ -18,6 +20,8 @@ Menu* closeMenu() {
         Menu* tmp=menu->getLast();
         delete menu;
         if (!tmp) gfxeng->update(UPDATE_ALL);
+        if (tmp) game_mode|=GAME_MENU;
+        else game_mode&=~GAME_MENU;
         return menu=tmp;
     } else {
         gfxeng->update(UPDATE_ALL);

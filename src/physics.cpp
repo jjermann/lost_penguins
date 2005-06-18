@@ -22,12 +22,12 @@ PhysicHandler::~PhysicHandler() {
 }
 
 void PhysicHandler::update() {
-    if (menu) {
+    if (game_mode&GAME_MENU) {
         reset_time=true;
     } else if (game_mode&GAME_PAUSED ) {
         reset_time=true;
         updatePaused();
-    } else {
+    } else if (game_mode&GAME_PLAY) {
         if (reset_time) {
             Dfps=Dframes=currentfps=dt=0;
             minfps=1000;
@@ -38,6 +38,7 @@ void PhysicHandler::update() {
         reset_time=false;
         tcurrent=SDL_GetTicks();
         updateGame();
+    } else {
     }
 }
 

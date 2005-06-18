@@ -28,12 +28,13 @@ bool InputHandler::keyState(ConfigKey key) {
 }   
 
 void InputHandler::update() {
-    if (menu) {
+    if (game_mode&GAME_MENU) {
         pollMenuEvents();
     } else if (game_mode&GAME_PAUSED) {
         pollPausedEvents();
-    } else {
+    } else if (game_mode&GAME_PLAY) {
         pollGameEvents();
+    } else {
     }
 }
 

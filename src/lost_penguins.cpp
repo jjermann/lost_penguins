@@ -51,7 +51,6 @@ int main(int argc, char* argv[]) {
     scenario=new Scenario();
 
     gfxeng->setMenuBG();
-    menu=NULL;
     setMenu(new StartMenu());
 
     while (true) {

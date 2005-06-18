@@ -11,7 +11,7 @@ Font* font;
 Font* font2;
 Config config;
 Uint8 game_mode=NOTHING;
-Menu* menu;
+Menu* menu=NULL;
 
 string itos(int i) {
     std::stringstream s;
