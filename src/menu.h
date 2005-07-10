@@ -1,5 +1,5 @@
-#ifndef _MENU_H
-#define _MENU_H 1
+#ifndef DEF_MENU_H
+#define DEF_MENU_H 1
 
 /** \brief abstract menu base class
 

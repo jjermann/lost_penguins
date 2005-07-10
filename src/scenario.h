@@ -1,5 +1,5 @@
-#ifndef _MAP_H
-#define _MAP_H 1
+#ifndef DEF_SCENARIO_H
+#define DEF_SCENARIO_H 1
 
 /** \brief Scenario organization
 

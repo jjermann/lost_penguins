@@ -1,5 +1,5 @@
-#ifndef _SOUNDSENGINE_H
-#define _SOUNDSENGINE_H 1
+#ifndef DEF_SOUNDSENGINE_H
+#define DEF_SOUNDSENGINE_H 1
 
 /** \brief Sounds engine
 

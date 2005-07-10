@@ -1,5 +1,5 @@
-#ifndef _OBJECTS_COMMON_H
-#define _OBJECTS_COMMON_H 1
+#ifndef DEF_OBJECTS_COMMON_H
+#define DEF_OBJECTS_COMMON_H 1
 
 //Object types
 //dense types are the same as directions (that fact is beeing used)

@@ -1,5 +1,5 @@
-#ifndef _GFXENG_H
-#define _GFXENG_H 1
+#ifndef DEF_GFXENG_H
+#define DEF_GFXENG_H 1
 
 #define BAR_HEIGHT      138
 #define ICON_SIZE       46

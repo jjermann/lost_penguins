@@ -1,5 +1,5 @@
-#ifndef _INPUT_H
-#define _INPUT_H 1
+#ifndef DEF_INPUT_H
+#define DEF_INPUT_H 1
 
 /** \brief Handels keyboard events
 

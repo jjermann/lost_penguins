@@ -1,5 +1,5 @@
-#ifndef _ANIMATION_H
-#define _ANIMATION_H 1
+#ifndef DEF_ANIMATION_H
+#define DEF_ANIMATION_H 1
 
 /** \brief A container for frames.
 

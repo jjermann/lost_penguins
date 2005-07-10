@@ -1,5 +1,5 @@
-#ifndef _OBJECTPOOLS_H
-#define _OBJECTPOOLS_H 1
+#ifndef DEF_OBJECTPOOLS_H
+#define DEF_OBJECTPOOLS_H 1
 
 /** \brief Container for objects.
 

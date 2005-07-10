@@ -1,5 +1,5 @@
-#ifndef _IMGCACHE_H
-#define _IMGCACHE_H 1
+#ifndef DEF_IMGCACHE_H
+#define DEF_IMGCACHE_H 1
 
 /** \brief Caches images.
 

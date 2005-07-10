@@ -1,5 +1,5 @@
-#ifndef _SOUNDCACHE_H
-#define _SOUNDCACHE_H 1
+#ifndef DEF_SOUNDCACHE_H
+#define DEF_SOUNDCACHE_H 1
 
 /** \brief Caches sounds.    
   

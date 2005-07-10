@@ -5,8 +5,8 @@
  *
  */
 
-#ifndef _SDL_rotozoom_h
-#define _SDL_rotozoom_h
+#ifndef DEF_SDL_ROTOZOOM_H
+#define DEF_SDL_ROTOZOOM_H
 
 #ifndef M_PI
 #define M_PI	3.141592654

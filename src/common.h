@@ -1,5 +1,5 @@
-#ifndef _COMMON_H
-#define _COMMON_H 1
+#ifndef DEF_COMMON_H
+#define DEF_COMMON_H 1
 
 /// Common header file
 ///

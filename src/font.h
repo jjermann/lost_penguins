@@ -1,5 +1,5 @@
-#ifndef _FONT_H
-#define _FONT_H 1
+#ifndef DEF_FONT_H
+#define DEF_FONT_H 1
 
 /*
 Copyright (C) 2003 Matthias Braun

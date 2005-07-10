@@ -1,5 +1,5 @@
-#ifndef _EVENTS_H
-#define _EVENTS_H 1
+#ifndef DEF_EVENTS_H
+#define DEF_EVENTS_H 1
 
 #define EV_DELAY     0x00000001
 #define EV_START     0x00000002

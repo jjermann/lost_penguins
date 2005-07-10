@@ -1,5 +1,5 @@
-#ifndef _PHYSICS_H  
-#define _PHYSICS_H 1
+#ifndef DEF_PHYSICS_H  
+#define DEF_PHYSICS_H 1
 
 /** \brief Updates all game states and animations, acts as a Mediator between objects
 

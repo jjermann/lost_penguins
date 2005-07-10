@@ -1,5 +1,5 @@
-#ifndef _CHARACTERS_COMMON_H
-#define _CHARACTERS_COMMON_H 1
+#ifndef DEF_CHARACTERS_COMMON_H
+#define DEF_CHARACTERS_COMMON_H 1
 
 #include "weapons.h"
 #include "objects_common.h"
