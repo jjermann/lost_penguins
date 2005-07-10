@@ -271,7 +271,7 @@ void GraphicConfigMenu::update() {
     entries[0]="Fullscreen:  " + string((gfxeng->fullscreen) ? "ON" : "OFF");
     entries[1]="Show FPS: "+string((gfxeng->show_fps) ? "ON" : "OFF");
     entries[2]="Show Player Bar: "+string((gfxeng->show_bar) ? "ON" : "OFF");
-    entries[3]="Video settings:  [" + string(driver_name) + "]   " + itos(gfxeng->screen->w) + " x " + itos(gfxeng->screen->h) + "  (" + itos(config.bpp) + " bpp)";
+    entries[3]="Video settings:  [" + string(driver_name) + "]   " + itos(gfxeng->screen->w) + " x " + itos(gfxeng->screen->h);
 /*
     entries.push_back("");
 
