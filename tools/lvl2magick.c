@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <magick/api.h>
 
 #define EXIT(a) { errno=(a); goto end; }
