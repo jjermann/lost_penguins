@@ -41,6 +41,7 @@ class Event;
 class Weapon;
 class Animation;
 class Menu;
+class Box;
 
 typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
@@ -147,10 +148,19 @@ Menu* setMenu(Menu* newmenu);
 Menu* closeMenu();
 /// Close all menus (menu=NULL)
 void closeMenus();
+/// Set the current box
+Box* setBox(Box* newbox);
+/// Close the current box
+void closeBox();
 //@}
 
 //global variables
 //@{
+extern const Uint32 rmask;
+extern const Uint32 gmask;
+extern const Uint32 bmask;
+extern const Uint32 amask;
+extern Uint32 vflags;
 /// Game configuration
 extern Config config;
 /// Image Cache
@@ -173,6 +183,8 @@ extern Font* font2;
 extern Uint8 game_mode;
 /// Currently used menu, NULL if not inside a menu
 extern Menu* menu;
+/// Currently used box, NULL if there is no box
+extern Box* box;
 //@}
 
 #endif

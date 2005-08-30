@@ -13,23 +13,11 @@
 
 
 GraphicsEngine::GraphicsEngine():
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-  rmask(0xff000000),
-  gmask(0x00ff0000),
-  bmask(0x0000ff00),
-  amask(0x000000ff),
-#else
-  rmask(0x000000ff),
-  gmask(0x0000ff00),
-  bmask(0x00ff0000),
-  amask(0xff000000),
-#endif
   screen(NULL),
   menubg(NULL),
   show_bar(true),
   show_fps(true),
-  fullscreen(config.full),
-  vflags(SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF) {
+  fullscreen(config.full) {
     shift.x=0;
     shift.y=0;
     resize(config.width, config.height);
@@ -82,7 +70,8 @@ void GraphicsEngine::draw() {
     } else if (game_mode&GAME_EDIT) {
         if (show_fps) toggleFPS();
         if (show_bar) togglePlayerBar();
-        drawEditScene();
+        drawScene();
+        drawBox();
         updatetype=UPDATE_ALL;
     } else return;
     //This is the most time consuming operation
@@ -147,11 +136,15 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
 void GraphicsEngine::drawScene() {
     //We don't want to change pos!
     SDL_Rect tmprect,srcpos;
-    if (scenario->player!=NULL) {
-        shift=setShift(scenario->player->getCenter());
-    } else {
-        shift.x=0;
-        shift.y=0;
+    if (game_mode&GAME_PLAY) {
+        if (scenario->player!=NULL) {
+            shift=setShift(scenario->player->getCenter());
+        } else {
+            shift.x=0;
+            shift.y=0;
+        }
+    } else if (game_mode&GAME_EDIT) {
+        SDL_FillRect(screen,NULL,0);
     }
 
     tmprect=*scenario->area;
@@ -168,31 +161,11 @@ void GraphicsEngine::drawScene() {
         ++obit;
     }
 
-    if (scenario->player!=NULL) {
+    if (game_mode&GAME_PLAY && scenario->player!=NULL) {
         tmprect=*(scenario->player->getPos());
         srcpos=scenario->player->getFrame().pos;
         shiftMapArea(tmprect,*(scenario->player->getCurPos()));
         SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
-    }
-}
-
-void GraphicsEngine::drawEditScene() {
-    //We don't want to change pos!
-    SDL_Rect tmprect,srcpos;
-
-    SDL_FillRect(screen,NULL,0);
-    tmprect=*scenario->area;
-    srcpos=scenario->background->getFrame().pos;
-    shiftMapArea(tmprect,*scenario->background->getCurPos());
-    SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
-    
-    object_iterator obit=scenario->pool->objectspool.begin();
-    while (obit!=scenario->pool->objectspool.end()) {
-        tmprect=*((*obit)->getPos());
-        srcpos=(*obit)->getFrame().pos;
-        shiftMapArea(tmprect,*((*obit)->getCurPos()));
-        SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
-        ++obit;
     }
 }
 
@@ -353,13 +326,21 @@ void GraphicsEngine::drawMenu() {
     }
 }
 
+void GraphicsEngine::drawBox() {
+    if (box && box->surface) {
+        SDL_Rect tmprect;
+        tmprect=box->area;
+        SDL_BlitSurface(box->surface,0,screen,&tmprect);
+    }
+}
+
 //this could probably be done much easier ;)
 inline void GraphicsEngine::setGameMenuBG() {
     if (menubg) SDL_FreeSurface(menubg);
     if (game_mode&GAME_PLAY) {
         drawScene();
         drawPlayerBar();
-    } else if (game_mode&GAME_EDIT) drawEditScene();
+    } else if (game_mode&GAME_EDIT) drawScene();
     SDL_Flip(screen);
     
     SDL_Surface* tmp = SDL_CreateRGBSurface (

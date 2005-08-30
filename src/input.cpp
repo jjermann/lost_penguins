@@ -46,11 +46,11 @@ inline void InputHandler::pollMenuEvents() {
     }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
-           // special events
-         case SDL_VIDEORESIZE: {
-             gfxeng->resize(event.resize.w, event.resize.h);
-             break;
-         }
+            // special events
+            case SDL_VIDEORESIZE: {
+                gfxeng->resize(event.resize.w, event.resize.h);
+                break;
+            }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
@@ -94,11 +94,11 @@ inline void InputHandler::pollPausedEvents() {
     }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
-           // special events
-         case SDL_VIDEORESIZE: {
-             gfxeng->resize(event.resize.w, event.resize.h);
-             break;
-         }
+             // special events
+             case SDL_VIDEORESIZE: {
+                gfxeng->resize(event.resize.w, event.resize.h);
+                break;
+            }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
@@ -136,11 +136,11 @@ inline void InputHandler::pollGameEvents() {
     }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
-           // special events
-         case SDL_VIDEORESIZE: {
-             gfxeng->resize(event.resize.w, event.resize.h);
-             break;
-         }
+            // special events
+            case SDL_VIDEORESIZE: {
+                gfxeng->resize(event.resize.w, event.resize.h);
+                break;
+            }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
@@ -183,14 +183,51 @@ inline void InputHandler::pollEditEvents() {
     }
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
-           // special events
-         case SDL_VIDEORESIZE: {
-             gfxeng->resize(event.resize.w, event.resize.h);
-             break;
-         }
+            // special events
+            case SDL_VIDEORESIZE: {
+                gfxeng->resize(event.resize.w, event.resize.h);
+                break;
+            }
             // keyboard events
             case SDL_QUIT: {
                 quitGame(0);
+            }
+            case SDL_MOUSEBUTTONUP: {
+                switch (event.button.button) {
+                    case SDL_BUTTON_LEFT: {
+                        break;
+                    }
+                    case SDL_BUTTON_RIGHT: {
+                        if (box) box->act(box->getCurrentEntry(event.button.x,event.button.y));
+                        break;
+                    }
+                    case SDL_BUTTON_MIDDLE: {
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                }
+                break;
+            }
+            case SDL_MOUSEBUTTONDOWN: {
+                switch (event.button.button) {
+                    case SDL_BUTTON_LEFT: {
+                        if (box) box->act(box->getCurrentEntry(event.button.x,event.button.y));
+                        break;
+                    }
+                    case SDL_BUTTON_RIGHT: {
+                        setBox(new EditBox(event.button.x,event.button.y));
+                        break;
+                    }
+                    case SDL_BUTTON_MIDDLE: {
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                }
+                break;
             }
             case SDL_KEYDOWN: {
                 SDLKey key=event.key.keysym.sym;

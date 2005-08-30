@@ -32,15 +32,14 @@ class GraphicsEngine {
         void setMenuBG(SDL_Surface* menu_background=NULL);
         const SDL_Rect& addShift(Sint16,Sint16);
         const SDL_Rect& setShift(Sint16,Sint16);
+        const SDL_Rect& getShift() {
+            return shift;
+        }
     protected:
-        const Uint32 rmask;
-        const Uint32 gmask;
-        const Uint32 bmask;
-        const Uint32 amask;
-        /// currently visible part of the map area
-        SDL_Rect vis_map;
         /// main screen
         SDL_Surface* screen;
+        /// currently visible part of the map area
+        SDL_Rect vis_map;
         /// menu background
         SDL_Surface* menubg;
         /// player bar
@@ -53,17 +52,12 @@ class GraphicsEngine {
         bool fullscreen;
         //update state
         Uint8 updatetype;
-        //video flags
-        Uint32 vflags;
         // current shift
         SDL_Rect shift;
     protected:
         /// Draw the background and all objects in the pool. This is a very time
         /// consuming function...
         inline void drawScene();
-        /// Draw the background and all objects in the pool in map editor mode.
-        /// This is a very time consuming function...
-        inline void drawEditScene();
         /// Draw player bar
         inline void drawPlayerBar();
         /// Draw the frames per second
@@ -73,6 +67,7 @@ class GraphicsEngine {
         /// If no scenario is running or the scenario was interrupted this will
         /// draw the menu.
         inline void drawMenu();
+        inline void drawBox();
         inline void resetMenuBG();
         inline SDL_Rect clipToBG(SDL_Rect dest) const;
         /// updates backpos and returns the new shift vector (ignore w,h)

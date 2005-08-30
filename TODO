@@ -12,27 +12,26 @@ Code
      o pointers => references where possible
      o Describe everything using Doxygen styles, move the documentation from
       *.cpp to the headers...
-     o Idea: _all_ objects should have a "kore" like the players (curpos thing)
+     o Idea: _all_ objects should have a "core" like the players (curpos thing)
        This would help in many ways and should be a frame information and not an
        image as done for players atm!
      o Use Singletons
-     o Introduce abstract classes for all engines and load the corresponding
+     o IDEA: Introduce abstract classes for all engines and load the corresponding
        concrete class depending on the game_mode instead of using if...
 
  o Move/Fall/push/crash/collisions:
      o the character should have more information what he hits
-     o movements into dense objects should involve a push()
-     o I have no idea about how the push should look like, elevators can be pushed
-       up, even though you don't collide with them on top
-     o characters should be "pushable", eg. a stone that falls down pushes the
-       character down or better: an elevator should push the characters up
+     o IDEA: movements into dense objects should involve a push()
+       -> I have no idea about how the push should look like, elevators can be pushed
+          up, even though you don't collide with them on top
+       -> characters should be "pushable", eg. a stone that falls down pushes the
+          character down or better: an elevator should push the characters up
      o In case of the elevator, the players are somehow "bound" to the elevator (ie.
        it's not like: the elevator moves, the character falls, but they move together)
        Solution: The elevators move function checks all objects it would
          hit, if they are pushable (not dense) they are moved first if
          possible. If it's not possible, do sthg else (stop the elevator and hit the
          object/whatever)...
-     o the collision detection and the move/fall code is all a big mess
 
  o Animations/Events:
      o Allow as complex Images as possible:
@@ -116,7 +115,7 @@ Code
           illegaly placed!
         - the placement should somehow involve checkPlace...
 
- o Plugins:
+ o (Plugins):
      o move object creation code (addObjectByName) to the objects
      o create dynamical plugins for all objects (or compile all in)
 
@@ -145,12 +144,10 @@ Features/Ideas
 ==============
 
  o Make water movements possible (eric)
- o Improve player bar management
  o Add better graphics
  o finnish the map editor
  o OpenGL
  o Simple AI
- o Menu
 
  o Finnish the vikings:
      - weapons: run, jump2, fart, sword, arm, fire, claws
@@ -182,6 +179,3 @@ Features/Ideas
 
  o Items?:
     - special items
-
- o IDEA: add horizontal gravity that slows objects down??
-

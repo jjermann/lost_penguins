@@ -1,5 +1,7 @@
 #include "common.h"
 #include "scenario.h"
+//HACK
+#include "gfxeng.h"
 #include "sfxeng.h"
 #include "sndcache.h"
 #include "objectpools.h"
@@ -37,6 +39,8 @@ ObjectsPool::~ObjectsPool() {
 }
 
 Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sint16 x, Sint16 y, const string& arg1, const string& arg2, const string& arg3) {
+    x-=gfxeng->getShift().x;
+    y-=gfxeng->getShift().y;
     //Set names...
     string name=obj;
     if (arg1!="0") {

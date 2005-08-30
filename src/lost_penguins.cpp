@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
         cout << "Couldn't initialize SDL!\n";
         exit(-1);
     }
-    SDL_ShowCursor(SDL_DISABLE);
+    SDL_ShowCursor(SDL_ENABLE);
     //Change directory to datadir
 
     cout << "ImageCache...\n";
@@ -64,6 +64,7 @@ int main(int argc, char* argv[]) {
 
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
+    closeBox();
     closeMenus();
     delete scenario;
     cout << "Scenario closed...\n";
