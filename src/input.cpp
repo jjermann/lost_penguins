@@ -109,7 +109,7 @@ inline void InputHandler::pollPausedEvents() {
                 if (key==config.keybind[KEY_SWITCH]) {
                      scenario->pool->switchPlayer();
                 } else if (key==config.keybind[KEY_PAUSE]) {
-                     game_mode&=~GAME_PAUSED;
+                     removeGameMode(GAME_PAUSED);
                      sfxeng->resumeMusic();
                 } else if (key==config.keybind[KEY_MENU]) {
                      sfxeng->pauseMusic();
@@ -151,7 +151,7 @@ inline void InputHandler::pollGameEvents() {
                 if (key==config.keybind[KEY_SWITCH]) {
                      scenario->pool->switchPlayer();
                 } else if (key==config.keybind[KEY_PAUSE]) {  
-                     game_mode|=GAME_PAUSED;
+                     addGameMode(GAME_PAUSED);
                      sfxeng->playWAV(au_pause);
                      sfxeng->pauseMusic();
                 } else if (key==config.keybind[KEY_MENU]) {
@@ -204,13 +204,21 @@ inline void InputHandler::pollEditEvents() {
                 SDLKey key=event.key.keysym.sym;
                 keypressed[key]=true;
                 if (key==config.keybind[KEY_FULL]) {
-                     gfxeng->toggleFullScreen();
+                    gfxeng->toggleFullScreen();
                 } else if (key==config.keybind[KEY_MENU]) {
-                     sfxeng->pauseMusic();
-                     setMenu(new EditMenu());
-                     gfxeng->update(UPDATE_ALL);
+                    sfxeng->pauseMusic();
+                    setMenu(new EditMenu());
+                    gfxeng->update(UPDATE_ALL);
                 } else if (key==config.keybind[KEY_QUIT]) {
-                     quitGame(0);
+                    quitGame(0);
+                } else if (key==config.keybind[KEY_NOANIM]) {
+                    gfxeng->update(UPDATE_ALL);
+                    if (game_mode&GAME_EDIT_NOANIM) {
+                        removeGameMode(GAME_EDIT_NOANIM);
+                    } else {
+                        scenario->reloadMap();
+                        addGameMode(GAME_EDIT_NOANIM);
+                    }
                 }
                 break;
             }

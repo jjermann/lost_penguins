@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         cout << "Couldn't initialize SDL!\n";
         exit(-1);
     }
-    SDL_ShowCursor(SDL_ENABLE);
+    SDL_ShowCursor(SDL_DISABLE);
     //Change directory to datadir
 
     cout << "ImageCache...\n";
@@ -113,6 +113,7 @@ int readConfig(const string& filename) {
     config.keybind[KEY_SWITCH]  = SDLK_LCTRL;
     config.keybind[KEY_PAUSE]   = SDLK_TAB;
     config.keybind[KEY_MENU]    = SDLK_ESCAPE;
+    config.keybind[KEY_NOANIM]  = SDLK_F3;
     config.keybind[KEY_FPS]     = SDLK_F2;
     config.keybind[KEY_BAR]     = SDLK_F1;
     config.keybind[KEY_FULL]    = SDLK_f;

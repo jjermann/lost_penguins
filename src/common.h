@@ -65,8 +65,9 @@ typedef std::set<Monster *>::iterator monster_iterator;
 
 #define GAME_PAUSED         0x00000001
 #define GAME_PLAY           0x00000002
-#define GAME_EDIT           0x00000004
-#define GAME_MENU           0x00000008
+#define GAME_MENU           0x00000004
+#define GAME_EDIT           0x00000008
+#define GAME_EDIT_NOANIM    0x00000010
 
 enum ConfigKey {
     KEY_START,
@@ -85,7 +86,8 @@ enum ConfigKey {
     KEY_FPS,
     KEY_BAR,
     KEY_FULL,
-    KEY_QUIT
+    KEY_QUIT,
+    KEY_NOANIM
 };
 
 /**\brief Collision type
@@ -143,6 +145,12 @@ string itos(int);
 /// Helper function boost that increases/decreases the absolute value
 int boost(int,int);
 
+/// Set game mode
+void setGameMode(Uint8);
+/// Add game mode
+void addGameMode(Uint8);
+/// Remove game mode
+void removeGameMode(Uint8);
 /// Set the current menu
 Menu* setMenu(Menu* newmenu);
 /// Close the current menus

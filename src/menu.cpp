@@ -11,8 +11,8 @@ Menu* setMenu(Menu* newmenu) {
     if (menu) gfxeng->update(UPDATE_MENU);
     else gfxeng->update(UPDATE_ALL);
     newmenu->setLast(menu);
-    if (newmenu) game_mode|=GAME_MENU;
-    else game_mode&=~GAME_MENU;
+    if (newmenu) addGameMode(GAME_MENU);
+    else removeGameMode(GAME_MENU);
     return menu=newmenu;   
 }
  
@@ -22,8 +22,8 @@ Menu* closeMenu() {
         Menu* tmp=menu->getLast();
         delete menu;
         if (!tmp) gfxeng->update(UPDATE_ALL);
-        if (tmp) game_mode|=GAME_MENU;
-        else game_mode&=~GAME_MENU;
+        if (tmp) addGameMode(GAME_MENU);
+        else removeGameMode(GAME_MENU);
         return menu=tmp;
     } else {
         gfxeng->update(UPDATE_ALL);
@@ -66,7 +66,7 @@ void StartMenu::act() {
     case 0: {
         if ((config.map!="") && (scenario->loadMap(config.map)==0)) {
             closeMenu();
-            game_mode|=GAME_PLAY;
+            addGameMode(GAME_PLAY);
             cout << "Starting game...\n" << endl;
         } else {
             cout << "Select a valid map first...\n" << endl;
@@ -78,7 +78,7 @@ void StartMenu::act() {
         if ((config.map!="") && (scenario->loadMap(config.map)==0)) {
             closeMenu();
             cout << "Starting editor...\n" << endl;
-            game_mode|=GAME_EDIT;
+            addGameMode(GAME_EDIT);
             if (!editor) editor=new Editor();
         } else {
             cout << "Select a valid map first...\n" << endl;

@@ -37,3 +37,30 @@ int boost(int a, int b) {
     if (a>=0) return a=max(0,a+b);
     else return a=min(0,a-b);
 }
+
+void setGameMode(Uint8 newmode) {
+    game_mode=newmode;
+    if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
+        SDL_ShowCursor(SDL_ENABLE);
+    } else {
+        SDL_ShowCursor(SDL_DISABLE);
+    }
+}
+
+void addGameMode(Uint8 addmode) {
+    game_mode|=addmode;
+    if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
+        SDL_ShowCursor(SDL_ENABLE);
+    } else {
+        SDL_ShowCursor(SDL_DISABLE);
+    }
+}
+
+void removeGameMode(Uint8 rmmode) {
+    game_mode&=~rmmode;
+    if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
+        SDL_ShowCursor(SDL_ENABLE);
+    } else {
+        SDL_ShowCursor(SDL_DISABLE);
+    }
+}

@@ -3,6 +3,7 @@
 #include "objectpools.h"
 #include "menu.h"
 #include "font.h"
+#include "gfxeng.h"
 #include "editor.h"
 
 
@@ -19,6 +20,7 @@ Editor::~Editor() {
 }
 
 void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
+    gfxeng->update(UPDATE_ALL);
     if (action&EDIT_RESET_ACTIONS) {
         for (Uint8 i=0; i<6; i++) {
             action_mouse_pressed[i]=NOTHING;
@@ -32,6 +34,7 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
     } else if (action&EDIT_ACT_BOX) {
         if (box) box->act(box->getCurrentEntry(x,y));
     } else if (action&EDIT_PLACE_OBJECT) {
+        scenario->reloadMap();
         string next_name=scenario->pool->getNextObjectName(place_name);
         if (scenario->pool->addObjectbyName(place_name,place_image,x,y,next_name)) {
             appendtoBuf(place_name+" "+place_image+" "+itos(x)+" "+itos(y)+" "+next_name);
@@ -73,10 +76,12 @@ int Editor::saveBuf(string filename) {
 }
 
 Box* Editor::setBox(Box* newbox) {
+    gfxeng->update(UPDATE_ALL);
     return box=newbox;   
 }
  
 void Editor::closeBox() {
+    gfxeng->update(UPDATE_ALL);
     if (box) delete box;
     box=NULL;
 }
@@ -95,6 +100,7 @@ Box::~Box() {
 }
  
 void Box::act(Sint8) {
+    gfxeng->update(UPDATE_ALL);
     editor->closeBox();
 }
  
@@ -130,6 +136,7 @@ Sint8 Box::getCurrentEntry(Sint16 x, Sint16 y) {
 }
  
 void Box::update() {
+    gfxeng->update(UPDATE_ALL);
     if (surface==NULL) {
         getArea();
         SDL_Surface* tmp=SDL_CreateRGBSurface(vflags, area.w, area.h, 32, rmask, gmask, bmask, amask);
@@ -200,6 +207,7 @@ EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
 }
 
 void EditBox::act(Sint8 curentry) {
+    gfxeng->update(UPDATE_ALL);
     if (curentry==-1 || curentry >= (Sint8)entries.size()) {
         editor->closeBox();
     } else {

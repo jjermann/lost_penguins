@@ -38,6 +38,7 @@ void PhysicHandler::update() {
         reset_time=false;
         tcurrent=SDL_GetTicks();
         updateGame();
+    } else if (game_mode&GAME_EDIT_NOANIM) {
     } else if (game_mode&GAME_EDIT) {
         if (reset_time) {
             dt=0;

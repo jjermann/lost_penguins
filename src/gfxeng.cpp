@@ -71,9 +71,11 @@ void GraphicsEngine::draw() {
     } else if (game_mode&GAME_EDIT) {
         if (show_fps) toggleFPS();
         if (show_bar) togglePlayerBar();
-        drawScene();
-        drawBox();
-        updatetype=UPDATE_ALL;
+        if (!(game_mode&GAME_EDIT_NOANIM) || updatetype==UPDATE_ALL) {
+            drawScene();
+            drawBox();
+            updatetype=UPDATE_ALL;
+        }
     } else return;
     //This is the most time consuming operation
     if (updatetype!=UPDATE_NOTHING) SDL_Flip(screen);
