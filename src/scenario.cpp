@@ -49,23 +49,14 @@ inline void Scenario::reinitMap() {
     background=NULL;
     area=NULL;
     player=NULL;
-    name="";
 }
 
-int Scenario::loadMap(string mapname) {
-    reinitMap();
-    sfxeng->playMusic((config.datadir + "01theme.wav").c_str());
+int Scenario::loadMapBuf(string mapname) {
     name=mapname;
     ifstream mapfile;
     string tmpline;
-    string image;
-    string arg1,arg2,arg3;
-    Uint16 x,y;
-    background=NULL;
-    area=NULL;
     string loadfile=config.datadir+name;
-    bool header=false;
-    
+
     mapfile.open(loadfile.c_str());
     if (mapfile) {
         cout << "Loading new map: " << loadfile << endl;
@@ -74,52 +65,67 @@ int Scenario::loadMap(string mapname) {
         return -2;
     }
 
-    //check every line
+    mapbuf.clear();
     while (getline(mapfile,tmpline)) {
+        mapbuf.push_back(tmpline);
+    }
+
+    mapfile.close();
+    mapfile.clear();
+    return 0;
+}
+
+int Scenario::reloadMap() {
+    reinitMap();
+    sfxeng->playMusic((config.datadir + "01theme.wav").c_str());
+    string image;
+    string cname,arg1,arg2,arg3;
+    Uint16 x,y;
+    bool header=false;
+
+    //check every line
+    for (Uint16 linenum=0; linenum<mapbuf.size(); linenum++) {
         //parse the header, always start a header with #HEADER and end it with #ENDHEADER!
         if (header) {
-            name.erase();
+            cname.erase();
             arg1.erase();
             arg2.erase();
             arg3.erase();
-            std::istringstream tmpstream(tmpline);
-            tmpstream >> name >> arg1 >> arg2 >> arg3;
-            if (name[0]=='#') {
-                if (name=="#ENDHEADER") header=false;
+            std::istringstream tmpstream(mapbuf[linenum]);
+            tmpstream >> cname >> arg1 >> arg2 >> arg3;
+            if (cname[0]=='#') {
+                if (cname=="#ENDHEADER") header=false;
                 continue;
             }
             continue;
         }
-        name.erase();
+        cname.erase();
         image.erase();
         x=0;
         y=0;
         arg1=arg2="0";
         arg3="";
-        std::istringstream tmpstream(tmpline);
-        tmpstream >> name >> image >> x >> y >> arg1 >> arg2 >> arg3;
+        std::istringstream tmpstream(mapbuf[linenum]);
+        tmpstream >> cname >> image >> x >> y >> arg1 >> arg2 >> arg3;
 
         //Skip empty lines
-        if (name.empty()) continue;
+        if (cname.empty()) continue;
         //Skip comments
-        if (name[0]=='#') {
-            if (name=="#HEADER") header=true;
+        if (cname[0]=='#') {
+            if (cname=="#HEADER") header=true;
             continue;
         }
 
-        if (name=="Background" && (!background)) {
+        if (cname=="Background" && (!background)) {
             background=new Background(image);
             if (background) area=background->getPos();
         //Background has to be first!
         } else if (background) {
-            pool->addObjectbyName(name,image,x,y,arg1,arg2,arg3);
+            pool->addObjectbyName(cname,image,x,y,arg1,arg2,arg3);
         } else {
-            cout << "No background found yet, skipping " << name << " ...\n";
+            cout << "No background found yet, skipping " << cname << " ...\n";
         }
     }
-
-    mapfile.close();
-    mapfile.clear();
 
     //Has a background been found?
     if (background) {
@@ -131,6 +137,11 @@ int Scenario::loadMap(string mapname) {
        cout << "Map loading failed: No background found!\n";
        return -1;
     }
+}
+
+int Scenario::loadMap(string mapname) {
+    if (!loadMapBuf(mapname) && !reloadMap()) return 0;
+    else return -1;
 }
 
 Uint16 Scenario::getDirection(const SDL_Rect& src, const SDL_Rect& dest) const {

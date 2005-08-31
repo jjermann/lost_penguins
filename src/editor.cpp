@@ -9,10 +9,13 @@
 Editor::Editor() {
     run_action(EDIT_RESET_ACTIONS);
     string place_name="";
+    save_name="newmap.txt";
+    box=NULL;
 }
 
 Editor::~Editor() {
     closeBox();
+    saveBuf(save_name);
 }
 
 void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
@@ -29,9 +32,44 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
     } else if (action==EDIT_ACT_BOX) {
         if (box) box->act(box->getCurrentEntry(x,y));
     } else if (action==EDIT_PLACE_OBJECT) {
-        scenario->pool->addObjectbyName(place_name,place_image,x,y,scenario->pool->getNextObjectName(place_name));
+        string next_name=scenario->pool->getNextObjectName(place_name);
+        if (scenario->pool->addObjectbyName(place_name,place_image,x,y,next_name)) {
+            appendtoBuf(place_name+" "+place_image+" "+itos(x)+" "+itos(y)+" "+next_name);
+        }
         action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
     } else { }
+}
+
+void Editor::appendtoBuf(string line) {
+    scenario->mapbuf.push_back(line);
+}
+
+string Editor::removefromBuf(string match) {
+    for (Uint16 linenum=0; linenum<scenario->mapbuf.size(); linenum++) {
+        if (scenario->mapbuf[linenum].find(match)!=string::npos) {
+            vector<string>::iterator it=scenario->mapbuf.begin()+linenum;
+            string returnstring=scenario->mapbuf[linenum];
+            scenario->mapbuf.erase(it);
+            return returnstring;
+        }
+    }
+    return "";
+}
+
+int Editor::saveBuf(string filename) {
+    ofstream outfile;
+    outfile.open(filename.c_str());
+    if (outfile.is_open()) {
+        for (Uint16 linenum=0; linenum<scenario->mapbuf.size(); linenum++) {
+            outfile << scenario->mapbuf[linenum] << endl;
+        }
+        outfile.close();
+        cout << "Saved map to " << filename << endl;
+        return 0;
+    } else {
+        cout << "Failed to save map to " << filename << ": Could not open file!" << endl;
+        return -1;
+    }
 }
 
 Box* Editor::setBox(Box* newbox) {
@@ -170,6 +208,8 @@ void EditBox::act(Sint8 curentry) {
             editor->place_image="viking1.bmp";
         } else if (editor->place_name=="Water") {
             editor->place_image="water.bmp";
+        } else if (editor->place_name=="Exit") {
+            editor->place_image="exit.bmp";
         } else if (editor->place_name=="Teleporter") {
             editor->place_image="viking1.bmp";
         } else if (editor->place_name=="Wind") {

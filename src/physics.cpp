@@ -95,7 +95,7 @@ inline void PhysicHandler::updateGame() {
         if (input->keyState(KEY_RIGHT)) scenario->player->in_right(dt);
         if (input->keyState(KEY_UP))    scenario->player->in_up(dt);
         if (input->keyState(KEY_DOWN))  scenario->player->in_down(dt);
-    } else {
+    } else if (scenario->player!=NULL) {
         scenario->player->unsetState(STATE_MLEFT);
         scenario->player->unsetState(STATE_MRIGHT);
     }

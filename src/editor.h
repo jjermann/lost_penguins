@@ -74,13 +74,23 @@ class Editor {
         }
         Box* box;
     protected:
+        /// Name the saved map file
+        string save_name;
         /// Object to place when clicking the left mouse button
         string place_name;
         /// Image name of the placed object
         string place_image;
         /// Action type for the mouse buttons when clicking
         Uint32 action_mouse_pressed[6];
+        /// Action type for the mouse buttons when releasing the button
         Uint32 action_mouse_released[6];
+        /// Append a command to the buffered map file
+        void appendtoBuf(string);
+        /* TODO: add header modifiers */
+        /// Remove the first line in the buffered map file matching the specified string
+        string removefromBuf(string);
+        /// Save the map file buffer to the specified file if possible
+        int saveBuf(string);
 };
 
 #endif

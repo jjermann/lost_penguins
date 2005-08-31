@@ -61,6 +61,10 @@ class Scenario {
         ObjectsPool* pool;
         /// Physic Handler
         PhysicHandler* physic;
+        /// Used to load the map file into a buffer
+        int loadMapBuf(string mapname);
+        /// Reload the map file using the buffered map file
+        int reloadMap();
         ///\brief Loads and initializes the map data
         ///
         /// Parses the map file and tries to add the objects by using addObjectByName()
@@ -71,6 +75,7 @@ class Scenario {
         bool failed;
         /// Name of the map file
         string name;
+        std::vector<string> mapbuf;
     private:
         inline void reinitMap();
 };
