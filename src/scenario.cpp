@@ -77,7 +77,6 @@ int Scenario::loadMapBuf(string mapname) {
 
 int Scenario::reloadMap() {
     reinitMap();
-    sfxeng->playMusic((config.datadir + "01theme.wav").c_str());
     string image;
     string cname,arg1,arg2,arg3;
     Uint16 x,y;
@@ -126,6 +125,8 @@ int Scenario::reloadMap() {
             cout << "No background found yet, skipping " << cname << " ...\n";
         }
     }
+
+    sfxeng->playMusic((config.datadir + "01theme.wav").c_str());
 
     //Has a background been found?
     if (background) {

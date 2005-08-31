@@ -19,6 +19,7 @@ GraphicsEngine::GraphicsEngine():
   show_bar(true),
   show_fps(true),
   fullscreen(config.full) {
+    updatetype=UPDATE_ALL;
     shift.x=0;
     shift.y=0;
     resize(config.width, config.height);
@@ -32,8 +33,7 @@ GraphicsEngine::~GraphicsEngine() {
 }
 
 void GraphicsEngine::update(Uint8 upd) {
-    if (updatetype==UPDATE_ALL) return;
-    else updatetype=upd;
+    if (updatetype!=UPDATE_ALL) updatetype=upd;
 }
 
 void GraphicsEngine::draw() {

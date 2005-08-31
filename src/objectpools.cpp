@@ -123,10 +123,11 @@ string ObjectsPool::getNextObjectName(const string& basename) {
 ///\todo Fix this mess
 object_iterator ObjectsPool::removeObject(object_iterator it) {
     if (it!=objectspool.end()) {
-        objectspool.erase(*it);
-        if (Character* ptrc = dynamic_cast<Character*>(*it)) {
+        Object* obj=*it;
+        objectspool.erase(obj);
+        if (Character* ptrc = dynamic_cast<Character*>(obj)) {
             characterspool.erase(ptrc);
-            if(Player* ptrv = dynamic_cast<Player*>(*it)) {
+            if(Player* ptrv = dynamic_cast<Player*>(obj)) {
                 if (playerspool.erase(ptrv)) {
                     currentplayer=playerspool.begin();
                     if (currentplayer!=playerspool.end()) {
@@ -134,10 +135,10 @@ object_iterator ObjectsPool::removeObject(object_iterator it) {
                         scenario->player=*currentplayer;
                     } else scenario->player=NULL;
                 }
-            } else if (Monster* ptrm = dynamic_cast<Monster*>(*it)) monsterspool.erase(ptrm);
+            } else if (Monster* ptrm = dynamic_cast<Monster*>(obj)) monsterspool.erase(ptrm);
         }
-        (*it)->destroy();
-        return (++it);
+        (obj)->destroy();
+        return (objectspool.begin());
     } else return objectspool.end();
 }
 

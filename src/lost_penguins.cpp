@@ -66,6 +66,10 @@ int main(int argc, char* argv[]) {
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
     closeMenus();
+    if (editor) {
+        cout << "Deleting Editor...\n";
+        delete editor;
+    }
     delete scenario;
     cout << "Scenario closed...\n";
     delete sfxeng;
@@ -77,10 +81,6 @@ int quitGame(int errorcode=0) {
     delete sndcache;
     cout << "Deleting ImageCache...\n";
     delete imgcache;
-    if (editor) {
-        cout << "Deleting Editor...\n";
-        delete editor;
-    }
     cout << "Quiting SDL...\n";
     SDL_Quit();
     exit(errorcode);
