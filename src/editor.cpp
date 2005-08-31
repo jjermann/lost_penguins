@@ -19,7 +19,7 @@ Editor::~Editor() {
 }
 
 void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
-    if (action==EDIT_RESET_ACTIONS) {
+    if (action&EDIT_RESET_ACTIONS) {
         for (Uint8 i=0; i<6; i++) {
             action_mouse_pressed[i]=NOTHING;
             action_mouse_released[i]=NOTHING;
@@ -27,16 +27,16 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
         action_mouse_pressed[SDL_BUTTON_RIGHT]=EDIT_BOX;
         action_mouse_released[SDL_BUTTON_RIGHT]=EDIT_ACT_BOX;
-    } else if (action==EDIT_BOX) {
+    } else if (action&EDIT_BOX) {
         setBox(new EditBox(x,y));
-    } else if (action==EDIT_ACT_BOX) {
+    } else if (action&EDIT_ACT_BOX) {
         if (box) box->act(box->getCurrentEntry(x,y));
-    } else if (action==EDIT_PLACE_OBJECT) {
+    } else if (action&EDIT_PLACE_OBJECT) {
         string next_name=scenario->pool->getNextObjectName(place_name);
         if (scenario->pool->addObjectbyName(place_name,place_image,x,y,next_name)) {
             appendtoBuf(place_name+" "+place_image+" "+itos(x)+" "+itos(y)+" "+next_name);
         }
-        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
+//        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
     } else { }
 }
 
@@ -246,7 +246,6 @@ void EditBox::act(Sint8 curentry) {
             editor->place_image="";
         }
         editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
-        editor->action_mouse_released[SDL_BUTTON_LEFT]=EDIT_RESET_ACTIONS;
         editor->closeBox();
     }
 }

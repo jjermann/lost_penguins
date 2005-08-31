@@ -1,6 +1,8 @@
 #ifndef DEF_INPUT_H
 #define DEF_INPUT_H 1
 
+#define SHIFT_SPEED 10
+
 /** \brief Handels keyboard events
 
     \remark A key release event which is passed on to the PhysicHandler

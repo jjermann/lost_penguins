@@ -221,12 +221,12 @@ inline void InputHandler::pollEditEvents() {
     }    
     keystate = SDL_GetKeyState(NULL);
     if (keyState(KEY_LEFT)) {
-        gfxeng->addShift(-1,0);
+        gfxeng->addShift(-SHIFT_SPEED,0);
     } else if (keyState(KEY_RIGHT)) {
-        gfxeng->addShift(1,0);
+        gfxeng->addShift(SHIFT_SPEED,0);
     } else if (keyState(KEY_UP)) {
-        gfxeng->addShift(0,-1);   
+        gfxeng->addShift(0,-SHIFT_SPEED);   
     } else if (keyState(KEY_DOWN)) {
-        gfxeng->addShift(0,1);
+        gfxeng->addShift(0,SHIFT_SPEED);
     }
 }
