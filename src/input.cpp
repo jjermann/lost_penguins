@@ -9,7 +9,7 @@
 #include "menu.h"
 #include "physics.h"
 #include "objects_common.h"
-
+#include "editor.h"
 
 InputHandler::InputHandler() {
     au_pause=sndcache->loadWAV("pause.wav");
@@ -193,40 +193,11 @@ inline void InputHandler::pollEditEvents() {
                 quitGame(0);
             }
             case SDL_MOUSEBUTTONUP: {
-                switch (event.button.button) {
-                    case SDL_BUTTON_LEFT: {
-                        break;
-                    }
-                    case SDL_BUTTON_RIGHT: {
-                        if (box) box->act(box->getCurrentEntry(event.button.x,event.button.y));
-                        break;
-                    }
-                    case SDL_BUTTON_MIDDLE: {
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
+                editor->run_action(editor->getActionMReleased(event.button.button),event.button.x,event.button.y);
                 break;
             }
             case SDL_MOUSEBUTTONDOWN: {
-                switch (event.button.button) {
-                    case SDL_BUTTON_LEFT: {
-                        if (box) box->act(box->getCurrentEntry(event.button.x,event.button.y));
-                        break;
-                    }
-                    case SDL_BUTTON_RIGHT: {
-                        setBox(new EditBox(event.button.x,event.button.y));
-                        break;
-                    }
-                    case SDL_BUTTON_MIDDLE: {
-                        break;
-                    }
-                    default: {
-                        break;
-                    }
-                }
+                editor->run_action(editor->getActionMPressed(event.button.button),event.button.x,event.button.y);
                 break;
             }
             case SDL_KEYDOWN: {

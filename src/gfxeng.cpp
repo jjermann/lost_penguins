@@ -6,6 +6,7 @@
 #include "imgcache.h"
 #include "scenario.h"
 #include "menu.h"
+#include "editor.h"
 //Only needed for fps
 #include "scenario.h"
 #include "physics.h"
@@ -327,10 +328,10 @@ void GraphicsEngine::drawMenu() {
 }
 
 void GraphicsEngine::drawBox() {
-    if (box && box->surface) {
+    if (editor->hasBox()) {
         SDL_Rect tmprect;
-        tmprect=box->area;
-        SDL_BlitSurface(box->surface,0,screen,&tmprect);
+        tmprect=editor->box->area;
+        SDL_BlitSurface(editor->box->surface,0,screen,&tmprect);
     }
 }
 

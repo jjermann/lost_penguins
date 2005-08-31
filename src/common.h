@@ -42,6 +42,7 @@ class Weapon;
 class Animation;
 class Menu;
 class Box;
+class Editor;
 
 typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
@@ -49,23 +50,23 @@ typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
 
 //General definitions
-#define NOTHING         0x00000000
-#define ALL             0xFFFFFFFF
-#define DIR_RIGHT       0x00000001
-#define DIR_LEFT        0x00000002
-#define DIR_UP          0x00000004
-#define DIR_DOWN        0x00000008
-#define DIR_ALL         0x0000000F
-#define DIR_UPR         0x00000005
-#define DIR_UPL         0x00000006
-#define DIR_DWR         0x00000009
-#define DIR_DWL         0x0000000A
-#define DIR_LR          0x00000003
+#define NOTHING             0x00000000
+#define ALL                 0xFFFFFFFF
+#define DIR_RIGHT           0x00000001
+#define DIR_LEFT            0x00000002
+#define DIR_UP              0x00000004
+#define DIR_DOWN            0x00000008
+#define DIR_ALL             0x0000000F
+#define DIR_UPR             0x00000005
+#define DIR_UPL             0x00000006
+#define DIR_DWR             0x00000009
+#define DIR_DWL             0x0000000A
+#define DIR_LR              0x00000003
 
-#define GAME_PAUSED     0x00000001
-#define GAME_PLAY       0x00000002
-#define GAME_EDIT       0x00000004
-#define GAME_MENU       0x00000008
+#define GAME_PAUSED         0x00000001
+#define GAME_PLAY           0x00000002
+#define GAME_EDIT           0x00000004
+#define GAME_MENU           0x00000008
 
 enum ConfigKey {
     KEY_START,
@@ -148,10 +149,6 @@ Menu* setMenu(Menu* newmenu);
 Menu* closeMenu();
 /// Close all menus (menu=NULL)
 void closeMenus();
-/// Set the current box
-Box* setBox(Box* newbox);
-/// Close the current box
-void closeBox();
 //@}
 
 //global variables
@@ -183,8 +180,8 @@ extern Font* font2;
 extern Uint8 game_mode;
 /// Currently used menu, NULL if not inside a menu
 extern Menu* menu;
-/// Currently used box, NULL if there is no box
-extern Box* box;
+/// Editor
+extern Editor* editor;
 //@}
 
 #endif

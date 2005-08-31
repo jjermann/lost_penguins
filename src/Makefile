@@ -9,7 +9,7 @@ SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image -ldl -rdynamic
 OBJS  = common.o gfxeng.o input.o font.o lost_penguins.o scenario.o\
         objects_common.o sfxeng.o players_common.o monsters_common.o\
         characters_common.o objectpools.o weapons.o events.o imgcache.o\
-        sndcache.o physics.o animation.o menu.o SDL_rotozoom.o
+        sndcache.o physics.o animation.o menu.o editor.o SDL_rotozoom.o
 PLUGS = objects.a
 BIN   = ../lost_penguins
 

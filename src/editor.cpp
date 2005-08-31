@@ -1,0 +1,212 @@
+#include "common.h"
+#include "scenario.h"
+#include "objectpools.h"
+#include "menu.h"
+#include "font.h"
+#include "editor.h"
+
+
+Editor::Editor() {
+    run_action(EDIT_RESET_ACTIONS);
+    string place_name="";
+}
+
+Editor::~Editor() {
+    closeBox();
+}
+
+void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
+    if (action==EDIT_RESET_ACTIONS) {
+        for (Uint8 i=0; i<6; i++) {
+            action_mouse_pressed[i]=NOTHING;
+            action_mouse_released[i]=NOTHING;
+        }
+        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
+        action_mouse_pressed[SDL_BUTTON_RIGHT]=EDIT_BOX;
+        action_mouse_released[SDL_BUTTON_RIGHT]=EDIT_ACT_BOX;
+    } else if (action==EDIT_BOX) {
+        setBox(new EditBox(x,y));
+    } else if (action==EDIT_ACT_BOX) {
+        if (box) box->act(box->getCurrentEntry(x,y));
+    } else if (action==EDIT_PLACE_OBJECT) {
+        scenario->pool->addObjectbyName(place_name,place_image,x,y,scenario->pool->getNextObjectName(place_name));
+        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
+    } else { }
+}
+
+Box* Editor::setBox(Box* newbox) {
+    return box=newbox;   
+}
+ 
+void Editor::closeBox() {
+    if (box) delete box;
+    box=NULL;
+}
+ 
+Box::Box(Sint16 x, Sint16 y):
+  title("MENU"),
+  surface(NULL),
+  //don't forget the "::"
+  font(::font),
+  font_title(font),
+  font_high(font2) {  
+    area.x=x;
+    area.y=y;
+}
+Box::~Box() {
+}
+ 
+void Box::act(Sint8) {
+    editor->closeBox();
+}
+ 
+const SDL_Rect& Box::getArea() {
+    Uint16 tmp=0;
+    Uint16 maxwidth=font_title->getTextWidth(title);
+    for (Uint8 i=0; i<entries.size(); i++) {
+        tmp=max(font->getTextWidth(entries[i]),font_high->getTextWidth(entries[i]));
+        maxwidth=max(maxwidth,tmp);
+    }
+    area.w=maxwidth+2*WFONT;
+    area.h=entries.size()*(DFONT+font->getHeight())+2*WFONT+font_title->getHeight();
+    return area;
+}
+ 
+Sint8 Box::getCurrentEntry(Sint16 x, Sint16 y) {
+    getArea();
+    if (
+      (x>=(area.x+area.w)) ||
+      (x<=area.x) ||
+      (y>=(area.y+area.h)) ||
+      (y<=(area.y+WFONT+font_title->getHeight()+(int)(DFONT/2)))) {
+        return -1;
+    }
+    Sint16 tmp=y-area.y-WFONT-font_title->getHeight()-(int)(DFONT/2);
+    Uint16 entrysize=DFONT+font->getHeight();
+    Uint8 currententry=0;
+    while (tmp>entrysize) {
+        tmp-=entrysize;
+        ++currententry;
+    }
+    return currententry;
+}
+ 
+void Box::update() {
+    if (surface==NULL) {
+        getArea();
+        SDL_Surface* tmp=SDL_CreateRGBSurface(vflags, area.w, area.h, 32, rmask, gmask, bmask, amask);
+        surface=SDL_DisplayFormatAlpha(tmp);
+        SDL_FreeSurface(tmp);
+        SDL_FillRect(surface,0,SDL_MapRGBA(surface->format,200,200,200,180));
+
+        /* create a border */
+        Sint16 tmph=0;
+        SDL_Rect line;
+        line.x=0;
+        line.y=0;
+        line.w=BORDERSIZE;
+        line.h=area.h;
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+        line.x=area.w-BORDERSIZE;
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+        line.x=0;
+        line.y=0;
+        line.w=area.w;
+        line.h=BORDERSIZE;
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+        line.y=area.h-BORDERSIZE;
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+
+        /* write title */
+        font_title->writeCenter(surface,title,WFONT);
+        line.y=font_title->getHeight()+(int)((DFONT-line.h)/2);
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+        line.h=LINESIZE;
+
+        /* write entries */
+        for (Uint8 i=0; i<entries.size(); i++) {
+            tmph=DFONT*(i+1)+font->getHeight()*i+WFONT+font_title->getHeight();
+            font->writeCenter(surface,entries[i],tmph);
+            line.y=tmph+font->getHeight()+(int)((DFONT-line.h)/2);
+            SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,180));
+        }
+    }
+}
+ 
+EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
+    title="PLACE";
+    entries.push_back("Wall");
+    entries.push_back("Exit");
+    entries.push_back("Water");
+    entries.push_back("Teleporter");
+    entries.push_back("Wind");
+    entries.push_back("Geyser");
+    entries.push_back("Trigger");
+    entries.push_back("Door");   
+    entries.push_back("Spike");  
+
+    entries.push_back("Heart");
+    entries.push_back("Key");  
+    entries.push_back("Bomb"); 
+
+    entries.push_back("Erik");
+    entries.push_back("Olaf");
+    entries.push_back("Baleog");
+    entries.push_back("Fang");  
+    entries.push_back("Scorch");
+
+    entries.push_back("Plant");
+    entries.push_back("Zombie");
+
+    update();
+}
+
+void EditBox::act(Sint8 curentry) {
+    if (curentry==-1 || curentry >= (Sint8)entries.size()) {
+        editor->closeBox();
+    } else {
+        editor->place_name=entries[curentry];
+        if        (editor->place_name=="Wall") {
+            editor->place_image="viking1.bmp";
+        } else if (editor->place_name=="Water") {
+            editor->place_image="water.bmp";
+        } else if (editor->place_name=="Teleporter") {
+            editor->place_image="viking1.bmp";
+        } else if (editor->place_name=="Wind") {
+            editor->place_image="teleport_01.bmp";
+        } else if (editor->place_name=="Geyser") {
+            editor->place_image="viking1.bmp";
+        } else if (editor->place_name=="Trigger") {
+            editor->place_image="key.bmp";
+        } else if (editor->place_name=="Door") {
+            editor->place_image="viking1.bmp";
+        } else if (editor->place_name=="Spike") {
+            editor->place_image="viking1.bmp";
+        } else if (editor->place_name=="Heart") {
+            editor->place_image="heart.bmp";
+        } else if (editor->place_name=="Key") {
+            editor->place_image="key.bmp";
+        } else if (editor->place_name=="Bomb") {
+            editor->place_image="bomb_fire.bmp";
+        } else if (editor->place_name=="Erik") {
+            editor->place_image="viking.bmp";
+        } else if (editor->place_name=="Olaf") {
+            editor->place_image="viking.bmp";
+        } else if (editor->place_name=="Baleog") {
+            editor->place_image="viking.bmp";
+        } else if (editor->place_name=="Fang") {
+            editor->place_image="viking.bmp";
+        } else if (editor->place_name=="Scorch") {
+            editor->place_image="viking.bmp";
+        } else if (editor->place_name=="Plant") {
+            editor->place_image="viking1.bmp";
+        } else if (editor->place_name=="Zombie") {
+            editor->place_image="viking.bmp";
+        } else {
+            editor->place_image="";
+        }
+        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
+        editor->action_mouse_released[SDL_BUTTON_LEFT]=EDIT_RESET_ACTIONS;
+        editor->closeBox();
+    }
+}

@@ -13,6 +13,7 @@ Config config;
 Uint8 game_mode=NOTHING;
 Menu* menu=NULL;
 Box* box=NULL;
+Editor* editor=NULL;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 const Uint32 rmask=0xff000000;
 const Uint32 gmask=0x00ff0000;

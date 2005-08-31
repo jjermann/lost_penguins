@@ -110,6 +110,14 @@ Object* ObjectsPool::addObject(Object* object) {
     }
 }
 
+string ObjectsPool::getNextObjectName(const string& basename) {
+    int objnum=1;
+    while(getObject(basename+itos(objnum))) {
+        objnum++;
+    }
+    return basename+itos(objnum);
+}
+
 //yeah, a pyramide... ;) serious, this is _NOT_ good
 //hmm, but it can be used as a bad example on how "_not_ to do things"... ;-)
 ///\todo Fix this mess

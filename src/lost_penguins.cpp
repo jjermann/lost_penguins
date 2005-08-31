@@ -10,6 +10,7 @@
 #include "sfxeng.h"
 #include "objectpools.h"
 #include "menu.h"
+#include "editor.h"
 #include "players_common.h"
 
 
@@ -64,7 +65,6 @@ int main(int argc, char* argv[]) {
 
 int quitGame(int errorcode=0) {
     cout << endl << "Quitting game (exit code: " << errorcode << ")...\n";
-    closeBox();
     closeMenus();
     delete scenario;
     cout << "Scenario closed...\n";
@@ -77,8 +77,11 @@ int quitGame(int errorcode=0) {
     delete sndcache;
     cout << "Deleting ImageCache...\n";
     delete imgcache;
+    if (editor) {
+        cout << "Deleting Editor...\n";
+        delete editor;
+    }
     cout << "Quiting SDL...\n";
-    
     SDL_Quit();
     exit(errorcode);
 }

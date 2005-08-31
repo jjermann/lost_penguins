@@ -49,6 +49,8 @@ class ObjectsPool {
         /// \pre The name must be unique (otherwise it's basically random)
         /// \return Pointer to the Object or NULL if it wasn't found
         Object*            getObject(const string& oname);
+        /// Helper function to return the next available object name corresponding to the given base name
+        string             getNextObjectName(const string& basename);
         //@{
         /// Remove an Object (using an object_iterator) from all pools it belongs to
         /// \return object_iterator to the next entry in the pool or the end()
