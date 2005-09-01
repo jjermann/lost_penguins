@@ -137,44 +137,44 @@ Sint8 Box::getCurrentEntry(Sint16 x, Sint16 y) {
  
 void Box::update() {
     gfxeng->update(UPDATE_ALL);
-    if (surface==NULL) {
-        getArea();
-        SDL_Surface* tmp=SDL_CreateRGBSurface(vflags, area.w, area.h, 32, rmask, gmask, bmask, amask);
-        surface=SDL_DisplayFormatAlpha(tmp);
-        SDL_FreeSurface(tmp);
-        SDL_FillRect(surface,0,SDL_MapRGBA(surface->format,200,200,200,180));
+    getArea();
 
-        /* create a border */
-        Sint16 tmph=0;
-        SDL_Rect line;
-        line.x=0;
-        line.y=0;
-        line.w=BORDERSIZE;
-        line.h=area.h;
-        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
-        line.x=area.w-BORDERSIZE;
-        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
-        line.x=0;
-        line.y=0;
-        line.w=area.w;
-        line.h=BORDERSIZE;
-        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
-        line.y=area.h-BORDERSIZE;
-        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    if (surface!=NULL) SDL_FreeSurface(surface);
+    SDL_Surface* tmp=SDL_CreateRGBSurface(vflags, area.w, area.h, 32, rmask, gmask, bmask, amask);
+    surface=SDL_DisplayFormatAlpha(tmp);
+    SDL_FreeSurface(tmp);
 
-        /* write title */
-        font_title->writeCenter(surface,title,WFONT);
-        line.y=font_title->getHeight()+(int)((DFONT-line.h)/2);
-        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
-        line.h=LINESIZE;
+    SDL_FillRect(surface,0,SDL_MapRGBA(surface->format,200,200,200,180));
+    /* create a border */
+    Sint16 tmph=0;
+    SDL_Rect line;
+    line.x=0;
+    line.y=0;
+    line.w=BORDERSIZE;
+    line.h=area.h;
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    line.x=area.w-BORDERSIZE;
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    line.x=0;
+    line.y=0;
+    line.w=area.w;
+    line.h=BORDERSIZE;
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    line.y=area.h-BORDERSIZE;
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
 
-        /* write entries */
-        for (Uint8 i=0; i<entries.size(); i++) {
-            tmph=DFONT*(i+1)+font->getHeight()*i+WFONT+font_title->getHeight();
-            font->writeCenter(surface,entries[i],tmph);
-            line.y=tmph+font->getHeight()+(int)((DFONT-line.h)/2);
-            SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,180));
-        }
+    /* write title */
+    font_title->writeCenter(surface,title,WFONT);
+    line.y=font_title->getHeight()+(int)((DFONT-line.h)/2);
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    line.h=LINESIZE;
+
+    /* write entries */
+    for (Uint8 i=0; i<entries.size(); i++) {
+        tmph=DFONT*(i+1)+font->getHeight()*i+WFONT+font_title->getHeight();
+        font->writeCenter(surface,entries[i],tmph);
+        line.y=tmph+font->getHeight()+(int)((DFONT-line.h)/2);
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,180));
     }
 }
  
@@ -255,5 +255,40 @@ void EditBox::act(Sint8 curentry) {
         }
         editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
         editor->closeBox();
+    }
+}
+
+TextInputBox::TextInputBox(Sint16 x,Sint16 y): Box(x,y),
+  currententry(-1) {
+    SDL_EnableUNICODE(1);
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
+    addGameMode(GAME_TEXT_INPUT);
+}
+TextInputBox::~TextInputBox() {
+    SDL_EnableUNICODE(0);
+    SDL_EnableKeyRepeat(0,SDL_DEFAULT_REPEAT_INTERVAL);
+    removeGameMode(GAME_TEXT_INPUT);
+    editor->run_action(EDIT_RESET_ACTIONS);
+}
+
+void TextInputBox::act(Sint8 button) {
+    if (button>=0 && (Uint8)button<entries.size()) currententry=button;
+}
+void TextInputBox::input(Uint16 akey) {
+    if (currententry==-1) {
+    } else if (akey==(Uint16)config.keybind[KEY_ACT]) {
+        editor->closeBox();
+    // Backspace
+    } else if (akey==8) {
+        if ( entries[currententry].begin() != entries[currententry].end() ) {
+            entries[currententry].erase(entries[currententry].end()-1);
+            gfxeng->update(UPDATE_ALL);
+            update();
+        }
+    } else if ((Uint16)akey<32 || (Uint16)akey>126) {
+    } else {
+        entries[currententry]+=(char)akey;
+        gfxeng->update(UPDATE_ALL);
+        update();
     }
 }

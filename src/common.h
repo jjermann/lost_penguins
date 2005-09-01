@@ -68,6 +68,7 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define GAME_MENU           0x00000004
 #define GAME_EDIT           0x00000008
 #define GAME_EDIT_NOANIM    0x00000010
+#define GAME_TEXT_INPUT     0x00000020
 
 enum ConfigKey {
     KEY_START,

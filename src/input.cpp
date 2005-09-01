@@ -203,21 +203,26 @@ inline void InputHandler::pollEditEvents() {
             case SDL_KEYDOWN: {
                 SDLKey key=event.key.keysym.sym;
                 keypressed[key]=true;
-                if (key==config.keybind[KEY_FULL]) {
-                    gfxeng->toggleFullScreen();
-                } else if (key==config.keybind[KEY_MENU]) {
-                    sfxeng->pauseMusic();
-                    setMenu(new EditMenu());
-                    gfxeng->update(UPDATE_ALL);
-                } else if (key==config.keybind[KEY_QUIT]) {
-                    quitGame(0);
-                } else if (key==config.keybind[KEY_NOANIM]) {
-                    gfxeng->update(UPDATE_ALL);
-                    if (game_mode&GAME_EDIT_NOANIM) {
-                        removeGameMode(GAME_EDIT_NOANIM);
-                    } else {
-                        scenario->reloadMap();
-                        addGameMode(GAME_EDIT_NOANIM);
+                if (game_mode&GAME_TEXT_INPUT) {
+                    Uint16 unikey=event.key.keysym.unicode;
+                    if (unikey<127) editor->box->input(unikey);
+                } else {
+                    if (key==config.keybind[KEY_FULL]) {
+                        gfxeng->toggleFullScreen();
+                    } else if (key==config.keybind[KEY_MENU]) {
+                        sfxeng->pauseMusic();
+                        setMenu(new EditMenu());
+                        gfxeng->update(UPDATE_ALL);
+                    } else if (key==config.keybind[KEY_QUIT]) {
+                        quitGame(0);
+                    } else if (key==config.keybind[KEY_NOANIM]) {
+                        gfxeng->update(UPDATE_ALL);
+                        if (game_mode&GAME_EDIT_NOANIM) {
+                            removeGameMode(GAME_EDIT_NOANIM);
+                        } else {
+                            scenario->reloadMap();
+                            addGameMode(GAME_EDIT_NOANIM);
+                        }
                     }
                 }
                 break;

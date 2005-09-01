@@ -15,10 +15,11 @@ class Box {
     public:
         Box(Sint16,Sint16);
         virtual ~Box();
-        /// Name of the menu
+        /// Name of the box
         string title;
-        /// Main menu function, depends on currententry (changed by input), overload this.
+        /// Activate specified entry, if no entry is selected this is -1
         virtual void act(Sint8) = 0;
+        virtual void input(Uint16) { }
         Uint8 getSize() {
             return entries.size();
         }
@@ -46,6 +47,17 @@ class EditBox : public Box {
         EditBox(Sint16,Sint16);
         virtual void act(Sint8);
 };
+
+class TextInputBox : public Box {
+    public:
+        TextInputBox(Sint16,Sint16);
+        virtual ~TextInputBox();
+        virtual void act(Sint8);
+        virtual void input(Uint16);
+    protected:
+        Sint8 currententry;
+};
+
 
 /** \brief Handels editor specific tasks
 
