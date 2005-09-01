@@ -8,7 +8,6 @@
 
 
 Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
-  tbirth(SDL_GetTicks()),
   state(NOTHING),
   event(NULL),
   im_orig(new Animation(scenario->imgcache->loadImage(imagename))),
@@ -24,11 +23,17 @@ Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
     curpos.h=pos.h;
     curpos.x=0;
     curpos.y=0;
+    onum=++scenario->max_obj_num;
 }
 
 Object::~Object() {
     if (event) event->cancel();
     if (!(otype&OTYPE_CHARACTER)) delete animation;
+}
+
+bool Object::operator<(const Object& obj) const {
+    if (onum<obj.onum) return true;
+    else return false;
 }
 
 bool Object::isIn(const SDL_Rect& rect, bool touch) {

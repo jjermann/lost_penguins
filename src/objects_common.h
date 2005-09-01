@@ -163,8 +163,9 @@ class Object {
         /// \remark This should be called downwards by all derived classes
         virtual void idle(Uint16) { }
         //@}
+        bool operator<(const Object& obj) const;
+        Uint32 onum;
     protected:
-        Uint16 tbirth;
         Uint32 state;
         Event* event;
         Animation* im_orig;

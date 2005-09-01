@@ -80,6 +80,8 @@ class Scenario {
         /// Name of the map background image
         string bgimage;
         std::vector<string> mapbuf;
+        /// The number of created objects
+        Uint32 max_obj_num;
     private:
         inline void reinitMap();
 };

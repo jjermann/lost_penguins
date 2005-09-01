@@ -1,6 +1,10 @@
 #ifndef DEF_OBJECTPOOLS_H
 #define DEF_OBJECTPOOLS_H 1
 
+struct Compare {
+    bool operator()(const Object*, const Object*);
+};
+
 /** \brief Container for objects.
 
     Contains a pool for each important derived object class,
@@ -69,19 +73,19 @@ class ObjectsPool {
         ///\brief Object pool
         ///
         /// Contains all objects managed by the ObjectsPool
-        std::set<Object *>    objectspool;
+        std::set<Object *,Compare>    objectspool;
         ///\brief Character pool
         ///
         /// Contains all characters managed by the ObjectsPool
-        std::set<Character *> characterspool;
+        std::set<Character *,Compare> characterspool;
         ///\brief Player pool
         ///
         /// Contains all players managed by the ObjectsPool
-        std::set<Player *>    playerspool;
+        std::set<Player *,Compare>    playerspool;
         ///\brief Monster pool
         ///
         /// Contains all monsters managed by the ObjectsPool
-        std::set<Monster *>   monsterspool;
+        std::set<Monster *,Compare>   monsterspool;
         //@}
     private:
         //player number of the currently selected player

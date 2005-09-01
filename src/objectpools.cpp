@@ -30,6 +30,11 @@
 #include "objects/zombie.h"
 
 
+bool Compare::operator()(const Object* obj1, const Object* obj2) {
+    if (obj1->onum<obj2->onum) return true;
+    else return false;
+}
+
 ObjectsPool::ObjectsPool():
   currentplayer(playerspool.begin()),
   au_switch(sndcache->loadWAV("newchar.wav")) { }

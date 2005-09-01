@@ -23,6 +23,7 @@ Scenario::Scenario():
     physic=new PhysicHandler();
     cout << "Map: ObjectsPool...\n";
     pool=new ObjectsPool();
+    max_obj_num=0;
 }
 
 Scenario::~Scenario() {
@@ -50,6 +51,7 @@ inline void Scenario::reinitMap() {
     background=NULL;
     area=NULL;
     player=NULL;
+    max_obj_num=0;
 }
 
 void Scenario::newMap(string bgimage) {
