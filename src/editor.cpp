@@ -10,16 +10,19 @@
 Editor::Editor() {
     run_action(EDIT_RESET_ACTIONS);
     string place_name="";
-    save_name="newmap.txt";
+    save_name="newmap.cfg";
     box=NULL;
 }
 
 Editor::~Editor() {
     closeBox();
-    saveBuf(save_name);
 }
 
 void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
+    SDL_Rect shift=gfxeng->getShift();
+    Sint16 xs=x-shift.x;
+    Sint16 ys=y-shift.y;
+
     gfxeng->update(UPDATE_ALL);
     if (action&EDIT_RESET_ACTIONS) {
         for (Uint8 i=0; i<6; i++) {
@@ -35,9 +38,8 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         if (box) box->act(box->getCurrentEntry(x,y));
     } else if (action&EDIT_PLACE_OBJECT) {
         scenario->reloadMap();
-        string next_name=scenario->pool->getNextObjectName(place_name);
-        if (scenario->pool->addObjectbyName(place_name,place_image,x,y,next_name)) {
-            appendtoBuf(place_name+" "+place_image+" "+itos(x)+" "+itos(y)+" "+next_name);
+        if (scenario->pool->addObjectbyName(place_name,place_image,xs,ys,place_arg1,place_arg2,place_arg3)) {
+            appendtoBuf(place_name+" "+place_image+" "+itos(xs)+" "+itos(ys)+" "+place_arg1+" "+place_arg2+" "+place_arg3);
         }
 //        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
     } else { }
@@ -76,8 +78,8 @@ int Editor::saveBuf(string filename) {
 }
 
 Box* Editor::setBox(Box* newbox) {
-    gfxeng->update(UPDATE_ALL);
-    return box=newbox;   
+    closeBox();
+    return box=newbox;
 }
  
 void Editor::closeBox() {
@@ -92,7 +94,9 @@ Box::Box(Sint16 x, Sint16 y):
   //don't forget the "::"
   font(::font),
   font_title(font),
-  font_high(font2) {  
+  font_high(font2),
+  centered(true) {  
+    editor->run_action(EDIT_RESET_ACTIONS);
     area.x=x;
     area.y=y;
 }
@@ -172,13 +176,66 @@ void Box::update() {
     /* write entries */
     for (Uint8 i=0; i<entries.size(); i++) {
         tmph=DFONT*(i+1)+font->getHeight()*i+WFONT+font_title->getHeight();
-        font->writeCenter(surface,entries[i],tmph);
+        if (centered) font->writeCenter(surface,entries[i],tmph);
+        else font->write(surface,entries[i],WFONT,tmph);
         line.y=tmph+font->getHeight()+(int)((DFONT-line.h)/2);
         SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,180));
     }
 }
  
 EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
+    title="EDIT MAP";
+    entries.push_back("New");
+    entries.push_back("Save As...");
+    entries.push_back("Save");
+    entries.push_back("Open");
+    entries.push_back("Run");
+    entries.push_back("Quit");
+    entries.push_back("");
+    entries.push_back("Place Object");
+    entries.push_back("Remove Object");
+    entries.push_back("Move Object");
+    entries.push_back("Configure Object");
+    update();
+}
+
+void EditBox::act(Sint8 curentry) {
+    gfxeng->update(UPDATE_ALL);
+    if (curentry==-1 || curentry >= (Sint8)entries.size()) {
+        editor->closeBox();
+    } else if (entries[curentry]=="New") {
+        editor->setBox(new NewMapBox(area.x,area.y));
+    } else if (entries[curentry]=="Save As...") {
+        editor->setBox(new SaveAsBox(area.x,area.y));
+    } else if (entries[curentry]=="Save") {
+        if (editor->save_name=="newmap.cfg") {
+            editor->setBox(new SaveAsBox(area.x,area.y));
+        } else {
+            editor->saveBuf(editor->save_name);
+            editor->closeBox();
+        }
+    } else if (entries[curentry]=="Open") {
+        editor->setBox(new OpenMapBox(area.x,area.y));
+    } else if (entries[curentry]=="Run") {
+        setGameMode(GAME_PLAY);
+        scenario->reloadMap();
+        editor->closeBox();
+    } else if (entries[curentry]=="Place Object") {
+        editor->setBox(new PlaceBox(area.x,area.y));
+    } else if (entries[curentry]=="Remove Object") {
+        editor->closeBox();
+    } else if (entries[curentry]=="Move Object") {
+        editor->closeBox();
+    } else if (entries[curentry]=="Configure Object") {
+        editor->closeBox();
+    } else if (entries[curentry]=="Quit") {
+        quitGame(0);
+    } else {
+        editor->closeBox();
+    }
+}
+
+PlaceBox::PlaceBox(Sint16 x, Sint16 y): Box(x,y) {
     title="PLACE";
     entries.push_back("Wall");
     entries.push_back("Exit");
@@ -206,55 +263,53 @@ EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
     update();
 }
 
-void EditBox::act(Sint8 curentry) {
+void PlaceBox::act(Sint8 curentry) {
     gfxeng->update(UPDATE_ALL);
     if (curentry==-1 || curentry >= (Sint8)entries.size()) {
-        editor->closeBox();
     } else {
-        editor->place_name=entries[curentry];
-        if        (editor->place_name=="Wall") {
-            editor->place_image="viking1.bmp";
-        } else if (editor->place_name=="Water") {
-            editor->place_image="water.bmp";
-        } else if (editor->place_name=="Exit") {
-            editor->place_image="exit.bmp";
-        } else if (editor->place_name=="Teleporter") {
-            editor->place_image="viking1.bmp";
-        } else if (editor->place_name=="Wind") {
-            editor->place_image="teleport_01.bmp";
-        } else if (editor->place_name=="Geyser") {
-            editor->place_image="viking1.bmp";
-        } else if (editor->place_name=="Trigger") {
-            editor->place_image="key.bmp";
-        } else if (editor->place_name=="Door") {
-            editor->place_image="viking1.bmp";
-        } else if (editor->place_name=="Spike") {
-            editor->place_image="viking1.bmp";
-        } else if (editor->place_name=="Heart") {
-            editor->place_image="heart.bmp";
-        } else if (editor->place_name=="Key") {
-            editor->place_image="key.bmp";
-        } else if (editor->place_name=="Bomb") {
-            editor->place_image="bomb_fire.bmp";
-        } else if (editor->place_name=="Erik") {
-            editor->place_image="viking.bmp";
-        } else if (editor->place_name=="Olaf") {
-            editor->place_image="viking.bmp";
-        } else if (editor->place_name=="Baleog") {
-            editor->place_image="viking.bmp";
-        } else if (editor->place_name=="Fang") {
-            editor->place_image="viking.bmp";
-        } else if (editor->place_name=="Scorch") {
-            editor->place_image="viking.bmp";
-        } else if (editor->place_name=="Plant") {
-            editor->place_image="viking1.bmp";
-        } else if (editor->place_name=="Zombie") {
-            editor->place_image="viking.bmp";
+        string next_name=scenario->pool->getNextObjectName(entries[curentry]);
+        if        (entries[curentry]=="Wall") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Water") {
+            editor->setBox(new ObjectBox(entries[curentry],"water.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Exit") {
+            editor->setBox(new ObjectBox(entries[curentry],"exit.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Teleporter") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Teleport Destination (x coordinate): ","0","Teleport Destination (y coordinate): ","0","Name: ",next_name));
+        } else if (entries[curentry]=="Wind") {
+            editor->setBox(new ObjectBox(entries[curentry],"teleport_01.bmp",area.x,area.y,"Wind acceleration: ","0","Name: ",next_name));
+        } else if (entries[curentry]=="Geyser") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Geyser force: ","0","Name: ",next_name));
+        } else if (entries[curentry]=="Trigger") {
+            editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Trigger target name: ","","Name: ",next_name,"Key name: ",""));
+        } else if (entries[curentry]=="Door") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Key name: ","","Name: ",next_name));
+        } else if (entries[curentry]=="Spike") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Direction (R=1,L=2,U=4,D=8): ","4","Name: ",next_name));
+        } else if (entries[curentry]=="Heart") {
+            editor->setBox(new ObjectBox(entries[curentry],"heart.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Key") {
+            editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Bomb") {
+            editor->setBox(new ObjectBox(entries[curentry],"bomb_fire.bmp",area.x,area.y,"Exploding time (in ms): ","0","Name: ",next_name));
+        } else if (entries[curentry]=="Erik") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Olaf") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Baleog") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Fang") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Scorch") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
+        } else if (entries[curentry]=="Plant") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Recovery time (in ms): ","0","Name: ",next_name));
+        } else if (entries[curentry]=="Zombie") {
+            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else {
-            editor->place_image="";
+            editor->run_action(EDIT_RESET_ACTIONS);
+            editor->closeBox();
         }
-        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
-        editor->closeBox();
     }
 }
 
@@ -263,32 +318,127 @@ TextInputBox::TextInputBox(Sint16 x,Sint16 y): Box(x,y),
     SDL_EnableUNICODE(1);
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,SDL_DEFAULT_REPEAT_INTERVAL);
     addGameMode(GAME_TEXT_INPUT);
+    editor->action_mouse_released[SDL_BUTTON_RIGHT]=NOTHING;
 }
 TextInputBox::~TextInputBox() {
     SDL_EnableUNICODE(0);
     SDL_EnableKeyRepeat(0,SDL_DEFAULT_REPEAT_INTERVAL);
     removeGameMode(GAME_TEXT_INPUT);
-    editor->run_action(EDIT_RESET_ACTIONS);
+    editor->action_mouse_released[SDL_BUTTON_RIGHT]=EDIT_BOX;
 }
-
 void TextInputBox::act(Sint8 button) {
-    if (button>=0 && (Uint8)button<entries.size()) currententry=button;
+    if (button>=0 && (Uint8)button<einput.size()) currententry=button;
 }
 void TextInputBox::input(Uint16 akey) {
-    if (currententry==-1) {
+    if (currententry==-1 || currententry>=(int)einput.size()) {
     } else if (akey==(Uint16)config.keybind[KEY_ACT]) {
-        editor->closeBox();
+        evaluateEntry();        
     // Backspace
     } else if (akey==8) {
-        if ( entries[currententry].begin() != entries[currententry].end() ) {
-            entries[currententry].erase(entries[currententry].end()-1);
+        if ( einput[currententry].begin() != einput[currententry].end() ) {
+            einput[currententry].erase(einput[currententry].end()-1);
             gfxeng->update(UPDATE_ALL);
             update();
         }
     } else if ((Uint16)akey<32 || (Uint16)akey>126) {
     } else {
-        entries[currententry]+=(char)akey;
+        einput[currententry]+=(char)akey;
         gfxeng->update(UPDATE_ALL);
         update();
     }
+}
+void TextInputBox::evaluateEntry() {
+    editor->closeBox();
+}
+void TextInputBox::update() {
+    Uint8 maxs=max(entries.size(),max(einput.size(),etitles.size()));
+    Uint16 maxw=0;
+    string spaces="";
+    if (entries.size()<maxs) entries.resize(maxs);
+    if (etitles.size()<maxs) etitles.resize(maxs);
+    for (Uint8 i=0;i<einput.size(); i++) {
+        maxw=max(maxw,(Uint16)font->getTextWidth(etitles[i]));
+    }
+    for (Uint8 i=0; i<einput.size(); i++) {
+        spaces="";
+        while (font->getTextWidth(etitles[i]+spaces)<maxw) spaces+=" ";
+        spaces+="  ";
+        entries[i]=etitles[i]+spaces+einput[i];
+    }
+    for (Uint8 i=einput.size(); i<maxs; i++) {
+        entries[i]=etitles[i];
+    }
+    Box::update();
+}
+
+SaveAsBox::SaveAsBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
+    title="Save As...";
+    einput.push_back(editor->save_name);
+    currententry=0;
+    update();
+}
+
+void SaveAsBox::evaluateEntry() {
+    editor->save_name=einput[0];
+    editor->saveBuf(editor->save_name);
+    editor->closeBox();
+}
+
+OpenMapBox::OpenMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
+    title="Open Map";
+    einput.push_back(scenario->name);
+    currententry=0;
+    update();
+}
+
+void OpenMapBox::evaluateEntry() {
+    scenario->loadMap(einput[0]);
+    editor->closeBox();
+}
+
+NewMapBox::NewMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
+    title="New Map"; 
+    centered=false; 
+    etitles.push_back("Map file: "); einput.push_back("newmap.cfg");
+    etitles.push_back("Background image: "); einput.push_back(scenario->bgimage);
+    currententry=0;
+    update();
+}
+
+void NewMapBox::evaluateEntry() {
+    scenario->name=einput[0];
+    scenario->newMap(einput[1]);
+    scenario->reloadMap();
+    editor->closeBox();
+}
+
+ObjectBox::ObjectBox(string name, string image, Sint16 x, Sint16 y, string targ1, string arg1, string targ2, string arg2, string targ3, string arg3): TextInputBox(x,y),
+  objname(name) {
+    title=name+" Properties";
+    centered=false;
+    currententry=0;
+    etitles.push_back("Image name: "); einput.push_back(image);
+    if (targ1!="" || arg1!="") {
+        etitles.push_back(targ1);
+        einput.push_back(arg1);
+    }
+    if (targ2!="" || arg2!="") {
+        etitles.push_back(targ2);
+        einput.push_back(arg2);
+    }
+    if (targ3!="" || arg3!="") {
+        etitles.push_back(targ3);
+        einput.push_back(arg3);
+    }
+    update();
+}
+
+void ObjectBox::evaluateEntry() {
+    editor->place_name=objname;
+    editor->place_image=einput[0];
+    if (einput.size()>=2) editor->place_arg1=einput[1];
+    if (einput.size()>=3) editor->place_arg2=einput[2];
+    if (einput.size()>=4) editor->place_arg3=einput[3];
+    editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
+    editor->closeBox();
 }

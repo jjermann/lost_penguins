@@ -38,11 +38,11 @@ ObjectsPool::~ObjectsPool() {
     while (i!=objectspool.end()) i=removeObject(i);
 }
 
-Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sint16 x, Sint16 y, const string& arg1, const string& arg2, const string& arg3) {
-    x-=gfxeng->getShift().x;
-    y-=gfxeng->getShift().y;
+Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sint16 x, Sint16 y, string& arg1, string& arg2, const string& arg3) {
     //Set names...
-    string name=obj;
+    if (arg1.empty()) arg1="0";
+    if (arg2.empty()) arg2="0";
+    string name=getNextObjectName(obj);
     if (arg1!="0") {
         //one additional parameter
         if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Plant" || name=="Geyser" || name=="Wind" || name=="Spike") {

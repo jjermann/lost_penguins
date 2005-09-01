@@ -39,12 +39,20 @@ class Box {
         /// Area occupied by the selection box
         SDL_Rect area;
         /// Draw the box surface
-        void update();
+        virtual void update();
+        /// True if the entries should be draw centered
+        bool centered;
 };
 
 class EditBox : public Box {
     public:
         EditBox(Sint16,Sint16);
+        virtual void act(Sint8);
+};
+
+class PlaceBox : public Box {
+    public:
+        PlaceBox(Sint16,Sint16);
         virtual void act(Sint8);
 };
 
@@ -54,8 +62,41 @@ class TextInputBox : public Box {
         virtual ~TextInputBox();
         virtual void act(Sint8);
         virtual void input(Uint16);
+        virtual void evaluateEntry();
     protected:
         Sint8 currententry;
+        std::vector<string> etitles;
+        std::vector<string> einput;
+        virtual void update();
+};
+
+class ObjectBox : public TextInputBox {
+    public:
+        ObjectBox(string,string,Sint16,Sint16,string targ1="",string arg1="",string targ2="",string arg2="",string targ3="",string arg3="");
+    protected:
+        virtual void evaluateEntry();
+        string objname;
+};
+
+class SaveAsBox : public TextInputBox {
+    public:
+        SaveAsBox(Sint16,Sint16);
+    protected:
+        virtual void evaluateEntry();
+};
+
+class OpenMapBox : public TextInputBox {
+    public:
+        OpenMapBox(Sint16,Sint16);
+    protected:
+        virtual void evaluateEntry();
+};
+
+class NewMapBox : public TextInputBox {
+    public:
+        NewMapBox(Sint16,Sint16);
+    protected:
+        virtual void evaluateEntry();
 };
 
 
@@ -63,7 +104,6 @@ class TextInputBox : public Box {
 
 */
 class Editor {
-    friend class EditBox;
     public:
         Editor();
         ~Editor();
@@ -85,17 +125,18 @@ class Editor {
             else return false;
         }
         Box* box;
-    protected:
         /// Name the saved map file
         string save_name;
         /// Object to place when clicking the left mouse button
         string place_name;
         /// Image name of the placed object
         string place_image;
-        /// Action type for the mouse buttons when clicking
-        Uint32 action_mouse_pressed[6];
-        /// Action type for the mouse buttons when releasing the button
-        Uint32 action_mouse_released[6];
+        /// First additonal parameter of the placed object
+        string place_arg1;
+        /// Seconds additional parameter of the placed object
+        string place_arg2;
+        /// Third additional parameter of the placed object
+        string place_arg3;
         /// Append a command to the buffered map file
         void appendtoBuf(string);
         /* TODO: add header modifiers */
@@ -103,6 +144,10 @@ class Editor {
         string removefromBuf(string);
         /// Save the map file buffer to the specified file if possible
         int saveBuf(string);
+        /// Action type for the mouse buttons when clicking
+        Uint32 action_mouse_pressed[6];
+        /// Action type for the mouse buttons when releasing the button
+        Uint32 action_mouse_released[6];
 };
 
 #endif

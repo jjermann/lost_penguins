@@ -59,7 +59,10 @@ void GraphicsEngine::draw() {
         }
     //Paused game
     } else if (game_mode&GAME_PAUSED) {
-        if (updatetype==UPDATE_ALL || updatetype==UPDATE_BAR) {
+        if (updatetype==UPDATE_ALL) {
+            drawScene();
+            drawPlayerBar();
+        } else if (updatetype==UPDATE_BAR) {
             drawPlayerBar();
         }
     //Not paused running game

@@ -61,6 +61,8 @@ class Scenario {
         ObjectsPool* pool;
         /// Physic Handler
         PhysicHandler* physic;
+        /// Create a new empty map with the specified background
+        void newMap(string bgname);
         /// Used to load the map file into a buffer
         int loadMapBuf(string mapname);
         /// Reload the map file using the buffered map file
@@ -75,6 +77,8 @@ class Scenario {
         bool failed;
         /// Name of the map file
         string name;
+        /// Name of the map background image
+        string bgimage;
         std::vector<string> mapbuf;
     private:
         inline void reinitMap();

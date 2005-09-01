@@ -30,7 +30,7 @@ class ObjectsPool {
         /// \param arg3 Third argument as string
         /// \return Pointer to the new entry in the objectspool or NULL if
         ///   the object was not recognized
-        Object* addObjectbyName(const string& obj, const string& image, Sint16 x=0, Sint16 y=0, const string& arg1="0", const string& arg2="0", const string& arg3="0");
+        Object* addObjectbyName(const string& obj, const string& image, Sint16 x=0, Sint16 y=0, string& arg1="", string& arg2="", const string& arg3="");
         //@{
         /// Add an Object to the objectspool
         /// \return Pointer to the new entry in the objectspool or NULL if it failed

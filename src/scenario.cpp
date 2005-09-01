@@ -13,7 +13,8 @@ Scenario::Scenario():
   area(NULL),
   player(NULL),
   failed(false),
-  name("") {
+  name(""),
+  bgimage("") {
     cout << "Scenario: ImageCache...\n";
     imgcache=new ImageCache();
     cout << "Scenario: SoundCache...\n";
@@ -51,6 +52,10 @@ inline void Scenario::reinitMap() {
     player=NULL;
 }
 
+void Scenario::newMap(string bgimage) {
+    mapbuf.clear();
+    mapbuf.push_back("Background "+bgimage);
+}
 int Scenario::loadMapBuf(string mapname) {
     name=mapname;
     ifstream mapfile;
@@ -117,7 +122,10 @@ int Scenario::reloadMap() {
 
         if (cname=="Background" && (!background)) {
             background=new Background(image);
-            if (background) area=background->getPos();
+            if (background) {
+                area=background->getPos();
+                bgimage=image;
+            }
         //Background has to be first!
         } else if (background) {
             pool->addObjectbyName(cname,image,x,y,arg1,arg2,arg3);

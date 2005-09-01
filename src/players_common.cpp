@@ -8,6 +8,8 @@
 #include "sndcache.h"
 #include "objectpools.h"
 #include "scenario.h"
+//to allow gfxeng->update()
+#include "gfxeng.h"
 #include "players_common.h"
 
 
@@ -97,12 +99,14 @@ bool Player::pickupItem(Item* newitem) {
 }
 
 void Player::removeItem(Uint8 num) {
+    gfxeng->update(UPDATE_BAR);
     if (num>=MAX_ITEMS || items[num]==NULL) return;
     delete items[num];
     items[num]=NULL;
 }
 
 Item* Player::moveItem(Uint8 num) {
+    gfxeng->update(UPDATE_BAR);
     if (num>=MAX_ITEMS || items[num]==NULL) return NULL;
     Item* tmpit=items[num];
     items[num]=NULL;
@@ -110,6 +114,7 @@ Item* Player::moveItem(Uint8 num) {
 }
 
 void Player::switchItem(bool right) {
+    gfxeng->update(UPDATE_BAR);
     if (right) {
         ++currentitem;
         if (currentitem>=MAX_ITEMS) currentitem=0;
@@ -120,6 +125,7 @@ void Player::switchItem(bool right) {
 }
 
 Object* Player::dropItem(Uint8 num) {
+    gfxeng->update(UPDATE_ALL);
     Item* tmpit=moveItem(num);
     Object* tmpobj=NULL;
     bool ok=false;
