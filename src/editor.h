@@ -131,6 +131,8 @@ class Editor {
         string place_name;
         /// Image name of the placed object
         string place_image;
+        /// Object name to place when clicking the left mouse button
+        string* place_obj_name;
         /// First additonal parameter of the placed object
         string place_arg1;
         /// Seconds additional parameter of the placed object

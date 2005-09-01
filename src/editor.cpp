@@ -12,6 +12,7 @@ Editor::Editor() {
     string place_name="";
     save_name="newmap.cfg";
     box=NULL;
+    place_obj_name=NULL;
 }
 
 Editor::~Editor() {
@@ -41,6 +42,8 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         if (scenario->pool->addObjectbyName(place_name,place_image,xs,ys,place_arg1,place_arg2,place_arg3)) {
             appendtoBuf(place_name+" "+place_image+" "+itos(xs)+" "+itos(ys)+" "+place_arg1+" "+place_arg2+" "+place_arg3);
         }
+        if (place_obj_name) (*place_obj_name)=scenario->pool->getNextObjectName(place_name);
+        if (place_obj_name) cout << "Name: " << *place_obj_name << endl;
 //        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
     } else { }
 }
@@ -268,6 +271,7 @@ void PlaceBox::act(Sint8 curentry) {
     if (curentry==-1 || curentry >= (Sint8)entries.size()) {
     } else {
         string next_name=scenario->pool->getNextObjectName(entries[curentry]);
+        editor->place_obj_name=&editor->place_arg1;
         if        (entries[curentry]=="Wall") {
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Water") {
@@ -275,22 +279,29 @@ void PlaceBox::act(Sint8 curentry) {
         } else if (entries[curentry]=="Exit") {
             editor->setBox(new ObjectBox(entries[curentry],"exit.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Teleporter") {
+            editor->place_obj_name=&editor->place_arg3;
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Teleport Destination (x coordinate): ","0","Teleport Destination (y coordinate): ","0","Name: ",next_name));
         } else if (entries[curentry]=="Wind") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"teleport_01.bmp",area.x,area.y,"Wind acceleration: ","0","Name: ",next_name));
         } else if (entries[curentry]=="Geyser") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Geyser force: ","0","Name: ",next_name));
         } else if (entries[curentry]=="Trigger") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Trigger target name: ","","Name: ",next_name,"Key name: ",""));
         } else if (entries[curentry]=="Door") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Key name: ","","Name: ",next_name));
         } else if (entries[curentry]=="Spike") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Direction (R=1,L=2,U=4,D=8): ","4","Name: ",next_name));
         } else if (entries[curentry]=="Heart") {
             editor->setBox(new ObjectBox(entries[curentry],"heart.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Key") {
             editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Bomb") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"bomb_fire.bmp",area.x,area.y,"Exploding time (in ms): ","0","Name: ",next_name));
         } else if (entries[curentry]=="Erik") {
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
@@ -303,6 +314,7 @@ void PlaceBox::act(Sint8 curentry) {
         } else if (entries[curentry]=="Scorch") {
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Plant") {
+            editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Recovery time (in ms): ","0","Name: ",next_name));
         } else if (entries[curentry]=="Zombie") {
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
