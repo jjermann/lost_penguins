@@ -127,8 +127,6 @@ Code
         - crushable (ie. weapon fart, jump, run destroys them?)
         - bombable (ie. bomb destroys them)
         - multistates? => bridges, door, stone block
-     o Give each object a serial number and order the pools with it
-       => solves display bug...
 
 
 Progress
