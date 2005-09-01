@@ -43,7 +43,6 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
             appendtoBuf(place_name+" "+place_image+" "+itos(xs)+" "+itos(ys)+" "+place_arg1+" "+place_arg2+" "+place_arg3);
         }
         if (place_obj_name) (*place_obj_name)=scenario->pool->getNextObjectName(place_name);
-        if (place_obj_name) cout << "Name: " << *place_obj_name << endl;
 //        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
     } else { }
 }
