@@ -270,10 +270,11 @@ void PlaceBox::act(Sint8 curentry) {
     if (curentry==-1 || curentry >= (Sint8)entries.size()) {
     } else {
         string next_name=scenario->pool->getNextObjectName(entries[curentry]);
-        editor->place_obj_name=&editor->place_arg1;
         if        (entries[curentry]=="Wall") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Water") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"water.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Exit") {
             editor->setBox(new ObjectBox(entries[curentry],"exit.bmp",area.x,area.y,"Name: ",next_name));
@@ -296,26 +297,34 @@ void PlaceBox::act(Sint8 curentry) {
             editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Direction (R=1,L=2,U=4,D=8): ","4","Name: ",next_name));
         } else if (entries[curentry]=="Heart") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"heart.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Key") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Bomb") {
             editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"bomb_fire.bmp",area.x,area.y,"Exploding time (in ms): ","0","Name: ",next_name));
         } else if (entries[curentry]=="Erik") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Olaf") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Baleog") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Fang") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Scorch") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Plant") {
             editor->place_obj_name=&editor->place_arg2;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Recovery time (in ms): ","0","Name: ",next_name));
         } else if (entries[curentry]=="Zombie") {
+            editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else {
             editor->run_action(EDIT_RESET_ACTIONS);
