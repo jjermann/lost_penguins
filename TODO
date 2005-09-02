@@ -2,6 +2,8 @@ Bugs
 ====
  o rewrite zombie (bug in movement!, attacks too often, use events, etc...)
  o memleaks, segfaults?
+ o left/right move + switchPlayer (keeps moving)
+ o key vs. trigger in map2
 
 
 Code

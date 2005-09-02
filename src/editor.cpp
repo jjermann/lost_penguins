@@ -322,7 +322,7 @@ void PlaceBox::act(Sint8 curentry) {
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
         } else if (entries[curentry]=="Plant") {
             editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Recovery time (in ms): ","0","Name: ",next_name));
+            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Recovery time (in ms): ","0","Name: ",next_name));
         } else if (entries[curentry]=="Zombie") {
             editor->place_obj_name=&editor->place_arg1;
             editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
