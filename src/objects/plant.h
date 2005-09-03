@@ -9,7 +9,7 @@ class Plant : public Monster {
         virtual ~Plant();
         virtual void touch(Object*);
         virtual void idle(Uint16);
-        virtual Uint16 hit(Uint16 dir, Weapon& weap);
+        virtual Uint16 hit(Uint16 direction, Weapon& weap);
     private:
         Uint16 recover;
         Sint16 tcur;

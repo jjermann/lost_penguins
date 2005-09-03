@@ -6,7 +6,7 @@
 #define EDIT_ACT_BOX        0x00000008
 #define EDIT_PLACE_OBJECT   0x00000010
 
-/** \brief abstract selection box base class
+/** \brief abstract Box base class
 
 */
 class Box {
@@ -44,18 +44,27 @@ class Box {
         bool centered;
 };
 
+/** \brief Main Box of the editor with all main options
+
+*/
 class EditBox : public Box {
     public:
         EditBox(Sint16,Sint16);
         virtual void act(Sint8);
 };
 
+/** \brief Box used to choose the object that is to be placed
+
+*/
 class PlaceBox : public Box {
     public:
         PlaceBox(Sint16,Sint16);
         virtual void act(Sint8);
 };
 
+/** \brief Abstract base class for text input boxes
+
+*/
 class TextInputBox : public Box {
     public:
         TextInputBox(Sint16,Sint16);
@@ -70,6 +79,9 @@ class TextInputBox : public Box {
         virtual void update();
 };
 
+/** \brief Configure object attributes
+
+*/
 class ObjectBox : public TextInputBox {
     public:
         ObjectBox(string,string,Sint16,Sint16,string targ1="",string arg1="",string targ2="",string arg2="",string targ3="",string arg3="");
@@ -78,6 +90,9 @@ class ObjectBox : public TextInputBox {
         string objname;
 };
 
+/** \brief Saves the map to the specified file
+
+*/
 class SaveAsBox : public TextInputBox {
     public:
         SaveAsBox(Sint16,Sint16);
@@ -85,6 +100,9 @@ class SaveAsBox : public TextInputBox {
         virtual void evaluateEntry();
 };
 
+/** \brief Opens the specified map
+
+*/
 class OpenMapBox : public TextInputBox {
     public:
         OpenMapBox(Sint16,Sint16);
@@ -92,6 +110,9 @@ class OpenMapBox : public TextInputBox {
         virtual void evaluateEntry();
 };
 
+/** \brief Creates a new map with the specified attributes
+
+*/
 class NewMapBox : public TextInputBox {
     public:
         NewMapBox(Sint16,Sint16);

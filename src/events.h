@@ -53,6 +53,10 @@ class CEvent : public Event {
 */
 class AnimEvent : public Event {
     public:
+        /// \param obj Owner object of the AnimEvent
+        /// \param length Duration of the animation, once it's started
+        /// \param edelay Delay until the animation is started
+        /// \param switchstate States that will be switched when the animation starts/ends
         /// \param asound Sound (Mix_Chunk) to be played when the event starts
         /// \param runanim Animation to be run when the event starts
         /// \todo Get rid of the delanim parameter
@@ -97,11 +101,19 @@ class CAnimEvent : public CEvent {
 */
 class EAttack : public CAnimEvent {
     public:
+        /// \param chr Character owner of the AnimEvent
+        /// \param length Duration of the animation, once it's started
         /// \param atweapon Weapon to be used for the attack
         /// \param dir Directions to attack
         /// \param weapon_range Range of the weapon starting from the
         ///        character into all specified directions
         /// \param target_mask Mask for the object type of the targets to be hit
+        /// \param edelay Delay until the animation is started
+        /// \param switchstate States that will be switched when the animation starts/ends
+        /// \param esound Sound (Mix_Chunk) to be played when the event starts
+        /// \param runanim Animation to be run when the event starts
+        /// \todo Get rid of the delanim parameter
+        /// \param delanim True if the animation should be deleted
         EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0,
           Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL,
           Animation* runanim=NULL, bool delanim=false);
@@ -121,8 +133,6 @@ class EAttack : public CAnimEvent {
 class ERun : public CAnimEvent {
     public:
         /// Adds the initial speed
-        /// \param inispeed Initial horizontal speed to be added
-        /// \param ahspeed Horizontal speed to be added when the event starts
         ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay=0,
           Uint32 switchstate=0, Mix_Chunk* esound=NULL, Animation* runanim=NULL, bool delanim=false);
         virtual ~ERun();
