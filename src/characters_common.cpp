@@ -64,12 +64,8 @@ void Character::removedObject(Object* obj) {
     enter.erase(obj);
 }
 
-void Character::updateAnimState(bool change) {
-    if (change) animation=im_orig;
-    curpos.w=animation->getWidth();
-    curpos.h=animation->getHeight();
-    curpos.x=(Uint16)((pos.w-curpos.w)/2); 
-    curpos.y=(pos.h-curpos.h);
+void Character::updateAnimState() {
+    animation=im_orig;
 }
 
 void Character::idle(Uint16) {

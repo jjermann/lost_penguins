@@ -10,19 +10,14 @@
 Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   state(NOTHING),
   event(NULL),
-  im_orig(new Animation(scenario->imgcache->loadImage(imagename))),
+  im_orig(loadAnimation(scenario->imgcache->loadImage(1,imagename))),
   otype(NOTHING),
   name(oname),
   delete_flag(false) {
     animation=im_orig;
+    pos=animation->getFrameDim();
     pos.x=xcord;
     pos.y=ycord;
-    pos.w=animation->getWidth();
-    pos.h=animation->getHeight();
-    curpos.w=pos.w;
-    curpos.h=pos.h;
-    curpos.x=0;
-    curpos.y=0;
     onum=++scenario->max_obj_num;
 }
 
@@ -64,7 +59,24 @@ bool Object::setPos(Sint16 xcord,Sint16 ycord) {
     return ok;
 }
 
-const Frame& Object::getFrame() const {
+Animation* Object::loadAnimation(const Image& abase_image,
+                         Uint32 aduration,
+                         Uint16 aframes,
+                         Uint16 aanimation_type,
+                         Uint16 astart_pos,
+                         BasePointType abp_type, 
+                         AllignType aallign_type,
+                         Sint16 ashift_x, 
+                         Sint16 ashift_y) {
+    Animation* anim=new Animation(abase_image,aduration,aframes,aanimation_type,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
+    anim->setBasePos(&pos);
+    return anim;
+}
+
+SDL_Rect Object::getDrawPos() const {
+    return animation->getDrawPos();
+}
+const Frame Object::getFrame() const {
     return animation->getFrame();
 }
 bool Object::updateAnim(Uint16 dt) {
@@ -72,11 +84,13 @@ bool Object::updateAnim(Uint16 dt) {
 }
 void Object::setAnim(Animation* anim) {
     animation=anim;
-    animation->start();
+    animation->setBasePos(&pos);
+    animation->runAnim();
 }
 void Object::resetAnimState() {
     animation=im_orig;
-    animation->setFrame(0);
+    animation->setBasePos(&pos);
+    animation->runAnim();
 }
 bool Object::isRunning() const {
     return animation->isRunning();

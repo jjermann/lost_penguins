@@ -278,7 +278,7 @@ int parse(int argc, char* argv[]) {
     if (strcmp(config.data_file,"")==0) {
         snprintf(config.data_file,16,"%s.dat",config.basename);
     }
-    snprintf(config.geom_file,16,"%s.txt",config.basename);
+    snprintf(config.geom_file,16,"%s.dsc",config.basename);
 
     /* set colorkey in palette */
     lvl_palette[0][red]   = (unsigned char)(config.colorkey.red*255/MaxRGB);
@@ -651,11 +651,11 @@ int main(int argc, char *argv[]) {
     }
 
     /* Create the geometry file */
-    snprintf(buf,16,"%s.txt",config.basename);
+    snprintf(buf,16,"%s.dsc",config.basename);
     geom_file = fopen(buf,"w");
     geom_file = freopen(buf,"a",geom_file);
 
-    fprintf(geom_file,"LVLGEOM\n");
+    fprintf(geom_file,"DESCRIPTION LVLANIM\n");
     fprintf(geom_file,"Size %u %u\n\n",lvlanim_size,num_entries);
     for (i=0; i<lvlanim_size; i++) {
         fprintf(geom_file,"%s %u {\n",lvlanims[i].name,lvlanims[i].size);

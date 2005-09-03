@@ -44,8 +44,8 @@ int main(int argc, char* argv[]) {
     cout << "SoundEngine...\n";
     sfxeng=new SoundsEngine();
     cout << "Fonts...\n";
-    font=new Font(imgcache->loadImage("font_arial_white_16_01.png"));
-    font2=new Font(imgcache->loadImage("font_arial_red_16_01.png"));
+    font=new Font(imgcache->loadImage(1,"font_arial_white_16_01.png").surface);
+    font2=new Font(imgcache->loadImage(1,"font_arial_red_16_01.png").surface);
     cout << "InputHandler...\n";
     input=new InputHandler();
     cout << "Initializing Scenario...\n";

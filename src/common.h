@@ -20,7 +20,6 @@
 #include <SDL_image.h>
 #endif
 
-using std::string;
 using namespace std;
 
 class Object;
@@ -50,25 +49,43 @@ typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
 
 //General definitions
-#define NOTHING             0x00000000
-#define ALL                 0xFFFFFFFF
-#define DIR_RIGHT           0x00000001
-#define DIR_LEFT            0x00000002
-#define DIR_UP              0x00000004
-#define DIR_DOWN            0x00000008
-#define DIR_ALL             0x0000000F
-#define DIR_UPR             0x00000005
-#define DIR_UPL             0x00000006
-#define DIR_DWR             0x00000009
-#define DIR_DWL             0x0000000A
-#define DIR_LR              0x00000003
+#define NOTHING                 0x00000000
+#define ALL                     0xFFFFFFFF
+#define DIR_RIGHT               0x00000001
+#define DIR_LEFT                0x00000002
+#define DIR_UP                  0x00000004
+#define DIR_DOWN                0x00000008
+#define DIR_ALL                 0x0000000F
+#define DIR_UPR                 0x00000005
+#define DIR_UPL                 0x00000006
+#define DIR_DWR                 0x00000009
+#define DIR_DWL                 0x0000000A
+#define DIR_LR                  0x00000003
 
-#define GAME_PAUSED         0x00000001
-#define GAME_PLAY           0x00000002
-#define GAME_MENU           0x00000004
-#define GAME_EDIT           0x00000008
-#define GAME_EDIT_NOANIM    0x00000010
-#define GAME_TEXT_INPUT     0x00000020
+//Game states
+#define GAME_PAUSED             0x00000001
+#define GAME_PLAY               0x00000002
+#define GAME_MENU               0x00000004
+#define GAME_EDIT               0x00000008
+#define GAME_EDIT_NOANIM        0x00000010
+#define GAME_TEXT_INPUT         0x00000020
+
+//Animation types
+#define ATYPE_ONCE              0x00000001
+#define ATYPE_ONCE_END          0x00000002
+#define ATYPE_LOOP              0x00000004
+#define ATYPE_SWING             0x00000008
+#define ATYPE_ONCE_REV          0x00000010
+#define ATYPE_ONCE_END_REV      0x00000020
+#define ATYPE_LOOP_REV          0x00000040
+#define ATYPE_SWING_REV         0x00000080
+#define ATYPE_ALL_ONCE          0x00000033
+#define ATYPE_ALL_LSTART        0x00000021
+#define ATYPE_ALL_LEND          0x00000012
+#define ATYPE_ALL_LOOP          0x00000044
+#define ATYPE_ALL_SWING         0x00000088
+#define ATYPE_ALL_NORMAL        0x0000000F
+#define ATYPE_ALL_REV           0x000000F0
 
 enum ConfigKey {
     KEY_START,
@@ -89,6 +106,30 @@ enum ConfigKey {
     KEY_FULL,
     KEY_QUIT,
     KEY_NOANIM
+};
+
+enum BasePointType {
+    BP_LU,
+    BP_LM,
+    BP_LD,
+    BP_MU,
+    BP_MM,
+    BP_MD,
+    BP_RU,
+    BP_RM,
+    BP_RD
+};
+
+enum AllignType {
+    AT_LU,
+    AT_LM,
+    AT_LD,
+    AT_MU,
+    AT_MM,
+    AT_MD,
+    AT_RU,
+    AT_RM,
+    AT_RD
 };
 
 /**\brief Collision type
@@ -118,9 +159,19 @@ struct Config {
 
 */
 struct Frame {
-    SDL_Surface* image;
-    //Frame position (Source Rectangle)
-    SDL_Rect    pos;
+        Frame(SDL_Surface*,SDL_Rect);
+        Frame();
+        SDL_Surface* image;
+        //Frame position (Source Rectangle)
+        SDL_Rect    pos;
+};
+
+/**\brief Image structure
+
+*/
+struct Image {
+    SDL_Surface* surface;
+    std::vector<SDL_Rect> description;
 };
 
 //global functions

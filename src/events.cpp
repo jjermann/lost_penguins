@@ -57,8 +57,10 @@ AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchsta
   anim(runanim),
   del(delanim),
   sound(asound) {
-    if (anim) state|=ESTATE_ANIM;
-    if (anim!=NULL) duration=30000;
+    if (anim) {
+        state|=ESTATE_ANIM;
+        duration=30000;
+    }
 }
 Uint16 AnimEvent::update(Uint16 dt) {
     Uint16 evstate=Event::update(dt);

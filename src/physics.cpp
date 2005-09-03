@@ -104,7 +104,7 @@ inline void PhysicHandler::updateGame() {
     character_iterator cit=scenario->pool->characterspool.begin();
     while (cit!=scenario->pool->characterspool.end()) {
         (*cit)->fall(dt);
-        (*cit)->updateAnimState(!((*cit)->getState(ESTATE_ANIM)));
+        if (!((*cit)->getState(ESTATE_ANIM))) (*cit)->updateAnimState();
         ++cit;
     }
     //update the animations of all objects
@@ -113,6 +113,7 @@ inline void PhysicHandler::updateGame() {
         if ((*obit)->getState(ESTATE_ANIM)) { 
             bool runs=(*obit)->updateAnim(dt);
             if (!runs) (*obit)->stopEvent();
+
         } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
         ++obit;
     }
@@ -136,7 +137,7 @@ inline void PhysicHandler::updateEdit() {
     character_iterator cit=scenario->pool->characterspool.begin();
     while (cit!=scenario->pool->characterspool.end()) {
         (*cit)->fall(dt);
-        (*cit)->updateAnimState(!((*cit)->getState(ESTATE_ANIM)));
+        if (!((*cit)->getState(ESTATE_ANIM))) (*cit)->updateAnimState();
         ++cit;
     }
     //update the animations of all objects

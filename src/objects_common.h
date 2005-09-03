@@ -61,12 +61,8 @@ class Object {
         SDL_Rect* getPos() {
             return &pos;
         }
-        //we want: bottom-middle of pos
-        //animation (image) changes (depending on State changes)
-        SDL_Rect* getCurPos() {
-            return &curpos;
-        }
-        const Frame& getFrame() const;
+        SDL_Rect getDrawPos() const;
+        const Frame getFrame() const;
         //@{
         Uint16 getType() const {
             return otype;
@@ -109,6 +105,16 @@ class Object {
             delete this;
         }
         //@}
+        /// Load an animation bound onto this object
+        Animation* loadAnimation(const Image& abase_image,
+                                 Uint32 aduration=0,
+                                 Uint16 aframes=1,
+                                 Uint16 aanimation_type=ATYPE_LOOP,
+                                 Uint16 astart_pos=0,
+                                 BasePointType abp_type=BP_MD,
+                                 AllignType aallign_type=AT_MD,
+                                 Sint16 ashift_x=0,
+                                 Sint16 ashift_y=0);
         //Events (triggered animations/effects)
         //@{
         /// Clears the event field (sets it to NULL). This should only be used by
@@ -171,9 +177,6 @@ class Object {
         Animation* im_orig;
         Animation* animation;
         ///\todo Document this!
-        //temporary information about where to _draw_ the animation frame:
-        //curpos.wh <= pos.wh, curpos.xy = positive dxy
-        SDL_Rect curpos;
         /// Upper left logical position of the object (used for decisions)
         SDL_Rect pos;
         //Object type

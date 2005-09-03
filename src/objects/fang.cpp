@@ -12,18 +12,18 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
-    im_left=new Animation(scenario->imgcache->loadImage("Fang_Breath_left.png"),4,1000);
-    im_right=new Animation(scenario->imgcache->loadImage("Fang_Breath_right.png"),4,1000);
-    im_run_left=new Animation(scenario->imgcache->loadImage("Fang_walk_left.png"),8,1000);
-    im_run_right=new Animation(scenario->imgcache->loadImage("Fang_walk_right.png"),8,1000);
+    im_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),1000,4);
+    im_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),1000,4);
+    im_run_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),1000,8);
+    im_run_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),1000,8);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(scenario->imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
-    im_land_right=new Animation(scenario->imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
-    im_claw_left=new Animation(scenario->imgcache->loadImage("Fang_Clawslash_left.png"),8,1000,true);
-    im_claw_right=new Animation(scenario->imgcache->loadImage("Fang_Clawslash_right.png"),8,1000,true);
+    im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
+    im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
+    im_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),1000,8,ATYPE_ONCE_END);
+    im_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),1000,8,ATYPE_ONCE_END);
     au_hit=scenario->sndcache->loadWAV("wolfhit.wav");
     au_claw=scenario->sndcache->loadWAV("wolfjmp1.wav");
     au_jump=scenario->sndcache->loadWAV("fangjump.wav");

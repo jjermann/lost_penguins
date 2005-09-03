@@ -12,28 +12,28 @@
 Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   fart(V_FART) {
-    im_left=new Animation(scenario->imgcache->loadImage("olaf1_left.bmp"));
-    im_right=new Animation(scenario->imgcache->loadImage("olaf1_right.bmp"));
-    im_run_left=new Animation(scenario->imgcache->loadImage("olaf1-run_left.png"),8,1000);
-    im_run_right=new Animation(scenario->imgcache->loadImage("olaf1-run_right.png"),8,1000);
+    im_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_left.bmp"));
+    im_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_right.bmp"));
+    im_run_left=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_left.png"),1000,8);
+    im_run_right=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_right.png"),1000,8);
     im_fall_left=im_left;
     im_fall_right=im_right;
     im_krit_left=im_left;
     im_krit_right=im_right;
-    im_land_left=new Animation(scenario->imgcache->loadImage("olaf1_land_left.bmp"),1,T_IRR,true);
-    im_land_right=new Animation(scenario->imgcache->loadImage("olaf1_land_right.bmp"),1,T_IRR,true);
+    im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
+    im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
 
-    im_small_left=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_left.png"),7,0);
-    im_small_right=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_right.png"),7,0);
-    im_run_small_left=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_left.png"),7,500);
-    im_run_small_right=new Animation(scenario->imgcache->loadImage("Olaf_Small_Walk_right.png"),7,500);
-    im_shield_right=new Animation(scenario->imgcache->loadImage("olaf1_fall_shield_right.bmp"));
-    im_shield_left=new Animation(scenario->imgcache->loadImage("olaf1_fall_shield_left.bmp"));
+    im_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),0,1);
+    im_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),0,1);
+    im_run_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),500,7);
+    im_run_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),500,7);
+    im_shield_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_right.bmp"));
+    im_shield_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_left.bmp"));
     im_run_shield_right=im_shield_right;
     im_run_shield_left=im_shield_left;
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
-    im_die=new Animation(60,scenario->imgcache->loadImage("kuru.bmp"),12,2000,true);
+    im_die=loadAnimation(scenario->imgcache->loadImage(60,"kuru.bmp"),2000,12,0,ATYPE_ONCE_END);
     au_small=scenario->sndcache->loadWAV("blob.wav");
     au_big=scenario->sndcache->loadWAV("unblob.wav");
     au_fart=scenario->sndcache->loadWAV("fart1.wav");
@@ -54,9 +54,8 @@ Olaf::~Olaf() {
     delete im_shield_left;
 }
 
-void Olaf::updateAnimState(bool change) {
-    if (!change) {
-    } else if (state&STATE_SMALL) {
+void Olaf::updateAnimState() {
+    if (state&STATE_SMALL) {
         if (state&STATE_LEFT) {
             if (state&STATE_MLEFT) animation=im_run_small_left;
             else animation=im_small_left;
@@ -85,10 +84,6 @@ void Olaf::updateAnimState(bool change) {
         otype&=~OTYPE_DENSE_D;
         Player::updateAnimState();
     }
-    curpos.w=animation->getWidth();
-    curpos.h=animation->getHeight();
-    curpos.x=(Uint16)((pos.w-curpos.w)/2);
-    curpos.y=(pos.h-curpos.h);
 }
 
 void Olaf::in_left(Uint16 dt) {
@@ -114,10 +109,10 @@ inline bool Olaf::trySmall(bool small) {
     //Assume both images have the same dimension
     else tmpanim=im_orig;
     //IDEA: left/right edge instead of bottom?
-    tmppos.x+=(Sint16)((tmppos.w-tmpanim->getWidth())/2);
-    tmppos.y+=tmppos.h-tmpanim->getHeight();
-    tmppos.w=tmpanim->getWidth();
-    tmppos.h=tmpanim->getHeight();
+    tmppos.x+=(Sint16)((tmppos.w-tmpanim->getFrameDim().w)/2);
+    tmppos.y+=tmppos.h-tmpanim->getFrameDim().h;
+    tmppos.w=tmpanim->getFrameDim().w;
+    tmppos.h=tmpanim->getFrameDim().h;
     if (!(checkMove(tmppos,true).enter&DIR_ALL)) {
         pos=tmppos;
         if (small) {

@@ -1,5 +1,4 @@
 #include "common.h"
-#include "menu.h"
 
 ImageCache* imgcache;
 SoundCache* sndcache;
@@ -63,4 +62,13 @@ void removeGameMode(Uint8 rmmode) {
     } else {
         SDL_ShowCursor(SDL_DISABLE);
     }
+}
+
+Frame::Frame(SDL_Surface* surface,SDL_Rect rect):
+  image(surface),
+  pos(rect) { }
+
+Frame::Frame():
+  image(NULL) {
+    pos.x=pos.y=pos.w=pos.h=0;
 }

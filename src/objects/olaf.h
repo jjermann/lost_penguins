@@ -19,7 +19,7 @@ class Olaf : public Player {
         Olaf(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Olaf");
         virtual ~Olaf();
         /// Additionally checks if Olaf is small and how he wears his shield
-        virtual void updateAnimState(bool change=true);
+        virtual void updateAnimState();
         virtual void in_left(Uint16);
         virtual void in_right(Uint16);
         /// \brief Olaf tries to shrink (if he was big)

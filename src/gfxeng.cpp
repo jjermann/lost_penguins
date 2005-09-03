@@ -23,7 +23,7 @@ GraphicsEngine::GraphicsEngine():
     shift.x=0;
     shift.y=0;
     resize(config.width, config.height);
-    lifeimage=new Animation(imgcache->loadImage("life.bmp"));
+    lifeimage=new Animation(imgcache->loadImage(1,"life.bmp"));
 }
 
 GraphicsEngine::~GraphicsEngine() {
@@ -155,22 +155,19 @@ void GraphicsEngine::drawScene() {
 
     tmprect=*scenario->area;
     srcpos=scenario->background->getFrame().pos;
-    shiftMapArea(tmprect,*scenario->background->getCurPos());
     SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
     
     object_iterator obit=scenario->pool->objectspool.begin();
     while (obit!=scenario->pool->objectspool.end()) {
-        tmprect=*((*obit)->getPos());
+        tmprect=((*obit)->getDrawPos());
         srcpos=(*obit)->getFrame().pos;
-        shiftMapArea(tmprect,*((*obit)->getCurPos()));
         SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         ++obit;
     }
 
     if (game_mode&GAME_PLAY && scenario->player!=NULL) {
-        tmprect=*(scenario->player->getPos());
+        tmprect=(scenario->player->getDrawPos());
         srcpos=scenario->player->getFrame().pos;
-        shiftMapArea(tmprect,*(scenario->player->getCurPos()));
         SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
     }
 }

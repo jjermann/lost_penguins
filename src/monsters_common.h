@@ -12,7 +12,7 @@ class Monster : public Character {
         Monster(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Monster");
         virtual ~Monster();
         virtual void removedObject(Object*);
-        virtual void updateAnimState(bool change=true);
+        virtual void updateAnimState();
         virtual void idle(Uint16);
         virtual void fall(Uint16);
         virtual Uint16 hit(Uint16 direction, Weapon& weap);

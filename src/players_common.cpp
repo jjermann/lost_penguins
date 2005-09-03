@@ -57,7 +57,7 @@ Player::~Player() {
 }
 
 Frame Player::getIcon() const {
-    return (im_right->getFrame(0));
+    return (im_right->getBaseFrame());
 }
 
 void Player::addEnter(std::set<Object *>& aset) {
@@ -146,9 +146,8 @@ void Player::setEvent(Event* ev) {
     Character::setEvent(ev);
 }
 
-void Player::updateAnimState(bool change) {
-    if (!change) {
-    } else if (state&STATE_LEFT) {
+void Player::updateAnimState() {
+    if (state&STATE_LEFT) {
         if (state&STATE_FALL) {
             if (speed>V_KRIT) {
                 animation=im_krit_left;
@@ -173,10 +172,6 @@ void Player::updateAnimState(bool change) {
             animation=im_right;
         }
     }
-    curpos.w=animation->getWidth();
-    curpos.h=animation->getHeight();
-    curpos.x=(Uint16)((pos.w-curpos.w)/2);
-    curpos.y=(pos.h-curpos.h);
 }
 
 void Player::idle(Uint16 dt) {

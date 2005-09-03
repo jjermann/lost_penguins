@@ -105,12 +105,11 @@ class Character : public Object {
         virtual void removedObject(Object*);
         ///\brief Updates the current animation
         ///
-        /// Checks the state and changes the animation and curpos correpspondingly
-        /// \param change False if only the curpos should be changed and not the animation.
-        virtual void updateAnimState(bool change=true);
+        /// Checks the state and changes the animation correpspondingly
+        virtual void updateAnimState();
         virtual void resetAnimState() {
             Object::resetAnimState();
-            updateAnimState(true);
+            updateAnimState();
         }
         //Define these for each character, the base function must be run for all derived classes
         virtual void idle(Uint16);

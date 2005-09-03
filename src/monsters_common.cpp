@@ -73,17 +73,12 @@ void Monster::removedObject(Object* obj) {
     }
 }
 
-void Monster::updateAnimState(bool change) {
-    if (!change) {
-    } else if (state&STATE_LEFT) {
+void Monster::updateAnimState() {
+    if (state&STATE_LEFT) {
         animation=im_left;   
     } else {   
         animation=im_right;
     }
-    curpos.w=animation->getWidth();
-    curpos.h=animation->getHeight();   
-    curpos.x=(Uint16)((pos.w-curpos.w)/2);
-    curpos.y=(pos.h-curpos.h);
 }
 
 void Monster::idle(Uint16 dt) {

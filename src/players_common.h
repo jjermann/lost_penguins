@@ -56,7 +56,7 @@ class Player : public Character {
         //@}
         //VIRTUAL METHODS
         //@{
-        virtual void updateAnimState(bool change=true);
+        virtual void updateAnimState();
         virtual void idle(Uint16);
         virtual void fall(Uint16);
         virtual Uint16 hit(Uint16 direction, Weapon& weap);
