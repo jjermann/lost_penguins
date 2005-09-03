@@ -1,0 +1,22 @@
+DOS - WIN differences
+
+bytes 6,7,8,9 -- size ?
+and starting 0x1c
+
+LEVEL diffs
+
+bytes 5,6,7,8,9,a,b,c,d,10 ...
+
+byte[5] == byte[a] == maybe num of sprites?!/entries?!
+
+hmm.. between D1 and D2, only 6,7,8,9 differs, and then until 0x37c nothing
+D1->D3: starting 0x21..., then 0x14
+
+
+FORMAT
+------
+
+byte0-3		ID == 'DATA'
+byte4-5		num of sprites?
+byte6-8		sizes?
+byte9-10	num of sprites?
