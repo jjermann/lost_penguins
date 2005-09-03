@@ -305,13 +305,13 @@ void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
  *
  * Data file Format:
  *
- * -----------------
- * LVLDATA
+ * ---------------------------
+ * ANIMATION LVLANIM imagename
  *
  * start_offset size name
  * ...
  *
- * -----------------
+ * ---------------------------
  *
  * start_offset is the image index off all images in the file
  * size is the number of frames of the animation
@@ -319,7 +319,7 @@ void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
  *
  */
 unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
-    const char data_id[]="LVLDATA";
+    const char data_id[]="ANIMATION LVLANIM";
     unsigned int start_num, size, data_size=0;
     char name[50], line[80];
     int match=0;
@@ -333,7 +333,7 @@ unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
         return 0;
     }
 
-    if (!fgets(line,80,data_file) || strncmp(line,data_id,7)) {
+    if (!fgets(line,80,data_file) || strncmp(line,data_id,17)) {
         printf("Data file %s is invalid!!\n",data_file_name);
         fclose(data_file);
         return 0;
@@ -423,6 +423,7 @@ int main(int argc, char *argv[]) {
 
     /* temporary variables */
     char buf[20];
+    char tmpcstr[10]="";
     struct stat sb;
     unsigned int i,j,width,height,x_off=0,y_off=0,maxh=0;
     int d_exception=0;
@@ -616,6 +617,8 @@ int main(int argc, char *argv[]) {
         /* Montage the image and append it to the big image list */
         if (config.write!=0) {
             if (anim_list!=(Image *) ((void *)0)) {
+                snprintf(tmpcstr,9,"%lux1",GetImageListLength(anim_list));
+                montage_anim_info.tile=tmpcstr;
                 anim_image=MontageImages(anim_list,&montage_anim_info,&exception);
                 anim_image->matte_color=config.colorkey;
 
@@ -636,6 +639,8 @@ int main(int argc, char *argv[]) {
 
     /* Create a big image (montage) using the big image list */
     if (config.write!=0) {
+        snprintf(tmpcstr,9,"1x%lu",GetImageListLength(image_list));
+        montage_info.tile=tmpcstr;
         big_image=MontageImages(image_list,&montage_info,&exception);
         big_image->matte_color=config.colorkey;
         DestroyImageList(image_list);
