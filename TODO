@@ -37,12 +37,13 @@ Code
          object/whatever)...
 
  o Events/Animations:
+     o Invent more intelligent and more robust! fallback methods for animations
      o Allow empty animation, decouple (put more logic in) these relations:
        object (pos, draw?), game(time, state, handler), gfxeng(draw), animation(empty,
        frame, update, time, draw)?, frame, global/current (public, private) properties
      o Make all events quite short, ie. almost all events become animation
        events
-     o Do some column/row logics to easy the access? => NO
+     o IDEA: couple left and right animations somehow to reduce the code size
         - eg. set offsets for left, right, mleft, mright...
      o IDEA: just store one side and add some flipping logic to the image
           loading process...
@@ -78,20 +79,25 @@ Code
 Progress
 ========
 
- o DONE?: fall logic including gravity!!
- o DONE?: players, object, item, ai, weapons, character
- o PART DONE: effect management (periodic events, permanent effects, etc)
- o DONE: hitlogic
- o IMPROVE!: move logic
+ o Monsters / AI: VERY BAD
+ o Game functionality (): BAD
+ o Object (including parameter) loading: BAD
+ o Move logic: BAD, BUGGED, MESS
+ o Events / Effects: BAD, MESS
+ o Objects (players, items, etc): ACCEPTABLE
+ o Input Handler: ACCEPTABLE, WORKS
+ o Collision detection: OK
+ o Fall logic: GOOD
+ o Animation / Image structure: VERY GOOD
 
 
-Features/Ideas
-==============
+Features/Ideas/Wishlist
+=======================
 
  o Make water movements possible (eric)
- o Add better graphics
- o improve the map editor
+ o improve the map editor even further
  o Simple AI
+ o In game scaling?
 
  o Finnish the vikings:
      - weapons: better run, jump2, fart, arm, fire
@@ -103,7 +109,7 @@ Features/Ideas
      - "deadly edges"
      - electric fence
 
- o Monsters?:
+ o Monsters:
      - stone?
      - knight
      - dragon
@@ -111,7 +117,7 @@ Features/Ideas
      - fish
      - firetower
  
- o Weapons?:
+ o Weapons:
     - fireballs
     - sword
     - claw
@@ -120,5 +126,5 @@ Features/Ideas
     - jump
     - arm
 
- o Items?:
+ o Items:
     - special items
