@@ -17,8 +17,6 @@ Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname)
   speed(0),
   gravity(900),
   Dgrav(0),
-  im_die_left(NULL),
-  im_die_right(NULL),
   dense_types(NOTHING),
   enemy_types(NOTHING),
   weapon(Weapon(0)) {
@@ -66,7 +64,7 @@ void Character::removedObject(Object* obj) {
 }
 
 void Character::updateAnimState() {
-    animation=im_orig;
+    setAnim(anim_orig);
 }
 
 void Character::idle(Uint16) {

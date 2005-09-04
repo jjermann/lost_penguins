@@ -61,6 +61,8 @@ typedef struct {
     char data_file[20];
     /* output geometry file */
     char geom_file[20];
+    /* output animation description file */
+    char anim_file[20];
     /* base name (used for output directory and output file names) */
     char basename[20];
     /* image format */
@@ -154,7 +156,7 @@ void usage() {
     printf("  -h, --help             Print this help message\n\n");
     printf("  -debug                 Create additional debug files (default: off)\n\n");
     printf("  -start_index <n>       Start index of the frame image names (default: 0)\n\n");
-    printf("  -write <0-7>           n=0: Just create the geometry data (no images)\n");
+    printf("  -write <0-7>           n=0: Just create the geometry and animation data (no images)\n");
     printf("                         n=1: Create one big image with all animations in it\n");
     printf("                         n=2: Create one image for each animation\n");
     printf("                         n=4: Create one image for each frame\n");
@@ -278,7 +280,8 @@ int parse(int argc, char* argv[]) {
     if (strcmp(config.data_file,"")==0) {
         snprintf(config.data_file,16,"%s.dat",config.basename);
     }
-    snprintf(config.geom_file,16,"%s.dsc",config.basename);
+    snprintf(config.geom_file,16,"%s.%s.dsc",config.basename,config.format);
+    snprintf(config.anim_file,16,"%s.%s.anim",config.basename,config.format);
 
     /* set colorkey in palette */
     lvl_palette[0][red]   = (unsigned char)(config.colorkey.red*255/MaxRGB);
@@ -319,7 +322,7 @@ void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
  *
  */
 unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
-    const char data_id[]="ANIMATION LVLANIM";
+    const char data_id[]="LVLDATA";
     unsigned int start_num, size, data_size=0;
     char name[50], line[80];
     int match=0;
@@ -333,7 +336,7 @@ unsigned int parseDataFile(char* data_file_name, LVLAnim** lvlanims) {
         return 0;
     }
 
-    if (!fgets(line,80,data_file) || strncmp(line,data_id,17)) {
+    if (!fgets(line,80,data_file) || strncmp(line,data_id,7)) {
         printf("Data file %s is invalid!!\n",data_file_name);
         fclose(data_file);
         return 0;
@@ -430,7 +433,7 @@ int main(int argc, char *argv[]) {
 
     const char entry_id[]="TRPS";
     unsigned int data_size=0, tot_entries=0, num_entries=0, unknown=0;
-    FILE *lvl_file=NULL, *unknown_file=NULL, *geom_file=NULL;
+    FILE *lvl_file=NULL, *unknown_file=NULL, *geom_file=NULL, *anim_file=NULL;
     LVLAnim* lvlanims=NULL;
     unsigned int lvlanim_size=0;
 
@@ -559,13 +562,11 @@ int main(int argc, char *argv[]) {
         GetExceptionInfo(&exception);
         d_exception=1;
         GetMontageInfo(image_info,&montage_info);
-        montage_info.tile="1x3000";
         montage_info.geometry="+0+0";
         montage_info.background_color=config.bg;
         montage_info.matte_color=config.colorkey;
         montage_info.gravity=NorthWestGravity;
         GetMontageInfo(image_info,&montage_anim_info);
-        montage_anim_info.tile="3000x1";
         montage_anim_info.geometry="+0+0";
         montage_anim_info.background_color=config.bg;
         montage_anim_info.matte_color=config.colorkey;
@@ -655,28 +656,47 @@ int main(int argc, char *argv[]) {
         big_image=NULL;
     }
 
-    /* Create the geometry file */
-    snprintf(buf,16,"%s.dsc",config.basename);
-    geom_file = fopen(buf,"w");
-    geom_file = freopen(buf,"a",geom_file);
+    /* Create the animation data file */
+    anim_file = fopen(config.anim_file,"w");
+    anim_file = freopen(config.anim_file,"a",anim_file);
 
-    fprintf(geom_file,"DESCRIPTION LVLANIM\n");
-    fprintf(geom_file,"Size %u %u\n\n",lvlanim_size,num_entries);
+    /* j is the current start frame number */
+    j=0;
+    fprintf(anim_file,"ANIMATION LVLANIM\n\n");
     for (i=0; i<lvlanim_size; i++) {
+        fprintf(anim_file,"%s %s.%s %u %u\n",lvlanims[i].name,config.basename,config.format,j,lvlanims[i].size);
+        j+=lvlanims[i].size;
+    }
+
+    geom_file = fopen(config.geom_file,"w");
+    geom_file = freopen(config.geom_file,"a",geom_file);
+
+    fprintf(geom_file,"DESCRIPTION LVLANIM\n\n");
+/*
+    fprintf(geom_file,"Size %u %u\n\n",lvlanim_size,num_entries);
+*/
+    for (i=0; i<lvlanim_size; i++) {
+/*
         fprintf(geom_file,"%s %u {\n",lvlanims[i].name,lvlanims[i].size);
         for (j=0; j<lvlanims[i].size; j++) {
             fprintf(geom_file,"  %5u %5u %5u %5u\n",lvlanims[i].geometry[j].x,lvlanims[i].geometry[j].y,lvlanims[i].geometry[j].w,lvlanims[i].geometry[j].h);
         }
         fprintf(geom_file,"}\n\n");
+*/
+        for (j=0; j<lvlanims[i].size; j++) {
+            fprintf(geom_file,"%5u %5u %5u %5u\n",lvlanims[i].geometry[j].x,lvlanims[i].geometry[j].y,lvlanims[i].geometry[j].w,lvlanims[i].geometry[j].h);
+        }
     }
 
     /* Summary */
     printf("%s/ Contains: ",config.basename);
-    if (config.write&1) printf("1 big animation composition image, ");
-    if (config.write&2) printf("%u extracted animation images, ", lvlanim_size);
-    if (config.write&4) printf("%u extracted frame images, ", num_entries);
-    if (config.debug)   printf("unknown chunk files, ");
-    printf("1 geometry files\n");
+    if (config.write&1)  printf("1 big animation composition image, ");
+    if (config.write&2)  printf("%u extracted animation images, ", lvlanim_size);
+    if (config.write&4)  printf("%u extracted frame images, ", num_entries);
+    if (config.debug)    printf("unknown chunk files, ");
+    if (geom_file!=NULL) printf("1 geometry file, ");
+    if (anim_file!=NULL) printf("1 animation data file ");
+    printf("\n");
     printf("Total images: %u, Extracted images: %u, Unknown content: %u bytes\n",tot_entries,num_entries,unknown);
 
     end:
@@ -697,6 +717,7 @@ int main(int argc, char *argv[]) {
     if (lvlanims && lvlanim_size)        freeLVLAnimList(lvlanims,lvlanim_size);
     if (lvl_file!=NULL)  fclose(lvl_file);
     if (geom_file!=NULL) fclose(geom_file);
+    if (anim_file!=NULL) fclose(anim_file);
 
     return errno;
 }

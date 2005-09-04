@@ -2,18 +2,18 @@
 #include "animation.h"
 
 Animation::Animation(const Image& abase_image,
-          Uint32 aduration,
           Uint16 aframes,
           Uint16 aanimation_type,
+          double afps,
           Uint16 astart_pos,
           BasePointType abp_type,
           AllignType aallign_type,
           Sint16 ashift_x,
           Sint16 ashift_y):
   base_image(abase_image),
-  duration(aduration),
   frames(aframes),
   animation_type(aanimation_type),
+  fps(afps),
   start_pos(astart_pos),
   bp_type(abp_type),
   allign_type(aallign_type),
@@ -21,6 +21,12 @@ Animation::Animation(const Image& abase_image,
   shift_y(ashift_y),
   end_pos(start_pos+frames),
   base_pos(NULL) {
+    if (fps==0) {
+        fps=calcFPS(frames,DATA_LVLDUR);
+    } else if (fps<0) {
+        fps=calcFPS(frames,(Uint32)(-fps));
+    }
+    duration=(Uint32)(frames*1000.0/fps+0.5);
     checkAnim();
 }
 Animation::~Animation() { }

@@ -37,6 +37,10 @@ int boost(int a, int b) {
     else return a=min(0,a-b);
 }
 
+double calcFPS(Uint16 frames, Uint32 duration) { 
+    return frames*1000.0/duration;
+}
+
 void setGameMode(Uint8 newmode) {
     game_mode=newmode;
     if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {

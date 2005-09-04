@@ -109,8 +109,7 @@ int Scenario::reloadMap() {
         image.erase();
         x=0;
         y=0;
-        arg1=arg2="0";
-        arg3="";
+        arg1=arg2=arg3="";
         std::istringstream tmpstream(mapbuf[linenum]);
         tmpstream >> cname >> image >> x >> y >> arg1 >> arg2 >> arg3;
 

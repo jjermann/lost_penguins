@@ -12,31 +12,21 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
-    im_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),1000,4);
-    im_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),1000,4);
-    im_run_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),1000,8);
-    im_run_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),1000,8);
-    im_fall_left=im_left;
-    im_fall_right=im_right;
-    im_krit_left=im_left;
-    im_krit_right=im_right;
-    im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
-    im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
-    im_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),1000,8,ATYPE_ONCE_END);
-    im_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),1000,8,ATYPE_ONCE_END);
+    anim_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),4);
+    anim_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),4);
+    anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),8);
+    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),8);
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),8);
+    anim_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),8);
     au_hit=scenario->sndcache->loadWAV("wolfhit.wav");
     au_claw=scenario->sndcache->loadWAV("wolfjmp1.wav");
     au_jump=scenario->sndcache->loadWAV("fangjump.wav");
 }
 Fang::~Fang() {
-    delete im_left;
-    delete im_right;
-    delete im_run_left;
-    delete im_run_right;
-    delete im_land_left;
-    delete im_land_right;
-    delete im_claw_left;
-    delete im_claw_right;
+    delete anim_claw_left;
+    delete anim_claw_right;
 }
 
 void Fang::in_left(Uint16 dt) {
@@ -94,7 +84,7 @@ void Fang::in_sp1() {
 }
 
 void Fang::in_sp2() {
-    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? im_claw_left : im_claw_right));
+    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? anim_claw_left : anim_claw_right));
 }
 
 void Fang::crash(Uint16 dir) {

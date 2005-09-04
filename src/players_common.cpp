@@ -26,16 +26,25 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     state=STATE_FALL;
     otype|=OTYPE_PLAYER;
     enemy_types|=OTYPE_MONSTER;
-    im_left=animation;
-    im_right=animation;
-    im_run_left=animation;
-    im_run_right=animation;
-    im_fall_left=animation;
-    im_fall_right=animation;
-    im_krit_left=animation;
-    im_krit_right=animation;
-    im_land_left=animation;
-    im_land_right=animation;
+    anim_left=anim_right=NULL;
+    anim_rock_left=anim_rock_right=NULL;
+    anim_walk_left=anim_walk_right=NULL;
+    anim_push_left=anim_push_right=NULL;
+    anim_fall_left=anim_fall_right=NULL;
+    anim_fall_fast_left=anim_fall_fast_right=NULL;
+    anim_land_left=anim_land_right=NULL;
+    anim_crash_left=anim_crash_right=NULL;
+    anim_rope_left=anim_rope_right=NULL;
+    anim_teleport_left=anim_teleport_right=NULL;
+    anim_die_crash_left=anim_die_crash_right=NULL;
+    anim_die_burn_left=anim_die_burn_right=NULL;
+    anim_die_bones_left=anim_die_bones_right=NULL;
+    anim_die_elec_left=anim_die_elec_right=NULL;
+    anim_die_spike_left=anim_die_spike_right=NULL;
+    anim_die_water_left=anim_die_water_right=NULL;
+    anim_fall_middle=NULL;
+    anim_climb=NULL;
+    anim_bar=NULL;
     au_land=scenario->sndcache->loadWAV("dizzy.wav");
     au_act=scenario->sndcache->loadWAV("button.wav");
     au_useerror=scenario->sndcache->loadWAV("useerror.wav");
@@ -49,6 +58,41 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 }
 
 Player::~Player() {
+    delete anim_left;
+    delete anim_right;
+    delete anim_rock_left;
+    delete anim_rock_right;
+    delete anim_walk_left;
+    delete anim_walk_right;
+    delete anim_push_left;
+    delete anim_push_right;
+    delete anim_fall_left;
+    delete anim_fall_right;
+    delete anim_fall_fast_left;
+    delete anim_fall_fast_right;
+    delete anim_land_left;
+    delete anim_land_right;
+    delete anim_crash_left;
+    delete anim_crash_right;
+    delete anim_rope_left;
+    delete anim_rope_right;
+    delete anim_teleport_left;
+    delete anim_teleport_right;
+    delete anim_die_crash_left;
+    delete anim_die_crash_right;
+    delete anim_die_burn_left;
+    delete anim_die_burn_right;
+    delete anim_die_bones_left;
+    delete anim_die_bones_right;
+    delete anim_die_elec_left;
+    delete anim_die_elec_right;
+    delete anim_die_spike_left;
+    delete anim_die_spike_right;
+    delete anim_die_water_left;
+    delete anim_die_water_right;
+    delete anim_fall_middle;
+    delete anim_climb;
+    delete anim_bar;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         if (items[i]) {
             removeItem(i);
@@ -57,7 +101,9 @@ Player::~Player() {
 }
 
 Frame Player::getIcon() const {
-    return (im_right->getBaseFrame());
+    if (anim_bar) return (anim_bar->getBaseFrame());
+    else if (anim_right) return (anim_right->getBaseFrame());
+    else return (anim_orig->getBaseFrame());
 }
 
 void Player::addEnter(std::set<Object *>& aset) {
@@ -150,26 +196,38 @@ void Player::updateAnimState() {
     if (state&STATE_LEFT) {
         if (state&STATE_FALL) {
             if (speed>V_KRIT) {
-                animation=im_krit_left;
+                if (!setAnim(anim_fall_fast_left)) {
+                    if (!setAnim(anim_fall_left)) setAnim(anim_left);
+                }
+            } else if (state&STATE_MLEFT || speed < 0) {
+                if (!setAnim(anim_fall_left)) setAnim(anim_left);
             } else {
-                animation=im_fall_left;
+                if (!setAnim(anim_fall_middle)) {
+                    if (!setAnim(anim_fall_left)) setAnim(anim_left);
+                }
             }
         } else if (state&STATE_MLEFT) {
-            animation=im_run_left;
+            if (!setAnim(anim_walk_left)) setAnim(anim_left);
         } else {
-            animation=im_left;
+            setAnim(anim_left);
         }
     } else {
         if (state&STATE_FALL) {
             if (speed>V_KRIT) {
-                animation=im_krit_right;
+                if (!setAnim(anim_fall_fast_right)) {
+                    if (!setAnim(anim_fall_right)) setAnim(anim_right);
+                }
+            } else if (state&STATE_MRIGHT || speed < 0) {
+                if (!setAnim(anim_fall_right)) setAnim(anim_right);
             } else {
-                animation=im_fall_right;
+                if (!setAnim(anim_fall_middle)) {
+                    if (!setAnim(anim_fall_right)) setAnim(anim_right);
+                }
             }
         } else if (state&STATE_MRIGHT) {
-            animation=im_run_right;
+            if (!setAnim(anim_walk_right)) setAnim(anim_right);
         } else {
-            animation=im_right;
+            setAnim(anim_right);
         }
     }
 }
@@ -279,27 +337,24 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
         Character* deadplr=scenario->pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
         switch(weap.getSubType()) {
             case WS_FIRE: {
-                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,(state&STATE_LEFT) ? im_die_left : im_die_right));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,(state&STATE_LEFT) ? anim_die_burn_left : anim_die_burn_right));
                 else sfxeng->playWAV(au_fire);
                 break;
             }
             case WS_WATER: {
-                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_drown,(state&STATE_LEFT) ? im_die_left : im_die_right));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_drown,(state&STATE_LEFT) ? anim_die_water_left : anim_die_water_right));
                 else sfxeng->playWAV(au_drown);
                 break;
             }
             //WS_NORMAL, WS_ELECTRIC, WS_FIRE, WS_PRESSURE
             default: {
-                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_die,(state&STATE_LEFT) ? im_die_left : im_die_right));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_die,(state&STATE_LEFT) ? anim_die_bones_left : anim_die_bones_right));
                 else sfxeng->playWAV(au_die);
             }
         }
     //damaged or healed...
     } else {
         Mix_Chunk* aud_hit;
-        Animation* anim_hit;
-        if (state&STATE_LEFT) anim_hit=im_land_left;
-        else anim_hit=im_land_right;
         //TODO add more Animations
         switch(weap.getSubType()) {
             case WS_HEAL: {
@@ -328,7 +383,7 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
                 break;
             }
             case W_PRESSURE: {
-                setEvent(new CAnimEvent(this,T_IRR,0,ESTATE_BUSY,aud_hit,anim_hit));
+                setEvent(new CAnimEvent(this,T_IRR,0,ESTATE_BUSY,aud_hit,(state & STATE_LEFT) ? anim_crash_left : anim_crash_right));
                 break;
             }
             case W_TOUCH: {

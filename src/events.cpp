@@ -69,7 +69,7 @@ Uint16 AnimEvent::update(Uint16 dt) {
 }
 void AnimEvent::start() {
     sfxeng->playWAV(sound);
-    if (anim) owner->setAnim(anim);
+    if (anim) owner->setAnim(anim,true);
     Event::start();
 }
 void AnimEvent::end() {
@@ -108,7 +108,7 @@ Uint16 CAnimEvent::update(Uint16 dt) {
 }
 void CAnimEvent::start() {
     sfxeng->playWAV(sound);
-    if (anim) charowner->setAnim(anim);
+    if (anim) charowner->setAnim(anim,true);
     CEvent::start();
 }
 void CAnimEvent::end() {

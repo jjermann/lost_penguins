@@ -21,8 +21,8 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     otype|=OTYPE_MONSTER;
     enemy_types|=OTYPE_PLAYER;
     dense_types|=OTYPE_PLAYER;
-    im_left=animation;
-    im_right=animation;
+    anim_left=animation;
+    anim_right=animation;
     au_hit=scenario->sndcache->loadWAV("monhit.wav");
 }
 
@@ -75,9 +75,9 @@ void Monster::removedObject(Object* obj) {
 
 void Monster::updateAnimState() {
     if (state&STATE_LEFT) {
-        animation=im_left;   
+        setAnim(anim_left);   
     } else {   
-        animation=im_right;
+        setAnim(anim_right);
     }
 }
 

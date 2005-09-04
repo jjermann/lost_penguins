@@ -34,8 +34,8 @@ class Fang : public Player {
         virtual void clearStates(bool reset=false);
     private:
         virtual void crash(Uint16 dir=DIR_DOWN);
-        Animation* im_claw_left;
-        Animation* im_claw_right;
+        Animation* anim_claw_left;
+        Animation* anim_claw_right;
         Mix_Chunk* au_jump;
         Mix_Chunk* au_claw;
         Sint16 jump;

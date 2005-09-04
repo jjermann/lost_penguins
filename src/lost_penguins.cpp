@@ -100,7 +100,7 @@ int readConfig(const string& filename) {
     config.datadir="data/";
     config.anim_file="animation_data.anim";
     config.map="map1.cfg";
-    config.lvlscale=4;
+    config.lvlscale=2;
 
     //key bindings
     config.keybind[KEY_LEFT]    = SDLK_LEFT;

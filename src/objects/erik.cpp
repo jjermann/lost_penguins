@@ -16,38 +16,52 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);
 /*
-    im_left=loadAnimation(scenario->imgcache->loadImage("erik1_left.bmp"));
-    im_right=loadAnimation(scenario->imgcache->loadImage(1,"erik1_right.bmp"));
-    im_run_right=im_right;
-    im_run_left=im_left;
-    im_fall_left=im_left;
-    im_fall_right=im_right;
-    im_krit_left=im_left;
-    im_krit_right=im_right;
-    im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
-    im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
+    anim_left=loadAnimation(scenario->imgcache->loadImage("erik1_left.bmp"));
+    anim_right=loadAnimation(scenario->imgcache->loadImage(1,"erik1_right.bmp"));
+    anim_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
 */
-    im_left=loadAnimation("eric_idle_left",config.lvlscale,1000);
-    im_right=loadAnimation("eric_idle_right",config.lvlscale,1000);
-    im_run_left=loadAnimation("eric_run_left",config.lvlscale,1000);
-    im_run_right=loadAnimation("eric_run_right",config.lvlscale,1000);
-    im_fall_left=loadAnimation("eric_fall_left",config.lvlscale,1000);
-    im_fall_right=loadAnimation("eric_fall_right",config.lvlscale,1000);
-    im_krit_left=loadAnimation("eric_fall_fast_left",config.lvlscale,1000);
-    im_krit_right=loadAnimation("eric_fall_fast_right",config.lvlscale,1000);
-    im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
-    im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
-    im_die_left=loadAnimation("eric_idle_left",config.lvlscale,1000);
-    im_die_right=loadAnimation("eric_idle_left",config.lvlscale,1000);
+    anim_left=loadAnimation("erik_idle_left",config.lvlscale);
+    anim_right=loadAnimation("erik_idle_right",config.lvlscale);
+    anim_rock_left=loadAnimation("erik_rock_left",config.lvlscale);
+    anim_rock_right=loadAnimation("erik_rock_right",config.lvlscale);
+    anim_walk_left=loadAnimation("erik_walk_left",config.lvlscale);
+    anim_walk_right=loadAnimation("erik_walk_right",config.lvlscale);
+    anim_push_left=loadAnimation("erik_push_left",config.lvlscale);
+    anim_push_right=loadAnimation("erik_push_right",config.lvlscale);
+    anim_fall_middle=loadAnimation("erik_fall_middle",config.lvlscale);
+    anim_fall_left=loadAnimation("erik_fall_left",config.lvlscale);
+    anim_fall_right=loadAnimation("erik_fall_right",config.lvlscale);
+    anim_fall_fast_left=loadAnimation("erik_fall_fast_left",config.lvlscale);
+    anim_fall_fast_right=loadAnimation("erik_fall_fast_right",config.lvlscale);
+    anim_land_left=loadAnimation("erik_land_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_land_right=loadAnimation("erik_land_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_crash_left=loadAnimation("erik_crash_left",config.lvlscale,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation("erik_crash_right",config.lvlscale,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_rope_left=loadAnimation("erik_rope_left",config.lvlscale);
+    anim_rope_right=loadAnimation("erik_rope_right",config.lvlscale);
+    anim_teleport_left=loadAnimation("erik_teleport_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_teleport_right=loadAnimation("erik_teleport_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_crash_left=loadAnimation("erik_die_crash_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_crash_right=loadAnimation("erik_die_crash_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_burn_left=loadAnimation("erik_die_burn_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_burn_right=loadAnimation("erik_die_burn_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_bones_left=loadAnimation("erik_die_bones_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_bones_right=loadAnimation("erik_die_bones_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_elec_left=loadAnimation("erik_die_elec_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_elec_right=loadAnimation("erik_die_elec_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_spike_left=loadAnimation("erik_die_spike_left",config.lvlscale,ATYPE_ONCE_END);
+    anim_die_spike_right=loadAnimation("erik_die_spike_right",config.lvlscale,ATYPE_ONCE_END);
+    anim_bar=loadAnimation("bar_erik",config.lvlscale,ATYPE_ONCE);
+
+    /* anim_die_water is missing as eric doesn't die under water, anim_climb is missing as well */
     au_jump=scenario->sndcache->loadWAV("rboots.wav");
     au_hit=scenario->sndcache->loadWAV("erikhit.wav");
     au_run=NULL;
 }
 Erik::~Erik() {
-    delete im_left;
-    delete im_right;
-    delete im_land_left;
-    delete im_land_right;
 }
 
 void Erik::idle(Uint16 dt) {

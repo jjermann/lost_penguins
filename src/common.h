@@ -48,6 +48,10 @@ typedef std::set<Character *>::iterator character_iterator;
 typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
 
+//Data
+#define DATA_LVLFPS 6
+#define DATA_LVLDUR 1000
+
 //General definitions
 #define NOTHING                 0x00000000
 #define ALL                     0xFFFFFFFF
@@ -203,6 +207,8 @@ void usage();
 string itos(int);
 /// Helper function boost that increases/decreases the absolute value
 int boost(int,int);
+/// Calculate the fps as frames*1000/duration_in_ms
+double calcFPS(Uint16 frames, Uint32 duration);
 
 /// Set game mode
 void setGameMode(Uint8);
@@ -216,6 +222,7 @@ Menu* setMenu(Menu* newmenu);
 Menu* closeMenu();
 /// Close all menus (menu=NULL)
 void closeMenus();
+
 //@}
 
 //global variables

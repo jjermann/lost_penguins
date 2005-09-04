@@ -15,11 +15,15 @@ ImageCache::~ImageCache() {
     }
 }
 
+/*
+   We add +0.5 to cleanly round the values
+   Alternative: We trunc the w,h values and ceil the x,y values to make the rectangle as small as possible
+*/
 SDL_Rect& ImageCache::scaleRectangle(SDL_Rect& base_rect, double scale_factor) {
-    base_rect.x=(Sint16)(base_rect.x*sqrt(scale_factor));
-    base_rect.y=(Sint16)(base_rect.y*sqrt(scale_factor));
-    base_rect.w=(Uint16)(base_rect.w*sqrt(scale_factor));
-    base_rect.h=(Uint16)(base_rect.h*sqrt(scale_factor));
+    base_rect.x=(Sint16)(base_rect.x*sqrt(scale_factor)+0.5);
+    base_rect.y=(Sint16)(base_rect.y*sqrt(scale_factor)+0.5);
+    base_rect.w=(Uint16)(base_rect.w*sqrt(scale_factor)+0.5);
+    base_rect.h=(Uint16)(base_rect.h*sqrt(scale_factor)+0.5);
     return base_rect;
 }
 
@@ -114,7 +118,9 @@ Image& ImageCache::loadImage(std::vector<SDL_Rect> image_desc, string imagename,
         // Nice return statement, isn't it ;-)))
         return (*(imgcache.insert(make_pair(make_pair(imagename,scale_factor),return_image))).first).second;
     // Return the existing Image in cache...
-    } else return (*imgit).second;
+    } else {
+        return (*imgit).second;
+    }
 }
 
 Image& ImageCache::loadImage(string imagename, double scale_factor, string image_desc_file) {
@@ -133,8 +139,6 @@ Image& ImageCache::loadImage(string imagename, double scale_factor, string image
     if (!file) {
         cout << "Failed to open the image description file: " << loadfile << " not found!" << endl;
     } else {
-        cout << "Loading image description: " << loadfile << endl;
-
         string arg1,arg2,arg3,arg4,arg5,arg6;
         Uint16 description_type=DESC_NONE;
 

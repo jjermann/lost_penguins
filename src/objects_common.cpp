@@ -10,11 +10,11 @@
 Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   state(NOTHING),
   event(NULL),
-  im_orig(loadAnimation(scenario->imgcache->loadImage(1,imagename))),
   otype(NOTHING),
   name(oname),
   delete_flag(false) {
-    animation=im_orig;
+    anim_orig=loadAnimation(scenario->imgcache->loadImage(1,imagename));
+    animation=anim_orig;
     pos=animation->getFrameDim();
     pos.x=xcord;
     pos.y=ycord;
@@ -61,8 +61,8 @@ bool Object::setPos(Sint16 xcord,Sint16 ycord) {
 
 Animation* Object::loadAnimation(string anim_name,
                          double scale_factor,
-                         Uint32 aduration,
                          Uint16 aanimation_type,
+                         double afps,
                          BasePointType abp_type,
                          AllignType aallign_type,
                          Sint16 ashift_x,
@@ -110,7 +110,7 @@ Animation* Object::loadAnimation(string anim_name,
                     aframes=(Uint16)atoi(arg4.c_str());
 
                     if (anim_name==tmp_anim_name) {
-                        return loadAnimation(imgcache->loadImage(imagename,scale_factor),aduration,aframes,aanimation_type,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
+                        return loadAnimation(imgcache->loadImage(imagename,scale_factor),aframes,aanimation_type,afps,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
                     }
                 }
             }
@@ -120,15 +120,15 @@ Animation* Object::loadAnimation(string anim_name,
 }
 
 Animation* Object::loadAnimation(const Image& abase_image,
-                         Uint32 aduration,
                          Uint16 aframes,
                          Uint16 aanimation_type,
+                         double afps,
                          Uint16 astart_pos,
                          BasePointType abp_type, 
                          AllignType aallign_type,
                          Sint16 ashift_x, 
                          Sint16 ashift_y) {
-    Animation* anim=new Animation(abase_image,aduration,aframes,aanimation_type,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
+    Animation* anim=new Animation(abase_image,aframes,aanimation_type,afps,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
     anim->setBasePos(&pos);
     return anim;
 }
@@ -142,13 +142,21 @@ const Frame Object::getFrame() const {
 bool Object::updateAnim(Uint16 dt) {
     return (animation->updateAnim(dt));
 }
-void Object::setAnim(Animation* anim) {
-    animation=anim;
-    animation->setBasePos(&pos);
-    animation->runAnim();
+bool Object::setAnim(Animation* anim, bool start) {
+    if (anim) {
+        animation=anim;
+        if (start) {
+            animation->setBasePos(&pos);
+            animation->runAnim();
+        }
+        return true;
+    } else {
+        animation=anim_orig;
+        return false;
+    }
 }
 void Object::resetAnimState() {
-    animation=im_orig;
+    setAnim(anim_orig);
     animation->setBasePos(&pos);
     animation->runAnim();
 }

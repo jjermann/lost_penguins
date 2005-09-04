@@ -8,8 +8,8 @@ class Animation {
     public:
         /// \brief Initialize the animation
         /// \param abase_image Base image used for the animation
-        /// \param aduration Duration of the animation
         /// \param aframes Number of frames
+        /// \param afps FPS of the animation, if (afps < 0) it is considered to be the duration in ms, if (afps==0) a default duration DATA_LVLDUR is taken
         /// \param aanimation_type Animation type
         /// \param astart_pos Start position from the frame array of the base_image
         /// \param abp_type Base point type
@@ -19,9 +19,9 @@ class Animation {
         ///
         /// To load one still image simply use: Animation(imgcache->loadImage(1,"image_name.png"))
         Animation(const Image& abase_image,
-                  Uint32 aduration=0,
                   Uint16 aframes=1,
                   Uint16 aanimation_type=ATYPE_LOOP,
+                  double afps=0,
                   Uint16 astart_pos=0,
                   BasePointType abp_type=BP_MD,
                   AllignType aallign_type=AT_MD,
@@ -75,8 +75,6 @@ class Animation {
     private:
         /// Base image for the animation (big)
         Image base_image;
-        /// Duration of the animation in ms
-        Uint32 duration;
         /// Number of frames
         Uint16 frames;
         /// Animation type: ATYPE_ONCE (play once), ATYPE_ONCE_END (play once and stop at end),
@@ -84,6 +82,8 @@ class Animation {
         /// reverse direction when finnished). The appended _REV means that the animation is
         /// started at the end and played backwards.
         Uint16 animation_type;
+        /// FPS of the animation
+        double fps;
         /// Start position from the frame array of the base_image
         Uint16 start_pos;
         ///\brief The base point of the animation
@@ -111,6 +111,8 @@ class Animation {
         //@}
         
         /* calculated or given values/functions */
+        /// Duration of the animation in ms
+        Uint32 duration;
         /// End position from the frame array of the base_image
         Uint16 end_pos;
         /// True if the animation consist of one still image (frames=1,still=true)

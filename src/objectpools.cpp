@@ -45,21 +45,22 @@ ObjectsPool::~ObjectsPool() {
 
 Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sint16 x, Sint16 y, string& arg1, string& arg2, const string& arg3) {
     //Set names...
-    if (arg1.empty()) arg1="0";
-    if (arg2.empty()) arg2="0";
     string name=getNextObjectName(obj);
-    if (arg1!="0") {
+    if (!arg1.empty()) {
         //one additional parameter
-        if (name=="Trigger" || name=="Door" || name=="Bomb" || name=="TriggeredBomb" || name=="Plant" || name=="Geyser" || name=="Wind" || name=="Spike") {
-            if (arg2!="0") name=arg2;
+        if (obj=="Trigger" || obj=="Door" || obj=="Bomb" || obj=="TriggeredBomb" || obj=="Plant" || obj=="Geyser" || obj=="Wind" || obj=="Spike") {
+            if (!arg2.empty()) name=arg2;
         //two additional parameter
-        } else if (name=="Teleporter") {
+        } else if (obj=="Teleporter") {
             if (!arg3.empty()) name=arg3;
         //no additional parameters
         } else {
             name=arg1;
         }
     }
+    if (arg1.empty()) arg1="0";
+    if (arg2.empty()) arg2="0";
+
     //normal objects
     if (obj=="Wall")         return (addObject(new Wall(image,x,y,name)));
     else if (obj=="Exit")    return (addObject(new Exit(image,x,y,name)));
