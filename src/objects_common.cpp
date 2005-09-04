@@ -59,6 +59,66 @@ bool Object::setPos(Sint16 xcord,Sint16 ycord) {
     return ok;
 }
 
+Animation* Object::loadAnimation(string anim_name,
+                         double scale_factor,
+                         Uint32 aduration,
+                         Uint16 aanimation_type,
+                         BasePointType abp_type,
+                         AllignType aallign_type,
+                         Sint16 ashift_x,
+                         Sint16 ashift_y) {
+
+    /* Parse animation data file */
+    ifstream file;
+    string tmpline;
+    string loadfile=config.datadir+config.anim_file;
+
+    file.open(loadfile.c_str());
+    if (!file) {
+        cout << "Failed to open the animation data file: " << loadfile << " => Couldn't load " << anim_name << " animation!\n" << endl;
+        return NULL;
+    } else {
+        string arg1,arg2,arg3,arg4,arg5,arg6;
+        string tmp_anim_name="";
+        string imagename="";
+        Uint16 astart_pos=0;
+        Uint16 aframes=1;
+
+        Uint16 description_type=DESC_NONE;
+
+        while (getline(file,tmpline)) {
+            arg1=arg2=arg3=arg4=arg5=arg6="";
+            std::istringstream tmpstream(tmpline);
+            tmpstream >> arg1 >> arg2 >> arg3 >> arg4 >> arg5 >> arg6;
+
+            if        (arg1 == "DESCRIPTION") {
+                description_type=DESC_NONE;  
+            } else if (arg1 == "ANIMATION") {
+                if (arg2 == "LVLANIM") {
+                    description_type=DESC_ANIM_LVLANIM;
+                } else {
+                    description_type=DESC_NONE;
+                }
+            }
+     
+            if (description_type==DESC_ANIM_LVLANIM) {
+                if (arg1.empty() || arg2.empty() || arg3.empty() || arg4.empty()) {
+                } else {
+                    tmp_anim_name=arg1;
+                    imagename=arg2;
+                    astart_pos=(Uint16)atoi(arg3.c_str());
+                    aframes=(Uint16)atoi(arg4.c_str());
+
+                    if (anim_name==tmp_anim_name) {
+                        return loadAnimation(imgcache->loadImage(imagename,scale_factor),aduration,aframes,aanimation_type,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
+                    }
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
 Animation* Object::loadAnimation(const Image& abase_image,
                          Uint32 aduration,
                          Uint16 aframes,

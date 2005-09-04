@@ -12,7 +12,7 @@ Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname) {
     im_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));
     im_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
-    im_run_left=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_left.png"),1000,8);
+    im_run_left=loadAnimation(scenario->imgcache->loadImage("baleog1-run_left.png"),1000,8);
     im_run_right=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_right.png"),1000,8);
     im_fall_left=im_left;
     im_fall_right=im_right;

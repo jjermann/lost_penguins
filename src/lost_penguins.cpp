@@ -98,7 +98,9 @@ int readConfig(const string& filename) {
     config.audio_format = MIX_DEFAULT_FORMAT;
     config.audio_channels = 2;
     config.datadir="data/";
+    config.anim_file="animation_data.anim";
     config.map="map1.cfg";
+    config.lvlscale=4;
 
     //key bindings
     config.keybind[KEY_LEFT]    = SDLK_LEFT;
@@ -133,6 +135,9 @@ int readConfig(const string& filename) {
         if (option[0]=='#') continue;
         if (option=="datadir") {
             config.datadir=arg1;
+            if (config.datadir.substr(config.datadir.size() - 1, 1)!="/") config.datadir+="/";
+        } else if (option=="animfile") {
+            config.anim_file=arg1;
         } else if (option=="width") {
             config.width=atoi(arg1.c_str());
         } else if (option=="height") {
@@ -165,6 +170,13 @@ void parseInput(int, char* argv[]) {
             config.map=argv[i+1];
             config.map+=".cfg";
             i++;
+        } else if ( strcmp(argv[i], "-datadir") == 0 ) {
+            config.datadir=argv[i+1];
+            if (config.datadir.substr(config.datadir.size() - 1, 1)!="/") config.datadir+="/";
+            i++;
+        } else if ( strcmp(argv[i], "-animfile") == 0 ) {
+            config.anim_file=argv[i+1];
+            i++;
         } else if ( strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             usage();
         } else usage();
@@ -173,6 +185,8 @@ void parseInput(int, char* argv[]) {
 
 void usage() {
     cout << "Usage: lost_penguins [OPTIONS]\n\n";
+    cout << "  -datadir     Changes the data directory.            Default: data/\n";
+    cout << "  -animfile    Changes the animation file name.       Default: animation_data.anim\n";
     cout << "  -w, -width   Changes resolution (width) of game.    Default: 640\n";
     cout << "  -h, -height  Changes resolution (height) of game.   Default: 480\n";
     cout << "  -fs, -full   Enable fullscreen.                     Default: disabled\n";

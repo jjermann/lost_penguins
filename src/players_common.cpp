@@ -279,18 +279,18 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
         Character* deadplr=scenario->pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
         switch(weap.getSubType()) {
             case WS_FIRE: {
-                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,im_die));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,(state&STATE_LEFT) ? im_die_left : im_die_right));
                 else sfxeng->playWAV(au_fire);
                 break;
             }
             case WS_WATER: {
-                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_drown,im_die));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_drown,(state&STATE_LEFT) ? im_die_left : im_die_right));
                 else sfxeng->playWAV(au_drown);
                 break;
             }
             //WS_NORMAL, WS_ELECTRIC, WS_FIRE, WS_PRESSURE
             default: {
-                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_die,im_die));
+                if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_die,(state&STATE_LEFT) ? im_die_left : im_die_right));
                 else sfxeng->playWAV(au_die);
             }
         }

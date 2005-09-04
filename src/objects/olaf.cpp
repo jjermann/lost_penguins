@@ -33,7 +33,8 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_run_shield_left=im_shield_left;
     im_fall_shield_left=im_shield_left;
     im_fall_shield_right=im_shield_right;
-    im_die=loadAnimation(scenario->imgcache->loadImage(60,"kuru.bmp"),2000,12,0,ATYPE_ONCE_END);
+    im_die_left=loadAnimation(scenario->imgcache->loadImage(60,"kuru.bmp"),2000,12,0,ATYPE_ONCE_END);
+    im_die_right=im_die_left;
     au_small=scenario->sndcache->loadWAV("blob.wav");
     au_big=scenario->sndcache->loadWAV("unblob.wav");
     au_fart=scenario->sndcache->loadWAV("fart1.wav");

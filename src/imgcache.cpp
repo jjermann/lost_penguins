@@ -16,10 +16,10 @@ ImageCache::~ImageCache() {
 }
 
 SDL_Rect& ImageCache::scaleRectangle(SDL_Rect& base_rect, double scale_factor) {
-    base_rect.x=(Sint16)(base_rect.x*scale_factor);
-    base_rect.y=(Sint16)(base_rect.y*scale_factor);
-    base_rect.w=(Uint16)(base_rect.w*scale_factor);
-    base_rect.h=(Uint16)(base_rect.h*scale_factor);
+    base_rect.x=(Sint16)(base_rect.x*sqrt(scale_factor));
+    base_rect.y=(Sint16)(base_rect.y*sqrt(scale_factor));
+    base_rect.w=(Uint16)(base_rect.w*sqrt(scale_factor));
+    base_rect.h=(Uint16)(base_rect.h*sqrt(scale_factor));
     return base_rect;
 }
 
@@ -31,7 +31,7 @@ std::vector<SDL_Rect>& ImageCache::scaleDescription(std::vector<SDL_Rect>& descr
 }
 
 Image& ImageCache::scaleImage(Image& original_image, double scale_factor) {
-    SDL_Surface* newsurface=zoomSurface(original_image.surface, scale_factor, scale_factor, 1);
+    SDL_Surface* newsurface=zoomSurface(original_image.surface, sqrt(scale_factor), sqrt(scale_factor), 1);
     SDL_FreeSurface(original_image.surface);
     original_image.surface=newsurface;
     scaleDescription(original_image.description, scale_factor);
@@ -143,7 +143,9 @@ Image& ImageCache::loadImage(string imagename, double scale_factor, string image
             std::istringstream tmpstream(tmpline);
             tmpstream >> arg1 >> arg2 >> arg3 >> arg4 >> arg5 >> arg6;
 
-            if (arg1 == "DESCRIPTION") {
+            if        (arg1 == "ANIMATION") {
+                description_type=DESC_NONE;
+            } else if (arg1 == "DESCRIPTION") {
                 if (arg2 == "LVLANIM") {
                     description_type=DESC_LVLANIM;
                 } else if (arg2 == "FIX_RECT") {

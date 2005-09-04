@@ -17,7 +17,7 @@ class Animation {
         /// \param ashift_x x shift value
         /// \param ashift_y y shift value
         ///
-        /// To load one still image simply use: Animation(loadImage(1,"image_name.png"))
+        /// To load one still image simply use: Animation(imgcache->loadImage(1,"image_name.png"))
         Animation(const Image& abase_image,
                   Uint32 aduration=0,
                   Uint16 aframes=1,
@@ -45,7 +45,7 @@ class Animation {
         /// Calculates and returns the current frame
         Frame getFrame() const;
         /// Calculates and returns the current draw position using:
-        /// base_pos,bp_type,allign_type,shift,cur_im_pos
+        /// base_pos,bp_type,allign_type,shift
         SDL_Rect getDrawPos() const;
         /// HACK: Return the dimensions of the first frame
         SDL_Rect getFrameDim() const;
@@ -129,8 +129,6 @@ class Animation {
         bool forward;
         /// Current frame number
         Uint16 cur_frame_num;
-        /// Current position of the base_image_desc array
-        Uint16 cur_im_pos;
         /// Current time
         Uint32 cur_time;
 };

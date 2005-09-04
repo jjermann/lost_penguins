@@ -34,11 +34,9 @@ void Animation::runAnim() {
     if (animation_type&ATYPE_ALL_NORMAL) {
         forward=true;
         cur_frame_num=0;
-        cur_im_pos=start_pos;
     } else {
         forward=false;
         cur_frame_num=frames-1;
-        cur_im_pos=end_pos;
     }
 }
 bool Animation::stopAnim() {
@@ -50,10 +48,8 @@ bool Animation::stopAnim() {
         cur_time=0;
         if (animation_type&ATYPE_ALL_LSTART) {
             cur_frame_num=0;
-            cur_im_pos=start_pos;
         } else {
             cur_frame_num=frames-1;
-            cur_im_pos=end_pos;
         }
     }
     return isRunning();
@@ -128,7 +124,7 @@ bool Animation::updateAnim(Uint16 dt) {
 }
 Frame Animation::getFrame() const {
     if (!isValid()) cout << "Invalid Frame of an invalid animation!" << endl;
-    return Frame(base_image.surface,base_image.description[cur_frame_num]);
+    return Frame(base_image.surface,base_image.description[cur_frame_num+start_pos]);
 }
 Frame Animation::getBaseFrame() const {
     if (!isValid()) cout << "Invalid Base Frame of an invalid animation!" << endl;
@@ -244,7 +240,6 @@ bool Animation::checkAnim() {
         cur_time=0;
         forward=true;
         cur_frame_num=0;
-        cur_im_pos=start_pos;
         is_running=false;
         is_fixed=true;
         is_valid=true;
@@ -260,11 +255,9 @@ bool Animation::checkAnim() {
         if (animation_type&ATYPE_ALL_NORMAL) {
             forward=true;
             cur_frame_num=0;
-            cur_im_pos=start_pos;
         } else {
             forward=false;
             cur_frame_num=frames-1;
-            cur_im_pos=end_pos;
         }
     }
     return is_valid;

@@ -17,7 +17,8 @@ Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname)
   speed(0),
   gravity(900),
   Dgrav(0),
-  im_die(NULL),
+  im_die_left(NULL),
+  im_die_right(NULL),
   dense_types(NOTHING),
   enemy_types(NOTHING),
   weapon(Weapon(0)) {

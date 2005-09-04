@@ -35,6 +35,7 @@ clean:
 distclean: clean
 	rm -f *~
 	rm -f Makefile.dep
+	rm -f Makefile.dep.bak
 	+$(MAKE) -C objects distclean
 
 depend:

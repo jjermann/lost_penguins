@@ -15,6 +15,7 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   jump(V_JUMP),
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);
+/*
     im_left=loadAnimation(scenario->imgcache->loadImage("erik1_left.bmp"));
     im_right=loadAnimation(scenario->imgcache->loadImage(1,"erik1_right.bmp"));
     im_run_right=im_right;
@@ -25,6 +26,19 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     im_krit_right=im_right;
     im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
     im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
+*/
+    im_left=loadAnimation("eric_idle_left",config.lvlscale,1000);
+    im_right=loadAnimation("eric_idle_right",config.lvlscale,1000);
+    im_run_left=loadAnimation("eric_run_left",config.lvlscale,1000);
+    im_run_right=loadAnimation("eric_run_right",config.lvlscale,1000);
+    im_fall_left=loadAnimation("eric_fall_left",config.lvlscale,1000);
+    im_fall_right=loadAnimation("eric_fall_right",config.lvlscale,1000);
+    im_krit_left=loadAnimation("eric_fall_fast_left",config.lvlscale,1000);
+    im_krit_right=loadAnimation("eric_fall_fast_right",config.lvlscale,1000);
+    im_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),T_IRR,1,ATYPE_ONCE_END);
+    im_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),T_IRR,1,ATYPE_ONCE_END);
+    im_die_left=loadAnimation("eric_idle_left",config.lvlscale,1000);
+    im_die_right=loadAnimation("eric_idle_left",config.lvlscale,1000);
     au_jump=scenario->sndcache->loadWAV("rboots.wav");
     au_hit=scenario->sndcache->loadWAV("erikhit.wav");
     au_run=NULL;

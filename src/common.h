@@ -87,6 +87,11 @@ typedef std::set<Monster *>::iterator monster_iterator;
 #define ATYPE_ALL_NORMAL        0x0000000F
 #define ATYPE_ALL_REV           0x000000F0
 
+//Description formats
+#define DESC_NONE               0x00000000
+#define DESC_LVLANIM            0x00000001
+#define DESC_ANIM_LVLANIM       0x00000002     
+
 enum ConfigKey {
     KEY_START,
     KEY_LEFT,
@@ -152,7 +157,9 @@ struct Config {
     int audio_channels;
     string datadir;
     string map;
+    string anim_file;
     SDLKey keybind[30];
+    double lvlscale;
 };
 
 /**\brief Frame format

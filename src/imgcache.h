@@ -1,9 +1,6 @@
 #ifndef DEF_IMGCACHE_H
 #define DEF_IMGCACHE_H 1
 
-#define DESC_NONE               0x00000000
-#define DESC_LVLANIM            0x00000001
-
 /** \brief Caches images.
 
     Caches images supported by SDL_image according to their name

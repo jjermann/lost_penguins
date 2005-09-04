@@ -105,6 +105,15 @@ class Object {
             delete this;
         }
         //@}
+        /// Load an animation bound onto this object from an animation data file
+        Animation* loadAnimation(string anim_name,
+                                 double scale_factor=1,
+                                 Uint32 aduration=0,
+                                 Uint16 aanimation_type=ATYPE_LOOP,
+                                 BasePointType abp_type=BP_MD,
+                                 AllignType aallign_type=AT_MD,
+                                 Sint16 ashift_x=0,
+                                 Sint16 ashift_y=0);
         /// Load an animation bound onto this object
         Animation* loadAnimation(const Image& abase_image,
                                  Uint32 aduration=0,

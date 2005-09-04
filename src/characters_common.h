@@ -174,7 +174,8 @@ class Character : public Object {
         //temporary attributes
         Sint16 Dgrav;
         //Die animation
-        Animation* im_die;
+        Animation* im_die_left;
+        Animation* im_die_right;
         //Entered objects
         std::set<Object *> enter;
         //Touched objects
