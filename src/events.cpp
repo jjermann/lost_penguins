@@ -64,23 +64,23 @@ AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchsta
 }
 Uint16 AnimEvent::update(Uint16 dt) {
     Uint16 evstate=Event::update(dt);
-    if (started && anim && (!(anim->isRunning()))) return EV_END;
+    if (started && state&ESTATE_ANIM && (!(anim->isRunning()))) return EV_END;
     else return evstate; 
 }
 void AnimEvent::start() {
     sfxeng->playWAV(sound);
-    if (anim) owner->setAnim(anim,true);
+    if (state&ESTATE_ANIM) owner->setAnim(anim,true);
     Event::start();
 }
 void AnimEvent::end() {
-    if (started && anim) {
+    if (started && state&ESTATE_ANIM) {
         if (del) delete anim; 
         owner->resetAnimState();
     }
     Event::end();
 }
 void AnimEvent::cancel() {
-    if (started && anim) {
+    if (started && state&ESTATE_ANIM) {
         if (del) delete anim;
         owner->resetAnimState();
     }
@@ -105,23 +105,23 @@ CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 swit
 }
 Uint16 CAnimEvent::update(Uint16 dt) {
     Uint16 evstate=CEvent::update(dt);
-    if (started && anim && (!(anim->isRunning()))) return EV_END;
+    if (started && state&ESTATE_ANIM && (!(anim->isRunning()))) return EV_END;
     else return evstate;
 }
 void CAnimEvent::start() {
     sfxeng->playWAV(sound);
-    if (anim) charowner->setAnim(anim,true);
+    if (state&ESTATE_ANIM) charowner->setAnim(anim,true);
     CEvent::start();
 }
 void CAnimEvent::end() {
-    if (started && anim) {
+    if (started && state&ESTATE_ANIM) {
         if (del) delete anim;
         charowner->resetAnimState();
     }
     CEvent::end();
 }
 void CAnimEvent::cancel() {
-    if (started && anim) { 
+    if (started && state&ESTATE_ANIM) { 
         if (del) delete anim;
         charowner->resetAnimState();
     }

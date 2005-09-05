@@ -179,8 +179,8 @@ void Olaf::in_sp2() {
     
 void Olaf::fall(Uint16 dt) {
     if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
-        if (!getState(STATE_FALL)) hspeed=boost(hspeed,-dt*HSPEED_MULT/100);
-        else hspeed=boost(hspeed,-dt*HSPEED_MULT/200);
+        if (!getState(STATE_FALL)) hspeed=addAbsolute(hspeed,-dt*HSPEED_MULT/100);
+        else hspeed=addAbsolute(hspeed,-dt*HSPEED_MULT/200);
     }
     Dgrav+=dt;
     if (Dgrav>T_GRAV_EFFECT) {

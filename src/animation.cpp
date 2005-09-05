@@ -183,7 +183,7 @@ Frame Animation::getBaseFrame() const {
     return base_frame;
 }
 SDL_Rect Animation::getDrawPos() const {
-    SDL_Rect draw_pos=base_image.description[cur_frame_num];
+    SDL_Rect draw_pos=base_image.description[start_pos+cur_frame_num];
     if (!base_pos || !isValid()) {
         if (!isValid()) cout << "Invalid DrawPos of an invalid animation!" << endl;
         else cout << "Invalid DrawPos!" << endl;

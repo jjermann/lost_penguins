@@ -29,12 +29,15 @@ class GraphicsEngine {
         void togglePlayerBar();
         void toggleFPS();
         void toggleFullScreen();
+        void setShowDebug();
+        void unsetShowDebug();
         void setMenuBG(SDL_Surface* menu_background=NULL);
         const SDL_Rect& addShift(Sint16,Sint16);
         const SDL_Rect& setShift(Sint16,Sint16);
         const SDL_Rect& getShift() {
             return shift;
         }
+        void drawRectangle(SDL_Rect rect, Uint8 border=1, Uint32 color=0);
     protected:
         /// main screen
         SDL_Surface* screen;
@@ -48,6 +51,7 @@ class GraphicsEngine {
         EmptyAnimation* lifeimage;
         bool show_bar;
         bool show_fps;
+        bool show_debug;
         //visual flags
         bool fullscreen;
         //update state

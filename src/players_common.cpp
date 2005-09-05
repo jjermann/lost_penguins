@@ -281,8 +281,8 @@ Hit Player::move(Uint16 dt, bool check) {
 
 void Player::fall(Uint16 dt) {
     if (!getState(STATE_MRIGHT|STATE_MLEFT)) {
-        if (!getState(STATE_FALL)) hspeed=boost(hspeed,-dt*HSPEED_MULT/100);
-        else hspeed=boost(hspeed,-dt*HSPEED_MULT/200);
+        if (!getState(STATE_FALL)) hspeed=addAbsolute(hspeed,-dt*HSPEED_MULT/100);
+        else hspeed=addAbsolute(hspeed,-dt*HSPEED_MULT/200);
     }
     Character::fall(dt);
 }

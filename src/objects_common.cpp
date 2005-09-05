@@ -59,7 +59,7 @@ bool Object::setPos(Sint16 xcord,Sint16 ycord) {
     return ok;
 }
 
-Animation* Object::loadAnimation(string anim_name,
+EmptyAnimation* Object::loadAnimation(string anim_name,
                          double scale_factor,
                          BasePointType abp_type,
                          Uint16 aanimation_type,
@@ -74,7 +74,7 @@ Animation* Object::loadAnimation(string anim_name,
     file.open(loadfile.c_str());
     if (!file) {
         cout << "Failed to open the animation data file: " << loadfile << " => Couldn't load " << anim_name << " animation!\n" << endl;
-        return NULL;
+        return new EmptyAnimation();
     } else {
         string arg1,arg2,arg3,arg4,arg5,arg6;
         string tmp_anim_name="";
@@ -114,17 +114,18 @@ Animation* Object::loadAnimation(string anim_name,
             }
         }
     }
-    return NULL;
+    cout << "Animation " << anim_name << " not found!" << endl;
+    return new EmptyAnimation();
 }
 
-Animation* Object::loadAnimation(const Image& abase_image,
+EmptyAnimation* Object::loadAnimation(const Image& abase_image,
                          Uint16 aframes,
                          BasePointType abp_type, 
                          Uint16 aanimation_type,
                          double afps,
                          Uint16 astart_pos,
                          AllignType aallign_type) {
-    Animation* anim=new Animation(abase_image,aframes,abp_type,aanimation_type,afps,astart_pos,aallign_type);
+    EmptyAnimation* anim=new Animation(abase_image,aframes,abp_type,aanimation_type,afps,astart_pos,aallign_type);
     anim->setBasePos(&pos);
     return anim;
 }

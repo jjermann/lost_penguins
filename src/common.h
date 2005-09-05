@@ -206,8 +206,8 @@ void parseInput(int argc,char* argv[]);
 void usage();
 /// Helper function that converts an integer to a string
 string itos(int);
-/// Helper function boost that increases/decreases the absolute value
-int boost(int,int);
+/// Helper function that increases/decreases the absolute value
+int addAbsolute(int,int);
 /// Calculate the fps as frames*1000/duration_in_ms
 double calcFPS(Uint16 frames, Uint32 duration);
 

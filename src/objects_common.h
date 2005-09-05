@@ -106,14 +106,14 @@ class Object {
         }
         //@}
         /// Load an animation bound onto this object from an animation data file
-        Animation* loadAnimation(string anim_name,
+        EmptyAnimation* loadAnimation(string anim_name,
                                  double scale_factor=1,
                                  BasePointType abp_type=BP_MD,
                                  Uint16 aanimation_type=ATYPE_LOOP,
                                  double afps=0,
                                  AllignType aallign_type=AT_MD);
         /// Load an animation bound onto this object
-        Animation* loadAnimation(const Image& abase_image,
+        EmptyAnimation* loadAnimation(const Image& abase_image,
                                  Uint16 aframes=1,
                                  BasePointType abp_type=BP_MD,
                                  Uint16 aanimation_type=ATYPE_LOOP,

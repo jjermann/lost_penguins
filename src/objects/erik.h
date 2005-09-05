@@ -25,6 +25,18 @@ class Erik : public Player {
         virtual void crash(Uint16 dir);
         virtual Uint16 hit(Uint16 direction,Weapon& weap);
     private:
+        EmptyAnimation* anim_erik_jump_left;
+        EmptyAnimation* anim_erik_jump_right;
+        EmptyAnimation* anim_erik_jump2_left;
+        EmptyAnimation* anim_erik_jump2_right;
+        EmptyAnimation* anim_erik_start_run_left;
+        EmptyAnimation* anim_erik_start_run_right;
+        EmptyAnimation* anim_erik_swim_left;
+        EmptyAnimation* anim_erik_swim_right;
+        EmptyAnimation* anim_erik_swim_up_left;
+        EmptyAnimation* anim_erik_swim_up_right;
+        EmptyAnimation* anim_erik_hit_water_left;
+        EmptyAnimation* anim_erik_hit_water_right;
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;
         Sint16 jump,jump2;

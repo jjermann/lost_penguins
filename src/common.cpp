@@ -1,4 +1,5 @@
 #include "common.h"
+#include "gfxeng.h"
 
 ImageCache* imgcache;
 SoundCache* sndcache;
@@ -32,7 +33,7 @@ string itos(int i) {
     return s.str();
 }
 
-int boost(int a, int b) {
+int addAbsolute(int a, int b) {
     if (a>=0) return a=max(0,a+b);
     else return a=min(0,a-b);
 }
@@ -44,28 +45,22 @@ double calcFPS(Uint16 frames, Uint32 duration) {
 void setGameMode(Uint8 newmode) {
     game_mode=newmode;
     if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
+        gfxeng->setShowDebug();
         SDL_ShowCursor(SDL_ENABLE);
     } else {
+        gfxeng->unsetShowDebug();
         SDL_ShowCursor(SDL_DISABLE);
     }
 }
 
 void addGameMode(Uint8 addmode) {
     game_mode|=addmode;
-    if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
-        SDL_ShowCursor(SDL_ENABLE);
-    } else {
-        SDL_ShowCursor(SDL_DISABLE);
-    }
+    setGameMode(game_mode);
 }
 
 void removeGameMode(Uint8 rmmode) {
     game_mode&=~rmmode;
-    if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
-        SDL_ShowCursor(SDL_ENABLE);
-    } else {
-        SDL_ShowCursor(SDL_DISABLE);
-    }
+    setGameMode(game_mode);
 }
 
 Frame::Frame(SDL_Surface* surface,SDL_Rect rect):

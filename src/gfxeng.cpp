@@ -18,6 +18,7 @@ GraphicsEngine::GraphicsEngine():
   menubg(NULL),
   show_bar(true),
   show_fps(true),
+  show_debug(false),
   fullscreen(config.full) {
     updatetype=UPDATE_ALL;
     shift.x=0;
@@ -141,7 +142,7 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
 
 void GraphicsEngine::drawScene() {
     //We don't want to change pos!
-    SDL_Rect tmprect,srcpos;
+    SDL_Rect tmprect,srcpos,debugrect;
     if (game_mode&GAME_PLAY) {
         if (scenario->player!=NULL) {
             shift=setShift(scenario->player->getCenter());
@@ -161,6 +162,10 @@ void GraphicsEngine::drawScene() {
     while (obit!=scenario->pool->objectspool.end()) {
         tmprect=((*obit)->getDrawPos());
         srcpos=(*obit)->getFrame().pos;
+        if (show_debug) {
+            debugrect=*(*obit)->getPos();
+            drawRectangle(debugrect,1,SDL_MapRGB(screen->format,100,20,0));
+        }
         SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         ++obit;
     }
@@ -272,6 +277,13 @@ void GraphicsEngine::toggleFPS() {
     } else {   
         show_fps=true;
     }
+}
+
+void GraphicsEngine::setShowDebug() {
+    show_debug=true;
+}
+void GraphicsEngine::unsetShowDebug() {
+    show_debug=false;
 }
 
 void GraphicsEngine::toggleFullScreen() {
@@ -405,4 +417,36 @@ const SDL_Rect& GraphicsEngine::setShift(Sint16 shiftx, Sint16 shifty) {
     shift.x=shiftx;
     shift.y=shifty; 
     return shift;   
+}
+
+void GraphicsEngine::drawRectangle(SDL_Rect rect, Uint8 border, Uint32 color) {
+    SDL_Rect tmpline=*shiftMapArea(rect,shift);
+    rect=tmpline;
+    rect.x-=border;
+    rect.y-=border;
+    rect.w+=2*border;
+    rect.h=border;
+    /* horizontal top */
+    SDL_FillRect(screen,&rect,color);
+    rect=tmpline;
+    rect.x-=border;
+    rect.y+=tmpline.h;
+    rect.w+=2*border;
+    rect.h=border;
+    /* horizontal bottom */
+    SDL_FillRect(screen,&rect,color);
+    rect=tmpline;
+    rect.x-=border;
+    rect.y-=border;
+    rect.w=border;
+    rect.h+=2*border;
+    /* vertical left */
+    SDL_FillRect(screen,&rect,color);
+    rect=tmpline;
+    rect.x+=tmpline.w;
+    rect.y-=border;
+    rect.w=border;
+    rect.h+=2*border;
+    /* vertical right */
+    SDL_FillRect(screen,&rect,color);
 }
