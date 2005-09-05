@@ -16,8 +16,8 @@ Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
     anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_left.png"),8);
     anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_right.png"),8);
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
     au_swing=scenario->sndcache->loadWAV("flapwngs.wav");
     au_tired=scenario->sndcache->loadWAV("flwings.wav");
     au_hit=scenario->sndcache->loadWAV("draghit.wav");

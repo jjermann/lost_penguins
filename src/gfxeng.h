@@ -45,7 +45,7 @@ class GraphicsEngine {
         /// player bar
         SDL_Rect bar;
         /// symbol for one life of a player
-        Animation* lifeimage;
+        EmptyAnimation* lifeimage;
         bool show_bar;
         bool show_fps;
         //visual flags

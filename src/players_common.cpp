@@ -26,25 +26,41 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     state=STATE_FALL;
     otype|=OTYPE_PLAYER;
     enemy_types|=OTYPE_MONSTER;
-    anim_left=anim_right=NULL;
-    anim_rock_left=anim_rock_right=NULL;
-    anim_walk_left=anim_walk_right=NULL;
-    anim_push_left=anim_push_right=NULL;
-    anim_fall_left=anim_fall_right=NULL;
-    anim_fall_fast_left=anim_fall_fast_right=NULL;
-    anim_land_left=anim_land_right=NULL;
-    anim_crash_left=anim_crash_right=NULL;
-    anim_rope_left=anim_rope_right=NULL;
-    anim_teleport_left=anim_teleport_right=NULL;
-    anim_die_crash_left=anim_die_crash_right=NULL;
-    anim_die_burn_left=anim_die_burn_right=NULL;
-    anim_die_bones_left=anim_die_bones_right=NULL;
-    anim_die_elec_left=anim_die_elec_right=NULL;
-    anim_die_spike_left=anim_die_spike_right=NULL;
-    anim_die_water_left=anim_die_water_right=NULL;
-    anim_fall_middle=NULL;
-    anim_climb=NULL;
-    anim_bar=NULL;
+    anim_left=new EmptyAnimation(&anim_right);
+    anim_right=new EmptyAnimation();
+    anim_rock_left=new EmptyAnimation(&anim_left);
+    anim_rock_right=new EmptyAnimation(&anim_right);
+    anim_walk_left=new EmptyAnimation(&anim_left);
+    anim_walk_right=new EmptyAnimation(&anim_right);
+    anim_push_left=new EmptyAnimation(&anim_left);
+    anim_push_right=new EmptyAnimation(&anim_right);
+    anim_fall_left=new EmptyAnimation(&anim_left);
+    anim_fall_right=new EmptyAnimation(&anim_right);
+    anim_fall_fast_left=new EmptyAnimation(&anim_fall_left);
+    anim_fall_fast_right=new EmptyAnimation(&anim_fall_right);
+    anim_land_left=new EmptyAnimation();
+    anim_land_right=new EmptyAnimation();
+    anim_crash_left=new EmptyAnimation();
+    anim_crash_right=new EmptyAnimation();
+    anim_rope_left=new EmptyAnimation(&anim_left);
+    anim_rope_right=new EmptyAnimation(&anim_right);
+    anim_teleport_left=new EmptyAnimation();
+    anim_teleport_right=new EmptyAnimation();
+    anim_die_crash_left=new EmptyAnimation(&anim_die_bones_left);
+    anim_die_crash_right=new EmptyAnimation(&anim_die_bones_right);
+    anim_die_burn_left=new EmptyAnimation(&anim_die_bones_left);
+    anim_die_burn_right=new EmptyAnimation(&anim_die_bones_right);
+    anim_die_bones_left=new EmptyAnimation(&anim_die_bones_right);
+    anim_die_bones_right=new EmptyAnimation();
+    anim_die_elec_left=new EmptyAnimation(&anim_die_bones_left);
+    anim_die_elec_right=new EmptyAnimation(&anim_die_bones_right);
+    anim_die_spike_left=new EmptyAnimation(&anim_die_bones_left);
+    anim_die_spike_right=new EmptyAnimation(&anim_die_bones_right);
+    anim_die_water_left=new EmptyAnimation(&anim_die_bones_left);
+    anim_die_water_right=new EmptyAnimation(&anim_die_bones_right);
+    anim_fall_middle=new EmptyAnimation(&anim_fall_right);
+    anim_climb=new EmptyAnimation(&anim_right);
+    anim_bar=new EmptyAnimation(&anim_right);
     au_land=scenario->sndcache->loadWAV("dizzy.wav");
     au_act=scenario->sndcache->loadWAV("button.wav");
     au_useerror=scenario->sndcache->loadWAV("useerror.wav");
@@ -196,36 +212,30 @@ void Player::updateAnimState() {
     if (state&STATE_LEFT) {
         if (state&STATE_FALL) {
             if (speed>V_KRIT) {
-                if (!setAnim(anim_fall_fast_left)) {
-                    if (!setAnim(anim_fall_left)) setAnim(anim_left);
-                }
+                setAnim(anim_fall_fast_left);
             } else if (state&STATE_MLEFT || speed < 0) {
-                if (!setAnim(anim_fall_left)) setAnim(anim_left);
+                setAnim(anim_fall_left);
             } else {
-                if (!setAnim(anim_fall_middle)) {
-                    if (!setAnim(anim_fall_left)) setAnim(anim_left);
-                }
+                anim_fall_middle->setFallBack(&anim_fall_left);
+                setAnim(anim_fall_middle);
             }
         } else if (state&STATE_MLEFT) {
-            if (!setAnim(anim_walk_left)) setAnim(anim_left);
+            setAnim(anim_walk_left);
         } else {
             setAnim(anim_left);
         }
     } else {
         if (state&STATE_FALL) {
             if (speed>V_KRIT) {
-                if (!setAnim(anim_fall_fast_right)) {
-                    if (!setAnim(anim_fall_right)) setAnim(anim_right);
-                }
+                setAnim(anim_fall_fast_right);
             } else if (state&STATE_MRIGHT || speed < 0) {
-                if (!setAnim(anim_fall_right)) setAnim(anim_right);
+                setAnim(anim_fall_right);
             } else {
-                if (!setAnim(anim_fall_middle)) {
-                    if (!setAnim(anim_fall_right)) setAnim(anim_right);
-                }
+                anim_fall_middle->setFallBack(&anim_fall_right);
+                setAnim(anim_fall_middle);
             }
         } else if (state&STATE_MRIGHT) {
-            if (!setAnim(anim_walk_right)) setAnim(anim_right);
+            setAnim(anim_walk_right);
         } else {
             setAnim(anim_right);
         }

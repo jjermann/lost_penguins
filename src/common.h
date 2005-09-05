@@ -38,6 +38,7 @@ class PhysicHandler;
 class Font;
 class Event;
 class Weapon;
+class EmptyAnimation;
 class Animation;
 class Menu;
 class Box;

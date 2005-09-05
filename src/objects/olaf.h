@@ -41,16 +41,16 @@ class Olaf : public Player {
         /// \return True if successfull
         inline bool trySmall(bool small);
         //@{
-        Animation* anim_small_left;
-        Animation* anim_small_right;
-        Animation* anim_walk_small_left;
-        Animation* anim_walk_small_right;
-        Animation* anim_shield_left;
-        Animation* anim_shield_right;
-        Animation* anim_walk_shield_left;
-        Animation* anim_walk_shield_right;
-        Animation* anim_fall_shield_left;
-        Animation* anim_fall_shield_right;
+        EmptyAnimation* anim_small_left;
+        EmptyAnimation* anim_small_right;
+        EmptyAnimation* anim_walk_small_left;
+        EmptyAnimation* anim_walk_small_right;
+        EmptyAnimation* anim_shield_left;
+        EmptyAnimation* anim_shield_right;
+        EmptyAnimation* anim_walk_shield_left;
+        EmptyAnimation* anim_walk_shield_right;
+        EmptyAnimation* anim_fall_shield_left;
+        EmptyAnimation* anim_fall_shield_right;
         //@}
         //@{
         Mix_Chunk* au_small;

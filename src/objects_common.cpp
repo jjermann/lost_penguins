@@ -61,12 +61,10 @@ bool Object::setPos(Sint16 xcord,Sint16 ycord) {
 
 Animation* Object::loadAnimation(string anim_name,
                          double scale_factor,
+                         BasePointType abp_type,
                          Uint16 aanimation_type,
                          double afps,
-                         BasePointType abp_type,
-                         AllignType aallign_type,
-                         Sint16 ashift_x,
-                         Sint16 ashift_y) {
+                         AllignType aallign_type) {
 
     /* Parse animation data file */
     ifstream file;
@@ -110,7 +108,7 @@ Animation* Object::loadAnimation(string anim_name,
                     aframes=(Uint16)atoi(arg4.c_str());
 
                     if (anim_name==tmp_anim_name) {
-                        return loadAnimation(imgcache->loadImage(imagename,scale_factor),aframes,aanimation_type,afps,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
+                        return loadAnimation(imgcache->loadImage(imagename,scale_factor),aframes,abp_type,aanimation_type,afps,astart_pos,aallign_type);
                     }
                 }
             }
@@ -121,14 +119,12 @@ Animation* Object::loadAnimation(string anim_name,
 
 Animation* Object::loadAnimation(const Image& abase_image,
                          Uint16 aframes,
+                         BasePointType abp_type, 
                          Uint16 aanimation_type,
                          double afps,
                          Uint16 astart_pos,
-                         BasePointType abp_type, 
-                         AllignType aallign_type,
-                         Sint16 ashift_x, 
-                         Sint16 ashift_y) {
-    Animation* anim=new Animation(abase_image,aframes,aanimation_type,afps,astart_pos,abp_type,aallign_type,ashift_x,ashift_y);
+                         AllignType aallign_type) {
+    Animation* anim=new Animation(abase_image,aframes,abp_type,aanimation_type,afps,astart_pos,aallign_type);
     anim->setBasePos(&pos);
     return anim;
 }
@@ -142,8 +138,8 @@ const Frame Object::getFrame() const {
 bool Object::updateAnim(Uint16 dt) {
     return (animation->updateAnim(dt));
 }
-bool Object::setAnim(Animation* anim, bool start) {
-    if (anim) {
+bool Object::setAnim(EmptyAnimation* anim, bool start) {
+    if (anim && anim->isValid()) {
         animation=anim;
         if (start) {
             animation->setBasePos(&pos);
@@ -151,7 +147,7 @@ bool Object::setAnim(Animation* anim, bool start) {
         }
         return true;
     } else {
-        animation=anim_orig;
+        if (anim==NULL) animation=anim_orig;
         return false;
     }
 }

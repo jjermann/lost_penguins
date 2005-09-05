@@ -88,7 +88,7 @@ class Object {
         /// and starts it right away. Should not be used with updateAnimState,
         /// set ESTATE_ANIM to deactivate an updateAnimState. This is usually
         /// controlled by an AnimationEvent
-        bool setAnim(Animation* anim, bool start=false);
+        bool setAnim(EmptyAnimation* anim, bool start=false);
         /// Sets the animation back to the default one.
         virtual void resetAnimState();
         bool isRunning() const;
@@ -108,22 +108,18 @@ class Object {
         /// Load an animation bound onto this object from an animation data file
         Animation* loadAnimation(string anim_name,
                                  double scale_factor=1,
-                                 Uint16 aanimation_type=ATYPE_LOOP,
-                                 double afps=DATA_LVLFPS,
                                  BasePointType abp_type=BP_MD,
-                                 AllignType aallign_type=AT_MD,
-                                 Sint16 ashift_x=0,
-                                 Sint16 ashift_y=0);
+                                 Uint16 aanimation_type=ATYPE_LOOP,
+                                 double afps=0,
+                                 AllignType aallign_type=AT_MD);
         /// Load an animation bound onto this object
         Animation* loadAnimation(const Image& abase_image,
                                  Uint16 aframes=1,
-                                 Uint16 aanimation_type=ATYPE_LOOP,
-                                 double afps=DATA_LVLFPS,
-                                 Uint16 astart_pos=0,
                                  BasePointType abp_type=BP_MD,
-                                 AllignType aallign_type=AT_MD,
-                                 Sint16 ashift_x=0,
-                                 Sint16 ashift_y=0);
+                                 Uint16 aanimation_type=ATYPE_LOOP,
+                                 double afps=0,
+                                 Uint16 astart_pos=0,
+                                 AllignType aallign_type=AT_MD);
         //Events (triggered animations/effects)
         //@{
         /// Clears the event field (sets it to NULL). This should only be used by
@@ -183,8 +179,8 @@ class Object {
     protected:
         Uint32 state;
         Event* event;
-        Animation* anim_orig;
-        Animation* animation;
+        EmptyAnimation* anim_orig;
+        EmptyAnimation* animation;
         ///\todo Document this!
         /// Upper left logical position of the object (used for decisions)
         SDL_Rect pos;

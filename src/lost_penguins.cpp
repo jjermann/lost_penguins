@@ -58,6 +58,7 @@ int main(int argc, char* argv[]) {
         input->update();
         scenario->physic->update();
         gfxeng->draw();
+        SDL_Delay(1);
     }
 
     quitGame(-2);

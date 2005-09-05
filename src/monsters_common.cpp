@@ -21,12 +21,15 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     otype|=OTYPE_MONSTER;
     enemy_types|=OTYPE_PLAYER;
     dense_types|=OTYPE_PLAYER;
-    anim_left=animation;
-    anim_right=animation;
+    anim_left=new EmptyAnimation(&anim_right);
+    anim_right=new EmptyAnimation();
     au_hit=scenario->sndcache->loadWAV("monhit.wav");
 }
 
-Monster::~Monster() { }
+Monster::~Monster() {
+    delete anim_left;
+    delete anim_right;
+}
 
 void Monster::addEnter(std::set<Object *>& aset) {
     Character::addEnter(aset);    
