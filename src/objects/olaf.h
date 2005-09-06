@@ -58,4 +58,6 @@ class Olaf : public Player {
         Mix_Chunk* au_fart;
         //@}
         Sint16 fart;
+        SDL_Rect small_size;
+        SDL_Rect normal_size;
 };

@@ -34,6 +34,8 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_big=scenario->sndcache->loadWAV("unblob.wav");
     au_fart=scenario->sndcache->loadWAV("fart1.wav");
     au_hit=scenario->sndcache->loadWAV("fathit.wav");
+    normal_size=anim_orig->getFrameDim();
+    small_size=anim_small_right->getFrameDim();
 }
 
 Olaf::~Olaf() { }
@@ -106,10 +108,10 @@ inline bool Olaf::trySmall(bool small) {
     SDL_Rect tmppos=pos;
     //Assume both images have the same dimension
     //IDEA: left/right edge instead of bottom?
-    tmppos.x+=(Sint16)((tmppos.w-(small ? anim_small_left : anim_orig)->getFrameDim().w)/2);
-    tmppos.y+=tmppos.h-(small ? anim_small_left : anim_orig)->getFrameDim().h;
-    tmppos.w=(small ? anim_small_left : anim_orig)->getFrameDim().w;
-    tmppos.h=(small ? anim_small_left : anim_orig)->getFrameDim().h;
+    tmppos.x+=(Sint16)((tmppos.w-(small ? small_size.w : normal_size.w))/2);
+    tmppos.y+=tmppos.h-(small ? small_size.h : normal_size.h);
+    tmppos.w=(small ? small_size.w : normal_size.w);
+    tmppos.h=(small ? small_size.h : normal_size.h);
     if (!(checkMove(tmppos,true).enter&DIR_ALL)) {
         pos=tmppos;
         if (small) {
