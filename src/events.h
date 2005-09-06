@@ -60,9 +60,8 @@ class AnimEvent : public Event {
         /// \param asound Sound (Mix_Chunk) to be played when the event starts
         /// \param runanim Animation to be run when the event starts
         /// \todo Get rid of the delanim parameter
-        /// \param delanim True if the animation should be deleted
         AnimEvent(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING,
-          Mix_Chunk* asound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
+          Mix_Chunk* asound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr());
         /// \brief Updates the events
         /// \return Event state: either delayed (EV_DELAY), starting (EV_START),
         ///         running (EV_RUN), stopping (EV_END) or canceled (EV_CANCEL)
@@ -72,7 +71,6 @@ class AnimEvent : public Event {
         virtual void cancel();
     protected:
         EmptyAnimationPtr anim;
-        bool del;
         Mix_Chunk* sound;
 };
   
@@ -83,14 +81,13 @@ class AnimEvent : public Event {
 class CAnimEvent : public CEvent {
     public:
         CAnimEvent(Character* chr, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING,
-          Mix_Chunk* asound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
+          Mix_Chunk* asound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr());
         virtual Uint16 update(Uint16 dt);
         virtual void start();
         virtual void end();  
         virtual void cancel();
     protected:
         EmptyAnimationPtr anim;
-        bool del;
         Mix_Chunk* sound;
 };
 
@@ -112,11 +109,9 @@ class EAttack : public CAnimEvent {
         /// \param switchstate States that will be switched when the animation starts/ends
         /// \param esound Sound (Mix_Chunk) to be played when the event starts
         /// \param runanim Animation to be run when the event starts
-        /// \todo Get rid of the delanim parameter
-        /// \param delanim True if the animation should be deleted
         EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0,
           Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL,
-          EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
+          EmptyAnimationPtr runanim=EmptyAnimationPtr());
         virtual void end();
     protected:
         Weapon* weapon;
@@ -134,7 +129,7 @@ class ERun : public CAnimEvent {
     public:
         /// Adds the initial speed
         ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay=0,
-          Uint32 switchstate=0, Mix_Chunk* esound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
+          Uint32 switchstate=0, Mix_Chunk* esound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr());
         virtual ~ERun();
         /// Forces the event to continue
         virtual void start(); 

@@ -52,10 +52,9 @@ void Event::cancel() {
     delete this;
 }
 
-AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimationPtr runanim, bool delanim):
+AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimationPtr runanim):
   Event(obj,length,edelay,switchstate),
   anim(runanim),
-  del(delanim),
   sound(asound) {
     if (anim && anim->isValid()) {
         state|=ESTATE_ANIM;
@@ -91,10 +90,9 @@ CEvent::CEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate)
   charowner(chr) { }
   
 //Exactly the same as AnimEvent with Character* instead of Object*
-CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimationPtr runanim, bool delanim):
+CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimationPtr runanim):
   CEvent(chr,length,edelay,switchstate),
   anim(runanim),
-  del(delanim),
   sound(asound) {
     if (anim && anim->isValid()) {
         state|=ESTATE_ANIM;
@@ -125,8 +123,8 @@ void CAnimEvent::cancel() {
 }
 
 
-ERun::ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimationPtr runanim, bool delanim):
-  CAnimEvent(chr,length,edelay,(switchstate|STATE_PRESS_LR),esound,runanim,delanim),
+ERun::ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimationPtr runanim):
+  CAnimEvent(chr,length,edelay,(switchstate|STATE_PRESS_LR),esound,runanim),
   dmax(edmax),
   t_reset(0) {
     charowner->setState(STATE_RUN);
@@ -165,8 +163,8 @@ Uint16 ERun::update(Uint16 dt) {
 }
 
 
-EAttack::EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weap_range, Uint16 target_mask, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimationPtr runanim, bool delanim):
-  CAnimEvent(chr,length,edelay,switchstate|ESTATE_BUSY,esound,runanim,delanim),
+EAttack::EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weap_range, Uint16 target_mask, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimationPtr runanim):
+  CAnimEvent(chr,length,edelay,switchstate|ESTATE_BUSY,esound,runanim),
   weapon(atweapon),
   direction(dir),
   range(weap_range),
