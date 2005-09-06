@@ -14,6 +14,7 @@
 class Erik : public Player {
     public:
         Erik(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Erik");
+        virtual ~Erik();
         virtual void idle(Uint16); 
        /// \brief Erik jumps
         virtual void in_sp1();

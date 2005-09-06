@@ -36,8 +36,8 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_fall_right=loadAnimation("erik_fall_right",config.lvlscale,BP_LD);
     anim_fall_fast_left=loadAnimation("erik_fall_fast_left",config.lvlscale,BP_RD);
     anim_fall_fast_right=loadAnimation("erik_fall_fast_right",config.lvlscale,BP_LD);
-    anim_crash_left=loadAnimation("erik_crash_left",config.lvlscale,BP_RD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation("erik_crash_right",config.lvlscale,BP_LD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_left=loadAnimation("erik_crash_left",config.lvlscale,BP_RD,ATYPE_ONCE_END);
+    anim_crash_right=loadAnimation("erik_crash_right",config.lvlscale,BP_LD,ATYPE_ONCE_END);
     anim_rope_left=loadAnimation("erik_rope_left",config.lvlscale,BP_RD);
     anim_rope_right=loadAnimation("erik_rope_right",config.lvlscale,BP_LD);
     anim_teleport_left=loadAnimation("erik_teleport_left",config.lvlscale,BP_RD,ATYPE_ONCE_END);
@@ -74,6 +74,8 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_hit=scenario->sndcache->loadWAV("erikhit.wav");
     au_run=NULL;
 }
+
+Erik::~Erik() { }
 
 void Erik::idle(Uint16 dt) {
     Player::idle(dt);

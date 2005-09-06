@@ -51,6 +51,9 @@ void setGameMode(Uint8 newmode) {
         gfxeng->unsetShowDebug();
         SDL_ShowCursor(SDL_DISABLE);
     }
+#ifdef DEBUG
+    gfxeng->setShowDebug();
+#endif
 }
 
 void addGameMode(Uint8 addmode) {

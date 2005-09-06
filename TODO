@@ -4,7 +4,6 @@ Bugs
  o memleaks, segfaults?
  o key vs. trigger in map2
  o fall event (DONE?)
- o left/right fallback?
  o players die event segfault (eg. olaf)
 
 
@@ -24,8 +23,16 @@ Code
        concrete class depending on the game_mode instead of using if...
 
  o Move/Fall/push/crash/collisions:
-     o the character should have more information what he hits
-     o IDEA: movements into dense objects should involve a push()
+     o move should be a property of a common object
+     o Hit should give either much more information or all logic should be done inside
+       move (BAD)
+     o collision reactions should depend on the corresponding types and whether we
+       already are near the object or not => getCollisionType(obj1,obj2)?
+     o First priority (first run): find out where the object will move to (HARD)
+       => add a bool notchange parameter and pass it on to all actions
+     o movement into a movable object should just move the object
+     o if the movement is "forced" the moved object should be hit hard when it collides
+       otherwise a hit would stop the moving object as well...
        -> I have no idea about how the push should look like, elevators can be pushed
           up, even though you don't collide with them on top
        -> characters should be "pushable", eg. a stone that falls down pushes the
@@ -82,9 +89,9 @@ Progress
 
  o Monsters / AI: VERY BAD
  o Game functionality (): BAD
- o Object (including parameter) loading: BAD
- o Move logic: BAD, BUGGED, MESS
  o Events / Effects: BAD, MESS
+ o Object (including parameter) loading: BAD
+ o Move logic: ACCEPTABLE, BUGGED
  o Objects (players, items, etc): ACCEPTABLE
  o Input Handler: ACCEPTABLE, WORKS
  o Collision detection: OK

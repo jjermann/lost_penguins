@@ -23,6 +23,8 @@ Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_hit=scenario->sndcache->loadWAV("draghit.wav");
 }
 
+Scorch::~Scorch() { }
+
 void Scorch::idle(Uint16 dt) {
     Player::idle(dt);
     if (!input->keyState(KEY_SP1)) {

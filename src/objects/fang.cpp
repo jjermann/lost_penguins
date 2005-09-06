@@ -25,6 +25,8 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_jump=scenario->sndcache->loadWAV("fangjump.wav");
 }
 
+Fang::~Fang() { }
+
 void Fang::in_left(Uint16 dt) {
     Player::in_left(dt);
     unsetState(STATE_CLIMB_R);

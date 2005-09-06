@@ -20,6 +20,8 @@ Zombie::Zombie(string imagename, Sint16 xcord, Sint16 ycord, string mname):
     weapon=Weapon(-1,W_STRIKE);
 }
 
+Zombie::~Zombie() { }
+
 void Zombie::idle(Uint16 dt) {
     Character::idle(dt);
     runAI(dt);

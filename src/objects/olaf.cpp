@@ -36,6 +36,8 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_hit=scenario->sndcache->loadWAV("fathit.wav");
 }
 
+Olaf::~Olaf() { }
+
 void Olaf::updateAnimState() {
     if (state&STATE_SMALL) {
         if (state&STATE_LEFT) {

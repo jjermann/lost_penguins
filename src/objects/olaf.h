@@ -17,6 +17,7 @@
 class Olaf : public Player {
     public:
         Olaf(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Olaf");
+        virtual ~Olaf();
         /// Additionally checks if Olaf is small and how he wears his shield
         virtual void updateAnimState();
         virtual void in_left(Uint16);
