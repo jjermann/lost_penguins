@@ -75,7 +75,7 @@ Animation::Animation(const Image& abase_image,
     duration=(Uint32)(frames*1000.0/fps+0.5);
     checkAnim();
 }
-Animation::~Animation() { is_valid=false; }
+Animation::~Animation() { }
 void Animation::runAnim() {
     if (!isValid()) {
         cout << "Starting an invalid animation!" << endl;
@@ -95,12 +95,26 @@ bool Animation::stopAnim() {
     if (!isValid()) {
         cout << "Stopping an invalid animation!" << endl;
         return is_running=false;
-    } else if (animation_type&ATYPE_ALL_ONCE) {
+    } else if (animation_type&ATYPE_ONCE) {
         is_running=false;
         cur_time=0;
-        if (animation_type&ATYPE_ALL_LSTART) {
-            cur_frame_num=0;
+        if (animation_type&ATYPE_ST_SWITCH) {
+            animation_type&=~ATYPE_ONCE;
+            animation_type|=ATYPE_ONCE_REV;
+            checkAnim();
         } else {
+            forward=true;
+            cur_frame_num=0;
+        }
+    } else if (animation_type&ATYPE_ONCE_REV) {
+        is_running=false;
+        cur_time=0;
+        if (animation_type&ATYPE_ST_SWITCH) {
+            animation_type&=~ATYPE_ONCE_REV;
+            animation_type|=ATYPE_ONCE;
+            checkAnim();
+        } else {
+            forward=false;
             cur_frame_num=frames-1;
         }
     }
@@ -116,7 +130,7 @@ bool Animation::updateAnim(Uint16 dt) {
     cur_time+=dt;
     Uint32 durationh=(Uint32)duration/2;
 
-    if        (animation_type&ATYPE_ONCE || animation_type&ATYPE_ONCE_END) {
+    if        (animation_type&ATYPE_ONCE) {
         if (cur_time>=duration) {
             return stopAnim();
         } else {
@@ -127,7 +141,7 @@ bool Animation::updateAnim(Uint16 dt) {
             while(cur_time>=duration) cur_time-=duration;
         }
         cur_frame_num=(Uint16)(cur_time*frames/duration);
-    } else if (animation_type&ATYPE_ONCE_REV || animation_type&ATYPE_ONCE_END_REV) {
+    } else if (animation_type&ATYPE_ONCE_REV) {
         if (cur_time>=duration) {
             return stopAnim();
         } else {
@@ -383,11 +397,13 @@ bool Animation::checkAnim() {
         if (animation_type&ATYPE_ALL_NORMAL) {
             forward=true;
             cur_frame_num=0;
+            base_frame_pos=start_pos;
         } else {
             forward=false;
             cur_frame_num=frames-1;
+            base_frame_pos=end_pos;
         }
-        base_frame=Frame(base_image.surface,base_image.description[(animation_type&ATYPE_ALL_NORMAL) ? start_pos : end_pos]);
+        base_frame=Frame(base_image.surface,base_image.description[base_frame_pos]);
         setShift();
     }
     return is_valid;

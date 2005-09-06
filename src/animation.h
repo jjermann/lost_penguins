@@ -109,10 +109,10 @@ class Animation : public EmptyAnimation {
         /// Example: BP_MU means the BP is the upper middle point of each frame.
         /// Default: BP_MD
         BasePointType bp_type;
-        /// Animation type: ATYPE_ONCE (play once), ATYPE_ONCE_END (play once and stop at end),
-        /// ATYPE_LOOP (always play, jump back to the beginning), ATYPE_SWING (always play,
-        /// reverse direction when finnished). The appended _REV means that the animation is
-        /// started at the end and played backwards.
+        /// Animation type: ATYPE_ONCE (play once), ATYPE_LOOP (always play, jump back to
+        /// the beginning), ATYPE_SWING (always play, reverse direction when finnished),
+        /// ATYPE_ST_SWITCH (parameter for ATYPE_ALL_ONCE: switch state when finnished).
+        /// The appended _REV means that the animation is started at the end and played backwards.
         Uint16 animation_type;
         /// FPS of the animation
         double fps;
@@ -137,6 +137,8 @@ class Animation : public EmptyAnimation {
         Sint16 shift_y;
         /// Duration of the animation in ms
         Uint32 duration;
+        /// Position of the base frame
+        Uint16 base_frame_pos;
         /// End position from the frame array of the base_image
         Uint16 end_pos;
         /// True if the animation consist of one still image (frames=1,still=true)

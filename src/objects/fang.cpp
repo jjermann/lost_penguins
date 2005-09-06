@@ -16,8 +16,8 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),4);
     anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),8);
     anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),8);
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
     anim_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),8);
     anim_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),8);
     au_hit=scenario->sndcache->loadWAV("wolfhit.wav");

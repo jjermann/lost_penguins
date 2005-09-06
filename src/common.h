@@ -79,20 +79,21 @@ typedef boost::shared_ptr<EmptyAnimation> EmptyAnimationPtr;
 
 //Animation types
 #define ATYPE_ONCE              0x00000001
-#define ATYPE_ONCE_END          0x00000002
-#define ATYPE_LOOP              0x00000004
-#define ATYPE_SWING             0x00000008
+#define ATYPE_LOOP              0x00000002
+#define ATYPE_SWING             0x00000004
+#define ATYPE_STEP              0x00000008
 #define ATYPE_ONCE_REV          0x00000010
-#define ATYPE_ONCE_END_REV      0x00000020
-#define ATYPE_LOOP_REV          0x00000040
-#define ATYPE_SWING_REV         0x00000080
-#define ATYPE_ALL_ONCE          0x00000033
-#define ATYPE_ALL_LSTART        0x00000021
-#define ATYPE_ALL_LEND          0x00000012
-#define ATYPE_ALL_LOOP          0x00000044
-#define ATYPE_ALL_SWING         0x00000088
+#define ATYPE_LOOP_REV          0x00000020
+#define ATYPE_SWING_REV         0x00000040
+#define ATYPE_STEP_REV          0x00000080
+#define ATYPE_ALL_ONCE          0x00000011
+#define ATYPE_ALL_LOOP          0x00000022
+#define ATYPE_ALL_SWING         0x00000044
 #define ATYPE_ALL_NORMAL        0x0000000F
 #define ATYPE_ALL_REV           0x000000F0
+#define ATYPE_ST_SWITCH         0x00000100
+#define ATYPE_ONCE_S            0x00000101
+#define ATYPE_ONCE_S_REV        0x00000110
 
 //Description formats
 #define DESC_NONE               0x00000000

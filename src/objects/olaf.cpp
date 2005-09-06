@@ -16,9 +16,9 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_right.bmp"));
     anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_left.png"),8);
     anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_right.png"),8);
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    anim_die_bones_left=loadAnimation(scenario->imgcache->loadImage(60,0,"kuru.bmp"),12,BP_MD,ATYPE_ONCE_END,25);
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    anim_die_bones_left=loadAnimation(scenario->imgcache->loadImage(60,0,"kuru.bmp"),12,BP_MD,ATYPE_ONCE,25);
 
     anim_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),1);
     anim_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),1);
