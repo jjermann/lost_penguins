@@ -254,17 +254,14 @@ void Player::crash(Uint16 dir) {
     if (event) event->cancel();
     switch (dir) {
         case DIR_LEFT: {
-            unsetState(STATE_MLEFT);
             hspeed=0;
             break;
         }
         case DIR_RIGHT: {
-            unsetState(STATE_MRIGHT);
             hspeed=0;
             break;
         }
         case DIR_UP: {
-            unsetState(STATE_MUP);
             speed=0;
             break;
         }
@@ -272,7 +269,6 @@ void Player::crash(Uint16 dir) {
         case DIR_DOWN: default : {
             clearStates(true);
             unsetState(STATE_FALL);
-            unsetState(STATE_MDOWN);
             Dgrav=0;
             if (speed>V_KRIT) {
                 speed=0;
