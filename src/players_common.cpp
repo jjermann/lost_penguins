@@ -28,8 +28,6 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   anim_fall_right(new EmptyAnimation(&anim_right)),
   anim_fall_fast_left(new EmptyAnimation(&anim_fall_left)),
   anim_fall_fast_right(new EmptyAnimation(&anim_fall_right)),
-  anim_land_left(new EmptyAnimation()),
-  anim_land_right(new EmptyAnimation()),
   anim_crash_left(new EmptyAnimation()),
   anim_crash_right(new EmptyAnimation()),
   anim_rope_left(new EmptyAnimation(&anim_left)),
@@ -280,7 +278,9 @@ void Player::crash(Uint16 dir) {
                 speed=0;
                 Weapon tmpweap(-1,W_PRESSURE,WS_PRESSURE);
                 hit(DIR_UP,tmpweap);
-            } else speed=0;
+            } else {
+                speed=0;
+            }
             break;
         }
     }

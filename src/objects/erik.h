@@ -30,6 +30,8 @@ class Erik : public Player {
         EmptyAnimationPtr anim_erik_jump2_right;
         EmptyAnimationPtr anim_erik_start_run_left;
         EmptyAnimationPtr anim_erik_start_run_right;
+        EmptyAnimationPtr anim_erik_run_left;
+        EmptyAnimationPtr anim_erik_run_right;
         EmptyAnimationPtr anim_erik_swim_left;
         EmptyAnimationPtr anim_erik_swim_right;
         EmptyAnimationPtr anim_erik_swim_up_left;

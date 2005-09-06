@@ -142,8 +142,6 @@ class Player : public Character {
         EmptyAnimationPtr anim_fall_right;
         EmptyAnimationPtr anim_fall_fast_left;
         EmptyAnimationPtr anim_fall_fast_right;
-        EmptyAnimationPtr anim_land_left;
-        EmptyAnimationPtr anim_land_right;
         EmptyAnimationPtr anim_crash_left;
         EmptyAnimationPtr anim_crash_right;
         EmptyAnimationPtr anim_rope_left;

@@ -36,8 +36,6 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_fall_right=loadAnimation("erik_fall_right",config.lvlscale,BP_LD);
     anim_fall_fast_left=loadAnimation("erik_fall_fast_left",config.lvlscale,BP_RD);
     anim_fall_fast_right=loadAnimation("erik_fall_fast_right",config.lvlscale,BP_LD);
-    anim_land_left=loadAnimation("erik_land_left",config.lvlscale,BP_RD,ATYPE_ONCE_END);
-    anim_land_right=loadAnimation("erik_land_right",config.lvlscale,BP_LD,ATYPE_ONCE_END);
     anim_crash_left=loadAnimation("erik_crash_left",config.lvlscale,BP_RD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
     anim_crash_right=loadAnimation("erik_crash_right",config.lvlscale,BP_LD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
     anim_rope_left=loadAnimation("erik_rope_left",config.lvlscale,BP_RD);
@@ -63,6 +61,8 @@ Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_erik_jump2_right=loadAnimation("erik_jump2_right",config.lvlscale,BP_LD,ATYPE_ONCE);
     anim_erik_start_run_left=loadAnimation("erik_start_run_left",config.lvlscale,BP_RD,ATYPE_ONCE);
     anim_erik_start_run_right=loadAnimation("erik_start_run_right",config.lvlscale,BP_LD,ATYPE_ONCE);    
+    anim_erik_run_left=loadAnimation("erik_run_left",config.lvlscale,BP_RD,ATYPE_ONCE);
+    anim_erik_run_right=loadAnimation("erik_run_right",config.lvlscale,BP_LD,ATYPE_ONCE);    
     anim_erik_swim_left=loadAnimation("erik_swim_left",config.lvlscale,BP_RD,ATYPE_ONCE);         
     anim_erik_swim_right=loadAnimation("erik_swim_right",config.lvlscale,BP_LD,ATYPE_ONCE);    
     anim_erik_swim_up_left=loadAnimation("erik_swim_up_left",config.lvlscale,BP_RD,ATYPE_ONCE);
@@ -91,7 +91,7 @@ void Erik::idle(Uint16 dt) {
         if (state&(STATE_MLEFT|STATE_MRIGHT)) {
             if (state&STATE_MRIGHT) run_right=true;
             else run_right=false;
-            setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run));
+            setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run,(state&STATE_LEFT) ? anim_erik_run_left : anim_erik_run_right));
         }
     }
 }
@@ -104,11 +104,11 @@ void Erik::in_sp1() {
     } else if (state&STATE_ACT_1) {
         setState(STATE_ACT_2);
         addSpeed(jump2);
-        setEvent(new CAnimEvent(this,DE_JUMP,0,0,au_jump));
+        setEvent(new CAnimEvent(this,DE_JUMP,0,ESTATE_ABORT,au_jump,(state&STATE_LEFT) ? anim_erik_jump2_left : anim_erik_jump2_right));
     } else {
         setState(STATE_ACT_1);
         addSpeed(jump);
-        setEvent(new CAnimEvent(this,DE_JUMP));
+        setEvent(new CAnimEvent(this,DE_JUMP,0,ESTATE_ABORT,NULL,(state&STATE_LEFT) ? anim_erik_jump_left : anim_erik_jump_right));
     }
 }
 
@@ -117,7 +117,7 @@ void Erik::in_sp2() {
     if (state&(STATE_MLEFT|STATE_MRIGHT)) {
         if (state&STATE_MRIGHT) run_right=true;
         else run_right=false;
-        setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run));
+        setEvent(new ERun(this,10000,maxspeedx,500,ESTATE_ABORT,au_run,(state&STATE_LEFT) ? anim_erik_run_left : anim_erik_run_right));
     }
 }
 
