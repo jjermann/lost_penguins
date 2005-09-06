@@ -19,6 +19,7 @@
 #ifdef SDL_IMAGE
 #include <SDL_image.h>
 #endif
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 
@@ -48,6 +49,7 @@ typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
 typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
+typedef boost::shared_ptr<EmptyAnimation> EmptyAnimationPtr;
 
 //Data
 #define DATA_LVLFPS 6

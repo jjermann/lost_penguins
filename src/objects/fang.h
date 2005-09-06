@@ -23,7 +23,6 @@
 class Fang : public Player {
     public:
         Fang(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Fang");
-        virtual ~Fang();
         virtual void fall(Uint16);
         virtual void in_left(Uint16);
         virtual void in_right(Uint16);
@@ -34,8 +33,8 @@ class Fang : public Player {
         virtual void clearStates(bool reset=false);
     private:
         virtual void crash(Uint16 dir=DIR_DOWN);
-        EmptyAnimation* anim_claw_left;
-        EmptyAnimation* anim_claw_right;
+        EmptyAnimationPtr anim_claw_left;
+        EmptyAnimationPtr anim_claw_right;
         Mix_Chunk* au_jump;
         Mix_Chunk* au_claw;
         Sint16 jump;

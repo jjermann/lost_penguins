@@ -22,11 +22,6 @@ Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_sword=scenario->sndcache->loadWAV("swrdsw2.wav");
 }
 
-Baleog::~Baleog() {
-    delete anim_sword_left;
-    delete anim_sword_right;
-}
-
 //Baleog1: Sword attack
 void Baleog::in_sp1() {
     setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_sword,(state&STATE_LEFT) ? anim_sword_left : anim_sword_right));

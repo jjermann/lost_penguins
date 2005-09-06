@@ -114,41 +114,8 @@ class Player : public Character {
         virtual void die();
         virtual Hit move(Uint16 dt, bool check=false);
         //@{
-        EmptyAnimation* anim_left;
-        EmptyAnimation* anim_right;
-        EmptyAnimation* anim_rock_left;
-        EmptyAnimation* anim_rock_right;
-        EmptyAnimation* anim_walk_left;
-        EmptyAnimation* anim_walk_right;
-        EmptyAnimation* anim_push_left;
-        EmptyAnimation* anim_push_right;
-        EmptyAnimation* anim_fall_left;
-        EmptyAnimation* anim_fall_right;
-        EmptyAnimation* anim_fall_fast_left;
-        EmptyAnimation* anim_fall_fast_right;
-        EmptyAnimation* anim_land_left;
-        EmptyAnimation* anim_land_right;
-        EmptyAnimation* anim_crash_left;
-        EmptyAnimation* anim_crash_right;
-        EmptyAnimation* anim_rope_left;
-        EmptyAnimation* anim_rope_right;
-        EmptyAnimation* anim_teleport_left;
-        EmptyAnimation* anim_teleport_right;
-        EmptyAnimation* anim_die_crash_left;
-        EmptyAnimation* anim_die_crash_right;
-        EmptyAnimation* anim_die_burn_left;
-        EmptyAnimation* anim_die_burn_right;
-        EmptyAnimation* anim_die_bones_left;
-        EmptyAnimation* anim_die_bones_right;
-        EmptyAnimation* anim_die_elec_left;
-        EmptyAnimation* anim_die_elec_right;
-        EmptyAnimation* anim_die_spike_left;
-        EmptyAnimation* anim_die_spike_right;
-        EmptyAnimation* anim_die_water_left;
-        EmptyAnimation* anim_die_water_right;
-        EmptyAnimation* anim_fall_middle;
-        EmptyAnimation* anim_climb;
-        EmptyAnimation* anim_bar;
+        Item* items[MAX_ITEMS];
+        Uint8 currentitem;
         //@}
         //@{
         Mix_Chunk*  au_hit;
@@ -163,8 +130,41 @@ class Player : public Character {
         Mix_Chunk*  au_heal;
         //@}
         //@{
-        Item* items[MAX_ITEMS];
-        Uint8 currentitem;
+        EmptyAnimationPtr anim_left;
+        EmptyAnimationPtr anim_right;
+        EmptyAnimationPtr anim_rock_left;
+        EmptyAnimationPtr anim_rock_right;
+        EmptyAnimationPtr anim_walk_left;
+        EmptyAnimationPtr anim_walk_right;
+        EmptyAnimationPtr anim_push_left;
+        EmptyAnimationPtr anim_push_right;
+        EmptyAnimationPtr anim_fall_left;
+        EmptyAnimationPtr anim_fall_right;
+        EmptyAnimationPtr anim_fall_fast_left;
+        EmptyAnimationPtr anim_fall_fast_right;
+        EmptyAnimationPtr anim_land_left;
+        EmptyAnimationPtr anim_land_right;
+        EmptyAnimationPtr anim_crash_left;
+        EmptyAnimationPtr anim_crash_right;
+        EmptyAnimationPtr anim_rope_left;
+        EmptyAnimationPtr anim_rope_right;
+        EmptyAnimationPtr anim_teleport_left;
+        EmptyAnimationPtr anim_teleport_right;
+        EmptyAnimationPtr anim_die_crash_left;
+        EmptyAnimationPtr anim_die_crash_right;
+        EmptyAnimationPtr anim_die_burn_left;
+        EmptyAnimationPtr anim_die_burn_right;
+        EmptyAnimationPtr anim_die_bones_left;
+        EmptyAnimationPtr anim_die_bones_right;
+        EmptyAnimationPtr anim_die_elec_left;
+        EmptyAnimationPtr anim_die_elec_right;
+        EmptyAnimationPtr anim_die_spike_left;
+        EmptyAnimationPtr anim_die_spike_right;
+        EmptyAnimationPtr anim_die_water_left;
+        EmptyAnimationPtr anim_die_water_right;
+        EmptyAnimationPtr anim_fall_middle;
+        EmptyAnimationPtr anim_climb;
+        EmptyAnimationPtr anim_bar;
         //@}
 };
 

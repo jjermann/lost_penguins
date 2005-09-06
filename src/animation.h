@@ -3,7 +3,7 @@
 
 class EmptyAnimation {
     public:
-        EmptyAnimation(EmptyAnimation** afallback=NULL);
+        EmptyAnimation(EmptyAnimationPtr* afallback=NULL);
         virtual ~EmptyAnimation() { }
         virtual void setBasePos(SDL_Rect*);
         virtual void unsetBasePos();
@@ -17,11 +17,11 @@ class EmptyAnimation {
         virtual bool isRunning() const;
         virtual bool isImage() const;
         virtual bool isFixed() const;
-        virtual void setFallBack(EmptyAnimation** newfallback=NULL);
+        virtual void setFallBack(EmptyAnimationPtr* newfallback=NULL);
     protected:
         Frame base_frame;
     private:
-        EmptyAnimation** fallback;
+        EmptyAnimationPtr* fallback;
 };
 
 /** \brief Animation is responsible to return the correct frame of an animation
@@ -87,7 +87,7 @@ class Animation : public EmptyAnimation {
         virtual bool isFixed() const {
             return is_fixed;
         }
-        virtual void setFallBack(EmptyAnimation**) { }
+        virtual void setFallBack(EmptyAnimationPtr*) { }
     protected:
         /// Helper function to set the shift values of the animation
         void setShift();

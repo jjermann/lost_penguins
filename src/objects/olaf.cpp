@@ -26,26 +26,14 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     anim_walk_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),7,BP_MD,ATYPE_LOOP,3.5);
     anim_shield_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_left.bmp"));
     anim_shield_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_right.bmp"));
-    anim_walk_shield_left=new EmptyAnimation(&anim_shield_left);
-    anim_walk_shield_right=new EmptyAnimation(&anim_shield_right);
-    anim_fall_shield_left=new EmptyAnimation(&anim_shield_left);
-    anim_fall_shield_right=new EmptyAnimation(&anim_shield_right);
+    anim_walk_shield_left.reset(new EmptyAnimation(&anim_shield_left));
+    anim_walk_shield_right.reset(new EmptyAnimation(&anim_shield_right));
+    anim_fall_shield_left.reset(new EmptyAnimation(&anim_shield_left));
+    anim_fall_shield_right.reset(new EmptyAnimation(&anim_shield_right));
     au_small=scenario->sndcache->loadWAV("blob.wav");
     au_big=scenario->sndcache->loadWAV("unblob.wav");
     au_fart=scenario->sndcache->loadWAV("fart1.wav");
     au_hit=scenario->sndcache->loadWAV("fathit.wav");
-}
-Olaf::~Olaf() {
-    delete anim_small_left;
-    delete anim_small_right;
-    delete anim_walk_small_left;
-    delete anim_walk_small_right;
-    delete anim_walk_shield_left;
-    delete anim_walk_shield_right;
-    delete anim_shield_left;
-    delete anim_shield_right;
-    delete anim_fall_shield_left;
-    delete anim_fall_shield_right;
 }
 
 void Olaf::updateAnimState() {
@@ -113,16 +101,13 @@ inline bool Olaf::trySmall(bool small) {
     //Are we already small?
     if ((small && (state&STATE_SMALL)) || ((!small) && (!(state&STATE_SMALL)))) return true;
 
-    EmptyAnimation* tmpanim;
     SDL_Rect tmppos=pos;
-    if (small) tmpanim=anim_small_left;
     //Assume both images have the same dimension
-    else tmpanim=anim_orig;
     //IDEA: left/right edge instead of bottom?
-    tmppos.x+=(Sint16)((tmppos.w-tmpanim->getFrameDim().w)/2);
-    tmppos.y+=tmppos.h-tmpanim->getFrameDim().h;
-    tmppos.w=tmpanim->getFrameDim().w;
-    tmppos.h=tmpanim->getFrameDim().h;
+    tmppos.x+=(Sint16)((tmppos.w-(small ? anim_small_left : anim_orig)->getFrameDim().w)/2);
+    tmppos.y+=tmppos.h-(small ? anim_small_left : anim_orig)->getFrameDim().h;
+    tmppos.w=(small ? anim_small_left : anim_orig)->getFrameDim().w;
+    tmppos.h=(small ? anim_small_left : anim_orig)->getFrameDim().h;
     if (!(checkMove(tmppos,true).enter&DIR_ALL)) {
         pos=tmppos;
         if (small) {

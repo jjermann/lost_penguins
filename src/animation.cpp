@@ -1,7 +1,7 @@
 #include "common.h"
 #include "animation.h"
 
-EmptyAnimation::EmptyAnimation(EmptyAnimation** afallback) : fallback(afallback) { }
+EmptyAnimation::EmptyAnimation(EmptyAnimationPtr* afallback) : fallback(afallback) { }
 void EmptyAnimation::setBasePos(SDL_Rect* abase_pos) {
     if (fallback) (*fallback)->setBasePos(abase_pos);
 }
@@ -47,7 +47,7 @@ bool EmptyAnimation::isFixed() const {
     if (fallback) return (*fallback)->isFixed();
     else return true;
 }
-void EmptyAnimation::setFallBack(EmptyAnimation** newfallback) {
+void EmptyAnimation::setFallBack(EmptyAnimationPtr* newfallback) {
     fallback=newfallback;
 }
 

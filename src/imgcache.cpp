@@ -115,6 +115,17 @@ Image& ImageCache::loadImage(std::vector<SDL_Rect> image_desc, string imagename,
             }
             SDL_FreeSurface(tmp_surface);
         }
+        if (return_image.surface==NULL) {
+            cout << "Couldn't load the image " << imagename << ": probably failed at setting to display format...." << endl;
+            //Even the fallback image was not found
+            if (not_found==imagename) {
+                quitGame(3);
+            //Try to load the fallback image...
+            } else {
+                std::vector<SDL_Rect> empty_vector;
+                return loadImage(empty_vector,not_found);
+            }
+        }
         // Nice return statement, isn't it ;-)))
         return (*(imgcache.insert(make_pair(make_pair(imagename,scale_factor),return_image))).first).second;
     // Return the existing Image in cache...

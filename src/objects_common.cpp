@@ -12,8 +12,8 @@ Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
   event(NULL),
   otype(NOTHING),
   name(oname),
-  delete_flag(false) {
-    anim_orig=loadAnimation(scenario->imgcache->loadImage(1,imagename));
+  delete_flag(false),
+  anim_orig(loadAnimation(scenario->imgcache->loadImage(1,imagename))) {
     animation=anim_orig;
     pos=animation->getFrameDim();
     pos.x=xcord;
@@ -23,7 +23,6 @@ Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
 
 Object::~Object() {
     if (event) event->cancel();
-    if (!(otype&OTYPE_CHARACTER)) delete animation;
 }
 
 bool Object::operator<(const Object& obj) const {
@@ -59,13 +58,12 @@ bool Object::setPos(Sint16 xcord,Sint16 ycord) {
     return ok;
 }
 
-EmptyAnimation* Object::loadAnimation(string anim_name,
-                         double scale_factor,
-                         BasePointType abp_type,
-                         Uint16 aanimation_type,
-                         double afps,
-                         AllignType aallign_type) {
-
+EmptyAnimationPtr Object::loadAnimation(string anim_name,
+                                        double scale_factor,
+                                        BasePointType abp_type,
+                                        Uint16 aanimation_type,
+                                        double afps,
+                                        AllignType aallign_type) {
     /* Parse animation data file */
     ifstream file;
     string tmpline;
@@ -74,7 +72,7 @@ EmptyAnimation* Object::loadAnimation(string anim_name,
     file.open(loadfile.c_str());
     if (!file) {
         cout << "Failed to open the animation data file: " << loadfile << " => Couldn't load " << anim_name << " animation!\n" << endl;
-        return new EmptyAnimation();
+        return EmptyAnimationPtr(new EmptyAnimation());
     } else {
         string arg1,arg2,arg3,arg4,arg5,arg6;
         string tmp_anim_name="";
@@ -115,17 +113,17 @@ EmptyAnimation* Object::loadAnimation(string anim_name,
         }
     }
     cout << "Animation " << anim_name << " not found!" << endl;
-    return new EmptyAnimation();
+    return EmptyAnimationPtr(new EmptyAnimation());
 }
 
-EmptyAnimation* Object::loadAnimation(const Image& abase_image,
-                         Uint16 aframes,
-                         BasePointType abp_type, 
-                         Uint16 aanimation_type,
-                         double afps,
-                         Uint16 astart_pos,
-                         AllignType aallign_type) {
-    EmptyAnimation* anim=new Animation(abase_image,aframes,abp_type,aanimation_type,afps,astart_pos,aallign_type);
+EmptyAnimationPtr Object::loadAnimation(const Image& abase_image,
+                                        Uint16 aframes,
+                                        BasePointType abp_type, 
+                                        Uint16 aanimation_type,
+                                        double afps,
+                                        Uint16 astart_pos,
+                                        AllignType aallign_type) {
+    EmptyAnimationPtr anim(new Animation(abase_image,aframes,abp_type,aanimation_type,afps,astart_pos,aallign_type));
     anim->setBasePos(&pos);
     return anim;
 }
@@ -139,7 +137,7 @@ const Frame Object::getFrame() const {
 bool Object::updateAnim(Uint16 dt) {
     return (animation->updateAnim(dt));
 }
-bool Object::setAnim(EmptyAnimation* anim, bool start) {
+bool Object::setAnim(EmptyAnimationPtr anim, bool start) {
     if (anim && anim->isValid()) {
         animation=anim;
         if (start) {

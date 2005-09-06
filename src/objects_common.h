@@ -88,7 +88,7 @@ class Object {
         /// and starts it right away. Should not be used with updateAnimState,
         /// set ESTATE_ANIM to deactivate an updateAnimState. This is usually
         /// controlled by an AnimationEvent
-        bool setAnim(EmptyAnimation* anim, bool start=false);
+        bool setAnim(EmptyAnimationPtr anim, bool start=false);
         /// Sets the animation back to the default one.
         virtual void resetAnimState();
         bool isRunning() const;
@@ -106,20 +106,20 @@ class Object {
         }
         //@}
         /// Load an animation bound onto this object from an animation data file
-        EmptyAnimation* loadAnimation(string anim_name,
-                                 double scale_factor=1,
-                                 BasePointType abp_type=BP_MD,
-                                 Uint16 aanimation_type=ATYPE_LOOP,
-                                 double afps=0,
-                                 AllignType aallign_type=AT_MD);
+        EmptyAnimationPtr loadAnimation(string anim_name,
+                                        double scale_factor=1,
+                                        BasePointType abp_type=BP_MD,
+                                        Uint16 aanimation_type=ATYPE_LOOP,
+                                        double afps=0,
+                                        AllignType aallign_type=AT_MD);
         /// Load an animation bound onto this object
-        EmptyAnimation* loadAnimation(const Image& abase_image,
-                                 Uint16 aframes=1,
-                                 BasePointType abp_type=BP_MD,
-                                 Uint16 aanimation_type=ATYPE_LOOP,
-                                 double afps=0,
-                                 Uint16 astart_pos=0,
-                                 AllignType aallign_type=AT_MD);
+        EmptyAnimationPtr loadAnimation(const Image& abase_image,
+                                        Uint16 aframes=1,
+                                        BasePointType abp_type=BP_MD,
+                                        Uint16 aanimation_type=ATYPE_LOOP,
+                                        double afps=0,
+                                        Uint16 astart_pos=0,
+                                        AllignType aallign_type=AT_MD);
         //Events (triggered animations/effects)
         //@{
         /// Clears the event field (sets it to NULL). This should only be used by
@@ -179,8 +179,6 @@ class Object {
     protected:
         Uint32 state;
         Event* event;
-        EmptyAnimation* anim_orig;
-        EmptyAnimation* animation;
         ///\todo Document this!
         /// Upper left logical position of the object (used for decisions)
         SDL_Rect pos;
@@ -190,6 +188,8 @@ class Object {
         string name;
         //delete me flag
         bool delete_flag;
+        EmptyAnimationPtr anim_orig;
+        EmptyAnimationPtr animation;
 };
 
 /** \brief Item

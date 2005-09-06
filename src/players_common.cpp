@@ -15,7 +15,42 @@
 
 Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Character(imagename,xcord,ycord,pname),
-  currentitem(0) {
+  currentitem(0),
+  anim_left(new EmptyAnimation(&anim_right)),
+  anim_right(new EmptyAnimation()),
+  anim_rock_left(new EmptyAnimation(&anim_left)),
+  anim_rock_right(new EmptyAnimation(&anim_right)),
+  anim_walk_left(new EmptyAnimation(&anim_left)),
+  anim_walk_right(new EmptyAnimation(&anim_right)),
+  anim_push_left(new EmptyAnimation(&anim_left)),
+  anim_push_right(new EmptyAnimation(&anim_right)),
+  anim_fall_left(new EmptyAnimation(&anim_left)),
+  anim_fall_right(new EmptyAnimation(&anim_right)),
+  anim_fall_fast_left(new EmptyAnimation(&anim_fall_left)),
+  anim_fall_fast_right(new EmptyAnimation(&anim_fall_right)),
+  anim_land_left(new EmptyAnimation()),
+  anim_land_right(new EmptyAnimation()),
+  anim_crash_left(new EmptyAnimation()),
+  anim_crash_right(new EmptyAnimation()),
+  anim_rope_left(new EmptyAnimation(&anim_left)),
+  anim_rope_right(new EmptyAnimation(&anim_right)),
+  anim_teleport_left(new EmptyAnimation()),
+  anim_teleport_right(new EmptyAnimation()),
+  anim_die_crash_left(new EmptyAnimation(&anim_die_bones_left)),
+  anim_die_crash_right(new EmptyAnimation(&anim_die_bones_right)),
+  anim_die_burn_left(new EmptyAnimation(&anim_die_bones_left)),
+  anim_die_burn_right(new EmptyAnimation(&anim_die_bones_right)),
+  anim_die_bones_left(new EmptyAnimation(&anim_die_bones_right)),
+  anim_die_bones_right(new EmptyAnimation()),
+  anim_die_elec_left(new EmptyAnimation(&anim_die_bones_left)),
+  anim_die_elec_right(new EmptyAnimation(&anim_die_bones_right)),
+  anim_die_spike_left(new EmptyAnimation(&anim_die_bones_left)),
+  anim_die_spike_right(new EmptyAnimation(&anim_die_bones_right)),
+  anim_die_water_left(new EmptyAnimation(&anim_die_bones_left)),
+  anim_die_water_right(new EmptyAnimation(&anim_die_bones_right)),
+  anim_fall_middle(new EmptyAnimation(&anim_fall_right)),
+  anim_climb(new EmptyAnimation(&anim_right)),
+  anim_bar(new EmptyAnimation(&anim_right)) {
     health=3;
     maxhealth=4;
     maxspeedx=300;
@@ -26,41 +61,6 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     state=STATE_FALL;
     otype|=OTYPE_PLAYER;
     enemy_types|=OTYPE_MONSTER;
-    anim_left=new EmptyAnimation(&anim_right);
-    anim_right=new EmptyAnimation();
-    anim_rock_left=new EmptyAnimation(&anim_left);
-    anim_rock_right=new EmptyAnimation(&anim_right);
-    anim_walk_left=new EmptyAnimation(&anim_left);
-    anim_walk_right=new EmptyAnimation(&anim_right);
-    anim_push_left=new EmptyAnimation(&anim_left);
-    anim_push_right=new EmptyAnimation(&anim_right);
-    anim_fall_left=new EmptyAnimation(&anim_left);
-    anim_fall_right=new EmptyAnimation(&anim_right);
-    anim_fall_fast_left=new EmptyAnimation(&anim_fall_left);
-    anim_fall_fast_right=new EmptyAnimation(&anim_fall_right);
-    anim_land_left=new EmptyAnimation();
-    anim_land_right=new EmptyAnimation();
-    anim_crash_left=new EmptyAnimation();
-    anim_crash_right=new EmptyAnimation();
-    anim_rope_left=new EmptyAnimation(&anim_left);
-    anim_rope_right=new EmptyAnimation(&anim_right);
-    anim_teleport_left=new EmptyAnimation();
-    anim_teleport_right=new EmptyAnimation();
-    anim_die_crash_left=new EmptyAnimation(&anim_die_bones_left);
-    anim_die_crash_right=new EmptyAnimation(&anim_die_bones_right);
-    anim_die_burn_left=new EmptyAnimation(&anim_die_bones_left);
-    anim_die_burn_right=new EmptyAnimation(&anim_die_bones_right);
-    anim_die_bones_left=new EmptyAnimation(&anim_die_bones_right);
-    anim_die_bones_right=new EmptyAnimation();
-    anim_die_elec_left=new EmptyAnimation(&anim_die_bones_left);
-    anim_die_elec_right=new EmptyAnimation(&anim_die_bones_right);
-    anim_die_spike_left=new EmptyAnimation(&anim_die_bones_left);
-    anim_die_spike_right=new EmptyAnimation(&anim_die_bones_right);
-    anim_die_water_left=new EmptyAnimation(&anim_die_bones_left);
-    anim_die_water_right=new EmptyAnimation(&anim_die_bones_right);
-    anim_fall_middle=new EmptyAnimation(&anim_fall_right);
-    anim_climb=new EmptyAnimation(&anim_right);
-    anim_bar=new EmptyAnimation(&anim_right);
     au_land=scenario->sndcache->loadWAV("dizzy.wav");
     au_act=scenario->sndcache->loadWAV("button.wav");
     au_useerror=scenario->sndcache->loadWAV("useerror.wav");
@@ -74,41 +74,6 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
 }
 
 Player::~Player() {
-    delete anim_left;
-    delete anim_right;
-    delete anim_rock_left;
-    delete anim_rock_right;
-    delete anim_walk_left;
-    delete anim_walk_right;
-    delete anim_push_left;
-    delete anim_push_right;
-    delete anim_fall_left;
-    delete anim_fall_right;
-    delete anim_fall_fast_left;
-    delete anim_fall_fast_right;
-    delete anim_land_left;
-    delete anim_land_right;
-    delete anim_crash_left;
-    delete anim_crash_right;
-    delete anim_rope_left;
-    delete anim_rope_right;
-    delete anim_teleport_left;
-    delete anim_teleport_right;
-    delete anim_die_crash_left;
-    delete anim_die_crash_right;
-    delete anim_die_burn_left;
-    delete anim_die_burn_right;
-    delete anim_die_bones_left;
-    delete anim_die_bones_right;
-    delete anim_die_elec_left;
-    delete anim_die_elec_right;
-    delete anim_die_spike_left;
-    delete anim_die_spike_right;
-    delete anim_die_water_left;
-    delete anim_die_water_right;
-    delete anim_fall_middle;
-    delete anim_climb;
-    delete anim_bar;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         if (items[i]) {
             removeItem(i);

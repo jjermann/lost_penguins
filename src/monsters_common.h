@@ -36,10 +36,10 @@ class Monster : public Character {
         std::set<Player *> targets;
         virtual Hit move(Uint16 dt, bool check=false);
         //common animations
-        EmptyAnimation* anim_left;
-        EmptyAnimation* anim_right;
         Mix_Chunk* au_hit;
         Sint16 Dai,Dattack;
+        EmptyAnimationPtr anim_left;
+        EmptyAnimationPtr anim_right;
 };
 
 #endif

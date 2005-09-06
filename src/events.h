@@ -62,7 +62,7 @@ class AnimEvent : public Event {
         /// \todo Get rid of the delanim parameter
         /// \param delanim True if the animation should be deleted
         AnimEvent(Object* obj, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING,
-          Mix_Chunk* asound=NULL, EmptyAnimation* runanim=NULL, bool delanim=false);
+          Mix_Chunk* asound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
         /// \brief Updates the events
         /// \return Event state: either delayed (EV_DELAY), starting (EV_START),
         ///         running (EV_RUN), stopping (EV_END) or canceled (EV_CANCEL)
@@ -71,7 +71,7 @@ class AnimEvent : public Event {
         virtual void end();  
         virtual void cancel();
     protected:
-        EmptyAnimation* anim;
+        EmptyAnimationPtr anim;
         bool del;
         Mix_Chunk* sound;
 };
@@ -83,13 +83,13 @@ class AnimEvent : public Event {
 class CAnimEvent : public CEvent {
     public:
         CAnimEvent(Character* chr, Uint16 length, Uint16 edelay=0, Uint32 switchstate=NOTHING,
-          Mix_Chunk* asound=NULL, EmptyAnimation* runanim=NULL, bool delanim=false);
+          Mix_Chunk* asound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
         virtual Uint16 update(Uint16 dt);
         virtual void start();
         virtual void end();  
         virtual void cancel();
     protected:
-        EmptyAnimation* anim;
+        EmptyAnimationPtr anim;
         bool del;
         Mix_Chunk* sound;
 };
@@ -116,7 +116,7 @@ class EAttack : public CAnimEvent {
         /// \param delanim True if the animation should be deleted
         EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weapon_range=0,
           Uint16 target_mask=NOTHING, Uint16 edelay=0, Uint32 switchstate=0, Mix_Chunk* esound=NULL,
-          EmptyAnimation* runanim=NULL, bool delanim=false);
+          EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
         virtual void end();
     protected:
         Weapon* weapon;
@@ -134,7 +134,7 @@ class ERun : public CAnimEvent {
     public:
         /// Adds the initial speed
         ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay=0,
-          Uint32 switchstate=0, Mix_Chunk* esound=NULL, EmptyAnimation* runanim=NULL, bool delanim=false);
+          Uint32 switchstate=0, Mix_Chunk* esound=NULL, EmptyAnimationPtr runanim=EmptyAnimationPtr(), bool delanim=false);
         virtual ~ERun();
         /// Forces the event to continue
         virtual void start(); 

@@ -52,7 +52,7 @@ void Event::cancel() {
     delete this;
 }
 
-AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimation* runanim, bool delanim):
+AnimEvent::AnimEvent(Object* obj, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimationPtr runanim, bool delanim):
   Event(obj,length,edelay,switchstate),
   anim(runanim),
   del(delanim),
@@ -74,14 +74,12 @@ void AnimEvent::start() {
 }
 void AnimEvent::end() {
     if (started && state&ESTATE_ANIM) {
-        if (del) delete anim; 
         owner->resetAnimState();
     }
     Event::end();
 }
 void AnimEvent::cancel() {
     if (started && state&ESTATE_ANIM) {
-        if (del) delete anim;
         owner->resetAnimState();
     }
     Event::cancel();
@@ -93,7 +91,7 @@ CEvent::CEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate)
   charowner(chr) { }
   
 //Exactly the same as AnimEvent with Character* instead of Object*
-CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimation* runanim, bool delanim):
+CAnimEvent::CAnimEvent(Character* chr, Uint16 length, Uint16 edelay, Uint32 switchstate, Mix_Chunk* asound, EmptyAnimationPtr runanim, bool delanim):
   CEvent(chr,length,edelay,switchstate),
   anim(runanim),
   del(delanim),
@@ -115,21 +113,19 @@ void CAnimEvent::start() {
 }
 void CAnimEvent::end() {
     if (started && state&ESTATE_ANIM) {
-        if (del) delete anim;
         charowner->resetAnimState();
     }
     CEvent::end();
 }
 void CAnimEvent::cancel() {
     if (started && state&ESTATE_ANIM) { 
-        if (del) delete anim;
         charowner->resetAnimState();
     }
     CEvent::cancel();
 }
 
 
-ERun::ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimation* runanim, bool delanim):
+ERun::ERun(Character* chr, Uint16 length, Sint16 edmax, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimationPtr runanim, bool delanim):
   CAnimEvent(chr,length,edelay,(switchstate|STATE_PRESS_LR),esound,runanim,delanim),
   dmax(edmax),
   t_reset(0) {
@@ -169,7 +165,7 @@ Uint16 ERun::update(Uint16 dt) {
 }
 
 
-EAttack::EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weap_range, Uint16 target_mask, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimation* runanim, bool delanim):
+EAttack::EAttack(Character* chr, Uint16 length, Weapon* atweapon, Uint16 dir, Uint16 weap_range, Uint16 target_mask, Uint16 edelay, Uint32 switchstate, Mix_Chunk* esound, EmptyAnimationPtr runanim, bool delanim):
   CAnimEvent(chr,length,edelay,switchstate|ESTATE_BUSY,esound,runanim,delanim),
   weapon(atweapon),
   direction(dir),

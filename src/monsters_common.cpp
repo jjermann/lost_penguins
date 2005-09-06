@@ -13,7 +13,9 @@
 Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Character(imagename,xcord,ycord,pname),
   Dai(0),
-  Dattack(0) {
+  Dattack(0),
+  anim_left(new EmptyAnimation(&anim_right)),
+  anim_right(new EmptyAnimation()) {
     health=1;
     maxspeedx=50;
     maxspeedy=0;
@@ -21,14 +23,10 @@ Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     otype|=OTYPE_MONSTER;
     enemy_types|=OTYPE_PLAYER;
     dense_types|=OTYPE_PLAYER;
-    anim_left=new EmptyAnimation(&anim_right);
-    anim_right=new EmptyAnimation();
     au_hit=scenario->sndcache->loadWAV("monhit.wav");
 }
 
 Monster::~Monster() {
-    delete anim_left;
-    delete anim_right;
 }
 
 void Monster::addEnter(std::set<Object *>& aset) {

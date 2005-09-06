@@ -14,7 +14,6 @@
 class Erik : public Player {
     public:
         Erik(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Erik");
-        virtual ~Erik();
         virtual void idle(Uint16); 
        /// \brief Erik jumps
         virtual void in_sp1();
@@ -25,18 +24,18 @@ class Erik : public Player {
         virtual void crash(Uint16 dir);
         virtual Uint16 hit(Uint16 direction,Weapon& weap);
     private:
-        EmptyAnimation* anim_erik_jump_left;
-        EmptyAnimation* anim_erik_jump_right;
-        EmptyAnimation* anim_erik_jump2_left;
-        EmptyAnimation* anim_erik_jump2_right;
-        EmptyAnimation* anim_erik_start_run_left;
-        EmptyAnimation* anim_erik_start_run_right;
-        EmptyAnimation* anim_erik_swim_left;
-        EmptyAnimation* anim_erik_swim_right;
-        EmptyAnimation* anim_erik_swim_up_left;
-        EmptyAnimation* anim_erik_swim_up_right;
-        EmptyAnimation* anim_erik_hit_water_left;
-        EmptyAnimation* anim_erik_hit_water_right;
+        EmptyAnimationPtr anim_erik_jump_left;
+        EmptyAnimationPtr anim_erik_jump_right;
+        EmptyAnimationPtr anim_erik_jump2_left;
+        EmptyAnimationPtr anim_erik_jump2_right;
+        EmptyAnimationPtr anim_erik_start_run_left;
+        EmptyAnimationPtr anim_erik_start_run_right;
+        EmptyAnimationPtr anim_erik_swim_left;
+        EmptyAnimationPtr anim_erik_swim_right;
+        EmptyAnimationPtr anim_erik_swim_up_left;
+        EmptyAnimationPtr anim_erik_swim_up_right;
+        EmptyAnimationPtr anim_erik_hit_water_left;
+        EmptyAnimationPtr anim_erik_hit_water_right;
         Mix_Chunk* au_jump;
         Mix_Chunk* au_run;
         Sint16 jump,jump2;

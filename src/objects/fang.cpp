@@ -12,21 +12,17 @@ Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
-    delete anim_left;           anim_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),4);
-    delete anim_right;          anim_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),4);
-    delete anim_walk_left;      anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),8);
-    delete anim_walk_right;     anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),8);
-    delete anim_crash_left;     anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    delete anim_crash_right;    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),4);
+    anim_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),4);
+    anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),8);
+    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),8);
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
     anim_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),8);
     anim_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),8);
     au_hit=scenario->sndcache->loadWAV("wolfhit.wav");
     au_claw=scenario->sndcache->loadWAV("wolfjmp1.wav");
     au_jump=scenario->sndcache->loadWAV("fangjump.wav");
-}
-Fang::~Fang() {
-    delete anim_claw_left;
-    delete anim_claw_right;
 }
 
 void Fang::in_left(Uint16 dt) {

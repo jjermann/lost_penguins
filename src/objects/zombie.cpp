@@ -15,12 +15,9 @@ Zombie::Zombie(string imagename, Sint16 xcord, Sint16 ycord, string mname):
   au_attack(scenario->sndcache->loadWAV("clang.wav")),
   T_Attack_Bite(1500) {
     maxspeedx=80;
-    delete anim_left;   anim_left=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_left.bmp"),2,BP_MD,ATYPE_LOOP,2);
-    delete anim_right;  anim_right=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_right.bmp"),2,BP_MD,ATYPE_LOOP,2);
+    anim_left=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_left.bmp"),2,BP_MD,ATYPE_LOOP,2);
+    anim_right=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_right.bmp"),2,BP_MD,ATYPE_LOOP,2);
     weapon=Weapon(-1,W_STRIKE);
-}
-
-Zombie::~Zombie() {
 }
 
 void Zombie::idle(Uint16 dt) {

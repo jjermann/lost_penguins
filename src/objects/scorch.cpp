@@ -12,17 +12,15 @@ Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   Player(imagename,xcord,ycord,pname),
   left_wings(SCORCH_MAX_WINGS),
   wing(V_FLY) {
-    delete anim_left;           anim_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));
-    delete anim_right;          anim_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
-    delete anim_walk_left;      anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_left.png"),8);
-    delete anim_walk_right;     anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_right.png"),8);
-    delete anim_crash_left;     anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
-    delete anim_crash_right;    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));
+    anim_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
+    anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_left.png"),8);
+    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_right.png"),8);
+    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
+    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE_END,calcFPS(1,T_IRR));
     au_swing=scenario->sndcache->loadWAV("flapwngs.wav");
     au_tired=scenario->sndcache->loadWAV("flwings.wav");
     au_hit=scenario->sndcache->loadWAV("draghit.wav");
-}
-Scorch::~Scorch() {
 }
 
 void Scorch::idle(Uint16 dt) {

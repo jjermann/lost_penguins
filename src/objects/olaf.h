@@ -17,7 +17,6 @@
 class Olaf : public Player {
     public:
         Olaf(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Olaf");
-        virtual ~Olaf();
         /// Additionally checks if Olaf is small and how he wears his shield
         virtual void updateAnimState();
         virtual void in_left(Uint16);
@@ -41,16 +40,16 @@ class Olaf : public Player {
         /// \return True if successfull
         inline bool trySmall(bool small);
         //@{
-        EmptyAnimation* anim_small_left;
-        EmptyAnimation* anim_small_right;
-        EmptyAnimation* anim_walk_small_left;
-        EmptyAnimation* anim_walk_small_right;
-        EmptyAnimation* anim_shield_left;
-        EmptyAnimation* anim_shield_right;
-        EmptyAnimation* anim_walk_shield_left;
-        EmptyAnimation* anim_walk_shield_right;
-        EmptyAnimation* anim_fall_shield_left;
-        EmptyAnimation* anim_fall_shield_right;
+        EmptyAnimationPtr anim_small_left;
+        EmptyAnimationPtr anim_small_right;
+        EmptyAnimationPtr anim_walk_small_left;
+        EmptyAnimationPtr anim_walk_small_right;
+        EmptyAnimationPtr anim_shield_left;
+        EmptyAnimationPtr anim_shield_right;
+        EmptyAnimationPtr anim_walk_shield_left;
+        EmptyAnimationPtr anim_walk_shield_right;
+        EmptyAnimationPtr anim_fall_shield_left;
+        EmptyAnimationPtr anim_fall_shield_right;
         //@}
         //@{
         Mix_Chunk* au_small;

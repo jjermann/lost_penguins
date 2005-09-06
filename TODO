@@ -5,6 +5,8 @@ Bugs
  o left/right move + switchPlayer (keeps moving)
  o key vs. trigger in map2
  o fall event (DONE?)
+ o left/right fallback?
+ o players die event segfault (eg. olaf)
 
 
 Code

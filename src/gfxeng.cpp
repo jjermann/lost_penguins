@@ -24,11 +24,10 @@ GraphicsEngine::GraphicsEngine():
     shift.x=0;
     shift.y=0;
     resize(config.width, config.height);
-    lifeimage=new Animation(imgcache->loadImage(1,"life.bmp"));
+    lifeimage.reset(new Animation(imgcache->loadImage(1,"life.bmp")));
 }
 
 GraphicsEngine::~GraphicsEngine() {
-    delete lifeimage;
     if (menubg) SDL_FreeSurface(menubg);
     SDL_FreeSurface(screen);
 }

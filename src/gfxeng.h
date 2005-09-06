@@ -47,8 +47,6 @@ class GraphicsEngine {
         SDL_Surface* menubg;
         /// player bar
         SDL_Rect bar;
-        /// symbol for one life of a player
-        EmptyAnimation* lifeimage;
         bool show_bar;
         bool show_fps;
         bool show_debug;
@@ -58,6 +56,8 @@ class GraphicsEngine {
         Uint8 updatetype;
         // current shift
         SDL_Rect shift;
+        /// symbol for one life of a player
+        EmptyAnimationPtr lifeimage;
     protected:
         /// Draw the background and all objects in the pool. This is a very time
         /// consuming function...
