@@ -4,7 +4,7 @@ CXX_DEBUG = -g #-fno-inline
 CXX_OPT = #-O2 -march=pentium4 -ffast-math
 CXX_GAME = -DSDL_MIXER -DSDL_IMAGE -DALPHA -I ./
 SDL = `sdl-config --cflags`
-SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image -ldl -rdynamic
+SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image #-ldl -rdynamic
 
 OBJS  = common.o gfxeng.o input.o font.o lost_penguins.o scenario.o\
         objects_common.o sfxeng.o players_common.o monsters_common.o\

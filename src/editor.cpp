@@ -406,12 +406,12 @@ void SaveAsBox::evaluateEntry() {
 
 OpenMapBox::OpenMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
     title="Open Map";
-    einput.push_back(scenario->name);
-    currententry=0;
+    einput.push_back(scenario->mapname);
     update();
 }
 
 void OpenMapBox::evaluateEntry() {
+    scenario->resetScenario();
     scenario->loadMap(einput[0]);
     editor->closeBox();
 }
@@ -426,7 +426,8 @@ NewMapBox::NewMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
 }
 
 void NewMapBox::evaluateEntry() {
-    scenario->name=einput[0];
+    scenario->resetScenario();
+    scenario->mapname=einput[0];
     scenario->newMap(einput[1]);
     scenario->reloadMap();
     editor->closeBox();

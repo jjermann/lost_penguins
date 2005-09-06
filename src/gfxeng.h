@@ -31,6 +31,7 @@ class GraphicsEngine {
         void toggleFullScreen();
         void setShowDebug();
         void unsetShowDebug();
+        void toggleShowDebug();
         void setMenuBG(SDL_Surface* menu_background=NULL);
         const SDL_Rect& addShift(Sint16,Sint16);
         const SDL_Rect& setShift(Sint16,Sint16);

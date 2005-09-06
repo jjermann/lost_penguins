@@ -53,6 +53,12 @@ void PhysicHandler::update() {
 }
 
 inline void PhysicHandler::updateGame() {
+    if (scenario->finnished) {
+        cout << endl;
+        if (scenario->failed) cout << "Mission failed: Replay?" << endl;
+        scenario->loadNextMap();
+        return;
+    }
     object_iterator obit=scenario->pool->objectspool.begin();
     while (obit!=scenario->pool->objectspool.end()) {
         //remove marked objects

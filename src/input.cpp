@@ -164,6 +164,8 @@ inline void InputHandler::pollGameEvents() {
                      gfxeng->toggleFPS(); 
                 } else if (key==config.keybind[KEY_FULL]) {
                      gfxeng->toggleFullScreen();
+                } else if (key==config.keybind[KEY_DEBUG]) {
+                     gfxeng->toggleShowDebug();
                 } else if (key==config.keybind[KEY_QUIT]) {
                      quitGame(0);
                 }

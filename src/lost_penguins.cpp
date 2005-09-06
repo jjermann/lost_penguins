@@ -51,8 +51,7 @@ int main(int argc, char* argv[]) {
     cout << "Initializing Scenario...\n";
     scenario=new Scenario();
 
-    gfxeng->setMenuBG();
-    setMenu(new StartMenu());
+    startScreen();
 
     while (true) {
         input->update();
@@ -62,6 +61,13 @@ int main(int argc, char* argv[]) {
     }
 
     quitGame(-2);
+}
+
+void startScreen() {
+    scenario->resetScenario();
+    gfxeng->setMenuBG();
+    setMenu(new StartMenu());
+    setGameMode(GAME_MENU);
 }
 
 int quitGame(int errorcode=0) {
@@ -100,8 +106,10 @@ int readConfig(const string& filename) {
     config.audio_channels = 2;
     config.datadir="data/";
     config.anim_file="animation_data.anim";
-    config.map="map1.cfg";
+    config.map="";
+    config.scenario="lv1.sce";
     config.lvlscale=2;
+    config.onlymap=false;
 
     //key bindings
     config.keybind[KEY_LEFT]    = SDLK_LEFT;
@@ -116,6 +124,7 @@ int readConfig(const string& filename) {
     config.keybind[KEY_SWITCH]  = SDLK_LCTRL;
     config.keybind[KEY_PAUSE]   = SDLK_TAB;
     config.keybind[KEY_MENU]    = SDLK_ESCAPE;
+    config.keybind[KEY_DEBUG]   = SDLK_F4;
     config.keybind[KEY_NOANIM]  = SDLK_F3;
     config.keybind[KEY_FPS]     = SDLK_F2;
     config.keybind[KEY_BAR]     = SDLK_F1;
@@ -148,6 +157,9 @@ int readConfig(const string& filename) {
             else config.full=false;
         } else if (option=="map") {
             config.map=arg1;
+            config.onlymap=true;
+        } else if (option=="scenario") {
+            config.scenario=arg1;
         //TODO: add keybindings
         } else {
             cout << "Unknown option: " << option << endl;
@@ -170,6 +182,11 @@ void parseInput(int, char* argv[]) {
         } else if ( strcmp(argv[i], "-map") == 0 ) {
             config.map=argv[i+1];
             config.map+=".cfg";
+            config.onlymap=true;
+            i++;
+        } else if ( strcmp(argv[i], "-scenario") == 0 ) {
+            config.scenario=argv[i+1];
+            config.scenario+=".sce";
             i++;
         } else if ( strcmp(argv[i], "-datadir") == 0 ) {
             config.datadir=argv[i+1];
@@ -191,7 +208,8 @@ void usage() {
     cout << "  -w, -width   Changes resolution (width) of game.    Default: 640\n";
     cout << "  -h, -height  Changes resolution (height) of game.   Default: 480\n";
     cout << "  -fs, -full   Enable fullscreen.                     Default: disabled\n";
-    cout << "  -map         Load specified map from data dir.      Default: map1\n";
+    cout << "  -map         Load specified map from data dir.      Default: disabled (map1 as a fallback)\n";
+    cout << "  -scenario    Load specified Scenario from data dir. Default: lv1\n";
     cout << "  -h, --help   Show this text \n";
     quitGame(4);
 }

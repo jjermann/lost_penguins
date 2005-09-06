@@ -210,10 +210,11 @@ void Player::idle(Uint16 dt) {
 }
 
 void Player::in_act() {
+    Mix_Chunk* au_act_bak=au_act;
     object_iterator i=enter.begin();
     while (i!=enter.end()) {
         if ((*i)->act(this)) {
-            sfxeng->playWAV(au_act);
+            sfxeng->playWAV(au_act_bak);
             return;
         }
         ++i;
@@ -283,6 +284,7 @@ void Player::crash(Uint16 dir) {
 }
 
 void Player::die() {
+    /* todo add box and ask for a continue / redo */
     scenario->failed=true;
     Character::die();
 }

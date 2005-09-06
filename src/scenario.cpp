@@ -13,8 +13,11 @@ Scenario::Scenario():
   area(NULL),
   player(NULL),
   failed(false),
-  name(""),
-  bgimage("") {
+  finnished(false),
+  mapname(""),
+  scenarioname(""),
+  bgimage(""),
+  currentmap(0) {
     cout << "Scenario: ImageCache...\n";
     imgcache=new ImageCache();
     cout << "Scenario: SoundCache...\n";
@@ -48,28 +51,31 @@ inline void Scenario::reinitMap() {
     if (background) delete background;
     if (physic) delete physic;
     physic=new PhysicHandler();
+    sfxeng->stopMusic();
     background=NULL;
     area=NULL;
     player=NULL;
     max_obj_num=0;
+    finnished=false;
+    failed=false;
 }
 
 void Scenario::newMap(string bgimage) {
     mapbuf.clear();
     mapbuf.push_back("Background "+bgimage);
 }
-int Scenario::loadMapBuf(string mapname) {
-    name=mapname;
+int Scenario::loadMapBuf(string mapn) {
+    mapname=mapn;
     ifstream mapfile;
     string tmpline;
-    string loadfile=config.datadir+name;
+    string loadfile=config.datadir+mapname;
 
     mapfile.open(loadfile.c_str());
     if (mapfile) {
         cout << "Loading new map: " << loadfile << endl;
     } else {
         cout << "Map loading failed: " << loadfile << " not found!\n";
-        return -2;
+        return 2;
     }
 
     mapbuf.clear();
@@ -144,14 +150,111 @@ int Scenario::reloadMap() {
         if (player==NULL) cout << "No player found!\n";
         return 0;
     } else {
-       cout << "Map loading failed: No background found!\n";
-       return -1;
+        cout << "Map loading failed: No background found!\n";
+        return 1;
     }
 }
 
-int Scenario::loadMap(string mapname) {
-    if (!loadMapBuf(mapname) && !reloadMap()) return 0;
-    else return -1;
+int Scenario::loadMap(string mapn) {
+    if (loadMapBuf(mapn)==0 && reloadMap()==0) return 0;
+    else return 1;
+}
+
+int Scenario::loadMap(Uint8 level) {
+    if (level<maps.size()) return loadMap(maps[level]+".cfg");
+    else return 3;
+}
+
+void Scenario::loadNextMap() {
+    if (failed) {
+        cout << "Reloading current map" << endl;
+        if (reloadMap()!=0) {
+            cout << "Reloading failed!" << endl;
+        }
+    } else if ((++currentmap)<maps.size()) {
+        cout << "Loading next map" << endl;
+        if (loadMap(maps[currentmap]+".cfg")!=0) {
+            cout << "Map loading failed!" << endl;
+        }
+    } else {
+        winScenario();
+    }
+}
+
+int Scenario::startScenario() {
+    currentmap=0;
+    return loadMap();
+}
+
+void Scenario::winScenario() {
+    cout << "You won the scenario!" << endl;
+    startScreen();
+}
+
+void Scenario::resetScenario() {
+    reinitMap();
+    currentmap=0;
+    maps.clear();
+    playlist.clear();
+}
+
+int Scenario::loadScenario(string scenarion) {
+    reinitMap();
+    maps.clear();
+    currentmap=0;
+
+    scenarioname=scenarion;
+    ifstream scenariofile;
+    string tmpline;
+    string loadfile=config.datadir+scenarioname;
+
+    scenariofile.open(loadfile.c_str());
+    if (scenariofile) {
+        cout << "Loading new scenario file: " << loadfile << endl;
+    } else {
+        cout << "Scenario file loading failed: " << loadfile << " not found!\n";
+        return 2;
+    }
+
+    string mname, arg1, arg2;
+    bool header=false;
+
+    //check every line
+    while (getline(scenariofile,tmpline)) {
+        //parse the header, always start a header with #HEADER and end it with #ENDHEADER!
+        if (header) {
+            mname.erase();
+            arg1.erase();
+            arg2.erase();
+            std::istringstream tmpstream(tmpline);
+            tmpstream >> mname >> arg1 >> arg2;
+            if (mname[0]=='#') {
+                if (mname=="#ENDHEADER") header=false;
+                continue;
+            }
+            continue;
+        }
+        mname.erase();
+        arg1=arg2="";
+        std::istringstream tmpstream(tmpline);
+        tmpstream >> mname >> arg1 >> arg2;
+
+        //Skip empty lines
+        if (mname.empty()) continue;
+        //Skip comments
+        if (mname[0]=='#') {
+            if (mname=="#HEADER") header=true;
+            continue;
+        }
+
+        maps.push_back(mname);
+    }
+
+    scenariofile.close();
+    scenariofile.clear();
+
+    if (maps.size()>0) return 0;
+    else return 1;
 }
 
 Uint16 Scenario::getDirection(const SDL_Rect& src, const SDL_Rect& dest) const {

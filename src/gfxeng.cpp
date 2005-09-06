@@ -278,11 +278,11 @@ void GraphicsEngine::toggleFPS() {
     }
 }
 
-void GraphicsEngine::setShowDebug() {
-    show_debug=true;
-}
-void GraphicsEngine::unsetShowDebug() {
-    show_debug=false;
+void GraphicsEngine::setShowDebug() { show_debug=true; }
+void GraphicsEngine::unsetShowDebug() { show_debug=false; }
+void GraphicsEngine::toggleShowDebug() {
+    if (show_debug) show_debug=false;
+    else show_debug=true;
 }
 
 void GraphicsEngine::toggleFullScreen() {

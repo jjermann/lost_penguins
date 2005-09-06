@@ -118,7 +118,8 @@ enum ConfigKey {
     KEY_BAR,
     KEY_FULL,
     KEY_QUIT,
-    KEY_NOANIM
+    KEY_NOANIM,
+    KEY_DEBUG
 };
 
 enum BasePointType {
@@ -165,9 +166,11 @@ struct Config {
     int audio_channels;
     string datadir;
     string map;
+    string scenario;
     string anim_file;
     SDLKey keybind[30];
     double lvlscale;
+    bool onlymap;
 };
 
 /**\brief Frame format
@@ -191,6 +194,8 @@ struct Image {
 
 //global functions
 //@{
+/// Resets everything and shows the start screen again
+void startScreen();
 /// Quits the game with a error code
 /// \return Error code, 0 if successfull
 int quitGame(int);

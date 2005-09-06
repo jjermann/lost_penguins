@@ -64,24 +64,35 @@ StartMenu::StartMenu(): Menu() {
 void StartMenu::act() {
     switch (currententry) {
     case 0: {
-        if ((config.map!="") && (scenario->loadMap(config.map)==0)) {
+        if (config.onlymap && (config.map!="") && (scenario->loadMap(config.map)==0)) {
             closeMenu();
             addGameMode(GAME_PLAY);
-            cout << "Starting game...\n" << endl;
+            cout << "Starting Scenario (1 map)...\n" << endl;
+        } else if (config.onlymap) {
+            cout << "Selected Map is invalid...\n" << endl;
+        } else if (scenario->loadScenario(config.scenario)==0 && scenario->startScenario()==0) {
+            closeMenu();
+            addGameMode(GAME_PLAY);
+            cout << "Starting Scenario...\n" << endl;
         } else {
-            cout << "Select a valid map first...\n" << endl;
+            cout << "Selected Scenario is invalid...\n" << endl;
         }
         break;
     }
     case 1: {
         //Add a proper Map creation menu, etc..., FIXME
-        if ((config.map!="") && (scenario->loadMap(config.map)==0)) {
+        if (config.onlymap && (config.map!="") && (scenario->loadMap(config.map)==0)) {
             closeMenu();
-            cout << "Starting editor...\n" << endl;
+            cout << "Starting Map Editor...\n" << endl;
             addGameMode(GAME_EDIT);
-            if (!editor) editor=new Editor();
+        } else if (config.onlymap) {
+            cout << "Selected Map is invalid...\n" << endl;
+        } else if (scenario->loadScenario(config.scenario)==0 && scenario->startScenario()==0) {
+            closeMenu();
+            addGameMode(GAME_EDIT);
+            cout << "Starting Map Editor...\n" << endl;
         } else {
-            cout << "Select a valid map first...\n" << endl;
+            cout << "Selected Scenario is invalid...\n" << endl;
         }
         break;
     }

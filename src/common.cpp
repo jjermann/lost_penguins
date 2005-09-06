@@ -1,5 +1,6 @@
 #include "common.h"
 #include "gfxeng.h"
+#include "editor.h"
 
 ImageCache* imgcache;
 SoundCache* sndcache;
@@ -51,6 +52,7 @@ void setGameMode(Uint8 newmode) {
         gfxeng->unsetShowDebug();
         SDL_ShowCursor(SDL_DISABLE);
     }
+    if (!editor) editor=new Editor();
 #ifdef DEBUG
     gfxeng->setShowDebug();
 #endif

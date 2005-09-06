@@ -1,7 +1,6 @@
 Bugs
 ====
- o rewrite zombie (bug in movement!, attacks too often, use events, etc...)
- o memleaks, segfaults?
+ o zombie (bug in movement!, attacks too often, use events, etc...)
  o key vs. trigger in map2
  o fall event (DONE?)
  o players die event segfault (eg. olaf)
@@ -10,19 +9,17 @@ Bugs
 Code
 ====
 
- o General:
+ o General / Interface:
      o (BIG) move drawing to the objects/menus/etc (create a draw() function)!
-     o pointers => references where possible
-     o Describe everything using Doxygen styles, move the documentation from
-      *.cpp to the headers...
-     o Idea: _all_ objects should have a "core" like the players (curpos thing)
-       This would help in many ways and should be a frame information and not an
-       image as done for players atm!
+     o pointers => shared_ptr/references where possible
+     o Complete the doxygen documentation and keep it up-to-date
      o Use Singletons
-     o IDEA: Introduce abstract classes for all engines and load the corresponding
-       concrete class depending on the game_mode instead of using if...
+     o Create a better class hierarchy so we don't have a class playground...
+     o Better handle the different game states and replace the current conditional model
+     o IDEA: Use boost to support better constructors (name loading)
+     o IDEA: create dynamical plugins for all objects (or compile all in)
 
- o Move/Fall/push/crash/collisions:
+ o Move/crash/collisions:
      o move should be a property of a common object
      o Hit should give either much more information or all logic should be done inside
        move (BAD)
@@ -33,34 +30,43 @@ Code
      o movement into a movable object should just move the object
      o if the movement is "forced" the moved object should be hit hard when it collides
        otherwise a hit would stop the moving object as well...
-       -> I have no idea about how the push should look like, elevators can be pushed
-          up, even though you don't collide with them on top
-       -> characters should be "pushable", eg. a stone that falls down pushes the
-          character down or better: an elevator should push the characters up
+     o I have no idea about how the push should look like, elevators can be pushed
+       up, even though you don't collide with them on top
+     o IDEA: characters should be "pushable", eg. a stone that falls down pushes the
+             character down or better: an elevator should push the characters up
      o In case of the elevator, the players are somehow "bound" to the elevator (ie.
        it's not like: the elevator moves, the character falls, but they move together)
        Solution: The elevators move function checks all objects it would
          hit, if they are pushable (not dense) they are moved first if
          possible. If it's not possible, do sthg else (stop the elevator and hit the
          object/whatever)...
+     o IMPROVE?: cleanup set_difference stuff => targets should be updated if
+       an object dies in an intelligent way...
+     o IDEA: merge otype and ctype and make all moves/etc depend on it
+     o IDEA (old): Add attributes:
+        - crushable (ie. weapon fart, jump, run destroys them?)
+        - bombable (ie. bomb destroys them)
+        - multistates? => bridges, door, stone block
+     o REWRITE: the whole crash system!!!
 
  o Events/Animations:
+     o Replace the anim_orig by a base rectangle
      o Invent more intelligent and more robust! fallback methods for animations
      o Allow empty animation, decouple (put more logic in) these relations:
        object (pos, draw?), game(time, state, handler), gfxeng(draw), animation(empty,
        frame, update, time, draw)?, frame, global/current (public, private) properties
-     o Make all events quite short, ie. almost all events become animation
-       events
      o IDEA: couple left and right animations somehow to reduce the code size
         - eg. set offsets for left, right, mleft, mright...
      o IDEA: just store one side and add some flipping logic to the image
           loading process...
-     o IDEA: change Animation* pointers to Animation (or references or auto_ptr),
-       leave only animation as a pointer and get the address each time...
-     o introduce animation events that play an animation and end when it's
-       finnished (always ESTATE_BUSY or abort animation?)
      o allow an event length depending on animation length, or: relate events more
        with animations!!!
+     o REWRITE: the whole event system!!!
+
+ o Scenario:
+     o Add some nice animation, text box, etc when a level was completed (including printing
+       the map name).
+     o Simplify the scenario class and drastically reduce the public variables!!
 
  o Placement code:
      o IDEA: allow moves from NULL and/or to NULL
@@ -70,37 +76,26 @@ Code
           illegaly placed!
         - the placement should somehow involve checkPlace...
 
- o (Plugins):
-     o move object creation code (addObjectByName) to the objects
-     o create dynamical plugins for all objects (or compile all in)
-
- o Ideas/Improvements:
-     o IMPROVE?: cleanup set_difference stuff => targets should be updated if
-       an object dies in an intelligent way...
-     o IDEA: merge otype and ctype and make all moves/etc depend on it
-     o IDEA (old): Add attributes:
-        - crushable (ie. weapon fart, jump, run destroys them?)
-        - bombable (ie. bomb destroys them)
-        - multistates? => bridges, door, stone block
-
 
 Progress
 ========
 
  o Monsters / AI: VERY BAD
  o Game functionality (): BAD
- o Events / Effects: BAD, MESS
+ o Events / Effects: BAD, MESS, NESTED
  o Object (including parameter) loading: BAD
- o Move logic: ACCEPTABLE, BUGGED
+ o Move logic: ACCEPTABLE, BUGGED, NESTED
  o Objects (players, items, etc): ACCEPTABLE
+ o Physic Handler: ACCEPTABLE, NESTED
  o Input Handler: ACCEPTABLE, WORKS
+ o Scenario: OK, MESS, WORKS
  o Collision detection: OK
  o Fall logic: GOOD
  o Animation / Image structure: VERY GOOD
 
 
-Features/Ideas/Wishlist
-=======================
+Feature Wishlist (Ideas)
+========================
 
  o Make water movements possible (eric)
  o improve the map editor even further

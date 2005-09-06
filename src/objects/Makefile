@@ -4,7 +4,7 @@ CXX_DEBUG = -g #-fno-inline
 CXX_OPT = #-O2 -march=pentium4 -ffast-math
 CXX_GAME = -DSDL_MIXER -DSDL_IMAGE -DALPHA -I ../
 SDL = `sdl-config --cflags`
-SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image -ldl -rdynamic
+SDL_LINK = `sdl-config --libs` -lSDL_mixer -lSDL_image #-ldl -rdynamic
 AR = ar
 
 OBJS  = baleog.o bomb.o door.o erik.o exit.o fang.o geyser.o heart.o\

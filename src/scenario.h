@@ -46,6 +46,8 @@ class Scenario {
         /// \param src Source rectangle
         /// \param dest Destination rectangle
         Uint16 getDirection(const SDL_Rect& src, const SDL_Rect& dest) const;
+        /// Load a new scenario
+        int loadScenario(string scenarioname);
 
         /// Background
         Background* background;
@@ -73,15 +75,27 @@ class Scenario {
         /// \param mapname Map file name without the data directory in it
         /// \return 0 if a Background was found, -1 if not, -2 if the loading failed
         int loadMap(string mapname);
+        int loadMap(Uint8 level=0);
+        void loadNextMap();
+        int startScenario();
+        void winScenario();
+        void resetScenario();
         /// True if the mission failed
         bool failed;
-        /// Name of the map file
-        string name;
+        /// True if the mission is finnished (suceeded or failed)
+        bool finnished;
+        /// Name of the current map file
+        string mapname;
+        /// Name of the scenario
+        string scenarioname;
         /// Name of the map background image
         string bgimage;
         std::vector<string> mapbuf;
         /// The number of created objects
         Uint32 max_obj_num;
+        std::vector<string> maps;
+        std::vector<string> playlist;
+        Uint8 currentmap;
     private:
         inline void reinitMap();
 };

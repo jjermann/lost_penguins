@@ -16,8 +16,6 @@ bool Exit::act(Object*) {
         if (!((*it)->isIn(pos))) return false;
         ++it;
     }
-    if (scenario->failed) cout << "Again?\n"; 
-    else cout << "You won!!!!\n";
-    quitGame(0);
+    scenario->finnished=true;
     return true;
 }
