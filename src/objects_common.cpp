@@ -153,14 +153,47 @@ EmptyAnimationPtr Object::loadAnimation(ParameterMap& parameters) {
     
     if (hasParam(parameters,"scale")) scale_factor=atof(parameters["scale"].c_str());
     if (hasParam(parameters,"bp_type")) {
-// TODO
+        if        (parameters["bp_type"].find("hleft")   !=string::npos) {
+            if      (parameters["bp_type"].find("vup")     !=string::npos) bp_type=BP_LU;
+            else if (parameters["bp_type"].find("vmiddle") !=string::npos) bp_type=BP_LM;
+            else if (parameters["bp_type"].find("vdown")   !=string::npos) bp_type=BP_LD;
+        } else if (parameters["bp_type"].find("hmiddle") !=string::npos) {
+            if      (parameters["bp_type"].find("vup")     !=string::npos) bp_type=BP_MU;
+            else if (parameters["bp_type"].find("vmiddle") !=string::npos) bp_type=BP_MM;
+            else if (parameters["bp_type"].find("vdown")   !=string::npos) bp_type=BP_MD;
+        } else if (parameters["bp_type"].find("hright")  !=string::npos) {
+            if      (parameters["bp_type"].find("vup")     !=string::npos) bp_type=BP_RU;
+            else if (parameters["bp_type"].find("vmiddle") !=string::npos) bp_type=BP_RM;
+            else if (parameters["bp_type"].find("vdown")   !=string::npos) bp_type=BP_RD;
+        }
     }
     if (hasParam(parameters,"type")) {
-// TODO
+        animation_type=NOTHING;
+        if (parameters["type"].find("once"))   animation_type|=ATYPE_ONCE;
+        if (parameters["type"].find("loop"))   animation_type|=ATYPE_LOOP;
+        if (parameters["type"].find("swing"))  animation_type|=ATYPE_SWING;
+        if (parameters["type"].find("step"))   animation_type|=ATYPE_STEP;
+        if (parameters["type"].find("reverse")) {
+            animation_type<<=1;
+        }
+        if (animation_type==NOTHING) animation_type=ATYPE_LOOP;
+        if (parameters["type"].find("switch")) animation_type|=ATYPE_ST_SWITCH;
     }
     if (hasParam(parameters,"fps")) fps=atof(parameters["fps"].c_str());
     if (hasParam(parameters,"allign_type")) {
-// TODO
+        if        (parameters["allign_type"].find("hleft")   !=string::npos) {
+            if      (parameters["allign_type"].find("vup")     !=string::npos) allign_type=AT_LU;
+            else if (parameters["allign_type"].find("vmiddle") !=string::npos) allign_type=AT_LM;
+            else if (parameters["allign_type"].find("vdown")   !=string::npos) allign_type=AT_LD;
+        } else if (parameters["allign_type"].find("hmiddle") !=string::npos) {
+            if      (parameters["allign_type"].find("vup")     !=string::npos) allign_type=AT_MU;
+            else if (parameters["allign_type"].find("vmiddle") !=string::npos) allign_type=AT_MM;
+            else if (parameters["allign_type"].find("vdown")   !=string::npos) allign_type=AT_MD;
+        } else if (parameters["allign_type"].find("hright")  !=string::npos) {
+            if      (parameters["allign_type"].find("vup")     !=string::npos) allign_type=AT_RU;
+            else if (parameters["allign_type"].find("vmiddle") !=string::npos) allign_type=AT_RM;
+            else if (parameters["allign_type"].find("vdown")   !=string::npos) allign_type=AT_RD;
+        }
     }
 
     /* Use animation name */
