@@ -39,6 +39,7 @@ ParameterMap Teleporter::default_parameters;
 ParameterMap Wall::default_parameters;
 ParameterMap Water::default_parameters;
 ParameterMap Wind::default_parameters;
+ParameterMap Geyser::default_parameters;
 ParameterMap Spike::default_parameters;
 
 ParameterMap Item::default_parameters;
@@ -101,6 +102,8 @@ void ObjectsPool::setDefaultObjParam() {
     Trigger::default_parameters["image"]="key.bmp";
     Trigger::default_parameters["key"]="Key";
     Trigger::default_parameters["target"]="Target";
+    Geyser::default_parameters=Object::default_parameters;
+    Geyser::default_parameters["aspeed"]="0";
     Spike::default_parameters=Object::default_parameters;
     Spike::default_parameters["direction"]="up";
 
