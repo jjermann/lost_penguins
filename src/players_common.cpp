@@ -15,58 +15,103 @@
 
 Player::Player(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Character(xcord,ycord,parameters),
-  currentitem(0),
-  anim_left(new EmptyAnimation(&anim_right)),
-  anim_right(new EmptyAnimation()),
-  anim_rock_left(new EmptyAnimation(&anim_left)),
-  anim_rock_right(new EmptyAnimation(&anim_right)),
-  anim_walk_left(new EmptyAnimation(&anim_left)),
-  anim_walk_right(new EmptyAnimation(&anim_right)),
-  anim_push_left(new EmptyAnimation(&anim_left)),
-  anim_push_right(new EmptyAnimation(&anim_right)),
-  anim_fall_left(new EmptyAnimation(&anim_left)),
-  anim_fall_right(new EmptyAnimation(&anim_right)),
-  anim_fall_fast_left(new EmptyAnimation(&anim_fall_left)),
-  anim_fall_fast_right(new EmptyAnimation(&anim_fall_right)),
-  anim_crash_left(new EmptyAnimation()),
-  anim_crash_right(new EmptyAnimation()),
-  anim_rope_left(new EmptyAnimation(&anim_left)),
-  anim_rope_right(new EmptyAnimation(&anim_right)),
-  anim_teleport_left(new EmptyAnimation()),
-  anim_teleport_right(new EmptyAnimation()),
-  anim_die_crash_left(new EmptyAnimation(&anim_die_bones_left)),
-  anim_die_crash_right(new EmptyAnimation(&anim_die_bones_right)),
-  anim_die_burn_left(new EmptyAnimation(&anim_die_bones_left)),
-  anim_die_burn_right(new EmptyAnimation(&anim_die_bones_right)),
-  anim_die_bones_left(new EmptyAnimation(&anim_die_bones_right)),
-  anim_die_bones_right(new EmptyAnimation()),
-  anim_die_elec_left(new EmptyAnimation(&anim_die_bones_left)),
-  anim_die_elec_right(new EmptyAnimation(&anim_die_bones_right)),
-  anim_die_spike_left(new EmptyAnimation(&anim_die_bones_left)),
-  anim_die_spike_right(new EmptyAnimation(&anim_die_bones_right)),
-  anim_die_water_left(new EmptyAnimation(&anim_die_bones_left)),
-  anim_die_water_right(new EmptyAnimation(&anim_die_bones_right)),
-  anim_fall_middle(new EmptyAnimation(&anim_fall_right)),
-  anim_climb(new EmptyAnimation(&anim_right)),
-  anim_bar(new EmptyAnimation(&anim_right)) {
+  currentitem(0) {
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         items[i]=NULL;
     }
     state=STATE_FALL;
     otype|=OTYPE_PLAYER;
     enemy_types|=OTYPE_MONSTER;
-    au_land=scenario->sndcache->loadWAV("dizzy.wav");
-    au_act=scenario->sndcache->loadWAV("button.wav");
-    au_useerror=scenario->sndcache->loadWAV("useerror.wav");
-    au_newitem=scenario->sndcache->loadWAV("pickup.wav");
-    au_hit=scenario->sndcache->loadWAV("vikhit.wav");
-    au_elec=scenario->sndcache->loadWAV("elecdth.wav");
-    au_drown=scenario->sndcache->loadWAV("drown.wav");
-    au_fire=scenario->sndcache->loadWAV("fireball.wav");
-    au_die=scenario->sndcache->loadWAV("bones.wav");
-    au_heal=scenario->sndcache->loadWAV("usefood1.wav");
 
     /* Parameters */
+    if (hasParam(parameters,"anim_left")) anim_left=loadAnimation(getParameters(parameters["anim_left"],':'));
+      else anim_left.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_right")) anim_right=loadAnimation(getParameters(parameters["anim_right"],':'));
+      else anim_right.reset(new EmptyAnimation(&anim_orig));
+    if (hasParam(parameters,"anim_rock_left")) anim_rock_left=loadAnimation(getParameters(parameters["anim_rock_left"],':'));
+      else anim_rock_left.reset(new EmptyAnimation(&anim_left));
+    if (hasParam(parameters,"anim_rock_right")) anim_rock_right=loadAnimation(getParameters(parameters["anim_rock_right"],':'));
+      else anim_rock_right.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_walk_left")) anim_walk_left=loadAnimation(getParameters(parameters["anim_walk_left"],':'));
+      else anim_walk_left.reset(new EmptyAnimation(&anim_left));
+    if (hasParam(parameters,"anim_walk_right")) anim_walk_right=loadAnimation(getParameters(parameters["anim_walk_right"],':'));
+      else anim_walk_right.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_push_left")) anim_push_left=loadAnimation(getParameters(parameters["anim_push_left"],':'));
+      else anim_push_left.reset(new EmptyAnimation(&anim_left));
+    if (hasParam(parameters,"anim_push_right")) anim_push_right=loadAnimation(getParameters(parameters["anim_push_right"],':'));
+      else anim_push_right.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_fall_left")) anim_fall_left=loadAnimation(getParameters(parameters["anim_fall_left"],':'));
+      else anim_fall_left.reset(new EmptyAnimation(&anim_left));
+    if (hasParam(parameters,"anim_fall_right")) anim_fall_right=loadAnimation(getParameters(parameters["anim_fall_right"],':'));
+      else anim_fall_right.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_fall_fast_left")) anim_fall_fast_left=loadAnimation(getParameters(parameters["anim_fall_fast_left"],':'));
+      else anim_fall_fast_left.reset(new EmptyAnimation(&anim_fall_left));
+    if (hasParam(parameters,"anim_fall_fast_right")) anim_fall_fast_right=loadAnimation(getParameters(parameters["anim_fall_fast_right"],':'));
+      else anim_fall_fast_right.reset(new EmptyAnimation(&anim_fall_right));
+    if (hasParam(parameters,"anim_crash_left")) anim_crash_left=loadAnimation(getParameters(parameters["anim_crash_left"],':'));
+      else anim_crash_left.reset(new EmptyAnimation());
+    if (hasParam(parameters,"anim_crash_right")) anim_crash_right=loadAnimation(getParameters(parameters["anim_crash_right"],':'));
+      else anim_crash_right.reset(new EmptyAnimation());
+    if (hasParam(parameters,"anim_rope_left")) anim_rope_left=loadAnimation(getParameters(parameters["anim_rope_left"],':'));
+      else anim_rope_left.reset(new EmptyAnimation(&anim_left));
+    if (hasParam(parameters,"anim_rope_right")) anim_rope_right=loadAnimation(getParameters(parameters["anim_rope_right"],':'));
+      else anim_rope_right.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_teleport_left")) anim_teleport_left=loadAnimation(getParameters(parameters["anim_teleport_left"],':'));
+      else anim_teleport_left.reset(new EmptyAnimation());
+    if (hasParam(parameters,"anim_teleport_left")) anim_teleport_left=loadAnimation(getParameters(parameters["anim_teleport_left"],':'));
+      else anim_teleport_left.reset(new EmptyAnimation());
+    if (hasParam(parameters,"anim_die_crash_left")) anim_die_crash_left=loadAnimation(getParameters(parameters["anim_die_crash_left"],':'));
+      else anim_die_crash_left.reset(new EmptyAnimation(&anim_die_bones_left));
+    if (hasParam(parameters,"anim_die_crash_left")) anim_die_crash_left=loadAnimation(getParameters(parameters["anim_die_crash_left"],':'));
+      else anim_die_crash_left.reset(new EmptyAnimation(&anim_die_bones_right));
+    if (hasParam(parameters,"anim_die_burn_left")) anim_die_burn_left=loadAnimation(getParameters(parameters["anim_die_burn_left"],':'));
+      else anim_die_burn_left.reset(new EmptyAnimation(&anim_die_bones_right));
+    if (hasParam(parameters,"anim_die_burn_left")) anim_die_burn_left=loadAnimation(getParameters(parameters["anim_die_burn_left"],':'));
+      else anim_die_burn_left.reset(new EmptyAnimation(&anim_die_bones_right));
+    if (hasParam(parameters,"anim_die_bones_left")) anim_die_bones_left=loadAnimation(getParameters(parameters["anim_die_bones_left"],':'));
+      else anim_die_bones_left.reset(new EmptyAnimation());
+    if (hasParam(parameters,"anim_die_bones_left")) anim_die_bones_left=loadAnimation(getParameters(parameters["anim_die_bones_left"],':'));
+      else anim_die_bones_left.reset(new EmptyAnimation());
+    if (hasParam(parameters,"anim_die_elec_left")) anim_die_elec_left=loadAnimation(getParameters(parameters["anim_die_elec_left"],':'));
+      else anim_die_elec_left.reset(new EmptyAnimation(&anim_die_bones_left));
+    if (hasParam(parameters,"anim_die_elec_right")) anim_die_elec_right=loadAnimation(getParameters(parameters["anim_die_elec_right"],':'));
+      else anim_die_elec_right.reset(new EmptyAnimation(&anim_die_bones_right));
+    if (hasParam(parameters,"anim_die_spike_left")) anim_die_spike_left=loadAnimation(getParameters(parameters["anim_die_spike_left"],':'));
+      else anim_die_spike_left.reset(new EmptyAnimation(&anim_die_bones_left));
+    if (hasParam(parameters,"anim_die_spike_right")) anim_die_spike_right=loadAnimation(getParameters(parameters["anim_die_spike_right"],':'));
+      else anim_die_spike_right.reset(new EmptyAnimation(&anim_die_bones_right));
+    if (hasParam(parameters,"anim_die_water_left")) anim_die_water_left=loadAnimation(getParameters(parameters["anim_die_water_left"],':'));
+      else anim_die_water_left.reset(new EmptyAnimation(&anim_die_bones_left));
+    if (hasParam(parameters,"anim_die_water_right")) anim_die_water_right=loadAnimation(getParameters(parameters["anim_die_water_right"],':'));
+      else anim_die_water_right.reset(new EmptyAnimation(&anim_die_bones_right));
+    if (hasParam(parameters,"anim_fall_middle")) anim_fall_middle=loadAnimation(getParameters(parameters["anim_fall_middle"],':'));
+      else anim_fall_middle.reset(new EmptyAnimation(&anim_fall_right));
+    if (hasParam(parameters,"anim_climb")) anim_climb=loadAnimation(getParameters(parameters["anim_climb"],':'));
+      else anim_climb.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_bar")) anim_bar=loadAnimation(getParameters(parameters["anim_bar"],':'));
+      else anim_bar.reset(new EmptyAnimation(&anim_right));
+
+    if (hasParam(parameters,"audio_land")) au_land=scenario->sndcache->loadWAV(parameters["audio_land"]);
+      else au_land=scenario->sndcache->loadWAV("dizzy.wav");
+    if (hasParam(parameters,"audio_act")) au_land=scenario->sndcache->loadWAV(parameters["audio_act"]);
+      else au_act=scenario->sndcache->loadWAV("button.wav");
+    if (hasParam(parameters,"audio_useerror")) au_land=scenario->sndcache->loadWAV(parameters["audio_useerror"]);
+      else au_useerror=scenario->sndcache->loadWAV("useerror.wav");
+    if (hasParam(parameters,"audio_newitem")) au_land=scenario->sndcache->loadWAV(parameters["audio_newitem"]);
+      else au_newitem=scenario->sndcache->loadWAV("pickup.wav");
+    if (hasParam(parameters,"audio_hit")) au_land=scenario->sndcache->loadWAV(parameters["audio_hit"]);
+      else au_hit=scenario->sndcache->loadWAV("vikhit.wav");
+    if (hasParam(parameters,"audio_elec")) au_land=scenario->sndcache->loadWAV(parameters["audio_elec"]);
+      else au_elec=scenario->sndcache->loadWAV("elecdth.wav");
+    if (hasParam(parameters,"audio_drown")) au_land=scenario->sndcache->loadWAV(parameters["audio_drown"]);
+      else au_drown=scenario->sndcache->loadWAV("drown.wav");
+    if (hasParam(parameters,"audio_fire")) au_land=scenario->sndcache->loadWAV(parameters["audio_fire"]);
+      else au_fire=scenario->sndcache->loadWAV("fireball.wav");
+    if (hasParam(parameters,"audio_die")) au_land=scenario->sndcache->loadWAV(parameters["audio_die"]);
+      else au_die=scenario->sndcache->loadWAV("bones.wav");
+    if (hasParam(parameters,"audio_heal")) au_land=scenario->sndcache->loadWAV(parameters["audio_heal"]);
+      else au_heal=scenario->sndcache->loadWAV("usefood1.wav");
+
     if (!hasParam(parameters,"maxhealth")) maxhealth=4;
     if (!hasParam(parameters,"health")) health=min(3,(int)maxhealth);
     if (!hasParam(parameters,"maxspeedx")) maxspeedx=300;
@@ -313,7 +358,9 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
         //should be !=NULL or sthg is wrong with the placement code...
         ParameterMap deadplr_parameters;
         deadplr_parameters["image"]="dead_player.bmp";
-        Character* deadplr=scenario->pool->addCharacter(new DeadPlayer(pos.x,pos.y,deadplr_parameters));
+        deadplr_parameters["w"]=10;
+        deadplr_parameters["h"]=10;
+        Character* deadplr=dynamic_cast<Character*>(scenario->pool->addObjectbyName("DeadPlayer",pos.x,pos.y,deadplr_parameters));
         switch(weap.getSubType()) {
             case WS_FIRE: {
                 if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,(state&STATE_LEFT) ? anim_die_burn_left : anim_die_burn_right));

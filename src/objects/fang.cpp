@@ -12,17 +12,26 @@ Fang::Fang(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Player(xcord,ycord,parameters),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
-    anim_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),4);
-    anim_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),4);
-    anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),8);
-    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),8);
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),8,BP_MD,ATYPE_ONCE);
-    anim_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),8,BP_MD,ATYPE_ONCE);
-    au_hit=scenario->sndcache->loadWAV("wolfhit.wav");
-    au_claw=scenario->sndcache->loadWAV("wolfjmp1.wav");
-    au_jump=scenario->sndcache->loadWAV("fangjump.wav");
+
+    /* Parameters */
+    if (!hasParam(parameters,"anim_left"))          anim_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),4);
+    if (!hasParam(parameters,"anim_right"))         anim_right=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_right.png"),4);
+    if (!hasParam(parameters,"anim_walk_left"))     anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_left.png"),8);
+    if (!hasParam(parameters,"anim_walk_right"))    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_walk_right.png"),8);
+    if (!hasParam(parameters,"anim_crash_left"))    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    if (!hasParam(parameters,"anim_crash_right"))   anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+
+    if (hasParam(parameters,"anim_fang_claw_left")) anim_fang_claw_left=loadAnimation(getParameters(parameters["anim_fang_claw_left"],':'));
+      else anim_fang_claw_left=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_left.png"),8,BP_MD,ATYPE_ONCE);
+    if (hasParam(parameters,"anim_fang_claw_right")) anim_fang_claw_right=loadAnimation(getParameters(parameters["anim_fang_claw_right"],':'));
+      else anim_fang_claw_right=loadAnimation(scenario->imgcache->loadImage(8,"Fang_Clawslash_right.png"),8,BP_MD,ATYPE_ONCE);
+
+    if (!hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV("wolfhit.wav");
+
+    if (hasParam(parameters,"audio_claw")) au_claw=scenario->sndcache->loadWAV(parameters["audio_claw"]);
+      else au_claw=scenario->sndcache->loadWAV("wolfjmp1.wav");
+    if (hasParam(parameters,"audio_jump")) au_jump=scenario->sndcache->loadWAV(parameters["audio_jump"]);
+      else au_jump=scenario->sndcache->loadWAV("fangjump.wav");
 }
 
 Fang::~Fang() { }
@@ -82,7 +91,7 @@ void Fang::in_sp1() {
 }
 
 void Fang::in_sp2() {
-    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? anim_claw_left : anim_claw_right));
+    setEvent(new EAttack(this,10,&weapon,(state&STATE_LEFT) ? DIR_LEFT : DIR_RIGHT,10,enemy_types,0,0,au_claw,(state&STATE_LEFT) ? anim_fang_claw_left : anim_fang_claw_right));
 }
 
 void Fang::crash(Uint16 dir) {

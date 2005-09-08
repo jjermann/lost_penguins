@@ -42,16 +42,16 @@ class Olaf : public Player {
         /// \return True if successfull
         inline bool trySmall(bool small);
         //@{
-        EmptyAnimationPtr anim_small_left;
-        EmptyAnimationPtr anim_small_right;
-        EmptyAnimationPtr anim_walk_small_left;
-        EmptyAnimationPtr anim_walk_small_right;
-        EmptyAnimationPtr anim_shield_left;
-        EmptyAnimationPtr anim_shield_right;
-        EmptyAnimationPtr anim_walk_shield_left;
-        EmptyAnimationPtr anim_walk_shield_right;
-        EmptyAnimationPtr anim_fall_shield_left;
-        EmptyAnimationPtr anim_fall_shield_right;
+        EmptyAnimationPtr anim_olaf_small_left;
+        EmptyAnimationPtr anim_olaf_small_right;
+        EmptyAnimationPtr anim_olaf_walk_small_left;
+        EmptyAnimationPtr anim_olaf_walk_small_right;
+        EmptyAnimationPtr anim_olaf_shield_left;
+        EmptyAnimationPtr anim_olaf_shield_right;
+        EmptyAnimationPtr anim_olaf_walk_shield_left;
+        EmptyAnimationPtr anim_olaf_walk_shield_right;
+        EmptyAnimationPtr anim_olaf_fall_shield_left;
+        EmptyAnimationPtr anim_olaf_fall_shield_right;
         //@}
         //@{
         Mix_Chunk* au_small;

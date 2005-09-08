@@ -13,15 +13,17 @@
 Monster::Monster(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Character(xcord,ycord,parameters),
   Dai(0),
-  Dattack(0),
-  anim_left(new EmptyAnimation(&anim_right)),
-  anim_right(new EmptyAnimation()) {
+  Dattack(0) {
     state=STATE_FALL;
     otype|=OTYPE_MONSTER;
     enemy_types|=OTYPE_PLAYER;
     dense_types|=OTYPE_PLAYER;
 
     /* Parameters */
+    if (hasParam(parameters,"anim_left")) anim_left=loadAnimation(getParameters(parameters["anim_left"],':'));
+      else anim_left.reset(new EmptyAnimation(&anim_right));
+    if (hasParam(parameters,"anim_right")) anim_right=loadAnimation(getParameters(parameters["anim_right"],':'));
+      else anim_right.reset(new EmptyAnimation(&anim_orig));
     if (!hasParam(parameters,"maxhealth")) maxhealth=1;
     if (!hasParam(parameters,"health")) health=min(1,(int)maxhealth);
     if (!hasParam(parameters,"maxspeedx")) maxspeedx=50;

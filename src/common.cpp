@@ -34,6 +34,32 @@ string itos(int i) {
     return s.str();
 }
 
+ParameterMap getFileParameters(const string& filelist) {
+    istringstream filelist_s(filelist);
+    ifstream file;
+    string filename,parameterlist;
+    ParameterMap file_parameters, line_parameters;
+    ParameterMap::iterator it;
+
+    while (std::getline(filelist_s,filename,':')) {
+        file.open((config.datadir+filename).c_str());
+        if (!file) continue;
+        while (getline(file,parameterlist)) {
+            if (parameterlist.empty()) continue;
+            if (parameterlist[0]=='#') continue;
+            line_parameters=getParameters(parameterlist);
+            it=line_parameters.begin();
+            while (it!=line_parameters.end()) {
+                file_parameters[(*it).first]=(*it).second;
+                ++it;
+            }
+        }
+        file.close();
+        file.clear();
+    }
+    return file_parameters;
+}
+
 ParameterMap getParameters(const string& parameterlist, char delim, char delimsub) {
     ParameterMap parameters;
     istringstream parameterlist_s(parameterlist);
@@ -79,7 +105,7 @@ string putParameters(const ParameterMap& parameters, char delim, char delimsub) 
     return parameterlist;
 }
 
-bool hasParam(ParameterMap& parameters, const string& str) {
+bool hasParam(const ParameterMap& parameters, const string& str) {
     if (parameters.find(str)!=parameters.end()) return true;
     else return false;
 }

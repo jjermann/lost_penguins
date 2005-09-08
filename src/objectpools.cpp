@@ -77,6 +77,7 @@ ObjectsPool::~ObjectsPool() {
     while (i!=objectspool.end()) i=removeObject(i);
 }
 void ObjectsPool::setDefaultObjParam() {
+    Object::default_parameters["file"]="";
     Object::default_parameters["name"]="";
     Object::default_parameters["w"]="";
     Object::default_parameters["h"]="";
@@ -122,7 +123,7 @@ void ObjectsPool::setDefaultObjParam() {
     Bomb::default_parameters["audio_bomb"]="explsn.wav";
 
     Character::default_parameters=Object::default_parameters;
-    Character::default_parameters["maxhealth"]=1;
+    Character::default_parameters["maxhealth"]="1";
     Character::default_parameters["health"]="1";
     Character::default_parameters["maxspeedx"]="300";
     Character::default_parameters["maxspeedy"]="0";
@@ -133,7 +134,9 @@ void ObjectsPool::setDefaultObjParam() {
     TriggeredBomb::default_parameters["audio_bomb"]="explsn.wav";
 
     Monster::default_parameters=Character::default_parameters;
-    Monster::default_parameters["maxhealth"]=1;
+    Monster::default_parameters["anim_left"]="";
+    Monster::default_parameters["anim_right"]="";
+    Monster::default_parameters["maxhealth"]="1";
     Monster::default_parameters["health"]="1";
     Monster::default_parameters["maxspeedx"]="50";
     Monster::default_parameters["maxspeedy"]="0";
@@ -151,11 +154,32 @@ void ObjectsPool::setDefaultObjParam() {
     Player::default_parameters["health"]="3";
     Player::default_parameters["maxspeedx"]="300";
     Player::default_parameters["maxspeedy"]="200";
+    Player::default_parameters["audio_land"]="dizzy.wav";
+    Player::default_parameters["audio_act"]="button.wav";
+    Player::default_parameters["audio_useerror"]="useerror.wav";
+    Player::default_parameters["audio_newitem"]="pickup.wav";
+    Player::default_parameters["audio_hit"]="vikhit.wav";
+    Player::default_parameters["audio_elec"]="elecdth.wav";
+    Player::default_parameters["audio_drown"]="drown.wav";
+    Player::default_parameters["audio_fire"]="fireball.wav";
+    Player::default_parameters["audio_die"]="bones.wav";
+    Player::default_parameters["audio_heal"]="usefood1.wav";
+
     Erik::default_parameters=Player::default_parameters;
+    Erik::default_parameters["audio_jump"]="rboots.wav";
+    Erik::default_parameters["audio_run"]="";
     Olaf::default_parameters=Player::default_parameters;
+    Olaf::default_parameters["audio_small"]="blob.wav";
+    Olaf::default_parameters["audio_big"]="unblob.wav";
+    Olaf::default_parameters["audio_fart"]="fart1.wav";
     Scorch::default_parameters=Player::default_parameters;
+    Scorch::default_parameters["audio_swing"]="flapwngs.wav";
+    Scorch::default_parameters["audio_tired"]="flwings.wav";
     Fang::default_parameters=Player::default_parameters;
+    Fang::default_parameters["audio_jump"]="fangjump.wav";
+    Fang::default_parameters["audio_claw"]="wolfjmp1.wav";
     Baleog::default_parameters=Player::default_parameters;
+    Baleog::default_parameters["audio_sword"]="swrdsw2.wav";
 }
 
 const ParameterMap& ObjectsPool::getDefaultObjParambyName(const string& obj) {
@@ -190,7 +214,18 @@ const ParameterMap& ObjectsPool::getDefaultObjParambyName(const string& obj) {
     else return empty_parameter;
 }
 
-Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, ParameterMap& parameters) {
+Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, ParameterMap& objparam) {
+    ParameterMap parameters;
+    if (hasParam(objparam,"file")) {
+        parameters=getFileParameters(objparam["file"]);
+        ParameterMap::iterator it=objparam.begin();
+        while (it!=objparam.end()) {
+            if ((*it).first!="file") parameters[(*it).first]=(*it).second;
+            ++it;
+        }
+    } else {
+        parameters=objparam;
+    }
     //Set names...
     if (!hasParam(parameters,"name")) parameters["name"]=getNextObjectName(obj);
 
@@ -207,6 +242,7 @@ Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, Para
     else if (obj=="Key")            return (addObject(new Key(x,y,parameters)));
     else if (obj=="Bomb")           return (addObject(new Bomb(x,y,parameters)));
     else if (obj=="TriggeredBomb")  return (addCharacter(new TriggeredBomb(x,y,parameters)));
+    else if (obj=="DeadPlayer")     return (addCharacter(new DeadPlayer(x,y,parameters)));
     else if (obj=="Erik")           return (addPlayer(new Erik(x,y,parameters)));
     else if (obj=="Olaf")           return (addPlayer(new Olaf(x,y,parameters)));
     else if (obj=="Baleog")         return (addPlayer(new Baleog(x,y,parameters)));

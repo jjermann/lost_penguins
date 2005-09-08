@@ -13,11 +13,12 @@
 Zombie::Zombie(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Monster(xcord,ycord,parameters),
   T_Attack_Bite(1500) {
-    anim_left=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_left.bmp"),2,BP_MD,ATYPE_LOOP,2);
-    anim_right=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_right.bmp"),2,BP_MD,ATYPE_LOOP,2);
     weapon=Weapon(-1,W_STRIKE);
 
     /* Parameters */
+    if (!hasParam(parameters,"anim_left"))  anim_left=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_left.bmp"),2,BP_MD,ATYPE_LOOP,2);
+    if (!hasParam(parameters,"anim_right")) anim_right=loadAnimation(scenario->imgcache->loadImage(2,"olaf1_right.bmp"),2,BP_MD,ATYPE_LOOP,2);
+
     if (!hasParam(parameters,"maxspeedx")) maxspeedx=80;
     if (hasParam(parameters,"audio_attack")) au_attack=scenario->sndcache->loadWAV(parameters["audio_attack"]);
       else au_attack=scenario->sndcache->loadWAV("clang.wav");

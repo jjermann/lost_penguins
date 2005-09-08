@@ -1,0 +1,51 @@
+#ERIK
+anim_left=	            name=erik_idle_left:          scale=2:  bp_type=rightdown
+anim_right=                 name=erik_idle_right:         scale=2:  bp_type=leftdown
+anim_rock_left=             name=erik_rock_left:          scale=2:  bp_type=rightdown
+anim_rock_right=            name=erik_rock_right:         scale=2:  bp_type=leftdown
+anim_walk_left=             name=erik_walk_left:          scale=2:  bp_type=rightdown  
+anim_walk_right=            name=erik_walk_right:         scale=2:  bp_type=leftdown
+anim_push_left=             name=erik_push_left:          scale=2:  bp_type=rightdown  
+anim_push_right=            name=erik_push_right:         scale=2:  bp_type=leftdown
+anim_fall_middle=           name=erik_fall_middle:        scale=2
+anim_fall_left=             name=erik_fall_left:          scale=2:  bp_type=rightdown
+anim_fall_right=            name=erik_fall_right:         scale=2:  bp_type=leftdown
+anim_fall_fast_left=        name=erik_fall_fast_left:     scale=2:  bp_type=rightdown
+anim_fall_fast_right=       name=erik_fall_fast_right:    scale=2:  bp_type=leftdown
+anim_crash_left=            name=erik_crash_left:         scale=2:  bp_type=rightdown:    type=once
+anim_crash_right=           name=erik_crash_right:        scale=2:  bp_type=leftdown:     type=once
+anim_rope_left=             name=erik_rope_left:          scale=2:  bp_type=rightdown
+anim_rope_right=            name=erik_rope_right:         scale=2:  bp_type=leftdown
+anim_teleport_left=         name=erik_teleport_left:      scale=2:  bp_type=rightdown:    type=once
+anim_teleport_right=        name=erik_teleport_right:     scale=2:  bp_type=leftdown:     type=once
+anim_die_crash_left=        name=erik_die_crash_left:     scale=2:  bp_type=rightdown:    type=once
+anim_die_crash_right=       name=erik_die_crash_right:    scale=2:  bp_type=leftdown:     type=once
+anim_die_burn_left=         name=erik_die_burn_left:      scale=2:  bp_type=rightdown:    type=once
+anim_die_burn_right=        name=erik_die_burn_right:     scale=2:  bp_type=leftdown:     type=once
+anim_die_bones_left=        name=erik_die_bones_left:     scale=2:  bp_type=rightdown:    type=once
+anim_die_bones_right=       name=erik_die_bones_right:    scale=2:  bp_type=leftdown:     type=once
+anim_die_elec_left=         name=erik_die_elec_left:      scale=2:  bp_type=rightdown:    type=once
+anim_die_elec_right=        name=erik_die_elec_right:     scale=2:  bp_type=leftdown:     type=once
+anim_die_spike_left=        name=erik_die_spike_left:     scale=2:  bp_type=rightdown:    type=once
+anim_die_spike_right=       name=erik_die_spike_right:    scale=2:  bp_type=leftdown:     type=once
+anim_bar=                   name=bar_erik:                scale=2:                        type=once
+#anim_die_water and anim_climb not specified
+
+anim_erik_jump_left=        name=erik_jump_left:          scale=2:  bp_type=rightdown:    type=once
+anim_erik_jump_right=       name=erik_jump_right:         scale=2:  bp_type=leftdown:     type=once
+anim_erik_jump2_left=       name=erik_jump2_left:         scale=2:  bp_type=rightdown:    type=once
+anim_erik_jump2_right=      name=erik_jump2_right:        scale=2:  bp_type=leftdown:     type=once
+anim_erik_start_run_left=   name=erik_start_run_left:     scale=2:  bp_type=rightdown:    type=once
+anim_erik_start_run_right=  name=erik_start_run_right:    scale=2:  bp_type=leftdown:     type=once    
+anim_erik_run_left=         name=erik_run_left:           scale=2:  bp_type=rightdown:    type=once
+anim_erik_run_right=        name=erik_run_right:          scale=2:  bp_type=leftdown:     type=once    
+anim_erik_swim_left=        name=erik_swim_left:          scale=2:  bp_type=rightdown:    type=once         
+anim_erik_swim_right=       name=erik_swim_right:         scale=2:  bp_type=leftdown:     type=once    
+anim_erik_swim_up_left=     name=erik_swim_up_left:       scale=2:  bp_type=rightdown:    type=once
+anim_erik_swim_up_right=    name=erik_swim_up_right:      scale=2:  bp_type=leftdown:     type=once     
+anim_erik_hit_water_left=   name=erik_hit_water_left:     scale=2:  bp_type=rightdown:    type=once       
+anim_erik_hit_water_right=  name=erik_hit_water_right:    scale=2:  bp_type=leftdown:     type=once
+
+au_hit=                     erikhit.wav
+au_jump=                    rboots.wav
+#au_run not specified

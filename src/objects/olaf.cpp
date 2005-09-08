@@ -12,30 +12,47 @@
 Olaf::Olaf(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Player(xcord,ycord,parameters),
   fart(V_FART) {
-    anim_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_left.bmp"));
-    anim_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_right.bmp"));
-    anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_left.png"),8);
-    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_right.png"),8);
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_die_bones_left=loadAnimation(scenario->imgcache->loadImage(60,0,"kuru.bmp"),12,BP_MD,ATYPE_ONCE,25);
+    /* Parameters */
+    if (!hasParam(parameters,"anim_left"))              anim_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_left.bmp"));
+    if (!hasParam(parameters,"anim_right"))             anim_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_right.bmp"));
+    if (!hasParam(parameters,"anim_walk_left"))         anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_left.png"),8);
+    if (!hasParam(parameters,"anim_walk_right"))        anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_right.png"),8);
+    if (!hasParam(parameters,"anim_crash_left"))        anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    if (!hasParam(parameters,"anim_crash_right"))       anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    if (!hasParam(parameters,"anim_die_bones_left"))    anim_die_bones_left=loadAnimation(scenario->imgcache->loadImage(60,0,"kuru.bmp"),12,BP_MD,ATYPE_ONCE,25);
 
-    anim_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),1);
-    anim_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),1);
-    anim_walk_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),7,BP_MD,ATYPE_LOOP,3.5);
-    anim_walk_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),7,BP_MD,ATYPE_LOOP,3.5);
-    anim_shield_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_left.bmp"));
-    anim_shield_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_right.bmp"));
-    anim_walk_shield_left.reset(new EmptyAnimation(&anim_shield_left));
-    anim_walk_shield_right.reset(new EmptyAnimation(&anim_shield_right));
-    anim_fall_shield_left.reset(new EmptyAnimation(&anim_shield_left));
-    anim_fall_shield_right.reset(new EmptyAnimation(&anim_shield_right));
-    au_small=scenario->sndcache->loadWAV("blob.wav");
-    au_big=scenario->sndcache->loadWAV("unblob.wav");
-    au_fart=scenario->sndcache->loadWAV("fart1.wav");
-    au_hit=scenario->sndcache->loadWAV("fathit.wav");
+    if (hasParam(parameters,"anim_olaf_small_left"))          anim_olaf_small_left=loadAnimation(getParameters(parameters["anim_olaf_small_left"],':'));
+      else anim_olaf_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),1);
+    if (hasParam(parameters,"anim_olaf_small_right"))         anim_olaf_small_right=loadAnimation(getParameters(parameters["anim_olaf_small_right"],':'));
+      else anim_olaf_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),1);
+    if (hasParam(parameters,"anim_olaf_walk_small_left"))     anim_olaf_walk_small_left=loadAnimation(getParameters(parameters["anim_olaf_walk_small_left"],':'));
+      else anim_olaf_walk_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),7,BP_MD,ATYPE_LOOP,3.5);
+    if (hasParam(parameters,"anim_olaf_walk_small_right"))    anim_olaf_walk_small_right=loadAnimation(getParameters(parameters["anim_olaf_walk_small_right"],':'));
+      else anim_olaf_walk_small_right=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_right.png"),7,BP_MD,ATYPE_LOOP,3.5);
+    if (hasParam(parameters,"anim_olaf_shield_left"))         anim_olaf_shield_left=loadAnimation(getParameters(parameters["anim_olaf_shield_left"],':'));
+      else anim_olaf_shield_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_left.bmp"));
+    if (hasParam(parameters,"anim_olaf_shield_right"))        anim_olaf_shield_right=loadAnimation(getParameters(parameters["anim_olaf_shield_right"],':'));
+      else anim_olaf_shield_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_fall_shield_right.bmp"));
+    if (hasParam(parameters,"anim_olaf_walk_shield_left"))    anim_olaf_walk_shield_left=loadAnimation(getParameters(parameters["anim_olaf_walk_shield_left"],':'));
+      else anim_olaf_walk_shield_left.reset(new EmptyAnimation(&anim_olaf_shield_left));
+    if (hasParam(parameters,"anim_olaf_walk_shield_right"))   anim_olaf_walk_shield_right=loadAnimation(getParameters(parameters["anim_olaf_walk_shield_right"],':'));
+      else anim_olaf_walk_shield_right.reset(new EmptyAnimation(&anim_olaf_shield_right));
+    if (hasParam(parameters,"anim_olaf_fall_shield_left"))    anim_olaf_fall_shield_left=loadAnimation(getParameters(parameters["anim_olaf_fall_shield_left"],':'));
+      else anim_olaf_fall_shield_left.reset(new EmptyAnimation(&anim_olaf_shield_left));
+    if (hasParam(parameters,"anim_olaf_fall_shield_right"))   anim_olaf_fall_shield_right=loadAnimation(getParameters(parameters["anim_olaf_fall_shield_right"],':'));
+      else anim_olaf_fall_shield_right.reset(new EmptyAnimation(&anim_olaf_shield_right));
+
+    if (!hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV("fathit.wav");
+
+    if (hasParam(parameters,"audio_small")) au_small=scenario->sndcache->loadWAV(parameters["audio_small"]);
+      else au_small=scenario->sndcache->loadWAV("blob.wav");
+    if (hasParam(parameters,"audio_big")) au_big=scenario->sndcache->loadWAV(parameters["audio_big"]);
+      else au_big=scenario->sndcache->loadWAV("unblob.wav");
+    if (hasParam(parameters,"audio_fart")) au_fart=scenario->sndcache->loadWAV(parameters["audio_fart"]);
+      else au_fart=scenario->sndcache->loadWAV("fart1.wav");
+
     normal_size=pos;
-    small_size=anim_small_right->getFrameDim();
+    small_size=anim_olaf_small_right->getFrameDim();
 }
 
 Olaf::~Olaf() { }
@@ -43,42 +60,42 @@ Olaf::~Olaf() { }
 void Olaf::updateAnimState() {
     if (state&STATE_SMALL) {
         if (state&STATE_LEFT) {
-            anim_small_left->setFallBack(&anim_walk_left);
-            setAnim(anim_walk_small_left);
-            anim_small_left->setFallBack(&anim_left);
+            anim_olaf_small_left->setFallBack(&anim_walk_left);
+            setAnim(anim_olaf_walk_small_left);
+            anim_olaf_small_left->setFallBack(&anim_left);
         } else {
-            anim_small_right->setFallBack(&anim_walk_right);
-            setAnim(anim_walk_small_right);
-            anim_small_right->setFallBack(&anim_right);
+            anim_olaf_small_right->setFallBack(&anim_walk_right);
+            setAnim(anim_olaf_walk_small_right);
+            anim_olaf_small_right->setFallBack(&anim_right);
         }
     } else if (state&STATE_SHIELD) {
         otype|=OTYPE_DENSE_D;
         if (state&STATE_LEFT) {
             if (state&STATE_FALL) {
-                anim_shield_left->setFallBack(&anim_fall_left);
-                setAnim(anim_fall_shield_left);
-                anim_shield_left->setFallBack(&anim_left);
+                anim_olaf_shield_left->setFallBack(&anim_fall_left);
+                setAnim(anim_olaf_fall_shield_left);
+                anim_olaf_shield_left->setFallBack(&anim_left);
             } else {
                 if (state&STATE_MLEFT) {
-                    anim_shield_left->setFallBack(&anim_walk_left);
-                    setAnim(anim_walk_shield_left);
-                    anim_shield_left->setFallBack(&anim_left);
+                    anim_olaf_shield_left->setFallBack(&anim_walk_left);
+                    setAnim(anim_olaf_walk_shield_left);
+                    anim_olaf_shield_left->setFallBack(&anim_left);
                 } else {
-                    setAnim(anim_shield_left);
+                    setAnim(anim_olaf_shield_left);
                 }
             }
         } else {
             if (state&STATE_FALL) {
-                anim_shield_right->setFallBack(&anim_fall_right);
-                setAnim(anim_fall_shield_right);
-                anim_shield_right->setFallBack(&anim_right);
+                anim_olaf_shield_right->setFallBack(&anim_fall_right);
+                setAnim(anim_olaf_fall_shield_right);
+                anim_olaf_shield_right->setFallBack(&anim_right);
             } else {
                 if (state&STATE_MRIGHT) {
-                    anim_shield_right->setFallBack(&anim_walk_right);
-                    setAnim(anim_walk_shield_right);
-                    anim_shield_right->setFallBack(&anim_right);
+                    anim_olaf_shield_right->setFallBack(&anim_walk_right);
+                    setAnim(anim_olaf_walk_shield_right);
+                    anim_olaf_shield_right->setFallBack(&anim_right);
                 } else {
-                    setAnim(anim_shield_right);
+                    setAnim(anim_olaf_shield_right);
                 }
             }
         }

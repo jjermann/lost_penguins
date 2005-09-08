@@ -13,7 +13,6 @@ Object::Object(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   otype(NOTHING),
   delete_flag(false) {
     onum=++scenario->max_obj_num;
-    animation.reset(new EmptyAnimation(&anim_orig));
 
     /* Parameters */
     if (hasParam(parameters,"anim")) {
@@ -35,6 +34,7 @@ Object::Object(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
       else pos.h=(Uint16)(DATA_LVLPLAYER_H*sqrt(config.lvlscale>=0 ? config.lvlscale : -1/config.lvlscale)+0.5);
     pos.x=xcord;
     pos.y=ycord;
+    animation=anim_orig;
 }
 
 Object::~Object() {
@@ -144,99 +144,99 @@ EmptyAnimationPtr Object::loadAnimation(const Image& abase_image,
     return anim;
 }
 
-EmptyAnimationPtr Object::loadAnimation(ParameterMap& parameters) {
+EmptyAnimationPtr Object::loadAnimation(const ParameterMap& parameters) {
     double scale_factor=1;
     BasePointType bp_type=BP_MD;
     Uint16 animation_type=ATYPE_LOOP;
     double fps=0;
     AllignType allign_type=AT_MD;
     
-    if (hasParam(parameters,"scale")) scale_factor=atof(parameters["scale"].c_str());
+    if (hasParam(parameters,"scale")) scale_factor=atof(parameters.find("scale")->second.c_str());
     if (hasParam(parameters,"bp_type")) {
-        if        (parameters["bp_type"].find("hleft")   !=string::npos) {
-            if      (parameters["bp_type"].find("vup")     !=string::npos) bp_type=BP_LU;
-            else if (parameters["bp_type"].find("vmiddle") !=string::npos) bp_type=BP_LM;
-            else if (parameters["bp_type"].find("vdown")   !=string::npos) bp_type=BP_LD;
-        } else if (parameters["bp_type"].find("hmiddle") !=string::npos) {
-            if      (parameters["bp_type"].find("vup")     !=string::npos) bp_type=BP_MU;
-            else if (parameters["bp_type"].find("vmiddle") !=string::npos) bp_type=BP_MM;
-            else if (parameters["bp_type"].find("vdown")   !=string::npos) bp_type=BP_MD;
-        } else if (parameters["bp_type"].find("hright")  !=string::npos) {
-            if      (parameters["bp_type"].find("vup")     !=string::npos) bp_type=BP_RU;
-            else if (parameters["bp_type"].find("vmiddle") !=string::npos) bp_type=BP_RM;
-            else if (parameters["bp_type"].find("vdown")   !=string::npos) bp_type=BP_RD;
+        if        (parameters.find("bp_type")->second.find("hleft")   !=string::npos) {
+            if      (parameters.find("bp_type")->second.find("vup")     !=string::npos) bp_type=BP_LU;
+            else if (parameters.find("bp_type")->second.find("vmiddle") !=string::npos) bp_type=BP_LM;
+            else if (parameters.find("bp_type")->second.find("vdown")   !=string::npos) bp_type=BP_LD;
+        } else if (parameters.find("bp_type")->second.find("hmiddle") !=string::npos) {
+            if      (parameters.find("bp_type")->second.find("vup")     !=string::npos) bp_type=BP_MU;
+            else if (parameters.find("bp_type")->second.find("vmiddle") !=string::npos) bp_type=BP_MM;
+            else if (parameters.find("bp_type")->second.find("vdown")   !=string::npos) bp_type=BP_MD;
+        } else if (parameters.find("bp_type")->second.find("hright")  !=string::npos) {
+            if      (parameters.find("bp_type")->second.find("vup")     !=string::npos) bp_type=BP_RU;
+            else if (parameters.find("bp_type")->second.find("vmiddle") !=string::npos) bp_type=BP_RM;
+            else if (parameters.find("bp_type")->second.find("vdown")   !=string::npos) bp_type=BP_RD;
         }
     }
     if (hasParam(parameters,"type")) {
         animation_type=NOTHING;
-        if (parameters["type"].find("once"))   animation_type|=ATYPE_ONCE;
-        if (parameters["type"].find("loop"))   animation_type|=ATYPE_LOOP;
-        if (parameters["type"].find("swing"))  animation_type|=ATYPE_SWING;
-        if (parameters["type"].find("step"))   animation_type|=ATYPE_STEP;
-        if (parameters["type"].find("reverse")) {
+        if (parameters.find("type")->second.find("once"))   animation_type|=ATYPE_ONCE;
+        if (parameters.find("type")->second.find("loop"))   animation_type|=ATYPE_LOOP;
+        if (parameters.find("type")->second.find("swing"))  animation_type|=ATYPE_SWING;
+        if (parameters.find("type")->second.find("step"))   animation_type|=ATYPE_STEP;
+        if (parameters.find("type")->second.find("reverse")) {
             animation_type<<=1;
         }
         if (animation_type==NOTHING) animation_type=ATYPE_LOOP;
-        if (parameters["type"].find("switch")) animation_type|=ATYPE_ST_SWITCH;
+        if (parameters.find("type")->second.find("switch")) animation_type|=ATYPE_ST_SWITCH;
     }
-    if (hasParam(parameters,"fps")) fps=atof(parameters["fps"].c_str());
+    if (hasParam(parameters,"fps")) fps=atof(parameters.find("fps")->second.c_str());
     if (hasParam(parameters,"allign_type")) {
-        if        (parameters["allign_type"].find("hleft")   !=string::npos) {
-            if      (parameters["allign_type"].find("vup")     !=string::npos) allign_type=AT_LU;
-            else if (parameters["allign_type"].find("vmiddle") !=string::npos) allign_type=AT_LM;
-            else if (parameters["allign_type"].find("vdown")   !=string::npos) allign_type=AT_LD;
-        } else if (parameters["allign_type"].find("hmiddle") !=string::npos) {
-            if      (parameters["allign_type"].find("vup")     !=string::npos) allign_type=AT_MU;
-            else if (parameters["allign_type"].find("vmiddle") !=string::npos) allign_type=AT_MM;
-            else if (parameters["allign_type"].find("vdown")   !=string::npos) allign_type=AT_MD;
-        } else if (parameters["allign_type"].find("hright")  !=string::npos) {
-            if      (parameters["allign_type"].find("vup")     !=string::npos) allign_type=AT_RU;
-            else if (parameters["allign_type"].find("vmiddle") !=string::npos) allign_type=AT_RM;
-            else if (parameters["allign_type"].find("vdown")   !=string::npos) allign_type=AT_RD;
+        if        (parameters.find("allign_type")->second.find("hleft")   !=string::npos) {
+            if      (parameters.find("allign_type")->second.find("vup")     !=string::npos) allign_type=AT_LU;
+            else if (parameters.find("allign_type")->second.find("vmiddle") !=string::npos) allign_type=AT_LM;
+            else if (parameters.find("allign_type")->second.find("vdown")   !=string::npos) allign_type=AT_LD;
+        } else if (parameters.find("allign_type")->second.find("hmiddle") !=string::npos) {
+            if      (parameters.find("allign_type")->second.find("vup")     !=string::npos) allign_type=AT_MU;
+            else if (parameters.find("allign_type")->second.find("vmiddle") !=string::npos) allign_type=AT_MM;
+            else if (parameters.find("allign_type")->second.find("vdown")   !=string::npos) allign_type=AT_MD;
+        } else if (parameters.find("allign_type")->second.find("hright")  !=string::npos) {
+            if      (parameters.find("allign_type")->second.find("vup")     !=string::npos) allign_type=AT_RU;
+            else if (parameters.find("allign_type")->second.find("vmiddle") !=string::npos) allign_type=AT_RM;
+            else if (parameters.find("allign_type")->second.find("vdown")   !=string::npos) allign_type=AT_RD;
         }
     }
 
     /* Use animation name */
     if (hasParam(parameters,"name")) {
-        string anim_name=parameters["name"];
+        string anim_name=parameters.find("name")->second;
         return loadAnimation(anim_name,scale_factor,bp_type,animation_type,fps,allign_type);
 
     /* Use a base image */
     } else if (hasParam(parameters,"image")) {
-        string image_name=parameters["image"];
+        string image_name=parameters.find("image")->second;
         Uint16 frames=1;
         Uint16 start_pos=0;
-        if (hasParam(parameters,"frames")) frames=atoi(parameters["frames"].c_str());
-        if (hasParam(parameters,"start_pos")) start_pos=atoi(parameters["start_pos"].c_str());
+        if (hasParam(parameters,"frames")) frames=atoi(parameters.find("frames")->second.c_str());
+        if (hasParam(parameters,"start_pos")) start_pos=atoi(parameters.find("start_pos")->second.c_str());
 
         /* threat as horizontal animation (constant width, height) with <image_hor_frames> frames */
         if (hasParam(parameters,"image_hor_frames")) {
-            Uint16 image_hor_frames=atoi(parameters["image_hor_frames"].c_str());
+            Uint16 image_hor_frames=atoi(parameters.find("image_hor_frames")->second.c_str());
             return loadAnimation(scenario->imgcache->loadImage(image_hor_frames,image_name,scale_factor),frames,bp_type,animation_type,fps,start_pos,allign_type);
 
         /* threat as horizontal animation (constant width, height) with width <image_hor_width> and an optional shift */
         } else if (hasParam(parameters,"image_hor_width")) {
-            Uint16 image_hor_width=atoi(parameters["image_hor_width"].c_str());
+            Uint16 image_hor_width=atoi(parameters.find("image_hor_width")->second.c_str());
             Uint16 image_hor_shift=0;
-            if (hasParam(parameters,"image_hor_shift")) image_hor_shift=atoi(parameters["image_hor_shift"].c_str());
+            if (hasParam(parameters,"image_hor_shift")) image_hor_shift=atoi(parameters.find("image_hor_shift")->second.c_str());
             return loadAnimation(scenario->imgcache->loadImage(image_hor_width,image_hor_shift,image_name,scale_factor),frames,bp_type,animation_type,fps,start_pos,allign_type);
 
         /* threat as constant width/height animation based on a base rectangle */
         } else if (hasParam(parameters,"image_rect")) {
-            ParameterMap rect_param=getParameters(parameters["image_rect"],';');
+            ParameterMap rect_param=getParameters(parameters.find("image_rect")->second,';');
             SDL_Rect rect;
             rect.x=rect.y=0;
             rect.w=rect.h=10;
-            if (hasParam(rect_param,"x")) rect.x=atoi(rect_param["x"].c_str());
-            if (hasParam(rect_param,"y")) rect.y=atoi(rect_param["y"].c_str());
-            if (hasParam(rect_param,"w")) rect.w=atoi(rect_param["w"].c_str());
-            if (hasParam(rect_param,"h")) rect.h=atoi(rect_param["h"].c_str());
+            if (hasParam(rect_param,"x")) rect.x=atoi(rect_param.find("x")->second.c_str());
+            if (hasParam(rect_param,"y")) rect.y=atoi(rect_param.find("y")->second.c_str());
+            if (hasParam(rect_param,"w")) rect.w=atoi(rect_param.find("w")->second.c_str());
+            if (hasParam(rect_param,"h")) rect.h=atoi(rect_param.find("h")->second.c_str());
             return loadAnimation(scenario->imgcache->loadImage(rect,image_name,scale_factor),frames,bp_type,animation_type,fps,start_pos,allign_type);
 
         /* get informations from an image description file */
         } else {
             string image_desc=image_name+".dsc";
-            if (hasParam(parameters,"image_desc")) image_desc=parameters["image_desc"];
+            if (hasParam(parameters,"image_desc")) image_desc=parameters.find("image_desc")->second;
             return loadAnimation(scenario->imgcache->loadImage(image_name,scale_factor,image_desc),frames,bp_type,animation_type,fps,start_pos,allign_type);
         }
 

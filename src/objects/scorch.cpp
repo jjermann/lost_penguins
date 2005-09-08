@@ -12,15 +12,21 @@ Scorch::Scorch(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Player(xcord,ycord,parameters),
   left_wings(SCORCH_MAX_WINGS),
   wing(V_FLY) {
-    anim_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));
-    anim_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
-    anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_left.png"),8);
-    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_right.png"),8);
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    au_swing=scenario->sndcache->loadWAV("flapwngs.wav");
-    au_tired=scenario->sndcache->loadWAV("flwings.wav");
-    au_hit=scenario->sndcache->loadWAV("draghit.wav");
+
+    /* Parameters */
+    if (!hasParam(parameters,"anim_left"))          anim_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));
+    if (!hasParam(parameters,"anim_right"))         anim_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
+    if (!hasParam(parameters,"anim_walk_left"))     anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_left.png"),8);
+    if (!hasParam(parameters,"anim_walk_right"))    anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"baleog1-run_right.png"),8);
+    if (!hasParam(parameters,"anim_crash_left"))    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+    if (!hasParam(parameters,"anim_crash_right"))   anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
+
+    if (!hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV("draghit.wav");
+
+    if (hasParam(parameters,"audio_swing")) au_swing=scenario->sndcache->loadWAV(parameters["audio_swing"]);
+      else au_swing=scenario->sndcache->loadWAV("flapwngs.wav");
+    if (hasParam(parameters,"audio_tired")) au_swing=scenario->sndcache->loadWAV(parameters["audio_tired"]);
+      else au_tired=scenario->sndcache->loadWAV("flwings.wav");
 }
 
 Scorch::~Scorch() { }

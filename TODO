@@ -13,6 +13,7 @@ Code
      o Create a better class hierarchy so we don't have a class playground...
      o Better handle the different game states and replace the current conditional model
      o IDEA: create dynamical plugins for all objects (or compile all in)
+     o map is not time ordered => leads to unwanted behaviour in editor and filelists
 
  o Move/crash/collisions:
      o move should be a property of a common object

@@ -12,6 +12,6 @@ class Baleog : public Player {
         virtual void in_sp1();
     private:
         Mix_Chunk* au_sword;
-        EmptyAnimationPtr anim_sword_left;
-        EmptyAnimationPtr anim_sword_right;
+        EmptyAnimationPtr anim_baleog_sword_left;
+        EmptyAnimationPtr anim_baleog_sword_right;
 };

@@ -1,4 +1,3 @@
-#HEADER
 #ENDHEADER
 
 map1

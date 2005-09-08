@@ -122,7 +122,7 @@ class Object {
                                         Uint16 astart_pos=0,
                                         AllignType aallign_type=AT_MD);
         /// Load an animation based on a parameter map
-        EmptyAnimationPtr loadAnimation(ParameterMap& parameters=ParameterMap());
+        EmptyAnimationPtr loadAnimation(const ParameterMap& parameters=ParameterMap());
         //Events (triggered animations/effects)
         //@{
         /// Clears the event field (sets it to NULL). This should only be used by

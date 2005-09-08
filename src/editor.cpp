@@ -117,6 +117,11 @@ const SDL_Rect& Box::getArea() {
     }
     area.w=maxwidth+2*WFONT;
     area.h=entries.size()*(DFONT+font->getHeight())+2*WFONT+font_title->getHeight();
+
+    area.x+=min(0,(int)(scenario->area->w-area.x-area.w));
+    area.y+=min(0,(int)(scenario->area->h-area.y-area.h));
+    if (area.x<0) area.x=0;
+    if (area.y<0) area.y=0;
     return area;
 }
  

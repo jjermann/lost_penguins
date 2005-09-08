@@ -15,64 +15,29 @@ Erik::Erik(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   jump(V_JUMP),
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);
-/*
-    anim_left=loadAnimation(scenario->imgcache->loadImage("erik1_left.bmp"));
-    anim_right=loadAnimation(scenario->imgcache->loadImage(1,"erik1_right.bmp"));
-    anim_land_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_LD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_land_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_RD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_LD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_RD,ATYPE_ONCE,calcFPS(1,T_IRR));
-*/
-    anim_left=loadAnimation("erik_idle_left",config.lvlscale,BP_RD);
-    anim_right=loadAnimation("erik_idle_right",config.lvlscale,BP_LD);
-    anim_rock_left=loadAnimation("erik_rock_left",config.lvlscale,BP_RD);
-    anim_rock_right=loadAnimation("erik_rock_right",config.lvlscale,BP_LD);
-    anim_walk_left=loadAnimation("erik_walk_left",config.lvlscale,BP_RD);
-    anim_walk_right=loadAnimation("erik_walk_right",config.lvlscale,BP_LD);
-    anim_push_left=loadAnimation("erik_push_left",config.lvlscale,BP_RD);
-    anim_push_right=loadAnimation("erik_push_right",config.lvlscale,BP_LD);
-    anim_fall_middle=loadAnimation("erik_fall_middle",config.lvlscale);
-    anim_fall_left=loadAnimation("erik_fall_left",config.lvlscale,BP_RD);
-    anim_fall_right=loadAnimation("erik_fall_right",config.lvlscale,BP_LD);
-    anim_fall_fast_left=loadAnimation("erik_fall_fast_left",config.lvlscale,BP_RD);
-    anim_fall_fast_right=loadAnimation("erik_fall_fast_right",config.lvlscale,BP_LD);
-    anim_crash_left=loadAnimation("erik_crash_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_crash_right=loadAnimation("erik_crash_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_rope_left=loadAnimation("erik_rope_left",config.lvlscale,BP_RD);
-    anim_rope_right=loadAnimation("erik_rope_right",config.lvlscale,BP_LD);
-    anim_teleport_left=loadAnimation("erik_teleport_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_teleport_right=loadAnimation("erik_teleport_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_die_crash_left=loadAnimation("erik_die_crash_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_die_crash_right=loadAnimation("erik_die_crash_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_die_burn_left=loadAnimation("erik_die_burn_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_die_burn_right=loadAnimation("erik_die_burn_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_die_bones_left=loadAnimation("erik_die_bones_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_die_bones_right=loadAnimation("erik_die_bones_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_die_elec_left=loadAnimation("erik_die_elec_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_die_elec_right=loadAnimation("erik_die_elec_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_die_spike_left=loadAnimation("erik_die_spike_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_die_spike_right=loadAnimation("erik_die_spike_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_bar=loadAnimation("bar_erik",config.lvlscale,BP_MD,ATYPE_ONCE);
-    /* anim_die_water is missing as eric doesn't die under water, anim_climb is missing as well */
 
-    anim_erik_jump_left=loadAnimation("erik_jump_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_erik_jump_right=loadAnimation("erik_jump_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_erik_jump2_left=loadAnimation("erik_jump2_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_erik_jump2_right=loadAnimation("erik_jump2_right",config.lvlscale,BP_LD,ATYPE_ONCE);
-    anim_erik_start_run_left=loadAnimation("erik_start_run_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_erik_start_run_right=loadAnimation("erik_start_run_right",config.lvlscale,BP_LD,ATYPE_ONCE);    
-    anim_erik_run_left=loadAnimation("erik_run_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_erik_run_right=loadAnimation("erik_run_right",config.lvlscale,BP_LD,ATYPE_ONCE);    
-    anim_erik_swim_left=loadAnimation("erik_swim_left",config.lvlscale,BP_RD,ATYPE_ONCE);         
-    anim_erik_swim_right=loadAnimation("erik_swim_right",config.lvlscale,BP_LD,ATYPE_ONCE);    
-    anim_erik_swim_up_left=loadAnimation("erik_swim_up_left",config.lvlscale,BP_RD,ATYPE_ONCE);
-    anim_erik_swim_up_right=loadAnimation("erik_swim_up_right",config.lvlscale,BP_LD,ATYPE_ONCE);     
-    anim_erik_hit_water_left=loadAnimation("erik_hit_water_left",config.lvlscale,BP_RD,ATYPE_ONCE);       
-    anim_erik_hit_water_right=loadAnimation("erik_hit_water_right",config.lvlscale,BP_LD,ATYPE_ONCE);
+    /* Parameters */
+    if (hasParam(parameters,"anim_erik_jump_left"))          anim_erik_jump_left=loadAnimation(getParameters(parameters["anim_erik_jump_left"],':'));
+    if (hasParam(parameters,"anim_erik_jump_right"))         anim_erik_jump_right=loadAnimation(getParameters(parameters["anim_erik_jump_right"],':'));
+    if (hasParam(parameters,"anim_erik_jump2_left"))         anim_erik_jump2_left=loadAnimation(getParameters(parameters["anim_erik_jump2_left"],':'));
+    if (hasParam(parameters,"anim_erik_jump2_right"))        anim_erik_jump2_right=loadAnimation(getParameters(parameters["anim_erik_jump2_right"],':'));
+    if (hasParam(parameters,"anim_erik_start_run_left"))     anim_erik_start_run_left=loadAnimation(getParameters(parameters["anim_erik_start_run_left"],':'));
+    if (hasParam(parameters,"anim_erik_start_run_right"))    anim_erik_start_run_right=loadAnimation(getParameters(parameters["anim_erik_start_run_right"],':'));
+    if (hasParam(parameters,"anim_erik_run_left"))           anim_erik_run_left=loadAnimation(getParameters(parameters["anim_erik_run_left"],':'));
+    if (hasParam(parameters,"anim_erik_run_right"))          anim_erik_run_right=loadAnimation(getParameters(parameters["anim_erik_run_right"],':'));
+    if (hasParam(parameters,"anim_erik_swim_left"))          anim_erik_swim_left=loadAnimation(getParameters(parameters["anim_erik_swim_left"],':'));
+    if (hasParam(parameters,"anim_erik_swim_right"))         anim_erik_swim_right=loadAnimation(getParameters(parameters["anim_erik_swim_right"],':'));
+    if (hasParam(parameters,"anim_erik_swim_up_left"))       anim_erik_swim_up_left=loadAnimation(getParameters(parameters["anim_erik_swim_up_left"],':'));
+    if (hasParam(parameters,"anim_erik_swim_up_right"))      anim_erik_swim_up_right=loadAnimation(getParameters(parameters["anim_erik_swim_up_right"],':'));
+    if (hasParam(parameters,"anim_erik_hit_water_left"))     anim_erik_hit_water_left=loadAnimation(getParameters(parameters["anim_erik_hit_water_left"],':'));
+    if (hasParam(parameters,"anim_erik_hit_water_right"))    anim_erik_hit_water_right=loadAnimation(getParameters(parameters["anim_erik_hit_water_right"],':'));
 
-    au_jump=scenario->sndcache->loadWAV("rboots.wav");
-    au_hit=scenario->sndcache->loadWAV("erikhit.wav");
-    au_run=NULL;
+    if (!hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV("erikhit.wav");
+
+    if (hasParam(parameters,"audio_jump")) au_jump=scenario->sndcache->loadWAV(parameters["audio_jump"]);
+      else au_jump=scenario->sndcache->loadWAV("rboots.wav");
+    if (hasParam(parameters,"audio_run")) au_jump=scenario->sndcache->loadWAV(parameters["audio_run"]);
+      else au_run=NULL;
 }
 
 Erik::~Erik() { }
