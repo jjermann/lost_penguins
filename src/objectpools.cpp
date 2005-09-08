@@ -80,6 +80,7 @@ void ObjectsPool::setDefaultObjParam() {
     Object::default_parameters["name"]="";
     Object::default_parameters["w"]="";
     Object::default_parameters["h"]="";
+    Object::default_parameters["anim"]="";
     Object::default_parameters["image"]="";
     Background::default_parameters=Object::default_parameters;
     Exit::default_parameters=Object::default_parameters;

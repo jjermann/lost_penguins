@@ -16,7 +16,15 @@ Object::Object(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
     animation.reset(new EmptyAnimation(&anim_orig));
 
     /* Parameters */
-    anim_orig=loadAnimation(parameters);
+    if (hasParam(parameters,"anim")) {
+        ParameterMap anim_param=getParameters(parameters["anim"],':');
+        anim_orig=loadAnimation(anim_param);
+    } else if (hasParam(parameters,"image")) {
+        ParameterMap anim_param;
+        anim_param["image"]=parameters["image"];
+        anim_param["image_hor_frames"]="1";
+        anim_orig=loadAnimation(anim_param);
+    } else anim_orig=EmptyAnimationPtr(new EmptyAnimation());
     if (hasParam(parameters,"name")) name=parameters["name"];
       else name="Object";
     if (hasParam(parameters,"w")) pos.w=atoi(parameters["w"].c_str());
@@ -137,8 +145,73 @@ EmptyAnimationPtr Object::loadAnimation(const Image& abase_image,
 }
 
 EmptyAnimationPtr Object::loadAnimation(ParameterMap& parameters) {
-    if (hasParam(parameters,"image")) return loadAnimation(scenario->imgcache->loadImage(1,parameters["image"]));
+    double scale_factor=1;
+    BasePointType bp_type=BP_MD;
+    Uint16 animation_type=ATYPE_LOOP;
+    double fps=0;
+    AllignType allign_type=AT_MD;
+    
+    if (hasParam(parameters,"scale")) scale_factor=atof(parameters["scale"].c_str());
+    if (hasParam(parameters,"bp_type")) {
+// TODO
+    }
+    if (hasParam(parameters,"type")) {
+// TODO
+    }
+    if (hasParam(parameters,"fps")) fps=atof(parameters["fps"].c_str());
+    if (hasParam(parameters,"allign_type")) {
+// TODO
+    }
+
+    /* Use animation name */
+    if (hasParam(parameters,"name")) {
+        string anim_name=parameters["name"];
+        return loadAnimation(anim_name,scale_factor,bp_type,animation_type,fps,allign_type);
+
+    /* Use a base image */
+    } else if (hasParam(parameters,"image")) {
+        string image_name=parameters["image"];
+        Uint16 frames=1;
+        Uint16 start_pos=0;
+        if (hasParam(parameters,"frames")) frames=atoi(parameters["frames"].c_str());
+        if (hasParam(parameters,"start_pos")) start_pos=atoi(parameters["start_pos"].c_str());
+
+        /* threat as horizontal animation (constant width, height) with <image_hor_frames> frames */
+        if (hasParam(parameters,"image_hor_frames")) {
+            Uint16 image_hor_frames=atoi(parameters["image_hor_frames"].c_str());
+            return loadAnimation(scenario->imgcache->loadImage(image_hor_frames,image_name,scale_factor),frames,bp_type,animation_type,fps,start_pos,allign_type);
+
+        /* threat as horizontal animation (constant width, height) with width <image_hor_width> and an optional shift */
+        } else if (hasParam(parameters,"image_hor_width")) {
+            Uint16 image_hor_width=atoi(parameters["image_hor_width"].c_str());
+            Uint16 image_hor_shift=0;
+            if (hasParam(parameters,"image_hor_shift")) image_hor_shift=atoi(parameters["image_hor_shift"].c_str());
+            return loadAnimation(scenario->imgcache->loadImage(image_hor_width,image_hor_shift,image_name,scale_factor),frames,bp_type,animation_type,fps,start_pos,allign_type);
+
+        /* threat as constant width/height animation based on a base rectangle */
+        } else if (hasParam(parameters,"image_rect")) {
+            ParameterMap rect_param=getParameters(parameters["image_rect"],';');
+            SDL_Rect rect;
+            rect.x=rect.y=0;
+            rect.w=rect.h=10;
+            if (hasParam(rect_param,"x")) rect.x=atoi(rect_param["x"].c_str());
+            if (hasParam(rect_param,"y")) rect.y=atoi(rect_param["y"].c_str());
+            if (hasParam(rect_param,"w")) rect.w=atoi(rect_param["w"].c_str());
+            if (hasParam(rect_param,"h")) rect.h=atoi(rect_param["h"].c_str());
+            return loadAnimation(scenario->imgcache->loadImage(rect,image_name,scale_factor),frames,bp_type,animation_type,fps,start_pos,allign_type);
+
+        /* get informations from an image description file */
+        } else {
+            string image_desc=image_name+".dsc";
+            if (hasParam(parameters,"image_desc")) image_desc=parameters["image_desc"];
+            return loadAnimation(scenario->imgcache->loadImage(image_name,scale_factor,image_desc),frames,bp_type,animation_type,fps,start_pos,allign_type);
+        }
+
+    /* no suitable animation found */
+    } else {
+        cout << "Invalid animation parameters!" << endl;
         return EmptyAnimationPtr(new EmptyAnimation());
+    }
 }
 
 SDL_Rect Object::getDrawPos() const {
@@ -222,9 +295,6 @@ Background::Background(ParameterMap& parameters):
     otype=NOTHING;
     name="Background";
 
-    /* Parameters */
     /* TODO: support surface creation and use it as a fallback if no image was specified */
-    anim_orig=loadAnimation(parameters);
-    pos=anim_orig->getFrameDim();
 }
 Background::~Background() { }
