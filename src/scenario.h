@@ -7,19 +7,19 @@
     \remarks MAP FORMAT:
     \remarks HeaderOption "parameters"
     \remarks Background "parameters"
-    \remarks #ENDHEADER
+    \remarks \#ENDHEADER
     \remarks "Object class name" "x position" "y position" "parameters"
     \remarks The parameters depend on the object: Each object checks it's
       corresponding parameters.
     \remarks The parameter format is like this:
     \remarks option1=value1,option2=value2,...
-    \remakrs A value may be a parameterlist of suboptions:
+    \remarks A value may be a parameterlist of suboptions:
     \remarks option1=subopt1=subval1:subopt2=subval2:...,option2=value2
     \remarks Defaults:
     \remarks x and y default to 0
     \remarks Example:
     \remarks Background image=background.bmp
-    \remarks #ENDHEADER
+    \remarks \#ENDHEADER
     \remarks Teleporter 0 0 image=teleporter.bmp,exitx=20,exity=100,name=teleporter1
     \todo Move the Caches into the current map as well?
 */
