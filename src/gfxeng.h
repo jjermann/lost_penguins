@@ -38,6 +38,9 @@ class GraphicsEngine {
         const SDL_Rect& getShift() {
             return shift;
         }
+        void resetShift() {
+            shift.x=shift.y=0;
+        }
         void drawRectangle(SDL_Rect rect, Uint8 border=1, Uint32 color=0);
     protected:
         /// main screen

@@ -18,6 +18,10 @@ class ObjectsPool {
     public:
         ObjectsPool();
         ~ObjectsPool();
+        ///\brief sets the static default_parameters variable of all objects
+        void setDefaultObjParam();
+        ///\brief Returns the default_parameters of the corresponding obj or an empty map
+        const ParameterMap& getDefaultObjParambyName(const string& obj);
         ///\brief Returns true if no objects were loaded so far...
         bool empty();
         ///\todo Move this code to the objects
@@ -26,15 +30,12 @@ class ObjectsPool {
         /// Add an Object by it's name to the corresponding pool if it was
         /// recognized, initialized with the parsed options.
         /// \param obj Name of the Object class
-        /// \param image Name of the base image to be load
         /// \param x x coordinate
         /// \param y y coordinate
-        /// \param arg1 First argument as string
-        /// \param arg2 Second argument as string
-        /// \param arg3 Third argument as string
+        /// \param parameters A map<string,string> of all parameters
         /// \return Pointer to the new entry in the objectspool or NULL if
         ///   the object was not recognized
-        Object* addObjectbyName(const string& obj, const string& image, Sint16 x=0, Sint16 y=0, string& arg1="", string& arg2="", const string& arg3="");
+        Object* addObjectbyName(const string& obj, Sint16 x=0, Sint16 y=0, ParameterMap& parameters=ParameterMap());
         //@{
         /// Add an Object to the objectspool
         /// \return Pointer to the new entry in the objectspool or NULL if it failed
@@ -91,6 +92,7 @@ class ObjectsPool {
         //player number of the currently selected player
         player_iterator currentplayer;
         Mix_Chunk* au_switch;
+        const ParameterMap empty_parameter;
 };
 
 #endif

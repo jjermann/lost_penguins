@@ -3,8 +3,8 @@
 #include "wall.h"
 
 
-Wall::Wall(string imagename, Sint16 xcord, Sint16 ycord, string oname):
-  Object(imagename,xcord,ycord,oname) {
+Wall::Wall(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
     otype=OTYPE_DENSE;
 }
 Wall::~Wall() { }

@@ -50,10 +50,13 @@ typedef std::set<Character *>::iterator character_iterator;
 typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
 typedef boost::shared_ptr<EmptyAnimation> EmptyAnimationPtr;
+typedef std::map<string,string> ParameterMap;
 
 //Data
 #define DATA_LVLFPS 6
 #define DATA_LVLDUR 1000
+#define DATA_LVLPLAYER_W 25
+#define DATA_LVLPLAYER_H 30
 
 //General definitions
 #define NOTHING                 0x00000000
@@ -207,6 +210,15 @@ int quitGame(int);
 /// \return 1 if the file was found, 0 otherwise
 /// \todo Create a better config format
 int readConfig(const string& filename);
+/// Parse a string parameter list and return it as a map<string,string>
+ParameterMap getParameters(const string& parameterlist, char delim=',', char delimsub='=');
+/// Convert the parameter map to a string
+string putParameters(const ParameterMap& parameters, char delim=',', char delimsub='=');
+/// Returns true if the parameter was found
+bool hasParam(ParameterMap& parameters, const string& str);
+/// Returns the direction from the given string: simply include one or a
+/// combination of "up", "down", "left", "right" in the string
+Uint16 getDirFromString(const string& str);
 
 /// Parse the command line options
 void parseInput(int argc,char* argv[]);

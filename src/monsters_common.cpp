@@ -10,20 +10,24 @@
 #include "players_common.h"
 
 
-Monster::Monster(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Character(imagename,xcord,ycord,pname),
+Monster::Monster(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Character(xcord,ycord,parameters),
   Dai(0),
   Dattack(0),
   anim_left(new EmptyAnimation(&anim_right)),
   anim_right(new EmptyAnimation()) {
-    health=1;
-    maxspeedx=50;
-    maxspeedy=0;
     state=STATE_FALL;
     otype|=OTYPE_MONSTER;
     enemy_types|=OTYPE_PLAYER;
     dense_types|=OTYPE_PLAYER;
-    au_hit=scenario->sndcache->loadWAV("monhit.wav");
+
+    /* Parameters */
+    if (!hasParam(parameters,"maxhealth")) maxhealth=1;
+    if (!hasParam(parameters,"health")) health=min(1,(int)maxhealth);
+    if (!hasParam(parameters,"maxspeedx")) maxspeedx=50;
+    if (!hasParam(parameters,"maxspeedy")) maxspeedy=0;
+    if (hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV(parameters["audio_hit"]);
+      else au_hit=scenario->sndcache->loadWAV("monhit.wav");
 }
 
 Monster::~Monster() {

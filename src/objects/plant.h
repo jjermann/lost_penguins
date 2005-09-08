@@ -5,8 +5,9 @@
 */
 class Plant : public Monster {
     public:
-        Plant(string imagename, Sint16 xpos=0, Sint16 ypos=0, Uint16 dleft=3000, string name="Plant");
+        Plant(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Plant();
+        static ParameterMap default_parameters;
         virtual void touch(Object*);
         virtual void idle(Uint16);
         virtual Uint16 hit(Uint16 direction, Weapon& weap);

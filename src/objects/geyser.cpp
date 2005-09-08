@@ -8,11 +8,15 @@
 #include "geyser.h"
 
 
-Geyser::Geyser(string imagename, Sint16 xcord, Sint16 ycord, Sint16 yAdd, string oname):
-  Object(imagename,xcord,ycord,oname),
-  aspeed(yAdd),
-  au_geyser(scenario->sndcache->loadWAV("geyser.wav")),
-  Deffect(0) { }
+Geyser::Geyser(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters),
+  Deffect(0) {
+    /* Parameters */
+    if (hasParam(parameters,"aspeed")) aspeed=atoi(parameters["aspeed"].c_str());
+      else aspeed=0;
+    if (hasParam(parameters,"audio_geyser")) au_geyser=scenario->sndcache->loadWAV(parameters["audio_geyser"]);
+      else au_geyser=scenario->sndcache->loadWAV("geyser.wav");
+}
 Geyser::~Geyser() { }
 
 void Geyser::idle(Uint16 dt) {

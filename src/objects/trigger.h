@@ -3,11 +3,13 @@
 
 /** \brief Trigger
 
+    Always add triggers after their related objects!
 */
 class Trigger : public Object {
     public:
-        Trigger(string imagename, Sint16 xcord=0, Sint16 ycord=0, string targetname="DefaultTarget", string oname="Trigger", string keyname="");
+        Trigger(Sint16 xcord=0, Sint16 ycord=0, ParameterMap& parameters=ParameterMap());
         virtual ~Trigger();
+        static ParameterMap default_parameters;
         virtual bool act(Object* obj);
     private:
         Object* target;

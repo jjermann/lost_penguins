@@ -13,8 +13,9 @@
 */
 class Erik : public Player {
     public:
-        Erik(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Erik");
+        Erik(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Erik();
+        static ParameterMap default_parameters;
         virtual void idle(Uint16); 
        /// \brief Erik jumps
         virtual void in_sp1();

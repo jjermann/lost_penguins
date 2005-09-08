@@ -9,8 +9,8 @@
 #include "olaf.h"
 
 
-Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname),
+Olaf::Olaf(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Player(xcord,ycord,parameters),
   fart(V_FART) {
     anim_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_left.bmp"));
     anim_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_right.bmp"));
@@ -34,7 +34,7 @@ Olaf::Olaf(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_big=scenario->sndcache->loadWAV("unblob.wav");
     au_fart=scenario->sndcache->loadWAV("fart1.wav");
     au_hit=scenario->sndcache->loadWAV("fathit.wav");
-    normal_size=anim_orig->getFrameDim();
+    normal_size=pos;
     small_size=anim_small_right->getFrameDim();
 }
 

@@ -26,12 +26,71 @@ const Uint32 gmask=0x0000ff00;
 const Uint32 bmask=0x00ff0000;
 const Uint32 amask=0xff000000;
 #endif
-Uint32 vflags=SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF;
+Uint32 vflags=SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|SDL_HWACCEL;
 
 string itos(int i) {
     std::stringstream s;
     s << i;
     return s.str();
+}
+
+ParameterMap getParameters(const string& parameterlist, char delim, char delimsub) {
+    ParameterMap parameters;
+    istringstream parameterlist_s(parameterlist);
+    string parameter,name,value,tmpstr;
+
+    while (std::getline(parameterlist_s,parameter,delim)) {
+        istringstream parameter_s(parameter);
+        std::getline(parameter_s,name,delimsub);
+        std::getline(parameter_s,value);
+
+        /* get rid of leading and trailing spaces: this part is silly ;)
+           all spaces, tabs, etc are converted to one single space */
+        istringstream name_s(name);
+        name="";
+        while (name_s >> tmpstr) {
+            if (!name.empty()) name+=" ";
+            name+=tmpstr;
+        }
+        istringstream value_s(value);
+        value="";
+        while (value_s >> tmpstr) {
+            if (!value.empty()) value+=" ";
+            value+=tmpstr;
+        }
+        parameters[name]=value;
+    }
+    return parameters;
+}
+
+string putParameters(const ParameterMap& parameters, char delim, char delimsub) {
+    string parameterlist;
+    ParameterMap::const_iterator it=parameters.begin();
+    while (it!=parameters.end()) {
+        if (!parameterlist.empty()) {
+            parameterlist+=delim;
+            parameterlist+=" ";
+        }
+        parameterlist+=(*it).first;
+        parameterlist+=delimsub;
+        parameterlist+=(*it).second;
+        ++it;
+    }
+    return parameterlist;
+}
+
+bool hasParam(ParameterMap& parameters, const string& str) {
+    if (parameters.find(str)!=parameters.end()) return true;
+    else return false;
+}
+
+Uint16 getDirFromString(const string& str) {
+    Uint16 direction=NOTHING;
+    if (str.find("up")    !=string::npos) direction|=DIR_UP;
+    if (str.find("down")  !=string::npos) direction|=DIR_DOWN;
+    if (str.find("left")  !=string::npos) direction|=DIR_LEFT;
+    if (str.find("right") !=string::npos) direction|=DIR_RIGHT;
+    return direction;
 }
 
 int addAbsolute(int a, int b) {
@@ -48,6 +107,7 @@ void setGameMode(Uint8 newmode) {
     if (game_mode&GAME_EDIT && !(game_mode&GAME_MENU)) {
         gfxeng->setShowDebug();
         SDL_ShowCursor(SDL_ENABLE);
+        gfxeng->resetShift();
     } else {
         gfxeng->unsetShowDebug();
         SDL_ShowCursor(SDL_DISABLE);

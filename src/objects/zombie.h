@@ -8,8 +8,9 @@
 */
 class Zombie : public Monster {
     public:
-        Zombie(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Zombie");
+        Zombie(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Zombie();
+        static ParameterMap default_parameters;
         virtual void idle(Uint16);
     private:
         virtual void runAI(Uint16);

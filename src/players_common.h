@@ -17,8 +17,9 @@
 */
 class Player : public Character {
     public:
-        Player(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Player");
+        Player(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Player();
+        static ParameterMap default_parameters;
         //@{
         /// \brief Returns the icon of this Player
         /// \return Single icon frame of this player (used for the player bar)
@@ -174,8 +175,9 @@ class Player : public Character {
 */
 class DeadPlayer : public Character {
     public:
-        DeadPlayer(string imagename, Sint16 xcord=0, Sint16 ycord=0, string name="DeadPlayer");
+        DeadPlayer(Sint16 xcord=0, Sint16 ycord=0, ParameterMap& parameters=ParameterMap());
         virtual ~DeadPlayer();
+        static ParameterMap default_parameters;
 };
 
 #endif

@@ -6,13 +6,19 @@
 #include "door.h"
 
 
-Door::Door(string imagename, Sint16 xcord, Sint16 ycord, string keyname, string oname):
-  Object(imagename,xcord,ycord,oname),
-  open(false),
-  key(keyname),
-  au_open(scenario->sndcache->loadWAV("dooropn.wav")),
-  au_close(au_open) {
+Door::Door(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
     otype=OTYPE_DENSE;
+
+    /* Parameters */
+    if (hasParam(parameters,"key")) key=parameters["key"];
+      else key="Key";
+    if (hasParam(parameters,"audio_open"))  au_open =scenario->sndcache->loadWAV(parameters["audio_open"]);
+      else au_open=scenario->sndcache->loadWAV("dooropn.wav");
+    if (hasParam(parameters,"audio_close")) au_close=scenario->sndcache->loadWAV(parameters["audio_close"]);
+      else au_close=scenario->sndcache->loadWAV("dooropn.wav");
+    if (hasParam(parameters,"start_open"))  open=true;
+      else open=false;
 }
 Door::~Door() { }
 

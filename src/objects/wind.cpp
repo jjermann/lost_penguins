@@ -4,9 +4,12 @@
 #include "characters_common.h"
 #include "wind.h"
 
-Wind::Wind(string imagename, Sint16 xcord, Sint16 ycord, Sint16 Accel, string oname):
-  Object(imagename,xcord,ycord,oname),
-  gravitymod(Accel) { }
+Wind::Wind(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
+    /* Parameters */
+    if (hasParam(parameters,"accel")) gravitymod=atoi(parameters["accel"].c_str());
+      else gravitymod=0;
+}
 Wind::~Wind() { }
 
 void Wind::enter(Object *obj) {

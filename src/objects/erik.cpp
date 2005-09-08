@@ -10,8 +10,8 @@
 #include "erik.h"
 
 
-Erik::Erik(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname),
+Erik::Erik(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Player(xcord,ycord,parameters),
   jump(V_JUMP),
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);

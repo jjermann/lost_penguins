@@ -22,8 +22,9 @@
 */
 class Fang : public Player {
     public:
-        Fang(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Fang");
+        Fang(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Fang();
+        static ParameterMap default_parameters;
         virtual void fall(Uint16);
         virtual void in_left(Uint16);
         virtual void in_right(Uint16);

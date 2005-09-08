@@ -3,12 +3,19 @@
 #include "objects_common.h"
 //this shouldn't be here
 #include "players_common.h"
+#include "scenario.h"
+#include "imgcache.h"
+#include "sndcache.h"
 #include "key.h"
 
 
-Key::Key(string imagename, Sint16 xcord, Sint16 ycord, string iname):
-  Item(imagename,xcord,ycord,iname),
-  au_key(NULL) { }
+Key::Key(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Item(xcord,ycord,parameters) {
+    /* Parameters */
+    if (!hasParam(parameters,"image")) anim_orig=loadAnimation(scenario->imgcache->loadImage(1,"key.bmp"));
+    if (hasParam(parameters,"audio_key")) au_key=scenario->sndcache->loadWAV(parameters["audio_key"]);
+      else au_key=NULL;
+}
 Key::~Key() { }
 
 bool Key::act(Object* obj) {

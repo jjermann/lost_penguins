@@ -7,8 +7,9 @@
 */
 class Key : public Item {
     public:
-        Key(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Key");
+        Key(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Key();
+        static ParameterMap default_parameters;
         virtual bool act(Object* obj);
     private:
         Mix_Chunk* au_key;

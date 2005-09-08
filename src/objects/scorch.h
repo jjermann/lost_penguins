@@ -16,8 +16,9 @@
 */
 class Scorch : public Player {
     public:
-        Scorch(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Scorch");
+        Scorch(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Scorch();
+        static ParameterMap default_parameters;
         virtual void fall(Uint16);
         /// \brief Scorch uses his wings
         virtual void idle(Uint16);

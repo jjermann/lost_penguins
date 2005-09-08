@@ -5,8 +5,9 @@
 */
 class Spike : public Object {
     public:
-        Spike(string imagename, Sint16 xpos=0, Sint16 ypos=0, Uint16 dir=DIR_UP, string name="Spike");
+        Spike(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Spike();
+        static ParameterMap default_parameters;
         virtual void touch(Object*);
     private:
         Weapon weapon;

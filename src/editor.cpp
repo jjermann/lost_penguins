@@ -12,7 +12,6 @@ Editor::Editor() {
     string place_name="";
     save_name="newmap.cfg";
     box=NULL;
-    place_obj_name=NULL;
 }
 
 Editor::~Editor() {
@@ -39,11 +38,10 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         if (box) box->act(box->getCurrentEntry(x,y));
     } else if (action&EDIT_PLACE_OBJECT) {
         scenario->reloadMap();
-        if (scenario->pool->addObjectbyName(place_name,place_image,xs,ys,place_arg1,place_arg2,place_arg3)) {
-            appendtoBuf(place_name+" "+place_image+" "+itos(xs)+" "+itos(ys)+" "+place_arg1+" "+place_arg2+" "+place_arg3);
+        if (scenario->pool->addObjectbyName(place_name,xs,ys,place_parameters)) {
+            appendtoBuf(place_name+" "+itos(xs)+" "+itos(ys)+" "+putParameters(place_parameters));
         }
-        if (place_obj_name) (*place_obj_name)=scenario->pool->getNextObjectName(place_name);
-//        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
+        place_parameters["name"]=scenario->pool->getNextObjectName(place_name);
     } else { }
 }
 
@@ -269,67 +267,9 @@ void PlaceBox::act(Sint8 curentry) {
     gfxeng->update(UPDATE_ALL);
     if (curentry==-1 || curentry >= (Sint8)entries.size()) {
     } else {
-        string next_name=scenario->pool->getNextObjectName(entries[curentry]);
-        if        (entries[curentry]=="Wall") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Water") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"water.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Exit") {
-            editor->setBox(new ObjectBox(entries[curentry],"exit.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Teleporter") {
-            editor->place_obj_name=&editor->place_arg3;
-            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Teleport Destination (x coordinate): ","0","Teleport Destination (y coordinate): ","0","Name: ",next_name));
-        } else if (entries[curentry]=="Wind") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"teleport_01.bmp",area.x,area.y,"Wind acceleration: ","0","Name: ",next_name));
-        } else if (entries[curentry]=="Geyser") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Geyser force: ","0","Name: ",next_name));
-        } else if (entries[curentry]=="Trigger") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Trigger target name: ","","Name: ",next_name,"Key name: ",""));
-        } else if (entries[curentry]=="Door") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Key name: ","","Name: ",next_name));
-        } else if (entries[curentry]=="Spike") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Direction (R=1,L=2,U=4,D=8): ","4","Name: ",next_name));
-        } else if (entries[curentry]=="Heart") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"heart.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Key") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"key.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Bomb") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"bomb_fire.bmp",area.x,area.y,"Exploding time (in ms): ","0","Name: ",next_name));
-        } else if (entries[curentry]=="Erik") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Olaf") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Baleog") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Fang") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Scorch") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
-        } else if (entries[curentry]=="Plant") {
-            editor->place_obj_name=&editor->place_arg2;
-            editor->setBox(new ObjectBox(entries[curentry],"viking1.bmp",area.x,area.y,"Recovery time (in ms): ","0","Name: ",next_name));
-        } else if (entries[curentry]=="Zombie") {
-            editor->place_obj_name=&editor->place_arg1;
-            editor->setBox(new ObjectBox(entries[curentry],"viking.bmp",area.x,area.y,"Name: ",next_name));
-        } else {
-            editor->run_action(EDIT_RESET_ACTIONS);
-            editor->closeBox();
-        }
+        ParameterMap parameters=scenario->pool->getDefaultObjParambyName(entries[curentry]);
+        parameters["name"]=scenario->pool->getNextObjectName(entries[curentry]);
+        editor->setBox(new ObjectBox(entries[curentry],area.x,area.y,parameters));
     }
 }
 
@@ -400,22 +340,32 @@ SaveAsBox::SaveAsBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
 
 void SaveAsBox::evaluateEntry() {
     editor->save_name=einput[0];
-    editor->saveBuf(editor->save_name);
+    editor->saveBuf(config.datadir+editor->save_name);
     editor->closeBox();
 }
 
 OpenMapBox::OpenMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
     title="Open Map";
+    currententry=0;
     einput.push_back(scenario->mapname);
     update();
 }
 
 void OpenMapBox::evaluateEntry() {
     scenario->resetScenario();
-    scenario->loadMap(einput[0]);
+    string oldname=scenario->mapname;
+    if (scenario->loadMap(einput[0])!=0) {
+        cout << "Map loading failed!" << endl;
+        if (scenario->loadMap(oldname)!=0) {
+            cout << "Couldn't even load the original map!" << endl;
+            startScreen();
+        }
+    }
     editor->closeBox();
 }
 
+/* TODO: support not just image bgs
+   TODO: support additional header options */
 NewMapBox::NewMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
     title="New Map"; 
     centered=false; 
@@ -427,39 +377,34 @@ NewMapBox::NewMapBox(Sint16 x, Sint16 y): TextInputBox(x,y) {
 
 void NewMapBox::evaluateEntry() {
     scenario->resetScenario();
+    ParameterMap bg_parameters;
+    bg_parameters["image"]=einput[1];
     scenario->mapname=einput[0];
-    scenario->newMap(einput[1]);
+    scenario->newMap(bg_parameters);
     scenario->reloadMap();
     editor->closeBox();
 }
 
-ObjectBox::ObjectBox(string name, string image, Sint16 x, Sint16 y, string targ1, string arg1, string targ2, string arg2, string targ3, string arg3): TextInputBox(x,y),
+ObjectBox::ObjectBox(string name, Sint16 x, Sint16 y, ParameterMap& parameters): TextInputBox(x,y),
   objname(name) {
     title=name+" Properties";
     centered=false;
     currententry=0;
-    etitles.push_back("Image name: "); einput.push_back(image);
-    if (targ1!="" || arg1!="") {
-        etitles.push_back(targ1);
-        einput.push_back(arg1);
-    }
-    if (targ2!="" || arg2!="") {
-        etitles.push_back(targ2);
-        einput.push_back(arg2);
-    }
-    if (targ3!="" || arg3!="") {
-        etitles.push_back(targ3);
-        einput.push_back(arg3);
+    ParameterMap::iterator it=parameters.begin();
+    while (it!=parameters.end()) {
+        etitles.push_back((*it).first);
+        einput.push_back((*it).second);
+        ++it;
     }
     update();
 }
 
 void ObjectBox::evaluateEntry() {
     editor->place_name=objname;
-    editor->place_image=einput[0];
-    if (einput.size()>=2) editor->place_arg1=einput[1];
-    if (einput.size()>=3) editor->place_arg2=einput[2];
-    if (einput.size()>=4) editor->place_arg3=einput[3];
+    editor->place_parameters.clear();
+    for (Uint8 i=0; i<einput.size(); ++i) {
+        if (!einput[i].empty()) editor->place_parameters[etitles[i]]=einput[i];
+    }
     editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
     editor->closeBox();
 }

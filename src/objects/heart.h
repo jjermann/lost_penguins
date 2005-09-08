@@ -7,7 +7,10 @@
 */
 class Heart : public Item {
     public:
-        Heart(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Heart");
+        Heart(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Heart();
+        static ParameterMap default_parameters;
         virtual bool act(Object* obj);
+    private:
+        Uint8 alife;
 };

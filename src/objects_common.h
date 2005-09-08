@@ -36,15 +36,16 @@
 */
 class Object {
     public:
-        Object(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Object");
+        Object(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Object();
+        static ParameterMap default_parameters;
         /// Sets the new position. If the coordinates are not in the map area
         /// they are corrected to fit into it.
         /// \return True if no correction was needed
         bool setPos(Sint16 xcord,Sint16 ycord);
         /// \brief Returns the center of an object
         /// \return Center position of the object with width=height=0
-        SDL_Rect getCenter() {
+        SDL_Rect getCenter() const {
             SDL_Rect tmprect;
             tmprect.x=pos.x+Uint16(pos.w/2);
             tmprect.y=pos.y+Uint16(pos.h/2);
@@ -57,7 +58,7 @@ class Object {
         /// \param touch If true an overlapping region is enough, if false
         ///        the object center has to be inside the specified area.
         /// \return True if the object is inside
-        bool isIn(const SDL_Rect& rect, bool touch=false);
+        bool isIn(const SDL_Rect& rect, bool touch=false) const;
         SDL_Rect* getPos() {
             return &pos;
         }
@@ -120,6 +121,8 @@ class Object {
                                         double afps=0,
                                         Uint16 astart_pos=0,
                                         AllignType aallign_type=AT_MD);
+        /// Load an animation based on a parameter map
+        EmptyAnimationPtr loadAnimation(ParameterMap& parameters=ParameterMap());
         //Events (triggered animations/effects)
         //@{
         /// Clears the event field (sets it to NULL). This should only be used by
@@ -199,8 +202,9 @@ class Object {
 */
 class Item : public Object {
     public:
-        Item(string img, Sint16 xpos=0, Sint16 ypos=0, string name="Item");
+        Item(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Item();
+        static ParameterMap default_parameters;
         virtual bool act(Object*) { return false; }
         /// Assigns the item a new (player) owner
         void setOwner(Player* plr) {
@@ -215,8 +219,9 @@ class Item : public Object {
 */
 class Background : public Object {
     public:
-        Background(string imagename);
+        Background(ParameterMap& parameters=ParameterMap());
         virtual ~Background();
+        static ParameterMap default_parameters;
 };
 
 #endif

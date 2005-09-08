@@ -8,8 +8,8 @@
 #include "scorch.h"
 
 
-Scorch::Scorch(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname),
+Scorch::Scorch(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Player(xcord,ycord,parameters),
   left_wings(SCORCH_MAX_WINGS),
   wing(V_FLY) {
     anim_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));

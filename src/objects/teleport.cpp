@@ -8,11 +8,15 @@
 #include "teleport.h"
 
 
-Teleporter::Teleporter(string imagename, Sint16 xcord, Sint16 ycord, Sint16 xExit, Sint16 yExit, string oname):
-  Object(imagename,xcord,ycord,oname),
-  au_tele(scenario->sndcache->loadWAV("teleprt.wav")) {
-    exit.x=xExit;
-    exit.y=yExit;
+Teleporter::Teleporter(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
+    /* Parameters */
+    if (hasParam(parameters,"audio_teleport")) au_tele=scenario->sndcache->loadWAV(parameters["audio_teleport"]);
+      else au_tele=scenario->sndcache->loadWAV("teleprt.wav");
+    if (hasParam(parameters,"exitx")) exit.x=atoi(parameters["exitx"].c_str());
+      else exit.x=0;
+    if (hasParam(parameters,"exity")) exit.y=atoi(parameters["exity"].c_str());
+      else exit.y=0;
     exit.w=exit.h=0;
 }
 Teleporter::~Teleporter() { }

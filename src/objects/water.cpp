@@ -9,10 +9,12 @@
 #include "water.h"
 
 
-Water::Water(string imagename, Sint16 xcord, Sint16 ycord, string oname):
-  Object(imagename,xcord,ycord,oname),
-  au_water(scenario->sndcache->loadWAV("splash2.wav")) {
+Water::Water(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
     weapon=Weapon(-1,W_WATER,WS_WATER);
+    /* Parameters */
+    if (hasParam(parameters,"audio_water_land")) au_water=scenario->sndcache->loadWAV(parameters["audio_water_land"]);
+      else au_water=scenario->sndcache->loadWAV("splash2.wav");
 }
 Water::~Water() { }
 

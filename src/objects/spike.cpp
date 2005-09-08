@@ -7,10 +7,13 @@
 #include "scenario.h"
 #include "spike.h"
 
-Spike::Spike(string imagename, Sint16 xcord, Sint16 ycord, Uint16 sdir, string oname):
-  Object(imagename,xcord,ycord,oname),
-  dir(sdir) {
+Spike::Spike(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
     weapon=Weapon(-10,W_TOUCH,WS_SPIKE);
+
+    /* Parameters */
+    if (hasParam(parameters,"direction")) dir=getDirFromString(parameters["direction"]);
+      else dir=DIR_UP;
     otype|=(DIR_ALL&(~dir));
 }
 Spike::~Spike() { }

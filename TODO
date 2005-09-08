@@ -1,10 +1,6 @@
 Bugs
 ====
  o zombie (bug in movement!, attacks too often, use events, etc...)
- o key vs. trigger in map2
- o fall event (DONE?)
- o players die event segfault (eg. olaf)
-
 
 Code
 ====
@@ -16,7 +12,6 @@ Code
      o Use Singletons
      o Create a better class hierarchy so we don't have a class playground...
      o Better handle the different game states and replace the current conditional model
-     o IDEA: Use boost to support better constructors (name loading)
      o IDEA: create dynamical plugins for all objects (or compile all in)
 
  o Move/crash/collisions:
@@ -63,7 +58,8 @@ Code
        with animations!!!
      o REWRITE: the whole event system!!!
 
- o Scenario:
+ o Scenario / Map:
+     o Specify Background in header
      o Add some nice animation, text box, etc when a level was completed (including printing
        the map name).
      o Simplify the scenario class and drastically reduce the public variables!!
@@ -83,7 +79,6 @@ Progress
  o Monsters / AI: VERY BAD
  o Game functionality (): BAD
  o Events / Effects: BAD, MESS, NESTED
- o Object (including parameter) loading: BAD
  o Move logic: ACCEPTABLE, BUGGED, NESTED
  o Objects (players, items, etc): ACCEPTABLE
  o Physic Handler: ACCEPTABLE, NESTED
@@ -91,6 +86,7 @@ Progress
  o Scenario: OK, MESS, WORKS
  o Collision detection: OK
  o Fall logic: GOOD
+ o Object loading (parameters) loading: GOOD
  o Animation / Image structure: VERY GOOD
 
 

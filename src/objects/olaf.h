@@ -16,8 +16,9 @@
 */
 class Olaf : public Player {
     public:
-        Olaf(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Olaf");
+        Olaf(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Olaf();
+        static ParameterMap default_parameters;
         /// Additionally checks if Olaf is small and how he wears his shield
         virtual void updateAnimState();
         virtual void in_left(Uint16);

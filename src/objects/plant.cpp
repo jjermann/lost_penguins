@@ -7,15 +7,19 @@
 #include "scenario.h"
 #include "plant.h"
 
-Plant::Plant(string imagename, Sint16 xcord, Sint16 ycord, Uint16 trecover, string cname):
-  Monster(imagename,xcord,ycord,cname),
-  recover(trecover),
-  tcur(trecover) {
-    maxhealth=1;
-    weapon=Weapon(-1,W_TOUCH);
-    au_hit=scenario->sndcache->loadWAV("creeper.wav");
-    au_recover=au_hit;
+Plant::Plant(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Monster(xcord,ycord,parameters) {
     enemy_types|=(OTYPE_PLAYER);
+    weapon=Weapon(-1,W_TOUCH);
+    tcur=recover;
+
+    /* Parameters */
+    if (!hasParam(parameters,"health")) health=min(1,(int)maxhealth);
+    if (!hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV("creeper.wav");
+    if (hasParam(parameters,"audio_recover")) au_recover=scenario->sndcache->loadWAV(parameters["audio_recover"]);
+      else au_recover=au_hit;
+    if (hasParam(parameters,"time_recover")) recover=atoi(parameters["recover"].c_str());
+      else recover=3000;
 }
 Plant::~Plant() { }
 

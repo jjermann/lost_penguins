@@ -8,8 +8,8 @@
 #include "fang.h"
 
 
-Fang::Fang(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname),
+Fang::Fang(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Player(xcord,ycord,parameters),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
     anim_left=loadAnimation(scenario->imgcache->loadImage(4,"Fang_Breath_left.png"),4);

@@ -13,8 +13,8 @@
 #include "players_common.h"
 
 
-Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Character(imagename,xcord,ycord,pname),
+Player::Player(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Character(xcord,ycord,parameters),
   currentitem(0),
   anim_left(new EmptyAnimation(&anim_right)),
   anim_right(new EmptyAnimation()),
@@ -49,10 +49,6 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
   anim_fall_middle(new EmptyAnimation(&anim_fall_right)),
   anim_climb(new EmptyAnimation(&anim_right)),
   anim_bar(new EmptyAnimation(&anim_right)) {
-    health=3;
-    maxhealth=4;
-    maxspeedx=300;
-    maxspeedy=200;
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         items[i]=NULL;
     }
@@ -69,6 +65,12 @@ Player::Player(string imagename, Sint16 xcord, Sint16 ycord, string pname):
     au_fire=scenario->sndcache->loadWAV("fireball.wav");
     au_die=scenario->sndcache->loadWAV("bones.wav");
     au_heal=scenario->sndcache->loadWAV("usefood1.wav");
+
+    /* Parameters */
+    if (!hasParam(parameters,"maxhealth")) maxhealth=4;
+    if (!hasParam(parameters,"health")) health=min(3,(int)maxhealth);
+    if (!hasParam(parameters,"maxspeedx")) maxspeedx=300;
+    if (!hasParam(parameters,"maxspeedy")) maxspeedy=200;
 }
 
 Player::~Player() {
@@ -309,7 +311,9 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
     if (newhealth==0) {
         die();
         //should be !=NULL or sthg is wrong with the placement code...
-        Character* deadplr=scenario->pool->addCharacter(new DeadPlayer("dead_player.bmp",pos.x,pos.y));
+        ParameterMap deadplr_parameters;
+        deadplr_parameters["image"]="dead_player.bmp";
+        Character* deadplr=scenario->pool->addCharacter(new DeadPlayer(pos.x,pos.y,deadplr_parameters));
         switch(weap.getSubType()) {
             case WS_FIRE: {
                 if (deadplr) deadplr->setEvent(new CAnimEvent(deadplr,10,0,ESTATE_BUSY,au_fire,(state&STATE_LEFT) ? anim_die_burn_left : anim_die_burn_right));
@@ -390,6 +394,7 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
     return newhealth;
 }
 
-DeadPlayer::DeadPlayer(string imagename, Sint16 xcord, Sint16 ycord, string name):
-  Character(imagename,xcord,ycord,name) { }
+DeadPlayer::DeadPlayer(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Character(xcord,ycord,parameters) {
+}
 DeadPlayer::~DeadPlayer() { }

@@ -7,8 +7,8 @@
 #include "characters_common.h"
 
 
-Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Object(imagename,xcord,ycord,pname),
+Character::Character(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters),
   health(1),
   maxhealth(1),
   maxspeedx(300),
@@ -22,6 +22,16 @@ Character::Character(string imagename, Sint16 xcord, Sint16 ycord, string pname)
   weapon(Weapon(0)) {
     state=STATE_FALL;
     otype|=OTYPE_CHARACTER;
+
+    /* Parameters */
+    if (hasParam(parameters,"maxhealth")) health=atoi(parameters["maxhealth"].c_str());
+      else maxhealth=1;
+    if (hasParam(parameters,"health")) health=min((int)maxhealth,atoi(parameters["health"].c_str()));
+      else health=min(1,(int)maxhealth);
+    if (hasParam(parameters,"maxspeedx")) health=atoi(parameters["maxspeedx"].c_str());
+      else maxspeedx=300;
+    if (hasParam(parameters,"maxspeedy")) health=atoi(parameters["maxspeedy"].c_str());
+      else maxspeedy=0;
 }
 
 Character::~Character() { }

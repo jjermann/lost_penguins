@@ -6,12 +6,16 @@
 #include "scenario.h"
 #include "triggered_bomb.h"
 
-TriggeredBomb::TriggeredBomb(string imagename, Sint16 xcord, Sint16 ycord, Uint16 tleft, string cname):
-  Character(imagename,xcord,ycord,cname),
-  countdown(tleft),
-  au_bomb(scenario->sndcache->loadWAV("explsn.wav")) {
+TriggeredBomb::TriggeredBomb(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Character(xcord,ycord,parameters) {
     weapon=Weapon(-1,W_EXPLOSION);
     enemy_types|=(OTYPE_PLAYER|OTYPE_MONSTER);
+
+    /* Parameters */
+    if (hasParam(parameters,"audio_bomb")) au_bomb=scenario->sndcache->loadWAV(parameters["audio_bomb"]);
+      else au_bomb=scenario->sndcache->loadWAV("explsn.wav");
+    if (hasParam(parameters,"countdown")) countdown=atoi(parameters["countdown"].c_str());
+      else countdown=3000;
 }
 TriggeredBomb::~TriggeredBomb() { }
 

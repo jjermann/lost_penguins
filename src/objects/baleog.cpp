@@ -8,8 +8,8 @@
 #include "baleog.h"
 
 
-Baleog::Baleog(string imagename, Sint16 xcord, Sint16 ycord, string pname):
-  Player(imagename,xcord,ycord,pname) {
+Baleog::Baleog(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Player(xcord,ycord,parameters) {
     anim_left=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_left.bmp"));
     anim_right=loadAnimation(scenario->imgcache->loadImage(1,"baleog1_right.bmp"));
     anim_walk_left=loadAnimation(scenario->imgcache->loadImage("baleog1-run_left.png"),8);

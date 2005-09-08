@@ -30,6 +30,37 @@
 #include "objects/zombie.h"
 
 
+ParameterMap Object::default_parameters;
+ParameterMap Background::default_parameters;
+ParameterMap Trigger::default_parameters;
+ParameterMap Door::default_parameters;
+ParameterMap Exit::default_parameters;
+ParameterMap Teleporter::default_parameters;
+ParameterMap Wall::default_parameters;
+ParameterMap Water::default_parameters;
+ParameterMap Wind::default_parameters;
+ParameterMap Spike::default_parameters;
+
+ParameterMap Item::default_parameters;
+ParameterMap Heart::default_parameters;
+ParameterMap Key::default_parameters;
+ParameterMap Bomb::default_parameters;
+
+ParameterMap Character::default_parameters;
+ParameterMap DeadPlayer::default_parameters;
+ParameterMap TriggeredBomb::default_parameters;
+
+ParameterMap Monster::default_parameters;
+ParameterMap Plant::default_parameters;
+ParameterMap Zombie::default_parameters;
+
+ParameterMap Player::default_parameters;
+ParameterMap Erik::default_parameters;
+ParameterMap Olaf::default_parameters;
+ParameterMap Scorch::default_parameters;
+ParameterMap Fang::default_parameters;
+ParameterMap Baleog::default_parameters;
+
 bool Compare::operator()(const Object* obj1, const Object* obj2) {
     if (obj1->onum<obj2->onum) return true;
     else return false;
@@ -37,60 +68,148 @@ bool Compare::operator()(const Object* obj1, const Object* obj2) {
 
 ObjectsPool::ObjectsPool():
   currentplayer(playerspool.begin()),
-  au_switch(sndcache->loadWAV("newchar.wav")) { }
+  au_switch(sndcache->loadWAV("newchar.wav")) {
+    setDefaultObjParam();
+}
 ObjectsPool::~ObjectsPool() {
     object_iterator i=objectspool.begin();
     while (i!=objectspool.end()) i=removeObject(i);
 }
+void ObjectsPool::setDefaultObjParam() {
+    Object::default_parameters["name"]="";
+    Object::default_parameters["w"]="";
+    Object::default_parameters["h"]="";
+    Object::default_parameters["image"]="";
+    Background::default_parameters=Object::default_parameters;
+    Exit::default_parameters=Object::default_parameters;
+    Exit::default_parameters["image"]="exit.bmp";
+    Wall::default_parameters=Object::default_parameters;
+    Door::default_parameters=Object::default_parameters;
+    Door::default_parameters["key"]="Key";
+    Door::default_parameters["start_open"]="";
+    Door::default_parameters["audio_open"]="dooropn.wav";
+    Door::default_parameters["audio_close"]="dooropn.wav";
+    Teleporter::default_parameters=Object::default_parameters;
+    Teleporter::default_parameters["exitx"]="0";
+    Teleporter::default_parameters["exity"]="0";
+    Teleporter::default_parameters["audio_teleport"]="teleprt.wav";
+    Water::default_parameters=Object::default_parameters;
+    Water::default_parameters["audio_water_land"]="splash2.wav";
+    Wind::default_parameters=Object::default_parameters;
+    Wind::default_parameters["accel"]="0";
+    Trigger::default_parameters=Object::default_parameters;
+    Trigger::default_parameters["image"]="key.bmp";
+    Trigger::default_parameters["key"]="Key";
+    Trigger::default_parameters["target"]="Target";
+    Spike::default_parameters=Object::default_parameters;
+    Spike::default_parameters["direction"]="up";
 
-Object* ObjectsPool::addObjectbyName(const string& obj, const string& image, Sint16 x, Sint16 y, string& arg1, string& arg2, const string& arg3) {
+    Item::default_parameters=Object::default_parameters;
+    Heart::default_parameters=Item::default_parameters;
+    Heart::default_parameters["image"]="heart.bmp";
+    Heart::default_parameters["alife"]="1";
+    Key::default_parameters=Item::default_parameters;
+    Key::default_parameters["image"]="key.bmp";
+    Key::default_parameters["audio_key"]="";
+    Bomb::default_parameters=Item::default_parameters;
+    Bomb::default_parameters["image"]="bomb_fire.bmp";
+    Bomb::default_parameters["image_bomb"]="bomb_fire.bmp";
+    Bomb::default_parameters["countdown"]="3000";
+    Bomb::default_parameters["audio_bomb"]="explsn.wav";
+
+    Character::default_parameters=Object::default_parameters;
+    Character::default_parameters["maxhealth"]=1;
+    Character::default_parameters["health"]="1";
+    Character::default_parameters["maxspeedx"]="300";
+    Character::default_parameters["maxspeedy"]="0";
+    DeadPlayer::default_parameters=Character::default_parameters;
+    TriggeredBomb::default_parameters=Character::default_parameters;
+    TriggeredBomb::default_parameters["image"]="bomb_fire.bmp";
+    TriggeredBomb::default_parameters["countdown"]="3000";
+    TriggeredBomb::default_parameters["audio_bomb"]="explsn.wav";
+
+    Monster::default_parameters=Character::default_parameters;
+    Monster::default_parameters["maxhealth"]=1;
+    Monster::default_parameters["health"]="1";
+    Monster::default_parameters["maxspeedx"]="50";
+    Monster::default_parameters["maxspeedy"]="0";
+    Monster::default_parameters["audio_hit"]="monhit.wav";
+    Plant::default_parameters=Character::default_parameters;
+    Plant::default_parameters["audio_hit"]="creeper.wav";
+    Plant::default_parameters["audio_recover"]="creeper.wav";
+    Plant::default_parameters["time_recover"]="3000";
+    Zombie::default_parameters=Character::default_parameters;
+    Zombie::default_parameters["maxspeedx"]="80";
+    Zombie::default_parameters["audio_attack"]="clang.wav";
+
+    Player::default_parameters=Character::default_parameters;
+    Player::default_parameters["maxhealth"]="4";
+    Player::default_parameters["health"]="3";
+    Player::default_parameters["maxspeedx"]="300";
+    Player::default_parameters["maxspeedy"]="200";
+    Erik::default_parameters=Player::default_parameters;
+    Olaf::default_parameters=Player::default_parameters;
+    Scorch::default_parameters=Player::default_parameters;
+    Fang::default_parameters=Player::default_parameters;
+    Baleog::default_parameters=Player::default_parameters;
+}
+
+const ParameterMap& ObjectsPool::getDefaultObjParambyName(const string& obj) {
+    if      (obj=="Object")          return Object::default_parameters;
+    else if (obj=="Background")      return Background::default_parameters;
+    else if (obj=="Trigger")         return Trigger::default_parameters;
+    else if (obj=="Door")            return Door::default_parameters;
+    else if (obj=="Exit")            return Exit::default_parameters;
+    else if (obj=="Teleporter")      return Teleporter::default_parameters;
+    else if (obj=="Wall")            return Wall::default_parameters;
+    else if (obj=="Water")           return Water::default_parameters;
+    else if (obj=="Wind")            return Wind::default_parameters;
+    else if (obj=="Spike")           return Spike::default_parameters;
+
+    else if (obj=="Item")            return Item::default_parameters;
+    else if (obj=="Heart")           return Heart::default_parameters;
+    else if (obj=="Key")             return Key::default_parameters;
+    else if (obj=="Bomb")            return Bomb::default_parameters;
+
+    else if (obj=="Character")       return Character::default_parameters;
+    else if (obj=="DeadPlayer")      return DeadPlayer::default_parameters;
+    else if (obj=="TriggeredBomb")   return TriggeredBomb::default_parameters;
+    else if (obj=="Plant")           return Plant::default_parameters;
+    else if (obj=="Zombie")          return Zombie::default_parameters;
+
+    else if (obj=="Player")          return Player::default_parameters;
+    else if (obj=="Erik")            return Erik::default_parameters;
+    else if (obj=="Olaf")            return Olaf::default_parameters;
+    else if (obj=="Scorch")          return Scorch::default_parameters;
+    else if (obj=="Fang")            return Fang::default_parameters;
+    else if (obj=="Baleog")          return Baleog::default_parameters;
+    else return empty_parameter;
+}
+
+Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, ParameterMap& parameters) {
     //Set names...
-    string name=getNextObjectName(obj);
-    if (!arg1.empty()) {
-        //one additional parameter
-        if (obj=="Trigger" || obj=="Door" || obj=="Bomb" || obj=="TriggeredBomb" || obj=="Plant" || obj=="Geyser" || obj=="Wind" || obj=="Spike") {
-            if (!arg2.empty()) name=arg2;
-        //two additional parameter
-        } else if (obj=="Teleporter") {
-            if (!arg3.empty()) name=arg3;
-        //no additional parameters
-        } else {
-            name=arg1;
-        }
-    }
-    if (arg1.empty()) arg1="0";
-    if (arg2.empty()) arg2="0";
+    if (!hasParam(parameters,"name")) parameters["name"]=getNextObjectName(obj);
 
-    //normal objects
-    if (obj=="Wall")         return (addObject(new Wall(image,x,y,name)));
-    else if (obj=="Exit")    return (addObject(new Exit(image,x,y,name)));
-    else if (obj=="Water")   return (addObject(new Water(image,x,y,name)));
-    else if (obj=="Teleporter") return (addObject(new Teleporter(image,x,y,atoi(arg1.c_str()),atoi(arg2.c_str()),name)));
-    else if (obj=="Wind")    return (addObject(new Wind(image,x,y,atoi(arg1.c_str()),name)));
-    else if (obj=="Geyser")  return (addObject(new Geyser(image,x,y,atoi(arg1.c_str()),name)));
-    else if (obj=="Trigger") return (addObject(new Trigger(image,x,y,arg1,name,arg3)));
-    else if (obj=="Door")    return (addObject(new Door(image,x,y,arg1,name)));
-    else if (obj=="Spike")   return (addObject(new Spike(image,x,y,atoi(arg1.c_str()),name)));
-    //Items
-    else if (obj=="Heart")   return (addObject(new Heart(image,x,y,name)));
-    else if (obj=="Key")     return (addObject(new Key(image,x,y,name)));
-    else if (obj=="Bomb")    return (addObject(new Bomb(image,x,y,atoi(arg1.c_str()),name)));
-
-    //normal characters
-    else if (obj=="TriggeredBomb") return (addCharacter(new TriggeredBomb(image,x,y,atoi(arg1.c_str()),name)));
-
-    //Players
-    else if (obj=="Erik")    return (addPlayer(new Erik(image,x,y,name)));
-    else if (obj=="Olaf")    return (addPlayer(new Olaf(image,x,y,name)));
-    else if (obj=="Baleog")  return (addPlayer(new Baleog(image,x,y,name)));
-    else if (obj=="Fang")    return (addPlayer(new Fang(image,x,y,name)));  
-    else if (obj=="Scorch")  return (addPlayer(new Scorch(image,x,y,name)));
-
-    //Monsters
-    else if (obj=="Plant")   return (addMonster(new Plant(image,x,y,atoi(arg1.c_str()),name)));
-    else if (obj=="Zombie")  return (addMonster(new Zombie(image,x,y,name)));
-
-    //not recognized
+    if      (obj=="Wall")           return (addObject(new Wall(x,y,parameters)));
+    else if (obj=="Exit")           return (addObject(new Exit(x,y,parameters)));
+    else if (obj=="Water")          return (addObject(new Water(x,y,parameters)));
+    else if (obj=="Teleporter")     return (addObject(new Teleporter(x,y,parameters)));
+    else if (obj=="Wind")           return (addObject(new Wind(x,y,parameters)));
+    else if (obj=="Geyser")         return (addObject(new Geyser(x,y,parameters)));
+    else if (obj=="Trigger")        return (addObject(new Trigger(x,y,parameters)));
+    else if (obj=="Door")           return (addObject(new Door(x,y,parameters)));
+    else if (obj=="Spike")          return (addObject(new Spike(x,y,parameters)));
+    else if (obj=="Heart")          return (addObject(new Heart(x,y,parameters)));
+    else if (obj=="Key")            return (addObject(new Key(x,y,parameters)));
+    else if (obj=="Bomb")           return (addObject(new Bomb(x,y,parameters)));
+    else if (obj=="TriggeredBomb")  return (addCharacter(new TriggeredBomb(x,y,parameters)));
+    else if (obj=="Erik")           return (addPlayer(new Erik(x,y,parameters)));
+    else if (obj=="Olaf")           return (addPlayer(new Olaf(x,y,parameters)));
+    else if (obj=="Baleog")         return (addPlayer(new Baleog(x,y,parameters)));
+    else if (obj=="Fang")           return (addPlayer(new Fang(x,y,parameters)));  
+    else if (obj=="Scorch")         return (addPlayer(new Scorch(x,y,parameters)));
+    else if (obj=="Plant")          return (addMonster(new Plant(x,y,parameters)));
+    else if (obj=="Zombie")         return (addMonster(new Zombie(x,y,parameters)));
     else {
         cout << "Object " << obj << " unknown, skipping...\n";
         return NULL;

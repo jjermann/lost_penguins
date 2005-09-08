@@ -60,9 +60,10 @@ inline void Scenario::reinitMap() {
     failed=false;
 }
 
-void Scenario::newMap(string bgimage) {
+void Scenario::newMap(const ParameterMap& bg_parameters) {
     mapbuf.clear();
-    mapbuf.push_back("Background "+bgimage);
+    mapbuf.push_back("Background "+putParameters(bg_parameters));
+    mapbuf.push_back("#ENDHEADER");
 }
 int Scenario::loadMapBuf(string mapn) {
     mapname=mapn;
@@ -90,69 +91,55 @@ int Scenario::loadMapBuf(string mapn) {
 
 int Scenario::reloadMap() {
     reinitMap();
-    string image;
-    string cname,arg1,arg2,arg3;
+    string cname;
     Uint16 x,y;
-    bool header=false;
+    ParameterMap parameters;
+    bool header=true;
 
     //check every line
     for (Uint16 linenum=0; linenum<mapbuf.size(); linenum++) {
-        //parse the header, always start a header with #HEADER and end it with #ENDHEADER!
+        //parse the header first, end it with #ENDHEADER!
         if (header) {
-            cname.erase();
-            arg1.erase();
-            arg2.erase();
-            arg3.erase();
             std::istringstream tmpstream(mapbuf[linenum]);
-            tmpstream >> cname >> arg1 >> arg2 >> arg3;
+            tmpstream >> cname;
             if (cname[0]=='#') {
                 if (cname=="#ENDHEADER") header=false;
                 continue;
+            } else {
+                string parameterlist((istreambuf_iterator<char>(tmpstream)), istreambuf_iterator<char>());
+                parameters=getParameters(parameterlist);
+                if (cname=="Background" && (!background)) {
+                    background=new Background(parameters);
+                    if (background) {
+                        area=background->getPos();
+                        bgimage=parameters["image"];
+                    }
+                }
             }
-            continue;
-        }
-        cname.erase();
-        image.erase();
-        x=0;
-        y=0;
-        arg1=arg2=arg3="";
-        std::istringstream tmpstream(mapbuf[linenum]);
-        tmpstream >> cname >> image >> x >> y >> arg1 >> arg2 >> arg3;
-
-        //Skip empty lines
-        if (cname.empty()) continue;
-        //Skip comments
-        if (cname[0]=='#') {
-            if (cname=="#HEADER") header=true;
-            continue;
-        }
-
-        if (cname=="Background" && (!background)) {
-            background=new Background(image);
-            if (background) {
-                area=background->getPos();
-                bgimage=image;
-            }
-        //Background has to be first!
+        // Background has to be loaded...
         } else if (background) {
-            pool->addObjectbyName(cname,image,x,y,arg1,arg2,arg3);
+            cname.erase();
+            x=y=0;
+            std::istringstream tmpstream(mapbuf[linenum]);
+            tmpstream >> cname >> x >> y;
+            //Skip empty lines
+            if (cname.empty()) continue;
+            if (cname[0]=='#') continue;
+
+            string parameterlist((istreambuf_iterator<char>(tmpstream)), istreambuf_iterator<char>());
+            parameters=getParameters(parameterlist);
+            pool->addObjectbyName(cname,x,y,parameters);
         } else {
-            cout << "No background found yet, skipping " << cname << " ...\n";
+            cout << "Map loading failed: No background found!" << endl;
+            return 1;
         }
     }
 
     sfxeng->playMusic((config.datadir + "01theme.wav").c_str());
-
-    //Has a background been found?
-    if (background) {
-        if (pool->playerspool.size()>0) player=*pool->playerspool.begin();
-        else player=NULL;
-        if (player==NULL) cout << "No player found!\n";
-        return 0;
-    } else {
-        cout << "Map loading failed: No background found!\n";
-        return 1;
-    }
+    if (pool->playerspool.size()>0) player=*pool->playerspool.begin();
+    else player=NULL;
+    if (player==NULL) cout << "No player found!\n";
+    return 0;
 }
 
 int Scenario::loadMap(string mapn) {

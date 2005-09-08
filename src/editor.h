@@ -84,7 +84,7 @@ class TextInputBox : public Box {
 */
 class ObjectBox : public TextInputBox {
     public:
-        ObjectBox(string,string,Sint16,Sint16,string targ1="",string arg1="",string targ2="",string arg2="",string targ3="",string arg3="");
+        ObjectBox(string,Sint16,Sint16,ParameterMap& parameters);
     protected:
         virtual void evaluateEntry();
         string objname;
@@ -150,16 +150,8 @@ class Editor {
         string save_name;
         /// Object to place when clicking the left mouse button
         string place_name;
-        /// Image name of the placed object
-        string place_image;
-        /// Object name to place when clicking the left mouse button
-        string* place_obj_name;
-        /// First additonal parameter of the placed object
-        string place_arg1;
-        /// Seconds additional parameter of the placed object
-        string place_arg2;
-        /// Third additional parameter of the placed object
-        string place_arg3;
+        /// Parameter list used to create the object
+        ParameterMap place_parameters;
         /// Append a command to the buffered map file
         void appendtoBuf(string);
         /* TODO: add header modifiers */

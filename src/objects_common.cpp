@@ -7,18 +7,26 @@
 #include "scenario.h"
 
 
-Object::Object(string imagename, Sint16 xcord, Sint16 ycord, string oname):
+Object::Object(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   state(NOTHING),
   event(NULL),
   otype(NOTHING),
-  name(oname),
-  delete_flag(false),
-  anim_orig(loadAnimation(scenario->imgcache->loadImage(1,imagename))) {
-    animation=anim_orig;
-    pos=animation->getFrameDim();
+  delete_flag(false) {
+    onum=++scenario->max_obj_num;
+    animation.reset(new EmptyAnimation(&anim_orig));
+
+    /* Parameters */
+    anim_orig=loadAnimation(parameters);
+    if (hasParam(parameters,"name")) name=parameters["name"];
+      else name="Object";
+    if (hasParam(parameters,"w")) pos.w=atoi(parameters["w"].c_str());
+      else if (anim_orig->isValid()) pos.w=anim_orig->getFrameDim().w;
+      else pos.w=(Uint16)(DATA_LVLPLAYER_W*sqrt(config.lvlscale>=0 ? config.lvlscale : -1/config.lvlscale)+0.5);
+    if (hasParam(parameters,"h")) pos.h=atoi(parameters["h"].c_str());
+      else if (anim_orig->isValid()) pos.h=anim_orig->getFrameDim().h;
+      else pos.h=(Uint16)(DATA_LVLPLAYER_H*sqrt(config.lvlscale>=0 ? config.lvlscale : -1/config.lvlscale)+0.5);
     pos.x=xcord;
     pos.y=ycord;
-    onum=++scenario->max_obj_num;
 }
 
 Object::~Object() {
@@ -30,7 +38,7 @@ bool Object::operator<(const Object& obj) const {
     else return false;
 }
 
-bool Object::isIn(const SDL_Rect& rect, bool touch) {
+bool Object::isIn(const SDL_Rect& rect, bool touch) const {
     if (touch) {
         if ((pos.x+pos.w) > rect.x && pos.x < (rect.x+rect.w) && (pos.y+pos.h) > rect.y && pos.y < (rect.y+rect.h)) return true;
         else return false;
@@ -128,6 +136,11 @@ EmptyAnimationPtr Object::loadAnimation(const Image& abase_image,
     return anim;
 }
 
+EmptyAnimationPtr Object::loadAnimation(ParameterMap& parameters) {
+    if (hasParam(parameters,"image")) return loadAnimation(scenario->imgcache->loadImage(1,parameters["image"]));
+        return EmptyAnimationPtr(new EmptyAnimation());
+}
+
 SDL_Rect Object::getDrawPos() const {
     return animation->getDrawPos();
 }
@@ -197,15 +210,21 @@ void Object::stopEvent() {
 }
 
 
-Item::Item(string imagename, Sint16 xcord, Sint16 ycord, string iname):
-  Object(imagename,xcord,ycord,iname), owner(NULL) {
+Item::Item(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters), owner(NULL) {
     otype|=OTYPE_ITEM;
 }
 Item::~Item() { }
 
 
-Background::Background(string imagename):
-  Object(imagename,0,0,"Background") {
+Background::Background(ParameterMap& parameters):
+  Object(0,0,parameters) {
     otype=NOTHING;
+    name="Background";
+
+    /* Parameters */
+    /* TODO: support surface creation and use it as a fallback if no image was specified */
+    anim_orig=loadAnimation(parameters);
+    pos=anim_orig->getFrameDim();
 }
 Background::~Background() { }

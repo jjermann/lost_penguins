@@ -9,8 +9,9 @@
 */
 class Geyser : public Object {
     public:
-        Geyser(string imagename, Sint16 xpos=0, Sint16 ypos=0, Sint16 yAdd=0, string name="Geyser");
+        Geyser(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Geyser();
+        static ParameterMap default_parameters;
         virtual void idle(Uint16 dt);
     private:
         Sint16 aspeed;

@@ -6,7 +6,8 @@
 */
 class Exit : public Object {
     public:
-        Exit(string imagename, Sint16 xpos=0, Sint16 ypos=0, string name="Exit");
+        Exit(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
         virtual ~Exit();
+        static ParameterMap default_parameters;
         virtual bool act(Object* obj);
 };

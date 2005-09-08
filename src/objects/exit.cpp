@@ -2,12 +2,16 @@
 #include "objectpools.h"
 //shouldn't be here...
 #include "scenario.h"
+#include "imgcache.h"
 #include "players_common.h"
 #include "exit.h"
 
 
-Exit::Exit(string imagename, Sint16 xcord, Sint16 ycord, string oname):
-  Object(imagename,xcord,ycord,oname) { }
+Exit::Exit(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+  Object(xcord,ycord,parameters) {
+    /* Parameters */
+    if (!hasParam(parameters,"image")) anim_orig=loadAnimation(scenario->imgcache->loadImage(1,"exit.bmp"));
+}
 Exit::~Exit() { }
 
 bool Exit::act(Object*) {
