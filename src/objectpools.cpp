@@ -166,6 +166,7 @@ void ObjectsPool::setDefaultObjParam() {
     Player::default_parameters["audio_heal"]="usefood1.wav";
 
     Erik::default_parameters=Player::default_parameters;
+    Erik::default_parameters["file"]="erik.inf";
     Erik::default_parameters["audio_jump"]="rboots.wav";
     Erik::default_parameters["audio_run"]="";
     Olaf::default_parameters=Player::default_parameters;

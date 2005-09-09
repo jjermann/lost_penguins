@@ -4,6 +4,7 @@
 #include "menu.h"
 #include "font.h"
 #include "gfxeng.h"
+#include "objects_common.h"
 #include "editor.h"
 
 
@@ -36,6 +37,13 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         setBox(new EditBox(x,y));
     } else if (action&EDIT_ACT_BOX) {
         if (box) box->act(box->getCurrentEntry(x,y));
+    } else if (action&EDIT_REMOVE_OBJECT) {
+        Object* obj=scenario->getObjectAt(xs,ys);
+        if (obj) {
+            if (removefromBuf(obj->getName()).empty()) {
+                cout << "Unable to remove object " << obj->getName() << ": Name identifier not found!" << endl;
+            } else scenario->reloadMap();
+        }
     } else if (action&EDIT_PLACE_OBJECT) {
         scenario->reloadMap();
         if (scenario->pool->addObjectbyName(place_name,xs,ys,place_parameters)) {
@@ -228,6 +236,7 @@ void EditBox::act(Sint8 curentry) {
     } else if (entries[curentry]=="Place Object") {
         editor->setBox(new PlaceBox(area.x,area.y));
     } else if (entries[curentry]=="Remove Object") {
+        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_REMOVE_OBJECT;
         editor->closeBox();
     } else if (entries[curentry]=="Move Object") {
         editor->closeBox();

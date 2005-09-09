@@ -5,6 +5,7 @@
 #define EDIT_BOX            0x00000004
 #define EDIT_ACT_BOX        0x00000008
 #define EDIT_PLACE_OBJECT   0x00000010
+#define EDIT_REMOVE_OBJECT  0x00000020
 
 /** \brief abstract Box base class
 

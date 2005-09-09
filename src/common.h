@@ -49,6 +49,8 @@ typedef std::set<Object *>::iterator object_iterator;
 typedef std::set<Character *>::iterator character_iterator;
 typedef std::set<Player *>::iterator player_iterator;
 typedef std::set<Monster *>::iterator monster_iterator;
+typedef std::set<Object *>::reverse_iterator object_riterator;
+typedef std::set<Character *>::reverse_iterator character_riterator;
 typedef boost::shared_ptr<EmptyAnimation> EmptyAnimationPtr;
 typedef std::map<string,string> ParameterMap;
 

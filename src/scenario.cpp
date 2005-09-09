@@ -30,7 +30,7 @@ Scenario::Scenario():
 }
 
 Scenario::~Scenario() {
-    cout << endl << "Closing map...\n";
+    cout << "Closing map...\n";
     delete pool;
     cout << "Map: Deleted Pools...\n";
     if (background) delete background;
@@ -80,8 +80,45 @@ int Scenario::loadMapBuf(string mapn) {
     }
 
     mapbuf.clear();
+
+    /* We parse the parameters to add a name if it was missing
+       This whole file reading looks much more complicated because
+       of this (otherwise there would only be mapbuf.push_back(tmpline) */
+    string cname;
+    Uint16 x,y;
+    ParameterMap parameters;
+    bool header=true;
+    std::map<string,Uint16> namecount;
     while (getline(mapfile,tmpline)) {
-        mapbuf.push_back(tmpline);
+        if (header) {
+            mapbuf.push_back(tmpline);
+            std::istringstream tmpstream(tmpline);
+            tmpstream >> cname;
+            if (cname[0]=='#') {
+                if (cname=="#ENDHEADER") header=false;
+                continue;
+            }
+        } else {
+            cname.erase();
+            x=y=0;
+            std::istringstream tmpstream(tmpline);
+            tmpstream >> cname >> x >> y;
+
+            if (cname.empty() || cname[0]=='#') {
+                mapbuf.push_back(tmpline);
+                continue;
+            } else {
+                namecount[cname]++;
+            }
+
+            string parameterlist((istreambuf_iterator<char>(tmpstream)), istreambuf_iterator<char>());
+            parameters=getParameters(parameterlist);
+            if (!hasParam(parameters,"name")) {
+                if (parameters.empty()) tmpline+=" name="+cname+itos(namecount[cname]);
+                else tmpline+=", name="+cname+itos(namecount[cname]);
+            }
+            mapbuf.push_back(tmpline);
+        }
     }
 
     mapfile.close();
@@ -294,4 +331,17 @@ std::set<Character *> Scenario::getCharactersIn(Uint16 mask, const SDL_Rect& rec
         ++cit;
     }
     return tmpset;
+}
+
+Object* Scenario::getObjectAt(Sint16 x, Sint16 y, Uint16 mask) const {
+    SDL_Rect tmprect;
+    tmprect.x=x;
+    tmprect.y=y;
+    tmprect.w=tmprect.h=1;
+    object_riterator obit=pool->objectspool.rbegin();
+    while (obit != pool->objectspool.rend()) {
+        if ((((*obit)->getType())&mask) && ((*obit)->isIn(tmprect,true))) return (*obit);
+        ++obit;
+    }
+    return NULL;
 }
