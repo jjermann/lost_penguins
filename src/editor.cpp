@@ -14,10 +14,19 @@ Editor::Editor() {
     string place_name="";
     save_name="newmap.cfg";
     box=NULL;
+    mask_surface=NULL;
+    reinit();
 }
 
 Editor::~Editor() {
     closeBox();
+}
+
+void Editor::reinit() {
+    if (mask_surface) SDL_FreeSurface(mask_surface);
+    mask_surface=gfxeng->createRGBAScreenSurface();
+    SDL_FillRect(mask_surface,0,SDL_MapRGBA(mask_surface->format,100,0,0,100));
+    if (box) box->update();
 }
 
 void Editor::updateSelection(Sint16 x, Sint16 y) {
@@ -219,9 +228,7 @@ void Box::update() {
     getArea();
 
     if (surface!=NULL) SDL_FreeSurface(surface);
-    SDL_Surface* tmp=SDL_CreateRGBSurface(vflags, area.w, area.h, 32, rmask, gmask, bmask, amask);
-    surface=SDL_DisplayFormatAlpha(tmp);
-    SDL_FreeSurface(tmp);
+    surface=gfxeng->createRGBASurface(area.w, area.h);
 
     SDL_FillRect(surface,0,SDL_MapRGBA(surface->format,200,200,200,180));
     /* create a border */

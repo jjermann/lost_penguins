@@ -255,12 +255,6 @@ void closeMenus();
 
 //global variables
 //@{
-/// masks
-extern const Uint32 rmask;
-extern const Uint32 gmask;
-extern const Uint32 bmask;
-extern const Uint32 amask;
-extern Uint32 vflags;
 /// Game configuration
 extern Config config;
 /// Image Cache

@@ -14,12 +14,24 @@
 
 
 GraphicsEngine::GraphicsEngine():
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  rmask(0xff000000),
+  gmask(0x00ff0000),
+  bmask(0x0000ff00),
+  amask(0x000000ff),
+#else
+  rmask(0x000000ff),
+  gmask(0x0000ff00),
+  bmask(0x00ff0000),
+  amask(0xff000000),
+#endif
   screen(NULL),
   menubg(NULL),
   show_bar(true),
   show_fps(true),
   show_debug(false),
   fullscreen(config.full) {
+    vflags=SDL_HWSURFACE|SDL_RESIZABLE|SDL_DOUBLEBUF|SDL_HWACCEL;
     updatetype=UPDATE_ALL;
     shift.x=0;
     shift.y=0;
@@ -106,6 +118,7 @@ void GraphicsEngine::resize(Uint16 width, Uint16 height) {
     vis_map.w=screen->w;
     vis_map.h=screen->h-bar.h;
     update(UPDATE_ALL);
+    if (editor && game_mode&GAME_EDIT) editor->reinit();
 }
 
 inline SDL_Rect GraphicsEngine::clipToBG(SDL_Rect dest) const {
@@ -161,6 +174,7 @@ void GraphicsEngine::drawScene() {
     while (obit!=scenario->pool->objectspool.end()) {
         tmprect=((*obit)->getDrawPos());
         srcpos=(*obit)->getFrame().pos;
+        SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         if (show_debug) {
             debugrect=*(*obit)->getPos();
             drawRectangle(debugrect,1,SDL_MapRGB(screen->format,100,20,0));
@@ -168,11 +182,17 @@ void GraphicsEngine::drawScene() {
         // TODO: fix this gfxeng mess
         if (editor && game_mode&GAME_EDIT) {
             if (editor->selection.find((*obit)->getName())!=editor->selection.end()) {
-                debugrect=*(*obit)->getPos();
-                drawRectangle(debugrect,3,SDL_MapRGB(screen->format,100,100,0));
+                if (editor->mask_surface) {
+                    debugrect=*(*obit)->getPos();
+                    SDL_Rect area=debugrect;
+                    area.x=area.y=0;
+                    SDL_BlitSurface(editor->mask_surface,&area,screen,shiftMapArea(debugrect,shift));
+                } else {
+                    debugrect=*(*obit)->getPos();
+                    drawRectangle(debugrect,3,SDL_MapRGB(screen->format,100,100,0));
+                }
             }
         }
-        SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         ++obit;
     }
     // TODO: fix this gfxeng mess
@@ -460,4 +480,22 @@ void GraphicsEngine::drawRectangle(SDL_Rect rect, Uint8 border, Uint32 color) {
     rect.h+=2*border;
     /* vertical right */
     SDL_FillRect(screen,&rect,color);
+}
+
+SDL_Surface* GraphicsEngine::createRGBSurface(Uint16 width, Uint16 height) {
+    SDL_Surface* tmp_surface=SDL_CreateRGBSurface(vflags, width, height, 32, rmask, gmask, bmask, 0);
+    SDL_Surface* return_surface=SDL_DisplayFormat(tmp_surface);
+    SDL_FreeSurface(tmp_surface);
+    return return_surface;
+}
+
+SDL_Surface* GraphicsEngine::createRGBASurface(Uint16 width, Uint16 height) {
+    SDL_Surface* tmp_surface=SDL_CreateRGBSurface(vflags, width, height, 32, rmask, gmask, bmask, amask);
+    SDL_Surface* return_surface=SDL_DisplayFormatAlpha(tmp_surface);
+    SDL_FreeSurface(tmp_surface);
+    return return_surface;
+}
+
+SDL_Surface* GraphicsEngine::createRGBAScreenSurface() {
+    return createRGBASurface(screen->w, screen->h);
 }

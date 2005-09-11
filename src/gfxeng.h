@@ -42,7 +42,17 @@ class GraphicsEngine {
             shift.x=shift.y=0;
         }
         void drawRectangle(SDL_Rect rect, Uint8 border=1, Uint32 color=0);
+        SDL_Surface* createRGBSurface(Uint16 width, Uint16 height);
+        SDL_Surface* createRGBASurface(Uint16 width, Uint16 height);
+        SDL_Surface* createRGBAScreenSurface();
     protected:
+        /// masks
+        const Uint32 rmask;
+        const Uint32 gmask;
+        const Uint32 bmask;
+        const Uint32 amask;
+        /// Video flags
+        Uint32 vflags;
         /// main screen
         SDL_Surface* screen;
         /// currently visible part of the map area

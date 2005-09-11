@@ -133,6 +133,7 @@ class Editor {
     public:
         Editor();
         ~Editor();
+        void reinit();
         void run_action(Uint32 action, Uint16 x=0, Uint16 y=0);
         Uint32 getActionMPressed(Uint8 button) {
             if (button>=1 && button <6) return action_mouse_pressed[button];
@@ -173,6 +174,7 @@ class Editor {
         SDL_Rect select_rect;
         Sint16 select_start_x;
         Sint16 select_start_y;
+        SDL_Surface* mask_surface;
     private:
         void updateSelection(Sint16 x, Sint16 y);
 };
