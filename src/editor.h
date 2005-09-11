@@ -2,10 +2,14 @@
 #define DEF_EDITOR_H 1
 
 #define EDIT_RESET_ACTIONS  0x00000001
+#define EDIT_MOUSE_MOTION   0x00000002
 #define EDIT_BOX            0x00000004
 #define EDIT_ACT_BOX        0x00000008
-#define EDIT_PLACE_OBJECT   0x00000010
-#define EDIT_REMOVE_OBJECT  0x00000020
+#define EDIT_SEL_ACT_BOX    0x00000010
+#define EDIT_PLACE_OBJECT   0x00000020
+#define EDIT_REMOVE_OBJECTS 0x00000040
+#define EDIT_SELECT_START   0x00000080
+#define EDIT_SELECT_END     0x00000100
 
 /** \brief abstract Box base class
 
@@ -164,6 +168,13 @@ class Editor {
         Uint32 action_mouse_pressed[6];
         /// Action type for the mouse buttons when releasing the button
         Uint32 action_mouse_released[6];
+        std::set<string> selection;
+        bool select_start;
+        SDL_Rect select_rect;
+        Sint16 select_start_x;
+        Sint16 select_start_y;
+    private:
+        void updateSelection(Sint16 x, Sint16 y);
 };
 
 #endif

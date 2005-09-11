@@ -10,7 +10,7 @@
 Object::Object(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   state(NOTHING),
   event(NULL),
-  otype(NOTHING),
+  otype(OTYPE_COMMON),
   delete_flag(false) {
     onum=++scenario->max_obj_num;
 

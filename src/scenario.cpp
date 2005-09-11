@@ -333,6 +333,33 @@ std::set<Character *> Scenario::getCharactersIn(Uint16 mask, const SDL_Rect& rec
     return tmpset;
 }
 
+std::set<Object *> Scenario::getObjectsIn(Uint16 mask, const SDL_Rect& rect, bool touch, Uint16 distance, Uint16 dir) const {
+    SDL_Rect tmprect=rect;
+    if (dir&DIR_LEFT) {
+        tmprect.x-=distance;
+        tmprect.w+=distance;
+    }
+    if (dir&DIR_RIGHT) {
+        tmprect.x+=distance;
+        tmprect.w+=distance;
+    }
+    if (dir&DIR_UP) {
+        tmprect.y-=distance;
+        tmprect.h+=distance;
+    }
+    if (dir&DIR_DOWN) {
+        tmprect.y+=distance;
+        tmprect.h+=distance;
+    }
+    std::set<Object *> tmpset;
+    object_iterator obit=pool->objectspool.begin();
+    while (obit != pool->objectspool.end()) {
+        if ((((*obit)->getType())&mask) && ((*obit)->isIn(tmprect,touch))) tmpset.insert(*obit);
+        ++obit;
+    }
+    return tmpset;
+}
+
 Object* Scenario::getObjectAt(Sint16 x, Sint16 y, Uint16 mask) const {
     SDL_Rect tmprect;
     tmprect.x=x;

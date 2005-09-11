@@ -130,6 +130,9 @@ int readConfig(const string& filename) {
     config.keybind[KEY_BAR]     = SDLK_F1;
     config.keybind[KEY_FULL]    = SDLK_f;
     config.keybind[KEY_QUIT]    = SDLK_q;
+    config.keybind[KEY_ADD_SEL] = SDLK_LSHIFT;
+    config.keybind[KEY_RM_SEL]  = SDLK_LCTRL;
+    config.keybind[KEY_DEL]     = SDLK_DELETE;
 
     configfile.open(filename.c_str());
     if (!configfile) return 0;

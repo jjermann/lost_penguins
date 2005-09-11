@@ -194,6 +194,10 @@ inline void InputHandler::pollEditEvents() {
             case SDL_QUIT: {
                 quitGame(0);
             }
+            case SDL_MOUSEMOTION: {
+                editor->run_action(EDIT_MOUSE_MOTION,event.motion.x,event.motion.y);
+                break;
+            }
             case SDL_MOUSEBUTTONUP: {
                 editor->run_action(editor->getActionMReleased(event.button.button),event.button.x,event.button.y);
                 break;
@@ -215,6 +219,8 @@ inline void InputHandler::pollEditEvents() {
                         sfxeng->pauseMusic();
                         setMenu(new EditMenu());
                         gfxeng->update(UPDATE_ALL);
+                    } else if (key==config.keybind[KEY_DEL]) {
+                        editor->run_action(EDIT_REMOVE_OBJECTS);
                     } else if (key==config.keybind[KEY_QUIT]) {
                         quitGame(0);
                     } else if (key==config.keybind[KEY_NOANIM]) {

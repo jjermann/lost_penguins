@@ -46,6 +46,7 @@ class Scenario {
         /// \return A set of characters that are inside the enlarged source rectangle
         ///   and that match the specified mask.
         std::set<Character *> getCharactersIn(Uint16 mask, const SDL_Rect& rect, bool touch=false, Uint16 radius=0, Uint16 dir=DIR_ALL) const;
+        std::set<Object *> getObjectsIn(Uint16 mask, const SDL_Rect& rect, bool touch=false, Uint16 radius=0, Uint16 dir=DIR_ALL) const;
         /// Returns the first found object at the given position
         Object* getObjectAt(Sint16 x, Sint16 y, Uint16 mask=ALL) const;
         /// Returns the directions from the source rectangle to the destination rectangle

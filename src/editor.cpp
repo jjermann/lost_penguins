@@ -4,6 +4,7 @@
 #include "menu.h"
 #include "font.h"
 #include "gfxeng.h"
+#include "input.h"
 #include "objects_common.h"
 #include "editor.h"
 
@@ -19,37 +20,98 @@ Editor::~Editor() {
     closeBox();
 }
 
+void Editor::updateSelection(Sint16 x, Sint16 y) {
+    if (!select_start) return;
+    select_rect.w=abs(x-select_start_x);
+    select_rect.h=abs(y-select_start_y);
+    if (x>select_start_x) select_rect.x=select_start_x;
+    else select_rect.x=x;
+    if (y>select_start_y) select_rect.y=select_start_y;
+    else select_rect.y=y;
+}
+
 void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
     SDL_Rect shift=gfxeng->getShift();
     Sint16 xs=x-shift.x;
     Sint16 ys=y-shift.y;
 
     gfxeng->update(UPDATE_ALL);
-    if (action&EDIT_RESET_ACTIONS) {
+    if (action&EDIT_MOUSE_MOTION) {
+        updateSelection(xs,ys);
+    } else if (action&EDIT_RESET_ACTIONS) {
         for (Uint8 i=0; i<6; i++) {
             action_mouse_pressed[i]=NOTHING;
             action_mouse_released[i]=NOTHING;
         }
-        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_ACT_BOX;
+        action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_SEL_ACT_BOX;
+        action_mouse_released[SDL_BUTTON_LEFT]=EDIT_SELECT_END;
         action_mouse_pressed[SDL_BUTTON_RIGHT]=EDIT_BOX;
         action_mouse_released[SDL_BUTTON_RIGHT]=EDIT_ACT_BOX;
+        select_start=false;
     } else if (action&EDIT_BOX) {
         setBox(new EditBox(x,y));
-    } else if (action&EDIT_ACT_BOX) {
-        if (box) box->act(box->getCurrentEntry(x,y));
-    } else if (action&EDIT_REMOVE_OBJECT) {
-        Object* obj=scenario->getObjectAt(xs,ys);
-        if (obj) {
-            if (removefromBuf(obj->getName()).empty()) {
-                cout << "Unable to remove object " << obj->getName() << ": Name identifier not found!" << endl;
-            } else scenario->reloadMap();
+    } else if (action&EDIT_SEL_ACT_BOX) {
+        if (box) {
+            Sint8 tmp=box->getCurrentEntry(x,y);
+            if (tmp==-1) run_action(EDIT_SELECT_START,x,y);
+            else box->act(tmp);
+        } else {
+            run_action(EDIT_SELECT_START,x,y);
         }
+    } else if (action&EDIT_ACT_BOX) {
+        Sint8 tmp=box->getCurrentEntry(x,y);
+        if (box) box->act(tmp);
+    } else if (action&EDIT_REMOVE_OBJECTS) {
+        std::set<string>::iterator sit=selection.begin();
+        while (sit!=selection.end()) {
+            if (removefromBuf(*sit).empty()) {
+                cout << "Unable to remove object " << (*sit) << endl;
+            }
+            ++sit;
+        }
+        scenario->reloadMap();
     } else if (action&EDIT_PLACE_OBJECT) {
         scenario->reloadMap();
         if (scenario->pool->addObjectbyName(place_name,xs,ys,place_parameters)) {
             appendtoBuf(place_name+" "+itos(xs)+" "+itos(ys)+" "+putParameters(place_parameters));
         }
         place_parameters["name"]=scenario->pool->getNextObjectName(place_name);
+    } else if (action&EDIT_SELECT_START) {
+        select_start=true;
+        select_start_x=xs;
+        select_start_y=ys;
+        select_rect.x=select_start_x;
+        select_rect.y=select_start_y;
+        select_rect.w=select_rect.h=0;
+    } else if (action&EDIT_SELECT_END) {
+        updateSelection(xs,ys);
+        select_start=false;
+        std::set<Object*> objects_sel;
+        Object* obj=NULL;
+        if (select_rect.w==0 && select_rect.h==0) {
+            if ((obj=scenario->getObjectAt(xs,ys))!=NULL) objects_sel.insert(obj);
+        } else {
+            objects_sel=scenario->getObjectsIn(ALL,select_rect);
+        }
+        object_iterator obit=objects_sel.begin();
+
+        if (input->keyState(KEY_ADD_SEL)) {
+            while (obit!=objects_sel.end()) {
+                selection.insert((*obit)->getName());
+                ++obit;
+                                      }
+        } else if (input->keyState(KEY_RM_SEL)) {
+            while (obit!=objects_sel.end()) {
+                selection.erase((*obit)->getName());
+                ++obit;
+            }
+        } else {
+            selection.clear();
+            while (obit!=objects_sel.end()) {
+                selection.insert((*obit)->getName());
+                ++obit;
+            }
+        }
     } else { }
 }
 
@@ -144,7 +206,7 @@ Sint8 Box::getCurrentEntry(Sint16 x, Sint16 y) {
     }
     Sint16 tmp=y-area.y-WFONT-font_title->getHeight()-(int)(DFONT/2);
     Uint16 entrysize=DFONT+font->getHeight();
-    Uint8 currententry=0;
+    Sint8 currententry=0;
     while (tmp>entrysize) {
         tmp-=entrysize;
         ++currententry;
@@ -205,10 +267,8 @@ EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
     entries.push_back("Run");
     entries.push_back("Quit");
     entries.push_back("");
-    entries.push_back("Place Object");
-    entries.push_back("Remove Object");
-    entries.push_back("Move Object");
-    entries.push_back("Configure Object");
+    entries.push_back("Place Objects");
+    entries.push_back("Select Objects");
     update();
 }
 
@@ -233,14 +293,11 @@ void EditBox::act(Sint8 curentry) {
         setGameMode(GAME_PLAY);
         scenario->reloadMap();
         editor->closeBox();
-    } else if (entries[curentry]=="Place Object") {
+    } else if (entries[curentry]=="Place Objects") {
         editor->setBox(new PlaceBox(area.x,area.y));
-    } else if (entries[curentry]=="Remove Object") {
-        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_REMOVE_OBJECT;
-        editor->closeBox();
-    } else if (entries[curentry]=="Move Object") {
-        editor->closeBox();
-    } else if (entries[curentry]=="Configure Object") {
+    } else if (entries[curentry]=="Select Objects") {
+        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_SELECT_START;
+        editor->action_mouse_released[SDL_BUTTON_LEFT]=EDIT_SELECT_END;
         editor->closeBox();
     } else if (entries[curentry]=="Quit") {
         quitGame(0);

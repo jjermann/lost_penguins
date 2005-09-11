@@ -165,8 +165,20 @@ void GraphicsEngine::drawScene() {
             debugrect=*(*obit)->getPos();
             drawRectangle(debugrect,1,SDL_MapRGB(screen->format,100,20,0));
         }
+        // TODO: fix this gfxeng mess
+        if (editor && game_mode&GAME_EDIT) {
+            if (editor->selection.find((*obit)->getName())!=editor->selection.end()) {
+                debugrect=*(*obit)->getPos();
+                drawRectangle(debugrect,3,SDL_MapRGB(screen->format,100,100,0));
+            }
+        }
         SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
         ++obit;
+    }
+    // TODO: fix this gfxeng mess
+    if (editor->select_start) {
+        debugrect=editor->select_rect;
+        drawRectangle(debugrect,1,SDL_MapRGB(screen->format,50,50,50));
     }
 
     if (game_mode&GAME_PLAY && scenario->player!=NULL) {

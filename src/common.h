@@ -124,7 +124,10 @@ enum ConfigKey {
     KEY_FULL,
     KEY_QUIT,
     KEY_NOANIM,
-    KEY_DEBUG
+    KEY_DEBUG,
+    KEY_ADD_SEL,
+    KEY_RM_SEL,
+    KEY_DEL
 };
 
 enum BasePointType {
