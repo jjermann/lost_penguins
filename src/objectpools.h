@@ -33,39 +33,29 @@ class ObjectsPool {
         /// \param x x coordinate
         /// \param y y coordinate
         /// \param parameters A map<string,string> of all parameters
+        /// \param outside True if the object shouldn't be added to the pools
         /// \return Pointer to the new entry in the objectspool or NULL if
         ///   the object was not recognized
-        Object* addObjectbyName(const string& obj, Sint16 x=0, Sint16 y=0, ParameterMap& parameters=ParameterMap());
-        //@{
-        /// Add an Object to the objectspool
+        Object* addObjectbyName(const string& obj, Sint16 x=0, Sint16 y=0, ParameterMap& parameters=ParameterMap(), bool outside=false);
+        /// Add an Object to all corresponding pools
         /// \return Pointer to the new entry in the objectspool or NULL if it failed
-        Object*            addObject(Object* object);
-        /// Add a Character to the characterspool (and objectspool)
-        /// \return Pointer to the new entry in the characterspool or NULL if it failed
-        Character*         addCharacter(Character* newcharacter);
-        /// Add a Player to the playerspool (and objects/characterspool)
-        /// \return Pointer to the new entry in the playerspool or NULL if it failed
-        Player*            addPlayer(Player* newplayer);
-        /// Add a Monster to the monsterspool
-        /// \return Pointer to the new entry in the monsterspool or NULL if it failed
-        Monster*           addMonster(Monster* newmonster);
-        //@}
+        Object* addObject(Object* object, bool outside=false);
         /// Gets an object by it's name
         /// \pre The name must be unique (otherwise it's basically random)
         /// \return Pointer to the Object or NULL if it wasn't found
-        Object*            getObject(const string& oname);
+        Object* getObject(const string& oname);
         /// Helper function to return the next available object name corresponding to the given base name
-        string             getNextObjectName(const string& basename);
+        string getNextObjectName(const string& basename);
         //@{
         /// Remove an Object (using an object_iterator) from all pools it belongs to
         /// \return object_iterator to the next entry in the pool or the end()
-        object_iterator    removeObject(object_iterator it);
+        object_iterator removeObject(object_iterator it);
         /// Remove an Object (using a pointer to it)
         /// \return object_iterator to the next entry in the pool or the end()
-        object_iterator    removeObject(Object* object);
+        object_iterator removeObject(Object* object);
         /// Detaches an Object from the objectspool
         /// \return Pointer to the detached Object
-        Object*            moveObject(Object* object);
+        Object* moveObject(Object* object);
         //@}
         /// Selects a new current player (circular from left to right) if possible
         Player* switchPlayer();

@@ -10,33 +10,40 @@
 
 
 Editor::Editor() {
-    run_action(EDIT_RESET_ACTIONS);
     string place_name="";
     save_name="newmap.cfg";
     box=NULL;
     mask_surface=NULL;
+    move_object=NULL;
     reinit();
+    run_action(EDIT_RESET_ACTIONS);
 }
 
 Editor::~Editor() {
+    if (move_object) delete move_object;
     closeBox();
 }
 
 void Editor::reinit() {
     if (mask_surface) SDL_FreeSurface(mask_surface);
     mask_surface=gfxeng->createRGBAScreenSurface();
-    SDL_FillRect(mask_surface,0,SDL_MapRGBA(mask_surface->format,100,0,0,100));
+    //128 is a special case for an alpha value => faster
+    SDL_FillRect(mask_surface,0,SDL_MapRGBA(mask_surface->format,100,0,0,128));
     if (box) box->update();
 }
 
 void Editor::updateSelection(Sint16 x, Sint16 y) {
-    if (!select_start) return;
     select_rect.w=abs(x-select_start_x);
     select_rect.h=abs(y-select_start_y);
     if (x>select_start_x) select_rect.x=select_start_x;
     else select_rect.x=x;
     if (y>select_start_y) select_rect.y=select_start_y;
     else select_rect.y=y;
+}
+
+bool Editor::updateMove(Sint16 x, Sint16 y) {
+    if (move_object) return move_object->setPos(x,y);
+    else return false;
 }
 
 void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
@@ -46,7 +53,14 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
 
     gfxeng->update(UPDATE_ALL);
     if (action&EDIT_MOUSE_MOTION) {
-        updateSelection(xs,ys);
+        if (select_start) {
+            updateSelection(xs,ys);
+            gfxeng->update(UPDATE_ALL);
+        }
+        if (move_start) {
+            updateMove(xs,ys);
+            gfxeng->update(UPDATE_ALL);
+        }
     } else if (action&EDIT_RESET_ACTIONS) {
         for (Uint8 i=0; i<6; i++) {
             action_mouse_pressed[i]=NOTHING;
@@ -57,6 +71,10 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         action_mouse_pressed[SDL_BUTTON_RIGHT]=EDIT_BOX;
         action_mouse_released[SDL_BUTTON_RIGHT]=EDIT_ACT_BOX;
         select_start=false;
+        move_start=false;
+        // HACK
+        if (move_object) delete move_object;
+        move_object=NULL;
     } else if (action&EDIT_BOX) {
         setBox(new EditBox(x,y));
     } else if (action&EDIT_SEL_ACT_BOX) {
@@ -80,11 +98,14 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
         }
         scenario->reloadMap();
     } else if (action&EDIT_PLACE_OBJECT) {
-        scenario->reloadMap();
-        if (scenario->pool->addObjectbyName(place_name,xs,ys,place_parameters)) {
+        updateMove(xs,ys);
+        if (scenario->pool->addObject(move_object)) {
             appendtoBuf(place_name+" "+itos(xs)+" "+itos(ys)+" "+putParameters(place_parameters));
         }
         place_parameters["name"]=scenario->pool->getNextObjectName(place_name);
+        editor->move_object=scenario->pool->addObjectbyName(place_name,-1000,-1000,place_parameters,true);
+        if (editor->move_object) editor->move_start=true;
+        else editor->move_start=false;
     } else if (action&EDIT_SELECT_START) {
         select_start=true;
         select_start_x=xs;
@@ -121,11 +142,63 @@ void Editor::run_action(Uint32 action, Uint16 x, Uint16 y) {
                 ++obit;
             }
         }
+    } else if (action&EDIT_MOVE_START) {
+        move_start_x=xs;
+        move_start_y=ys;
+        // HACK
+        if (move_object) delete move_object;
+        if ((move_object=scenario->pool->moveObject(scenario->getObjectAt(xs,ys)))) move_start=true;
+        else move_start=false;
+    } else if (action&EDIT_MOVE_END) {
+        if (move_object==NULL) {
+            move_start=false;
+            return;
+        }
+        updateMove(xs,ys);
+        if (scenario->pool->addObject(move_object)) {
+            istringstream tmpstream(getBufLine(move_object->getName()));
+            string name, x, y;
+            tmpstream >> name >> x >> y;
+            string nss((istreambuf_iterator<char>(tmpstream)), istreambuf_iterator<char>());
+            string newline=name+" "+itos(move_object->getPos()->x)+" "+itos(move_object->getPos()->y)+" "+nss;
+            changeBuf(newline,move_object->getName());
+        } else {
+            move_object->setPos(move_start_x,move_start_y);
+            if (!scenario->pool->addObject(move_object)) {
+                delete move_object;
+                move_object=NULL;
+                move_start=false;
+                scenario->reloadMap();
+            }
+        }
+        move_object=NULL;
+        move_start=false;
     } else { }
 }
 
 void Editor::appendtoBuf(string line) {
     scenario->mapbuf.push_back(line);
+}
+Sint16 Editor::getBufLineNr(string match) {
+    for (Uint16 linenum=0; linenum<scenario->mapbuf.size(); linenum++) {
+        if (scenario->mapbuf[linenum].find(match)!=string::npos) return linenum;
+    }
+    return -1;
+}
+string Editor::getBufLine(string match) {
+    for (Uint16 linenum=0; linenum<scenario->mapbuf.size(); linenum++) {
+        if (scenario->mapbuf[linenum].find(match)!=string::npos) {
+            return scenario->mapbuf[linenum];
+        }
+    }
+    return "";
+}
+bool Editor::changeBuf(string newline, string match) {
+    Sint16 linenum=getBufLineNr(match);
+    if (linenum<0) return false;
+    if (linenum>=(int)scenario->mapbuf.size()) return false;
+    scenario->mapbuf[linenum]=newline;
+    return true;
 }
 
 string Editor::removefromBuf(string match) {
@@ -230,7 +303,7 @@ void Box::update() {
     if (surface!=NULL) SDL_FreeSurface(surface);
     surface=gfxeng->createRGBASurface(area.w, area.h);
 
-    SDL_FillRect(surface,0,SDL_MapRGBA(surface->format,200,200,200,180));
+    SDL_FillRect(surface,0,SDL_MapRGBA(surface->format,200,200,200,128));
     /* create a border */
     Sint16 tmph=0;
     SDL_Rect line;
@@ -238,21 +311,21 @@ void Box::update() {
     line.y=0;
     line.w=BORDERSIZE;
     line.h=area.h;
-    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,SDL_ALPHA_OPAQUE));
     line.x=area.w-BORDERSIZE;
-    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,SDL_ALPHA_OPAQUE));
     line.x=0;
     line.y=0;
     line.w=area.w;
     line.h=BORDERSIZE;
-    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,SDL_ALPHA_OPAQUE));
     line.y=area.h-BORDERSIZE;
-    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,SDL_ALPHA_OPAQUE));
 
     /* write title */
     font_title->writeCenter(surface,title,WFONT);
     line.y=font_title->getHeight()+(int)((DFONT-line.h)/2);
-    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,255));
+    SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,SDL_ALPHA_OPAQUE));
     line.h=LINESIZE;
 
     /* write entries */
@@ -261,12 +334,13 @@ void Box::update() {
         if (centered) font->writeCenter(surface,entries[i],tmph);
         else font->write(surface,entries[i],WFONT,tmph);
         line.y=tmph+font->getHeight()+(int)((DFONT-line.h)/2);
-        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,180));
+        SDL_FillRect(surface,&line,SDL_MapRGBA(surface->format,100,100,100,128));
     }
 }
  
 EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
     title="EDIT MAP";
+    entries.push_back("Reload");
     entries.push_back("New");
     entries.push_back("Save As...");
     entries.push_back("Save");
@@ -276,12 +350,16 @@ EditBox::EditBox(Sint16 x, Sint16 y): Box(x,y) {
     entries.push_back("");
     entries.push_back("Place Objects");
     entries.push_back("Select Objects");
+    entries.push_back("Move Object");
     update();
 }
 
 void EditBox::act(Sint8 curentry) {
     gfxeng->update(UPDATE_ALL);
     if (curentry==-1 || curentry >= (Sint8)entries.size()) {
+        editor->closeBox();
+    } else if (entries[curentry]=="Reload") {
+        scenario->reloadMap();
         editor->closeBox();
     } else if (entries[curentry]=="New") {
         editor->setBox(new NewMapBox(area.x,area.y));
@@ -305,6 +383,10 @@ void EditBox::act(Sint8 curentry) {
     } else if (entries[curentry]=="Select Objects") {
         editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_SELECT_START;
         editor->action_mouse_released[SDL_BUTTON_LEFT]=EDIT_SELECT_END;
+        editor->closeBox();
+    } else if (entries[curentry]=="Move Object") {
+        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_MOVE_START;
+        editor->action_mouse_released[SDL_BUTTON_LEFT]=EDIT_MOVE_END;
         editor->closeBox();
     } else if (entries[curentry]=="Quit") {
         quitGame(0);
@@ -483,6 +565,14 @@ void ObjectBox::evaluateEntry() {
     for (Uint8 i=0; i<einput.size(); ++i) {
         if (!einput[i].empty()) editor->place_parameters[etitles[i]]=einput[i];
     }
-    editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
-    editor->closeBox();
+    if (editor->move_object) { 
+        delete editor->move_object;
+        editor->move_start=false;
+    }
+    editor->move_object=scenario->pool->addObjectbyName(editor->place_name,-1000,-1000,editor->place_parameters,true);
+    if (editor->move_object) {
+        editor->move_start=true;
+        editor->action_mouse_pressed[SDL_BUTTON_LEFT]=EDIT_PLACE_OBJECT;
+        editor->closeBox();
+    }
 }

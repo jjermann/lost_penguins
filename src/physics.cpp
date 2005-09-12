@@ -5,6 +5,7 @@
 #include "players_common.h"
 #include "scenario.h"
 #include "physics.h"
+#include "editor.h"
 
 
 PhysicHandler::PhysicHandler(): 
@@ -126,6 +127,7 @@ inline void PhysicHandler::updateGame() {
 }
 
 inline void PhysicHandler::updateEdit() {
+    assert(editor);
     object_iterator obit=scenario->pool->objectspool.begin();
     while (obit!=scenario->pool->objectspool.end()) {
         //remove marked objects
@@ -154,6 +156,9 @@ inline void PhysicHandler::updateEdit() {
             if (!runs) (*obit)->stopEvent();
         } else if ((*obit)->isRunning()) (*obit)->updateAnim(dt);
         ++obit;
+    }
+    if (editor->move_object) {
+        if (editor->move_object->isRunning()) editor->move_object->updateAnim(dt);
     }
 }
 

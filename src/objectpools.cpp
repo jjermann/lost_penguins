@@ -215,7 +215,7 @@ const ParameterMap& ObjectsPool::getDefaultObjParambyName(const string& obj) {
     else return empty_parameter;
 }
 
-Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, ParameterMap& objparam) {
+Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, ParameterMap& objparam, bool outside) {
     ParameterMap parameters;
     if (hasParam(objparam,"file")) {
         parameters=getFileParameters(objparam["file"]);
@@ -230,27 +230,27 @@ Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, Para
     //Set names...
     if (!hasParam(parameters,"name")) parameters["name"]=getNextObjectName(obj);
 
-    if      (obj=="Wall")           return (addObject(new Wall(x,y,parameters)));
-    else if (obj=="Exit")           return (addObject(new Exit(x,y,parameters)));
-    else if (obj=="Water")          return (addObject(new Water(x,y,parameters)));
-    else if (obj=="Teleporter")     return (addObject(new Teleporter(x,y,parameters)));
-    else if (obj=="Wind")           return (addObject(new Wind(x,y,parameters)));
-    else if (obj=="Geyser")         return (addObject(new Geyser(x,y,parameters)));
-    else if (obj=="Trigger")        return (addObject(new Trigger(x,y,parameters)));
-    else if (obj=="Door")           return (addObject(new Door(x,y,parameters)));
-    else if (obj=="Spike")          return (addObject(new Spike(x,y,parameters)));
-    else if (obj=="Heart")          return (addObject(new Heart(x,y,parameters)));
-    else if (obj=="Key")            return (addObject(new Key(x,y,parameters)));
-    else if (obj=="Bomb")           return (addObject(new Bomb(x,y,parameters)));
-    else if (obj=="TriggeredBomb")  return (addCharacter(new TriggeredBomb(x,y,parameters)));
-    else if (obj=="DeadPlayer")     return (addCharacter(new DeadPlayer(x,y,parameters)));
-    else if (obj=="Erik")           return (addPlayer(new Erik(x,y,parameters)));
-    else if (obj=="Olaf")           return (addPlayer(new Olaf(x,y,parameters)));
-    else if (obj=="Baleog")         return (addPlayer(new Baleog(x,y,parameters)));
-    else if (obj=="Fang")           return (addPlayer(new Fang(x,y,parameters)));  
-    else if (obj=="Scorch")         return (addPlayer(new Scorch(x,y,parameters)));
-    else if (obj=="Plant")          return (addMonster(new Plant(x,y,parameters)));
-    else if (obj=="Zombie")         return (addMonster(new Zombie(x,y,parameters)));
+    if      (obj=="Wall")           return (addObject(new Wall(x,y,parameters), outside));
+    else if (obj=="Exit")           return (addObject(new Exit(x,y,parameters), outside));
+    else if (obj=="Water")          return (addObject(new Water(x,y,parameters), outside));
+    else if (obj=="Teleporter")     return (addObject(new Teleporter(x,y,parameters), outside));
+    else if (obj=="Wind")           return (addObject(new Wind(x,y,parameters), outside));
+    else if (obj=="Geyser")         return (addObject(new Geyser(x,y,parameters), outside));
+    else if (obj=="Trigger")        return (addObject(new Trigger(x,y,parameters), outside));
+    else if (obj=="Door")           return (addObject(new Door(x,y,parameters), outside));
+    else if (obj=="Spike")          return (addObject(new Spike(x,y,parameters), outside));
+    else if (obj=="Heart")          return (addObject(new Heart(x,y,parameters), outside));
+    else if (obj=="Key")            return (addObject(new Key(x,y,parameters), outside));
+    else if (obj=="Bomb")           return (addObject(new Bomb(x,y,parameters), outside));
+    else if (obj=="TriggeredBomb")  return (addObject(new TriggeredBomb(x,y,parameters), outside));
+    else if (obj=="DeadPlayer")     return (addObject(new DeadPlayer(x,y,parameters), outside));
+    else if (obj=="Erik")           return (addObject(new Erik(x,y,parameters), outside));
+    else if (obj=="Olaf")           return (addObject(new Olaf(x,y,parameters), outside));
+    else if (obj=="Baleog")         return (addObject(new Baleog(x,y,parameters), outside));
+    else if (obj=="Fang")           return (addObject(new Fang(x,y,parameters), outside));  
+    else if (obj=="Scorch")         return (addObject(new Scorch(x,y,parameters), outside));
+    else if (obj=="Plant")          return (addObject(new Plant(x,y,parameters), outside));
+    else if (obj=="Zombie")         return (addObject(new Zombie(x,y,parameters), outside));
     else {
         cout << "Object " << obj << " unknown, skipping...\n";
         return NULL;
@@ -266,9 +266,22 @@ Object* ObjectsPool::getObject(const string& oname) {
     return NULL;
 }
 
-Object* ObjectsPool::addObject(Object* object) {
-    if ( (object!=NULL) && (scenario->area==NULL || (scenario->checkPlace(*(object->getPos()),*scenario->area).enter==NOTHING)) ) {
+Object* ObjectsPool::addObject(Object* object, bool outside) {
+    if (outside) return object;
+    else if ( (object!=NULL) && (scenario->area==NULL || (scenario->checkPlace(*(object->getPos()),*scenario->area).enter==NOTHING)) ) {
         objectspool.insert(object);
+        if (Character* ptrc = dynamic_cast<Character*>(object)) {
+            characterspool.insert(ptrc);
+            if (Player* ptrv = dynamic_cast<Player*>(object)) {
+                playerspool.insert(ptrv);
+                if (playerspool.size()==1) {
+                    currentplayer=playerspool.begin();
+                    scenario->player=*currentplayer;
+                }
+            } else if (Monster* ptrm = dynamic_cast<Monster*>(object)) {
+                monsterspool.insert(ptrm);
+            }
+        }
         return object;
     } else {
         cout << "Couldn't place object!\n";
@@ -314,6 +327,7 @@ object_iterator ObjectsPool::removeObject(Object* object) {
 }
 
 Object* ObjectsPool::moveObject(Object* object) {
+    if (object==NULL) return NULL;
     objectspool.erase(object);
     if (Character* ptrc = dynamic_cast<Character*>(object)) {
         characterspool.erase(ptrc);
@@ -330,30 +344,6 @@ Object* ObjectsPool::moveObject(Object* object) {
     return object;
 }
 
-
-Character* ObjectsPool::addCharacter(Character* newcharacter) {
-    if ( (newcharacter!=NULL) && (scenario->checkPlace(*(newcharacter->getPos()),*scenario->area).enter==NOTHING) ) {
-        characterspool.insert(newcharacter);
-        scenario->pool->addObject(newcharacter);
-        return newcharacter;
-    } else {
-        cout << "Couldn't place character!\n";
-        return NULL;
-    }
-}
-
-Player* ObjectsPool::addPlayer(Player* newplayer) {
-    if ( (newplayer!=NULL) && (scenario->checkPlace(*(newplayer->getPos()),*scenario->area).enter==NOTHING) ) {
-        playerspool.insert(newplayer);
-        currentplayer=playerspool.begin();
-        scenario->pool->addCharacter(newplayer);
-        return newplayer;
-    } else {
-        cout << "Couldn't place player!\n";
-        return NULL;
-    }
-}
-
 Player* ObjectsPool::switchPlayer() {
     if (currentplayer != playerspool.end()) {
         sfxeng->playWAV(au_switch);
@@ -366,18 +356,6 @@ Player* ObjectsPool::switchPlayer() {
         else scenario->player=NULL;
         return scenario->player;
     } else return (scenario->player=NULL);
-}
-
-
-Monster* ObjectsPool::addMonster(Monster* newmonster) {
-    if ( (newmonster!=NULL) && (scenario->checkPlace(*(newmonster->getPos()),*scenario->area).enter==NOTHING) ) {
-        monsterspool.insert(newmonster);
-        scenario->pool->addCharacter(newmonster);
-        return newmonster;
-    } else {
-        cout << "Couldn't place monster!\n";
-        return NULL;
-    }
 }
 
 bool ObjectsPool::empty() {

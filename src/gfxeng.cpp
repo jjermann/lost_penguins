@@ -49,49 +49,62 @@ void GraphicsEngine::update(Uint8 upd) {
 }
 
 void GraphicsEngine::draw() {
-    //Menu
-    if (game_mode&GAME_MENU) {
-        //Assure we have a (correct) menu background
-        if (!menubg) {
-            if (game_mode&(GAME_PLAY|GAME_EDIT)) {
+    if (game_mode&GAME_PLAY) {
+        if (game_mode&GAME_MENU) {
+            //Assure we have a (correct) menu background
+            if (!menubg || updatetype==UPDATE_ALL) setGameMenuBG();
+            if (updatetype==UPDATE_ALL) {
                 setGameMenuBG();
-            } else {
-                setMenuBG();
+                drawMenu();
+            } else if (updatetype==UPDATE_MENU) {
+                drawMenu();
             }
-        }
-        if (updatetype==UPDATE_ALL) {
-            if (game_mode&(GAME_PLAY|GAME_EDIT)) {
-                setGameMenuBG();
-            } else {
-                setMenuBG();
+        } else if (game_mode&GAME_PAUSED) {
+            if (updatetype==UPDATE_ALL) {
+                drawGameScene();
+                drawPlayerBar();
+            } else if (updatetype==UPDATE_BAR) {
+                drawPlayerBar();
             }
-            drawMenu();
-        } else if (updatetype==UPDATE_MENU) {
-            drawMenu();
-        }
-    //Paused game
-    } else if (game_mode&GAME_PAUSED) {
-        if (updatetype==UPDATE_ALL) {
-            drawScene();
+        } else {
+            drawGameScene();
             drawPlayerBar();
-        } else if (updatetype==UPDATE_BAR) {
-            drawPlayerBar();
+            drawFPS();
+            updatetype=UPDATE_ALL;
         }
-    //Not paused running game
-    } else if (game_mode&GAME_PLAY) {
-        drawScene();
-        drawPlayerBar();
-        drawFPS();
-        updatetype=UPDATE_ALL;
     } else if (game_mode&GAME_EDIT) {
-        if (show_fps) toggleFPS();
-        if (show_bar) togglePlayerBar();
-        if (!(game_mode&GAME_EDIT_NOANIM) || updatetype==UPDATE_ALL) {
-            drawScene();
+        if (game_mode&GAME_MENU) {
+            //Assure we have a (correct) menu background
+            if (!menubg || updatetype==UPDATE_ALL) setGameMenuBG();
+            if (updatetype==UPDATE_ALL) {
+                setGameMenuBG();
+                drawMenu();
+            } else if (updatetype==UPDATE_MENU) {
+                drawMenu();
+            }
+        } else if (game_mode&GAME_EDIT_NOANIM) {
+            if (updatetype==UPDATE_ALL) {
+                drawEditScene();
+                drawBox();
+            }
+        } else {
+            drawEditScene();
             drawBox();
             updatetype=UPDATE_ALL;
         }
-    } else return;
+    } else {
+        if (game_mode&GAME_MENU) {
+            //Assure we have a (correct) menu background
+            if (!menubg) setMenuBG();
+            if (updatetype==UPDATE_ALL) {
+                setMenuBG();
+                drawMenu();
+            } else if (updatetype==UPDATE_MENU) {
+                drawMenu();
+            }
+        } else return;
+    }
+
     //This is the most time consuming operation
     if (updatetype!=UPDATE_NOTHING) SDL_Flip(screen);
     updatetype=UPDATE_NOTHING;
@@ -152,18 +165,15 @@ inline SDL_Rect GraphicsEngine::setShift(SDL_Rect center) {
     return shift;    
 }
 
-void GraphicsEngine::drawScene() {
+void GraphicsEngine::drawGameScene() {
+    assert(game_mode&GAME_PLAY);
     //We don't want to change pos!
     SDL_Rect tmprect,srcpos,debugrect;
-    if (game_mode&GAME_PLAY) {
-        if (scenario->player!=NULL) {
-            shift=setShift(scenario->player->getCenter());
-        } else {
-            shift.x=0;
-            shift.y=0;
-        }
-    } else if (game_mode&GAME_EDIT) {
-        SDL_FillRect(screen,NULL,0);
+    if (scenario->player!=NULL) {
+        shift=setShift(scenario->player->getCenter());
+    } else {
+        shift.x=0;
+        shift.y=0;
     }
 
     tmprect=*scenario->area;
@@ -179,37 +189,71 @@ void GraphicsEngine::drawScene() {
             debugrect=*(*obit)->getPos();
             drawRectangle(debugrect,1,SDL_MapRGB(screen->format,100,20,0));
         }
-        // TODO: fix this gfxeng mess
-        if (editor && game_mode&GAME_EDIT) {
-            if (editor->selection.find((*obit)->getName())!=editor->selection.end()) {
-                if (editor->mask_surface) {
-                    debugrect=*(*obit)->getPos();
-                    SDL_Rect area=debugrect;
-                    area.x=area.y=0;
-                    SDL_BlitSurface(editor->mask_surface,&area,screen,shiftMapArea(debugrect,shift));
-                } else {
-                    debugrect=*(*obit)->getPos();
-                    drawRectangle(debugrect,3,SDL_MapRGB(screen->format,100,100,0));
-                }
-            }
-        }
         ++obit;
     }
-    // TODO: fix this gfxeng mess
-    if (editor->select_start) {
-        debugrect=editor->select_rect;
-        drawRectangle(debugrect,1,SDL_MapRGB(screen->format,50,50,50));
-    }
-
-    if (game_mode&GAME_PLAY && scenario->player!=NULL) {
+    if (scenario->player!=NULL) {
         tmprect=(scenario->player->getDrawPos());
         srcpos=scenario->player->getFrame().pos;
         SDL_BlitSurface(scenario->player->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
     }
 }
 
+void GraphicsEngine::drawEditScene() {
+    assert(editor && game_mode&GAME_EDIT);
+    SDL_Rect tmprect,srcpos,debugrect;
+
+    SDL_FillRect(screen,NULL,0);
+    tmprect=*scenario->area;
+    srcpos=scenario->background->getFrame().pos;
+    SDL_BlitSurface(scenario->background->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+    
+    object_iterator obit=scenario->pool->objectspool.begin();
+    while (obit!=scenario->pool->objectspool.end()) {
+        tmprect=((*obit)->getDrawPos());
+        srcpos=(*obit)->getFrame().pos;
+        SDL_BlitSurface((*obit)->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+        if (show_debug) {
+            debugrect=*(*obit)->getPos();
+            drawRectangle(debugrect,1,SDL_MapRGB(screen->format,100,20,0));
+        }
+        if (editor->selection.find((*obit)->getName())!=editor->selection.end()) {
+            if (editor->mask_surface) {
+                debugrect=*(*obit)->getPos();
+                SDL_Rect area=debugrect;
+                area.x=area.y=0;
+                SDL_BlitSurface(editor->mask_surface,&area,screen,shiftMapArea(debugrect,shift));
+            } else {
+                debugrect=*(*obit)->getPos();
+                drawRectangle(debugrect,3,SDL_MapRGB(screen->format,100,100,0));
+            }
+        }
+        ++obit;
+    }
+
+    if (editor->move_object) {
+        tmprect=editor->move_object->getDrawPos();
+        srcpos=editor->move_object->getFrame().pos;
+        SDL_BlitSurface(editor->move_object->getFrame().image,&srcpos,screen,shiftMapArea(tmprect,shift));
+
+        if (editor->mask_surface) {
+            debugrect=*(editor->move_object->getPos());
+            SDL_Rect area=debugrect;
+            area.x=area.y=0;
+            SDL_BlitSurface(editor->mask_surface,&area,screen,shiftMapArea(debugrect,shift));
+        } else {
+            debugrect=*(editor->move_object->getPos());
+            drawRectangle(debugrect,3,SDL_MapRGB(screen->format,100,100,0));
+        }
+    }
+    if (editor->select_start) {
+        debugrect=editor->select_rect;
+        drawRectangle(debugrect,1,SDL_MapRGB(screen->format,50,50,50));
+    }
+}
+
 //TODO don't draw the whole screen, just till bar, just upgrade certain regions of the bar
 void GraphicsEngine::drawPlayerBar() {
+    assert(game_mode&GAME_PLAY);
     if (!show_bar) return;
     //#players
     Uint8 pnum=scenario->pool->playerspool.size();
@@ -384,9 +428,9 @@ void GraphicsEngine::drawBox() {
 inline void GraphicsEngine::setGameMenuBG() {
     if (menubg) SDL_FreeSurface(menubg);
     if (game_mode&GAME_PLAY) {
-        drawScene();
+        drawGameScene();
         drawPlayerBar();
-    } else if (game_mode&GAME_EDIT) drawScene();
+    } else if (game_mode&GAME_EDIT) drawEditScene();
     SDL_Flip(screen);
     
     SDL_Surface* tmp = SDL_CreateRGBSurface (
@@ -420,14 +464,8 @@ void GraphicsEngine::setMenuBG(SDL_Surface* menu_background) {
     if (menu_background) {
         menubg=menu_background;
     } else {
-        SDL_Surface* tmp = SDL_CreateRGBSurface (
-          SDL_HWSURFACE,
-          screen->w,
-          screen->h,
-          32,
-          rmask,gmask,bmask,0);
-        SDL_FillRect(tmp,NULL,SDL_MapRGB(screen->format,0,0,0));
-        menubg=SDL_DisplayFormat(tmp);
+        menubg=createRGBScreenSurface();
+        SDL_FillRect(menubg,NULL,SDL_MapRGB(menubg->format,0,0,0));
     }
 }
 
@@ -490,12 +528,24 @@ SDL_Surface* GraphicsEngine::createRGBSurface(Uint16 width, Uint16 height) {
 }
 
 SDL_Surface* GraphicsEngine::createRGBASurface(Uint16 width, Uint16 height) {
+#ifdef ALPHA
     SDL_Surface* tmp_surface=SDL_CreateRGBSurface(vflags, width, height, 32, rmask, gmask, bmask, amask);
     SDL_Surface* return_surface=SDL_DisplayFormatAlpha(tmp_surface);
     SDL_FreeSurface(tmp_surface);
     return return_surface;
+#else
+    return createRGBSurface(width,height);
+#endif
+}
+
+SDL_Surface* GraphicsEngine::createRGBScreenSurface() {
+    return createRGBASurface(screen->w, screen->h);
 }
 
 SDL_Surface* GraphicsEngine::createRGBAScreenSurface() {
+#ifdef ALPHA
     return createRGBASurface(screen->w, screen->h);
+#else
+    return createRGBScreenSurface();
+#endif
 }

@@ -44,6 +44,7 @@ class GraphicsEngine {
         void drawRectangle(SDL_Rect rect, Uint8 border=1, Uint32 color=0);
         SDL_Surface* createRGBSurface(Uint16 width, Uint16 height);
         SDL_Surface* createRGBASurface(Uint16 width, Uint16 height);
+        SDL_Surface* createRGBScreenSurface();
         SDL_Surface* createRGBAScreenSurface();
     protected:
         /// masks
@@ -75,7 +76,10 @@ class GraphicsEngine {
     protected:
         /// Draw the background and all objects in the pool. This is a very time
         /// consuming function...
-        inline void drawScene();
+        ///@{
+        inline void drawGameScene();
+        inline void drawEditScene();
+        ///@}
         /// Draw player bar
         inline void drawPlayerBar();
         /// Draw the frames per second

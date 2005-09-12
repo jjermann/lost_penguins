@@ -10,6 +10,8 @@
 #define EDIT_REMOVE_OBJECTS 0x00000040
 #define EDIT_SELECT_START   0x00000080
 #define EDIT_SELECT_END     0x00000100
+#define EDIT_MOVE_START     0x00000200
+#define EDIT_MOVE_END       0x00000400
 
 /** \brief abstract Box base class
 
@@ -160,6 +162,9 @@ class Editor {
         ParameterMap place_parameters;
         /// Append a command to the buffered map file
         void appendtoBuf(string);
+        string getBufLine(string match);
+        /// Change the specified line in the buffered map file
+        bool changeBuf(string,string);
         /* TODO: add header modifiers */
         /// Remove the first line in the buffered map file matching the specified string
         string removefromBuf(string);
@@ -174,9 +179,15 @@ class Editor {
         SDL_Rect select_rect;
         Sint16 select_start_x;
         Sint16 select_start_y;
+        bool move_start;
+        Sint16 move_start_x;
+        Sint16 move_start_y;
         SDL_Surface* mask_surface;
+        Object* move_object;
     private:
+        Sint16 getBufLineNr(string);
         void updateSelection(Sint16 x, Sint16 y);
+        bool updateMove(Sint16 x, Sint16 y);
 };
 
 #endif

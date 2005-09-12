@@ -27,7 +27,7 @@ Player::Player(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
     if (hasParam(parameters,"anim_left")) anim_left=loadAnimation(getParameters(parameters["anim_left"],':'));
       else anim_left.reset(new EmptyAnimation(&anim_right));
     if (hasParam(parameters,"anim_right")) anim_right=loadAnimation(getParameters(parameters["anim_right"],':'));
-      else anim_right.reset(new EmptyAnimation());
+      else anim_right.reset(new EmptyAnimation(&anim_orig));
     if (hasParam(parameters,"anim_rock_left")) anim_rock_left=loadAnimation(getParameters(parameters["anim_rock_left"],':'));
       else anim_rock_left.reset(new EmptyAnimation(&anim_left));
     if (hasParam(parameters,"anim_rock_right")) anim_rock_right=loadAnimation(getParameters(parameters["anim_rock_right"],':'));

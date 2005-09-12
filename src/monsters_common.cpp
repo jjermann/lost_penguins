@@ -30,6 +30,8 @@ Monster::Monster(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
     if (!hasParam(parameters,"maxspeedy")) maxspeedy=0;
     if (hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV(parameters["audio_hit"]);
       else au_hit=scenario->sndcache->loadWAV("monhit.wav");
+
+    animation.reset(new EmptyAnimation((state&STATE_LEFT) ? &anim_left : &anim_right));
 }
 
 Monster::~Monster() {

@@ -221,6 +221,8 @@ inline void InputHandler::pollEditEvents() {
                         gfxeng->update(UPDATE_ALL);
                     } else if (key==config.keybind[KEY_DEL]) {
                         editor->run_action(EDIT_REMOVE_OBJECTS);
+                    } else if (key==config.keybind[KEY_DEBUG]) {
+                        gfxeng->toggleShowDebug();
                     } else if (key==config.keybind[KEY_QUIT]) {
                         quitGame(0);
                     } else if (key==config.keybind[KEY_NOANIM]) {
