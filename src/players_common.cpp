@@ -27,7 +27,7 @@ Player::Player(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
     if (hasParam(parameters,"anim_left")) anim_left=loadAnimation(getParameters(parameters["anim_left"],':'));
       else anim_left.reset(new EmptyAnimation(&anim_right));
     if (hasParam(parameters,"anim_right")) anim_right=loadAnimation(getParameters(parameters["anim_right"],':'));
-      else anim_right.reset(new EmptyAnimation(&anim_orig));
+      else anim_right.reset(new EmptyAnimation());
     if (hasParam(parameters,"anim_rock_left")) anim_rock_left=loadAnimation(getParameters(parameters["anim_rock_left"],':'));
       else anim_rock_left.reset(new EmptyAnimation(&anim_left));
     if (hasParam(parameters,"anim_rock_right")) anim_rock_right=loadAnimation(getParameters(parameters["anim_rock_right"],':'));
@@ -93,29 +93,31 @@ Player::Player(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
 
     if (hasParam(parameters,"audio_land")) au_land=scenario->sndcache->loadWAV(parameters["audio_land"]);
       else au_land=scenario->sndcache->loadWAV("dizzy.wav");
-    if (hasParam(parameters,"audio_act")) au_land=scenario->sndcache->loadWAV(parameters["audio_act"]);
+    if (hasParam(parameters,"audio_act")) au_act=scenario->sndcache->loadWAV(parameters["audio_act"]);
       else au_act=scenario->sndcache->loadWAV("button.wav");
-    if (hasParam(parameters,"audio_useerror")) au_land=scenario->sndcache->loadWAV(parameters["audio_useerror"]);
+    if (hasParam(parameters,"audio_useerror")) au_useerror=scenario->sndcache->loadWAV(parameters["audio_useerror"]);
       else au_useerror=scenario->sndcache->loadWAV("useerror.wav");
-    if (hasParam(parameters,"audio_newitem")) au_land=scenario->sndcache->loadWAV(parameters["audio_newitem"]);
+    if (hasParam(parameters,"audio_newitem")) au_newitem=scenario->sndcache->loadWAV(parameters["audio_newitem"]);
       else au_newitem=scenario->sndcache->loadWAV("pickup.wav");
-    if (hasParam(parameters,"audio_hit")) au_land=scenario->sndcache->loadWAV(parameters["audio_hit"]);
+    if (hasParam(parameters,"audio_hit")) au_hit=scenario->sndcache->loadWAV(parameters["audio_hit"]);
       else au_hit=scenario->sndcache->loadWAV("vikhit.wav");
-    if (hasParam(parameters,"audio_elec")) au_land=scenario->sndcache->loadWAV(parameters["audio_elec"]);
+    if (hasParam(parameters,"audio_elec")) au_elec=scenario->sndcache->loadWAV(parameters["audio_elec"]);
       else au_elec=scenario->sndcache->loadWAV("elecdth.wav");
-    if (hasParam(parameters,"audio_drown")) au_land=scenario->sndcache->loadWAV(parameters["audio_drown"]);
+    if (hasParam(parameters,"audio_drown")) au_drown=scenario->sndcache->loadWAV(parameters["audio_drown"]);
       else au_drown=scenario->sndcache->loadWAV("drown.wav");
-    if (hasParam(parameters,"audio_fire")) au_land=scenario->sndcache->loadWAV(parameters["audio_fire"]);
+    if (hasParam(parameters,"audio_fire")) au_fire=scenario->sndcache->loadWAV(parameters["audio_fire"]);
       else au_fire=scenario->sndcache->loadWAV("fireball.wav");
-    if (hasParam(parameters,"audio_die")) au_land=scenario->sndcache->loadWAV(parameters["audio_die"]);
+    if (hasParam(parameters,"audio_die")) au_die=scenario->sndcache->loadWAV(parameters["audio_die"]);
       else au_die=scenario->sndcache->loadWAV("bones.wav");
-    if (hasParam(parameters,"audio_heal")) au_land=scenario->sndcache->loadWAV(parameters["audio_heal"]);
+    if (hasParam(parameters,"audio_heal")) au_heal=scenario->sndcache->loadWAV(parameters["audio_heal"]);
       else au_heal=scenario->sndcache->loadWAV("usefood1.wav");
 
     if (!hasParam(parameters,"maxhealth")) maxhealth=4;
     if (!hasParam(parameters,"health")) health=min(3,(int)maxhealth);
     if (!hasParam(parameters,"maxspeedx")) maxspeedx=300;
     if (!hasParam(parameters,"maxspeedy")) maxspeedy=200;
+
+    animation.reset(new EmptyAnimation((state&STATE_LEFT) ? &anim_left : &anim_right));
 }
 
 Player::~Player() {
