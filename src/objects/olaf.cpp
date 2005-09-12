@@ -13,14 +13,6 @@ Olaf::Olaf(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
   Player(xcord,ycord,parameters),
   fart(V_FART) {
     /* Parameters */
-    if (!hasParam(parameters,"anim_left"))              anim_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_left.bmp"));
-    if (!hasParam(parameters,"anim_right"))             anim_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_right.bmp"));
-    if (!hasParam(parameters,"anim_walk_left"))         anim_walk_left=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_left.png"),8);
-    if (!hasParam(parameters,"anim_walk_right"))        anim_walk_right=loadAnimation(scenario->imgcache->loadImage(8,"olaf1-run_right.png"),8);
-    if (!hasParam(parameters,"anim_crash_left"))        anim_crash_left=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_left.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    if (!hasParam(parameters,"anim_crash_right"))       anim_crash_right=loadAnimation(scenario->imgcache->loadImage(1,"olaf1_land_right.bmp"),1,BP_MD,ATYPE_ONCE,calcFPS(1,T_IRR));
-    if (!hasParam(parameters,"anim_die_bones_left"))    anim_die_bones_left=loadAnimation(scenario->imgcache->loadImage(60,0,"kuru.bmp"),12,BP_MD,ATYPE_ONCE,25);
-
     if (hasParam(parameters,"anim_olaf_small_left"))          anim_olaf_small_left=loadAnimation(getParameters(parameters["anim_olaf_small_left"],':'));
       else anim_olaf_small_left=loadAnimation(scenario->imgcache->loadImage(7,"Olaf_Small_Walk_left.png"),1);
     if (hasParam(parameters,"anim_olaf_small_right"))         anim_olaf_small_right=loadAnimation(getParameters(parameters["anim_olaf_small_right"],':'));

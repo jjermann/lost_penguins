@@ -1,0 +1,37 @@
+#OLAF
+anim_left=                      name=olaf_idle_left:          scale=2:  bp_type=rightdown
+anim_right=                     name=olaf_idle_right:         scale=2:  bp_type=leftdown
+anim_rock_left=                 name=olaf_rock_left:          scale=2:  bp_type=rightdown
+anim_rock_right=                name=olaf_rock_right:         scale=2:  bp_type=leftdown
+anim_walk_left=                 name=olaf_walk_left:          scale=2:  bp_type=rightdown  
+anim_walk_right=                name=olaf_walk_right:         scale=2:  bp_type=leftdown
+anim_push_left=                 name=olaf_push_left:          scale=2:  bp_type=rightdown  
+anim_push_right=                name=olaf_push_right:         scale=2:  bp_type=leftdown
+anim_fall_left=                 name=olaf_fall_left:          scale=2:  bp_type=rightdown
+anim_fall_right=                name=olaf_fall_right:         scale=2:  bp_type=leftdown
+anim_fall_fast_left=            name=olaf_fall_fast_left:     scale=2:  bp_type=rightdown
+anim_fall_fast_right=           name=olaf_fall_fast_right:    scale=2:  bp_type=leftdown
+anim_crash_left=                name=olaf_crash_left:         scale=2:  bp_type=rightdown:    type=once
+anim_crash_right=               name=olaf_crash_right:        scale=2:  bp_type=leftdown:     type=once
+anim_rope_left=                 name=olaf_rope_left:          scale=2:  bp_type=rightdown
+anim_rope_right=                name=olaf_rope_right:         scale=2:  bp_type=leftdown
+anim_teleport_left=             name=olaf_teleport_left:      scale=2:  bp_type=rightdown:    type=once
+anim_teleport_right=            name=olaf_teleport_right:     scale=2:  bp_type=leftdown:     type=once
+anim_die_bones_left=            name=olaf_die_bones_left:     scale=2:  bp_type=rightdown:    type=once
+anim_die_bones_right=           name=olaf_die_bones_right:    scale=2:  bp_type=leftdown:     type=once
+anim_die_elec_left=             name=olaf_die_elec_left:      scale=2:  bp_type=rightdown:    type=once
+anim_die_elec_right=            name=olaf_die_elec_right:     scale=2:  bp_type=leftdown:     type=once
+anim_die_spike_left=            name=olaf_die_spike_left:     scale=2:  bp_type=rightdown:    type=once
+anim_die_spike_right=           name=olaf_die_spike_right:    scale=2:  bp_type=leftdown:     type=once
+anim_bar=                       name=bar_olaf:                scale=2:                        type=once
+
+anim_olaf_small_left=           name=olaf_idle_small_left:    scale=2:  bp_type=rightdown
+anim_olaf_small_right=          name=olaf_idle_small_right:   scale=2:  bp_type=leftdown
+anim_olaf_walk_small_left=      name=olaf_walk_small_left:    scale=2:  bp_type=rightdown
+anim_olaf_walk_small_right=     name=olaf_walk_small_right:   scale=2:  bp_type=leftdown
+anim_olaf_shield_left=          name=olaf_idle_shield_left:   scale=2:  bp_type=rightdown
+anim_olaf_shield_right=         name=olaf_idle_shield_right:  scale=2:  bp_type=leftdown
+anim_olaf_fall_shield_left=     name=olaf_fall_shield_left:   scale=2:  bp_type=rightdown
+anim_olaf_fall_shield_right=    name=olaf_fall_shield_right:  scale=2:  bp_type=leftdown
+anim_olaf_walk_shield_left=     name=olaf_walk_shield_left:   scale=2:  bp_type=rightdown
+anim_olaf_walk_shield_right=    name=olaf_walk_shield_right:  scale=2:  bp_type=leftdown
