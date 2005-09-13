@@ -1,5 +1,5 @@
 #ERIK
-anim_left=	            name=erik_idle_left:          scale=2:  bp_type=rightdown
+anim_left=                  name=erik_idle_left:          scale=2:  bp_type=rightdown
 anim_right=                 name=erik_idle_right:         scale=2:  bp_type=leftdown
 anim_rock_left=             name=erik_rock_left:          scale=2:  bp_type=rightdown
 anim_rock_right=            name=erik_rock_right:         scale=2:  bp_type=leftdown
