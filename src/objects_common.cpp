@@ -151,7 +151,10 @@ EmptyAnimationPtr Object::loadAnimation(const ParameterMap& parameters) {
     double fps=0;
     AllignType allign_type=AT_MD;
     
-    if (hasParam(parameters,"scale")) scale_factor=atof(parameters.find("scale")->second.c_str());
+    if (hasParam(parameters,"scale")) {
+        if (parameters.find("scale")->second == "lvl") scale_factor=config.lvlscale;
+        else scale_factor=atof(parameters.find("scale")->second.c_str());
+    }
     if (hasParam(parameters,"bp_type")) {
         if        (parameters.find("bp_type")->second.find("hleft")   !=string::npos) {
             if      (parameters.find("bp_type")->second.find("vup")     !=string::npos) bp_type=BP_LU;
