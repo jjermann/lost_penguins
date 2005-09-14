@@ -172,11 +172,11 @@ EmptyAnimationPtr Object::loadAnimation(const ParameterMap& parameters) {
     }
     if (hasParam(parameters,"type")) {
         animation_type=NOTHING;
-        if (parameters.find("type")->second.find("once"))   animation_type|=ATYPE_ONCE;
-        if (parameters.find("type")->second.find("loop"))   animation_type|=ATYPE_LOOP;
-        if (parameters.find("type")->second.find("swing"))  animation_type|=ATYPE_SWING;
-        if (parameters.find("type")->second.find("step"))   animation_type|=ATYPE_STEP;
-        if (parameters.find("type")->second.find("reverse")) {
+        if (parameters.find("type")->second.find("once")   !=string::npos)  animation_type|=ATYPE_ONCE;
+        if (parameters.find("type")->second.find("loop")   !=string::npos)  animation_type|=ATYPE_LOOP;
+        if (parameters.find("type")->second.find("swing")  !=string::npos)  animation_type|=ATYPE_SWING;
+        if (parameters.find("type")->second.find("step")   !=string::npos)  animation_type|=ATYPE_STEP;
+        if (parameters.find("type")->second.find("reverse" !=string::npos)) {
             animation_type<<=1;
         }
         if (animation_type==NOTHING) animation_type=ATYPE_LOOP;

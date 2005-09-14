@@ -1,0 +1,27 @@
+#FANG
+anim_left=                  name=fang_idle_left:          scale=lvl:  bp_type=rightdown
+anim_right=                 name=fang_idle_right:         scale=lvl:  bp_type=leftdown
+anim_rock_left=             name=fang_rock_left:          scale=lvl:  bp_type=rightdown
+anim_rock_right=            name=fang_rock_right:         scale=lvl:  bp_type=leftdown
+anim_walk_left=             name=fang_walk_left:          scale=lvl:  bp_type=rightdown  
+anim_walk_right=            name=fang_walk_right:         scale=lvl:  bp_type=leftdown
+anim_push_left=             name=fang_push_left:          scale=lvl:  bp_type=rightdown  
+anim_push_right=            name=fang_push_right:         scale=lvl:  bp_type=leftdown
+anim_fall_left=             name=fang_fall_left:          scale=lvl:  bp_type=rightdown
+anim_fall_right=            name=fang_fall_right:         scale=lvl:  bp_type=leftdown
+anim_rope_left=             name=fang_rope_left:          scale=lvl:  bp_type=rightdown
+anim_rope_right=            name=fang_rope_right:         scale=lvl:  bp_type=leftdown
+anim_teleport_left=         name=fang_teleport_left:      scale=lvl:  bp_type=rightdown:    type=once
+anim_teleport_right=        name=fang_teleport_right:     scale=lvl:  bp_type=leftdown:     type=once
+anim_die_burn_left=         name=fang_die_burn_left:      scale=lvl:  bp_type=rightdown:    type=once
+anim_die_burn_right=        name=fang_die_burn_right:     scale=lvl:  bp_type=leftdown:     type=once
+anim_die_bones_left=        name=fang_die_bones_left:     scale=lvl:  bp_type=rightdown:    type=once
+anim_die_bones_right=       name=fang_die_bones_right:    scale=lvl:  bp_type=leftdown:     type=once
+anim_die_elec_left=         name=fang_die_elec_left:      scale=lvl:  bp_type=rightdown:    type=once
+anim_die_elec_right=        name=fang_die_elec_right:     scale=lvl:  bp_type=leftdown:     type=once
+anim_die_spike_left=        name=fang_die_spike_left:     scale=lvl:  bp_type=rightdown:    type=once
+anim_die_spike_right=       name=fang_die_spike_right:    scale=lvl:  bp_type=leftdown:     type=once
+anim_bar=                   name=bar_fang:                scale=lvl:                        type=once
+
+anim_fang_claw_left=        name=fang_claw_left:          scale=lvl:  bp_type=rightdown:    type=once
+anim_fang_claw_right=       name=fang_claw_right:         scale=lvl:  bp_type=leftdown:     type=once
