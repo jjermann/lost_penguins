@@ -178,8 +178,8 @@ EmptyAnimationPtr Object::loadAnimation(const ParameterMap& parameters) {
         if (parameters.find("type")->second.find("step")    !=string::npos)  animation_type|=ATYPE_STEP;
         if (parameters.find("type")->second.find("reverse") !=string::npos)  animation_type<<=1;
 
-        if (animation_type==NOTHING) animation_type=ATYPE_LOOP;
-        if (parameters.find("type")->second.find("switch")) animation_type|=ATYPE_ST_SWITCH;
+        if (animation_type==NOTHING)                                         animation_type=ATYPE_LOOP;
+        if (parameters.find("type")->second.find("switch")  !=string::npos)  animation_type|=ATYPE_ST_SWITCH;
     }
     if (hasParam(parameters,"fps")) fps=atof(parameters.find("fps")->second.c_str());
     if (hasParam(parameters,"allign_type")) {
