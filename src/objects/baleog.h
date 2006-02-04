@@ -5,7 +5,7 @@
 */
 class Baleog : public Player {
     public:
-        Baleog(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Baleog(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Baleog();
         static ParameterMap default_parameters;
         /// \brief Baleog attacks with a sword

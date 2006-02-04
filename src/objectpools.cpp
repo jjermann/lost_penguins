@@ -215,13 +215,13 @@ const ParameterMap& ObjectsPool::getDefaultObjParambyName(const string& obj) {
     else return empty_parameter;
 }
 
-Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, ParameterMap& objparam, bool outside) {
+Object* ObjectsPool::addObjectbyName(const string& obj, Sint16 x, Sint16 y, const ParameterMap& objparam, bool outside) {
     ParameterMap parameters;
     if (hasParam(objparam,"file")) {
-        parameters=getFileParameters(objparam["file"]);
-        ParameterMap::iterator it=objparam.begin();
+        parameters=getFileParameters(objparam.find("file")->second);
+        ParameterMap::const_iterator it=objparam.begin();
         while (it!=objparam.end()) {
-            if ((*it).first!="file") parameters[(*it).first]=(*it).second;
+            if (it->first!="file") parameters[it->first]=it->second;
             ++it;
         }
     } else {

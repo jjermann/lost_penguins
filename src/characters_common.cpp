@@ -7,8 +7,8 @@
 #include "characters_common.h"
 
 
-Character::Character(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters),
+Character::Character(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param),
   health(1),
   maxhealth(1),
   maxspeedx(300),

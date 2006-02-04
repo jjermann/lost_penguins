@@ -10,8 +10,8 @@
 #include "players_common.h"
 
 
-Monster::Monster(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Character(xcord,ycord,parameters),
+Monster::Monster(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Character(xcord,ycord,param),
   Dai(0),
   Dattack(0) {
     state=STATE_FALL;

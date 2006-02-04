@@ -7,8 +7,8 @@
 #include "triggered_bomb.h"
 #include "bomb.h"
 
-Bomb::Bomb(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Item(xcord,ycord,parameters) {
+Bomb::Bomb(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Item(xcord,ycord,param) {
     /* Parameters */
     if (!hasParam(parameters,"image")) anim_orig=loadAnimation(scenario->imgcache->loadImage(1,"bomb_fire.bmp"));
     if (hasParam(parameters,"image_bomb")) triggered_bomb_param["image"]=parameters["image_bomb"];

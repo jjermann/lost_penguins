@@ -9,7 +9,7 @@
 */
 class Geyser : public Object {
     public:
-        Geyser(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Geyser(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Geyser();
         static ParameterMap default_parameters;
         virtual void idle(Uint16 dt);

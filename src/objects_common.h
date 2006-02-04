@@ -37,7 +37,7 @@
 */
 class Object {
     public:
-        Object(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Object(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Object();
         static ParameterMap default_parameters;
         /// Sets the new position. If the coordinates are not in the map area
@@ -123,7 +123,7 @@ class Object {
                                         Uint16 astart_pos=0,
                                         AllignType aallign_type=AT_MD);
         /// Load an animation based on a parameter map
-        EmptyAnimationPtr loadAnimation(const ParameterMap& parameters=ParameterMap());
+        EmptyAnimationPtr loadAnimation(const ParameterMap& param=ParameterMap());
         //Events (triggered animations/effects)
         //@{
         /// Clears the event field (sets it to NULL). This should only be used by
@@ -181,6 +181,7 @@ class Object {
         bool operator<(const Object& obj) const;
         Uint32 onum;
     protected:
+        ParameterMap parameters;
         Uint32 state;
         Event* event;
         ///\todo Document this!
@@ -203,7 +204,7 @@ class Object {
 */
 class Item : public Object {
     public:
-        Item(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Item(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Item();
         static ParameterMap default_parameters;
         virtual bool act(Object*) { return false; }
@@ -220,7 +221,7 @@ class Item : public Object {
 */
 class Background : public Object {
     public:
-        Background(ParameterMap& parameters=ParameterMap());
+        Background(const ParameterMap& param=ParameterMap());
         virtual ~Background();
         static ParameterMap default_parameters;
 };

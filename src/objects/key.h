@@ -7,7 +7,7 @@
 */
 class Key : public Item {
     public:
-        Key(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Key(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Key();
         static ParameterMap default_parameters;
         virtual bool act(Object* obj);

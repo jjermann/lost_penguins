@@ -8,8 +8,8 @@
 #include "fang.h"
 
 
-Fang::Fang(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Player(xcord,ycord,parameters),
+Fang::Fang(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Player(xcord,ycord,param),
   jump(V_JUMP) {
     weapon=Weapon(-1,W_STRIKE);
 

@@ -16,7 +16,7 @@
 */
 class Olaf : public Player {
     public:
-        Olaf(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Olaf(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Olaf();
         static ParameterMap default_parameters;
         /// Additionally checks if Olaf is small and how he wears his shield

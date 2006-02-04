@@ -8,8 +8,8 @@
 #include "baleog.h"
 
 
-Baleog::Baleog(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Player(xcord,ycord,parameters) {
+Baleog::Baleog(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Player(xcord,ycord,param) {
     weapon=Weapon(-1,W_STRIKE);
 
     /* Parameters */

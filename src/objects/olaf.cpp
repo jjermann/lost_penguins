@@ -9,8 +9,8 @@
 #include "olaf.h"
 
 
-Olaf::Olaf(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Player(xcord,ycord,parameters),
+Olaf::Olaf(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Player(xcord,ycord,param),
   fart(V_FART) {
     /* Parameters */
     if (hasParam(parameters,"anim_olaf_small_left"))          anim_olaf_small_left=loadAnimation(getParameters(parameters["anim_olaf_small_left"],':'));

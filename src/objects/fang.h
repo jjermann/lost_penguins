@@ -22,7 +22,7 @@
 */
 class Fang : public Player {
     public:
-        Fang(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Fang(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Fang();
         static ParameterMap default_parameters;
         virtual void fall(Uint16);

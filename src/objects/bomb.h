@@ -8,7 +8,7 @@
 */
 class Bomb : public Item {
     public:
-        Bomb(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Bomb(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Bomb();
         static ParameterMap default_parameters;
         virtual bool act(Object* obj);

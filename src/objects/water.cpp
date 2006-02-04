@@ -9,8 +9,8 @@
 #include "water.h"
 
 
-Water::Water(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters) {
+Water::Water(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param) {
     weapon=Weapon(-1,W_WATER,WS_WATER);
     /* Parameters */
     if (hasParam(parameters,"audio_water_land")) au_water=scenario->sndcache->loadWAV(parameters["audio_water_land"]);

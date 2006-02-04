@@ -13,8 +13,8 @@
 #include "players_common.h"
 
 
-Player::Player(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Character(xcord,ycord,parameters),
+Player::Player(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Character(xcord,ycord,param),
   currentitem(0) {
     for (Uint8 i=0; i<MAX_ITEMS; i++) {
         items[i]=NULL;
@@ -443,7 +443,7 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
     return newhealth;
 }
 
-DeadPlayer::DeadPlayer(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Character(xcord,ycord,parameters) {
+DeadPlayer::DeadPlayer(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Character(xcord,ycord,param) {
 }
 DeadPlayer::~DeadPlayer() { }

@@ -7,8 +7,8 @@
 #include "exit.h"
 
 
-Exit::Exit(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters) {
+Exit::Exit(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param) {
     /* Parameters */
     if (!hasParam(parameters,"image")) anim_orig=loadAnimation(scenario->imgcache->loadImage(1,"exit.bmp"));
 }

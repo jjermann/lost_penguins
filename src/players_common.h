@@ -17,7 +17,7 @@
 */
 class Player : public Character {
     public:
-        Player(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Player(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Player();
         static ParameterMap default_parameters;
         //@{
@@ -175,7 +175,7 @@ class Player : public Character {
 */
 class DeadPlayer : public Character {
     public:
-        DeadPlayer(Sint16 xcord=0, Sint16 ycord=0, ParameterMap& parameters=ParameterMap());
+        DeadPlayer(Sint16 xcord=0, Sint16 ycord=0, const ParameterMap& param=ParameterMap());
         virtual ~DeadPlayer();
         static ParameterMap default_parameters;
 };

@@ -36,7 +36,7 @@ class ObjectsPool {
         /// \param outside True if the object shouldn't be added to the pools
         /// \return Pointer to the new entry in the objectspool or NULL if
         ///   the object was not recognized
-        Object* addObjectbyName(const string& obj, Sint16 x=0, Sint16 y=0, ParameterMap& parameters=ParameterMap(), bool outside=false);
+        Object* addObjectbyName(const string& obj, Sint16 x=0, Sint16 y=0, const ParameterMap& param=ParameterMap(), bool outside=false);
         /// Add an Object to all corresponding pools
         /// \return Pointer to the new entry in the objectspool or NULL if it failed
         Object* addObject(Object* object, bool outside=false);

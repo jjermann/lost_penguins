@@ -35,7 +35,7 @@
 */
 class Character : public Object {
     public:
-        Character(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Character(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Character();
         static ParameterMap default_parameters;
         Uint8 getHealth();

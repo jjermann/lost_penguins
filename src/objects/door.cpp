@@ -6,8 +6,8 @@
 #include "door.h"
 
 
-Door::Door(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters) {
+Door::Door(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param) {
     otype=OTYPE_DENSE;
 
     /* Parameters */

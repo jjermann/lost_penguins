@@ -6,8 +6,8 @@
 #include "scenario.h"
 #include "triggered_bomb.h"
 
-TriggeredBomb::TriggeredBomb(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Character(xcord,ycord,parameters) {
+TriggeredBomb::TriggeredBomb(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Character(xcord,ycord,param) {
     weapon=Weapon(-1,W_EXPLOSION);
     enemy_types|=(OTYPE_PLAYER|OTYPE_MONSTER);
 

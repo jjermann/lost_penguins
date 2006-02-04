@@ -9,8 +9,8 @@
 #include "key.h"
 
 
-Key::Key(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Item(xcord,ycord,parameters) {
+Key::Key(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Item(xcord,ycord,param) {
     /* Parameters */
     if (!hasParam(parameters,"image")) anim_orig=loadAnimation(scenario->imgcache->loadImage(1,"key.bmp"));
     if (hasParam(parameters,"audio_key")) au_key=scenario->sndcache->loadWAV(parameters["audio_key"]);

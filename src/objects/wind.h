@@ -6,7 +6,7 @@
 */
 class Wind : public Object {
     public:
-        Wind(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Wind(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Wind();
         static ParameterMap default_parameters;
         virtual void enter(Object* obj);

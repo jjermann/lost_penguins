@@ -9,7 +9,7 @@
 */
 class Monster : public Character {
     public:
-        Monster(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Monster(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Monster();
         static ParameterMap default_parameters;
         virtual void removedObject(Object*);

@@ -7,8 +7,8 @@
 #include "scenario.h"
 #include "plant.h"
 
-Plant::Plant(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Monster(xcord,ycord,parameters) {
+Plant::Plant(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Monster(xcord,ycord,param) {
     enemy_types|=(OTYPE_PLAYER);
     weapon=Weapon(-1,W_TOUCH);
     tcur=recover;

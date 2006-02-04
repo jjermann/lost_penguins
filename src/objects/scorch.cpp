@@ -8,8 +8,8 @@
 #include "scorch.h"
 
 
-Scorch::Scorch(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Player(xcord,ycord,parameters),
+Scorch::Scorch(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Player(xcord,ycord,param),
   left_wings(SCORCH_MAX_WINGS),
   wing(V_FLY) {
 

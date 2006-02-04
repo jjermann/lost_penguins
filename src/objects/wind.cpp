@@ -4,8 +4,8 @@
 #include "characters_common.h"
 #include "wind.h"
 
-Wind::Wind(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters) {
+Wind::Wind(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param) {
     /* Parameters */
     if (hasParam(parameters,"accel")) gravitymod=atoi(parameters["accel"].c_str());
       else gravitymod=0;

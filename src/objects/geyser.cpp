@@ -8,8 +8,8 @@
 #include "geyser.h"
 
 
-Geyser::Geyser(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters),
+Geyser::Geyser(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param),
   Deffect(0) {
     /* Parameters */
     if (hasParam(parameters,"aspeed")) aspeed=atoi(parameters["aspeed"].c_str());

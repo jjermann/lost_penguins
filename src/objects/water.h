@@ -6,7 +6,7 @@
 */
 class Water : public Object {
     public:
-        Water(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Water(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Water();
         static ParameterMap default_parameters;
         virtual void enter(Object* obj);

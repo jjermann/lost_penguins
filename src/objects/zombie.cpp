@@ -10,8 +10,8 @@
 #include "zombie.h"
 
 
-Zombie::Zombie(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Monster(xcord,ycord,parameters),
+Zombie::Zombie(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Monster(xcord,ycord,param),
   T_Attack_Bite(1500) {
     weapon=Weapon(-1,W_STRIKE);
 

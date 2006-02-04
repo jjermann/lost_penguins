@@ -7,7 +7,8 @@
 #include "scenario.h"
 
 
-Object::Object(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
+Object::Object(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  parameters(param),
   state(NOTHING),
   event(NULL),
   otype(OTYPE_COMMON),
@@ -318,15 +319,15 @@ void Object::stopEvent() {
 }
 
 
-Item::Item(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters), owner(NULL) {
+Item::Item(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param), owner(NULL) {
     otype|=OTYPE_ITEM;
 }
 Item::~Item() { }
 
 
-Background::Background(ParameterMap& parameters):
-  Object(0,0,parameters) {
+Background::Background(const ParameterMap& param):
+  Object(0,0,param) {
     otype=NOTHING;
     name="Background";
 

@@ -5,7 +5,7 @@
 */
 class Spike : public Object {
     public:
-        Spike(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Spike(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Spike();
         static ParameterMap default_parameters;
         virtual void touch(Object*);

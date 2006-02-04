@@ -5,7 +5,7 @@
 */
 class Plant : public Monster {
     public:
-        Plant(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        Plant(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~Plant();
         static ParameterMap default_parameters;
         virtual void touch(Object*);

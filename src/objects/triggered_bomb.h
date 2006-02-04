@@ -5,7 +5,7 @@
 */
 class TriggeredBomb : public Character {
     public:
-        TriggeredBomb(Sint16 xpos=0, Sint16 ypos=0, ParameterMap& parameters=ParameterMap());
+        TriggeredBomb(Sint16 xpos=0, Sint16 ypos=0, const ParameterMap& param=ParameterMap());
         virtual ~TriggeredBomb();
         static ParameterMap default_parameters;
         virtual void idle(Uint16);

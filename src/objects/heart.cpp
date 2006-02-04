@@ -8,8 +8,8 @@
 #include "heart.h"
 
 
-Heart::Heart(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Item(xcord,ycord,parameters) {
+Heart::Heart(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Item(xcord,ycord,param) {
     /* Parameters */
     if (!hasParam(parameters,"image")) anim_orig=loadAnimation(scenario->imgcache->loadImage(1,"heart.bmp"));
     if (hasParam(parameters,"alife")) alife=atoi(parameters["alife"].c_str());

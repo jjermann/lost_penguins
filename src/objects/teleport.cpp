@@ -8,8 +8,8 @@
 #include "teleport.h"
 
 
-Teleporter::Teleporter(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters) {
+Teleporter::Teleporter(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param) {
     /* Parameters */
     if (hasParam(parameters,"audio_teleport")) au_tele=scenario->sndcache->loadWAV(parameters["audio_teleport"]);
       else au_tele=scenario->sndcache->loadWAV("teleprt.wav");

@@ -10,8 +10,8 @@
 #include "erik.h"
 
 
-Erik::Erik(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Player(xcord,ycord,parameters),
+Erik::Erik(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Player(xcord,ycord,param),
   jump(V_JUMP),
   jump2(V_JUMP2) {
     weapon=Weapon(-1,W_PRESSURE,WS_PRESSURE);

@@ -7,8 +7,8 @@
 #include "scenario.h"
 #include "spike.h"
 
-Spike::Spike(Sint16 xcord, Sint16 ycord, ParameterMap& parameters):
-  Object(xcord,ycord,parameters) {
+Spike::Spike(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
+  Object(xcord,ycord,param) {
     weapon=Weapon(-10,W_TOUCH,WS_SPIKE);
 
     /* Parameters */
