@@ -9,8 +9,8 @@ anim_crash_left=            name=scorch_crash_left:         scale=lvl:  bp_type=
 anim_crash_right=           name=scorch_crash_right:        scale=lvl:  bp_type=leftdown:     type=once
 anim_teleport_left=         name=scorch_teleport_left:      scale=lvl:  bp_type=rightdown:    type=once
 anim_teleport_right=        name=scorch_teleport_right:     scale=lvl:  bp_type=leftdown:     type=once
-anim_die_crash_left=        name=scorch_die_crash_left:     scale=lvl:  bp_type=rightdown:    type=once
-anim_die_crash_right=       name=scorch_die_crash_right:    scale=lvl:  bp_type=leftdown:     type=once
+anim_die_crash_left=        name=scorch_die_crash_left:     scale=lvl:  bp_type=rightdown:    type=once: fps=6
+anim_die_crash_right=       name=scorch_die_crash_right:    scale=lvl:  bp_type=leftdown:     type=once: fps=6
 anim_die_burn_left=         name=scorch_die_burn_left:      scale=lvl:  bp_type=rightdown:    type=once
 anim_die_burn_right=        name=scorch_die_burn_right:     scale=lvl:  bp_type=leftdown:     type=once
 anim_die_bones_left=        name=scorch_die_bones_left:     scale=lvl:  bp_type=rightdown:    type=once
