@@ -1,8 +1,8 @@
 CC         = gcc
-CC_FLAGS   = -pedantic -I /usr/include/ImageMagick/ -fPIC    -w # -W -Wall 
+CC_FLAGS   = -pedantic -I /usr/include/ImageMagick/    -w # -W -Wall 
 CC_DEBUG   = -g #-fno-inline
 CC_OPT     = -O2 -ffast-math
-CC_LVL     = -shared `Magick-config --ldflags --libs`
+CC_LVL     = `Magick-config --ldflags --libs`
 
 SLV        = slvextract
 SLV_OBJS   = slvextract.o
