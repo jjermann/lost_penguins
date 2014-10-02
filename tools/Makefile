@@ -1,6 +1,6 @@
 CC         = gcc
-CC_FLAGS   = -pedantic -I /usr/include/ImageMagick/    -w # -W -Wall 
-CC_DEBUG   = -g #-fno-inline
+CC_FLAGS   = -pedantic -I /usr/include/ImageMagick/ -w
+CC_DEBUG   = -g #-W -Wall -fno-inline
 CC_OPT     = -O2 -ffast-math
 CC_LVL     = `Magick-config --ldflags --libs`
 

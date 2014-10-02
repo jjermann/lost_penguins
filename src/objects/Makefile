@@ -1,6 +1,6 @@
 CXX = g++
-CXX_FLAGS = -W -Wall -ansi -pedantic
-CXX_DEBUG = -g #-fno-inline
+CXX_FLAGS = -ansi -pedantic -w
+CXX_DEBUG = -g # -W -Wall -fno-inline
 CXX_OPT = #-O2 -march=pentium4 -ffast-math
 CXX_GAME = -DSDL_MIXER -DSDL_IMAGE -DALPHA -I ../
 SDL = `sdl-config --cflags`
