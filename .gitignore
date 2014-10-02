@@ -1,0 +1,7 @@
+lost_penguins
+*~
+*.a
+*.o
+*.dep
+*.bak
+*.html

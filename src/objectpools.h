@@ -32,7 +32,7 @@ class ObjectsPool {
         /// \param obj Name of the Object class
         /// \param x x coordinate
         /// \param y y coordinate
-        /// \param parameters A map<string,string> of all parameters
+        /// \param param A map<string,string> of all parameters
         /// \param outside True if the object shouldn't be added to the pools
         /// \return Pointer to the new entry in the objectspool or NULL if
         ///   the object was not recognized
