@@ -16,7 +16,7 @@
 #include <stdarg.h>
 #include <magick/api.h>
 
-#define EXIT(a) { errno=(a); goto end; }
+#define EXIT(a) { my_errno=(a); goto end; }
 
 enum {
     red=0,
@@ -25,13 +25,13 @@ enum {
 };
 
 enum {
-    errno_ok=0,
-    errno_quit=1,
-    errno_parse=2,
-    errno_open=3,
-    errno_invalid=4,
-    errno_alloc=5,
-    errno_misc=6
+    my_errno_ok=0,
+    my_errno_quit=1,
+    my_errno_parse=2,
+    my_errno_open=3,
+    my_errno_invalid=4,
+    my_errno_alloc=5,
+    my_errno_misc=6
 };
 
 typedef struct {
@@ -74,7 +74,7 @@ typedef struct {
 } Config;
 
 Config config;
-int errno=errno_ok;
+int my_errno=my_errno_ok;
 
 /* RGB palette */
 unsigned char lvl_palette[256][3] = {
@@ -196,24 +196,24 @@ int parse(int argc, char* argv[]) {
         if (strncmp(argv[i],"-",1)==0) {
             if (strcmp(argv[i],"--help")==0 || strcmp(argv[i],"-h")==0) {
                 usage();
-                return errno_quit;
+                return my_errno_quit;
             } else if (strcmp(argv[i],"-debug")==0) {
                 config.debug=1;
             } else if (strcmp(argv[i],"-start_index")==0) {
                 i++;
-                if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
+                if (strncmp(argv[i],"-",1)==0) { usage(); return my_errno_parse; }
                 config.start_index=(unsigned int)atoi(argv[i]);
             } else if (strcmp(argv[i],"-write")==0) {
                 i++;
-                if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
+                if (strncmp(argv[i],"-",1)==0) { usage(); return my_errno_parse; }
                 config.write=atoi(argv[i]);
                 if (config.write>7 || config.write<0) {
                     usage();
-                    return errno_parse;
+                    return my_errno_parse;
                 }
             } else if (strcmp(argv[i],"-colorkey")==0) {
                 i++;
-                if (!strncmp(argv[i],"#",1)==0) { usage(); return errno_parse; }
+                if (!strncmp(argv[i],"#",1)==0) { usage(); return my_errno_parse; }
                 strcpy(buf,argv[i]+1); buf[2]=0;
                 config.colorkey.red=(Quantum)(MaxRGB*strtol(buf,NULL,16)/255);
                 strcpy(buf,argv[i]+3); buf[2]=0;
@@ -235,19 +235,19 @@ int parse(int argc, char* argv[]) {
                     config.bg.opacity=0;
                 } else {
                     usage();
-                    return errno_parse;
+                    return my_errno_parse;
                 }
             } else if (strcmp(argv[i],"-dir")==0 || strcmp(argv[i],"-o")==0) {
                 i++;
-                if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
+                if (strncmp(argv[i],"-",1)==0) { usage(); return my_errno_parse; }
                 strncpy(config.basename,argv[i],16);
             } else if (strcmp(argv[i],"-format")==0) {
                 i++;
-                if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
+                if (strncmp(argv[i],"-",1)==0) { usage(); return my_errno_parse; }
                 strncpy(config.format,argv[i],4);
             } else if (strcmp(argv[i],"-data_file")==0) {
                 i++;
-                if (strncmp(argv[i],"-",1)==0) { usage(); return errno_parse; }
+                if (strncmp(argv[i],"-",1)==0) { usage(); return my_errno_parse; }
                 strncpy(config.data_file,argv[i],16);
             } else {
                 printf("Unknown suboption %s!\n",argv[i]);
@@ -262,7 +262,7 @@ int parse(int argc, char* argv[]) {
     /* check validity */
     if (strcmp(config.lvl_file,"")==0) {
         usage();
-        return errno_parse;
+        return my_errno_parse;
     }
 
     /* default settings if unspecified */
@@ -291,7 +291,7 @@ int parse(int argc, char* argv[]) {
     lvl_palette[1][green] = (unsigned char)(config.colorkey.green*255/MaxRGB);
     lvl_palette[1][blue]  = (unsigned char)(config.colorkey.blue*255/MaxRGB);
 
-    return errno_ok;
+    return my_errno_ok;
 }
 
 void freeLVLAnimList(LVLAnim* lvlanims,unsigned int size) {
@@ -455,21 +455,21 @@ int main(int argc, char *argv[]) {
     /* -------------------------------------------------------------------- */
 
     /* parse command line options and set config */
-    errno=parse(argc,argv);
+    my_errno=parse(argc,argv);
 
-    if (errno==errno_quit)
-        EXIT(errno_ok)
-    else if (errno==errno_parse)
-        EXIT(errno_parse)
-    else if (errno!=errno_ok)
-        EXIT(errno)
+    if (my_errno==my_errno_quit)
+        EXIT(my_errno_ok)
+    else if (my_errno==my_errno_parse)
+        EXIT(my_errno_parse)
+    else if (my_errno!=my_errno_ok)
+        EXIT(my_errno)
 
     /* Check lvl_file */
     lvl_file = fopen(config.lvl_file,"r");
 
     if (lvl_file == NULL) {
         printf("Error opening file\n");
-        EXIT(errno_open)
+        EXIT(my_errno_open)
     }
 
     (void)fread(buf,1,12,lvl_file);
@@ -479,7 +479,7 @@ int main(int argc, char *argv[]) {
         printf("Invalid file\n");
         fclose(lvl_file);
         lvl_file=NULL;
-        EXIT(errno_invalid)
+        EXIT(my_errno_invalid)
     }
 
     /* get file size */
@@ -489,7 +489,7 @@ int main(int argc, char *argv[]) {
     /* Map the entire file into process memory space */
     if ((data = mmap(NULL, data_size, PROT_READ, MAP_PRIVATE, fileno(lvl_file), 0)) == MAP_FAILED) {
         printf("ERROR: Unable to mmap the file content!\n");
-        EXIT(errno_alloc)
+        EXIT(my_errno_alloc)
     }
 
     /* Iterate through all image data offsets to get the number of entries and the
@@ -505,7 +505,7 @@ int main(int argc, char *argv[]) {
                 if ((tmp = realloc(img_offsets, sizeof(unsigned char*) * (img_off_size += img_off_size_step))) == NULL) {
                     printf("ERROR: Realloc failed (img_offsets)!\n");
                     free(img_offsets);
-                    EXIT(errno_alloc)
+                    EXIT(my_errno_alloc)
                 }
                 img_offsets = tmp;
             }
@@ -538,7 +538,7 @@ int main(int argc, char *argv[]) {
         if ( (lvlanims=(LVLAnim*)malloc(sizeof(LVLAnim))) == NULL) {
             printf("Memory allocation of LVLAnim* failed!\n");
             lvlanims=NULL;
-            EXIT(errno_alloc)
+            EXIT(my_errno_alloc)
         } else {
             lvlanims->start_num=0;
             lvlanims->size=tot_entries;
@@ -578,7 +578,7 @@ int main(int argc, char *argv[]) {
     for (i=0; i<lvlanim_size; i++) {
         if ( (lvlanims[i].geometry=(Rectangle*)malloc(lvlanims[i].size*sizeof(Rectangle))) == NULL ) {
             printf("Memory allocation of geometry entry %u failed!\n",i);
-            EXIT(errno_alloc)
+            EXIT(my_errno_alloc)
         }
         x_off=0;
         maxh=0;
@@ -719,5 +719,5 @@ int main(int argc, char *argv[]) {
     if (geom_file!=NULL) fclose(geom_file);
     if (anim_file!=NULL) fclose(anim_file);
 
-    return errno;
+    return my_errno;
 }

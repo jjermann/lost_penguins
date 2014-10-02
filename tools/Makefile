@@ -1,8 +1,8 @@
 CC         = gcc
-CC_FLAGS   = -pedantic -W -Wall
+CC_FLAGS   = -pedantic -I /usr/include/ImageMagick/ -fPIC    -w # -W -Wall 
 CC_DEBUG   = -g #-fno-inline
-CC_OPT     = -O2 -march=pentium4 -ffast-math
-CC_LVL     = `Magick-config --ldflags --libs`
+CC_OPT     = -O2 -ffast-math
+CC_LVL     = -shared `Magick-config --ldflags --libs`
 
 SLV        = slvextract
 SLV_OBJS   = slvextract.o
@@ -21,7 +21,7 @@ $(SLV): $(SLV_OBJS)
 	$(CC) $(SLV_OBJS) -o $(SLV)
 
 $(LVL): $(LVL_OBJS)
-	$(CC) $(CC_LVL) $(LVL_OBJS) -o $(LVL)
+	$(CC) $(LVL_OBJS) -o $(LVL) $(CC_LVL) 
 
 %.o: %.c
 	$(CC) $(CC_FLAGS) $(CC_DEBUG) $(CC_OPT) -c $< -o $@

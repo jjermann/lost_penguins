@@ -1,7 +1,7 @@
 CC         = gcc
-CC_FLAGS   = -pedantic -W -Wall
+CC_FLAGS   = -pedantic -I /usr/include/ImageMagick/ -fPIC    -w # -W -Wall 
 CC_DEBUG   = -g #-fno-inline
-CC_OPT     = -O2 -march=pentium4 -ffast-math
+CC_OPT     = -O2 -ffast-math
 CC_TOOL    = -lpng
 
 OBJS        = png_out.o xpm_out.o pgm_out.o png_xpm_out.o lvlextract.o
@@ -12,7 +12,7 @@ default: $(BIN)
 all: $(BIN)
 
 $(BIN): $(OBJS)
-	$(CC) $(CC_TOOL) $(OBJS) -o $(BIN)
+	$(CC) $(OBJS) -o $(BIN) $(CC_TOOL)
 
 %.o: %.c
 	$(CC) $(CC_FLAGS) $(CC_DEBUG) -c $< -o $@
