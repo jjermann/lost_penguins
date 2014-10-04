@@ -359,7 +359,7 @@ Uint16 Player::hit(Uint16 direction, Weapon& weap) {
         die();
         //should be !=NULL or sthg is wrong with the placement code...
         ParameterMap deadplr_parameters;
-        deadplr_parameters["image"]="dead_player.bmp";
+        deadplr_parameters["image"]="dead_player.png";
         deadplr_parameters["w"]=10;
         deadplr_parameters["h"]=10;
         Character* deadplr=dynamic_cast<Character*>(scenario->pool->addObjectbyName("DeadPlayer",pos.x,pos.y,deadplr_parameters));
