@@ -31,11 +31,11 @@ distclean: clean
 	rm -f *~
 
 install: lost_penguins
-	$(INSTALL) $(INSTALLSTRIP) -m 755 -o root lost_penguins $(BINDIR)
+	$(INSTALL) $(INSTALLSTRIP) -m 755 lost_penguins $(BINDIR)
 	if test ! -d $(SHAREDIR)/lost_penguins; then mkdir -p $(SHAREDIR)/lost_penguins; fi
-	$(INSTALL) -m 644 -o root data/* $(SHAREDIR)/lost_penguins/
+	$(INSTALL) -m 644 data/* $(SHAREDIR)/lost_penguins/
 	if test ! -d $(ETCDIR); then mkdir -p $(ETCDIR); fi
-	$(INSTALL) -m 644 -o root lost_penguins.conf $(ETCDIR)
+	$(INSTALL) -m 644 lost_penguins.conf $(ETCDIR)
 
 uninstall:
 	rm -f $(BINDIR)/lost_penguins
