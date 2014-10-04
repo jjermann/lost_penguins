@@ -42,6 +42,26 @@ Erik::Erik(Sint16 xcord, Sint16 ycord, const ParameterMap& param):
 
 Erik::~Erik() { }
 
+void Erik::updateAnimState() {
+    if (state&STATE_WATER) {
+        if (state&STATE_LEFT) {
+            if (state&STATE_MLEFT) {
+                setAnim(anim_erik_swim_left);
+            } else {
+                setAnim(anim_erik_swim_left);
+            }
+        } else {
+            if (state&STATE_MRIGHT) {
+                setAnim(anim_erik_swim_right);
+            } else {
+                setAnim(anim_erik_swim_right);
+            }
+        }
+    } else {
+        Player::updateAnimState();
+    }
+}
+
 void Erik::idle(Uint16 dt) {
     Player::idle(dt);
     //TODO: this is an ugly hack...
