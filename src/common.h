@@ -13,6 +13,7 @@
 #include <map>
 #include <math.h>
 #include <string>
+#include <inttypes.h>
 #include <dlfcn.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -61,49 +62,49 @@ typedef std::map<string,string> ParameterMap;
 #define DATA_LVLPLAYER_H 30
 
 //General definitions
-#define NOTHING                 0x00000000
-#define ALL                     0xFFFFFFFF
-#define DIR_RIGHT               0x00000001
-#define DIR_LEFT                0x00000002
-#define DIR_UP                  0x00000004
-#define DIR_DOWN                0x00000008
-#define DIR_ALL                 0x0000000F
-#define DIR_UPR                 0x00000005
-#define DIR_UPL                 0x00000006
-#define DIR_DWR                 0x00000009
-#define DIR_DWL                 0x0000000A
-#define DIR_LR                  0x00000003
+#define NOTHING                 (uint16_t)(0x00000000)
+#define ALL                     (uint16_t)(0xFFFFFFFF)
+#define DIR_RIGHT               (uint16_t)(0x00000001)
+#define DIR_LEFT                (uint16_t)(0x00000002)
+#define DIR_UP                  (uint16_t)(0x00000004)
+#define DIR_DOWN                (uint16_t)(0x00000008)
+#define DIR_ALL                 (uint16_t)(0x0000000F)
+#define DIR_UPR                 (uint16_t)(0x00000005)
+#define DIR_UPL                 (uint16_t)(0x00000006)
+#define DIR_DWR                 (uint16_t)(0x00000009)
+#define DIR_DWL                 (uint16_t)(0x0000000A)
+#define DIR_LR                  (uint16_t)(0x00000003)
 
 //Game states
-#define GAME_PAUSED             0x00000001
-#define GAME_PLAY               0x00000002
-#define GAME_MENU               0x00000004
-#define GAME_EDIT               0x00000008
-#define GAME_EDIT_NOANIM        0x00000010
-#define GAME_TEXT_INPUT         0x00000020
+#define GAME_PAUSED             (uint16_t)(0x00000001)
+#define GAME_PLAY               (uint16_t)(0x00000002)
+#define GAME_MENU               (uint16_t)(0x00000004)
+#define GAME_EDIT               (uint16_t)(0x00000008)
+#define GAME_EDIT_NOANIM        (uint16_t)(0x00000010)
+#define GAME_TEXT_INPUT         (uint16_t)(0x00000020)
 
 //Animation types
-#define ATYPE_ONCE              0x00000001
-#define ATYPE_LOOP              0x00000002
-#define ATYPE_SWING             0x00000004
-#define ATYPE_STEP              0x00000008
-#define ATYPE_ONCE_REV          0x00000010
-#define ATYPE_LOOP_REV          0x00000020
-#define ATYPE_SWING_REV         0x00000040
-#define ATYPE_STEP_REV          0x00000080
-#define ATYPE_ALL_ONCE          0x00000011
-#define ATYPE_ALL_LOOP          0x00000022
-#define ATYPE_ALL_SWING         0x00000044
-#define ATYPE_ALL_NORMAL        0x0000000F
-#define ATYPE_ALL_REV           0x000000F0
-#define ATYPE_ST_SWITCH         0x00000100
-#define ATYPE_ONCE_S            0x00000101
-#define ATYPE_ONCE_S_REV        0x00000110
+#define ATYPE_ONCE              (uint16_t)(0x00000001)
+#define ATYPE_LOOP              (uint16_t)(0x00000002)
+#define ATYPE_SWING             (uint16_t)(0x00000004)
+#define ATYPE_STEP              (uint16_t)(0x00000008)
+#define ATYPE_ONCE_REV          (uint16_t)(0x00000010)
+#define ATYPE_LOOP_REV          (uint16_t)(0x00000020)
+#define ATYPE_SWING_REV         (uint16_t)(0x00000040)
+#define ATYPE_STEP_REV          (uint16_t)(0x00000080)
+#define ATYPE_ALL_ONCE          (uint16_t)(0x00000011)
+#define ATYPE_ALL_LOOP          (uint16_t)(0x00000022)
+#define ATYPE_ALL_SWING         (uint16_t)(0x00000044)
+#define ATYPE_ALL_NORMAL        (uint16_t)(0x0000000F)
+#define ATYPE_ALL_REV           (uint16_t)(0x000000F0)
+#define ATYPE_ST_SWITCH         (uint16_t)(0x00000100)
+#define ATYPE_ONCE_S            (uint16_t)(0x00000101)
+#define ATYPE_ONCE_S_REV        (uint16_t)(0x00000110)
 
 //Description formats
-#define DESC_NONE               0x00000000
-#define DESC_LVLANIM            0x00000001
-#define DESC_ANIM_LVLANIM       0x00000002     
+#define DESC_NONE               (uint16_t)(0x00000000)
+#define DESC_LVLANIM            (uint16_t)(0x00000001)
+#define DESC_ANIM_LVLANIM       (uint16_t)(0x00000002)
 
 enum ConfigKey {
     KEY_START,

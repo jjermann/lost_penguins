@@ -32,7 +32,7 @@ void Zombie::idle(Uint16 dt) {
 }
 
 void Zombie::ai_left(Uint16 dt) {
-    SDL_Rect oldpos=pos;
+    //SDL_Rect oldpos=pos;
     if ((hspeed-HSPEED_MULT*dt/100)>(-maxspeedx)) hspeed-=HSPEED_MULT*dt/100;
     else if (hspeed>(-maxspeedx)) hspeed=-maxspeedx;
     Hit hit=move(dt,true);
@@ -52,7 +52,7 @@ void Zombie::ai_left(Uint16 dt) {
 }
 
 void Zombie::ai_right(Uint16 dt) {
-    SDL_Rect oldpos=pos;
+    //SDL_Rect oldpos=pos;
     if ((hspeed+HSPEED_MULT*dt/100)<maxspeedx) hspeed+=HSPEED_MULT*dt/100;
     else if (hspeed<maxspeedx) hspeed=maxspeedx;
     Hit hit=move(dt,true);

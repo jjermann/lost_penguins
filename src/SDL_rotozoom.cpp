@@ -207,7 +207,7 @@ int zoomSurfaceRGBA(SDL_Surface * src, SDL_Surface * dst, int flipx, int flipy, 
  * Zoomes 8bit palette/Y 'src' surface to 'dst' surface.
  */
 
-int zoomSurfaceY(SDL_Surface * src, SDL_Surface * dst, int flipx, int flipy) {
+int zoomSurfaceY(SDL_Surface * src, SDL_Surface * dst) {
     Uint32 sx, sy, *sax, *say, *csax, *csay, csx, csy;
     int x,y;
     Uint8 *sp, *dp, *csp;
@@ -476,7 +476,7 @@ void transformSurfaceRGBA(SDL_Surface * src, SDL_Surface * dst, int cx, int cy, 
  */
 
 void transformSurfaceY(SDL_Surface * src, SDL_Surface * dst, int cx, int cy, int isin, int icos) {
-    int x, y, dx, dy, xd, yd, sdx, sdy, ax, ay, sw, sh;
+    int x, y, dx, dy, xd, yd, sdx, sdy, ax, ay;
     tColorY *pc, *sp;
     int gap;
 
@@ -487,8 +487,8 @@ void transformSurfaceY(SDL_Surface * src, SDL_Surface * dst, int cx, int cy, int
     yd = ((src->h - dst->h) << 15);
     ax = (cx << 16) - (icos * cx);
     ay = (cy << 16) - (isin * cx);
-    sw = src->w - 1;
-    sh = src->h - 1;
+    //sw = src->w - 1;
+    //sh = src->h - 1;
     pc = (tColorY*)dst->pixels;
     gap = dst->pitch - dst->w;
     /*
@@ -532,7 +532,7 @@ void transformSurfaceY(SDL_Surface * src, SDL_Surface * dst, int cx, int cy, int
 
 /* Local rotozoom-size function with trig result return */
 
-void rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx, double zoomy, int *dstwidth, int *dstheight,  double *canglezoom, double *sanglezoom) {
+void rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoom, int *dstwidth, int *dstheight,  double *canglezoom, double *sanglezoom) {
     double x, y, cx, cy, sx, sy;
     double radangle;
     int dstwidthhalf, dstheighthalf;
@@ -543,8 +543,8 @@ void rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx, 
     radangle = angle * (M_PI / 180.0);
     *sanglezoom = sin(radangle);
     *canglezoom = cos(radangle);
-    *sanglezoom *= zoomx;
-    *canglezoom *= zoomx;
+    *sanglezoom *= zoom;
+    *canglezoom *= zoom;
     x = width / 2;
     y = height / 2;
     cx = *canglezoom * x;
@@ -562,10 +562,10 @@ void rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx, 
 
 /* Publically available rotozoom-size function */
 
-void rotozoomSurfaceSizeXY(int width, int height, double angle, double zoomx, double zoomy, int *dstwidth, int *dstheight) {
+void rotozoomSurfaceSizeXY(int width, int height, double angle, double zoom, int *dstwidth, int *dstheight) {
     double dummy_sanglezoom, dummy_canglezoom;
 
-    rotozoomSurfaceSizeTrig(width, height, angle, zoomx, zoomy, dstwidth, dstheight, &dummy_sanglezoom, &dummy_canglezoom);
+    rotozoomSurfaceSizeTrig(width, height, angle, zoom, dstwidth, dstheight, &dummy_sanglezoom, &dummy_canglezoom);
 }
 
 /* Publically available rotozoom-size function */
@@ -573,7 +573,7 @@ void rotozoomSurfaceSizeXY(int width, int height, double angle, double zoomx, do
 void rotozoomSurfaceSize(int width, int height, double angle, double zoom, int *dstwidth, int *dstheight) {
     double dummy_sanglezoom, dummy_canglezoom;
 
-    rotozoomSurfaceSizeTrig(width, height, angle, zoom, zoom, dstwidth, dstheight, &dummy_sanglezoom, &dummy_canglezoom);
+    rotozoomSurfaceSizeTrig(width, height, angle, zoom, dstwidth, dstheight, &dummy_sanglezoom, &dummy_canglezoom);
 }
 
 /* Publically available rotozoom function */
@@ -645,7 +645,7 @@ SDL_Surface *rotozoomSurfaceXY(SDL_Surface * src, double angle, double zoomx, do
 	 */
 
 	/* Determine target size */
-	rotozoomSurfaceSizeTrig(rz_src->w, rz_src->h, angle, zoomx, zoomy, &dstwidth, &dstheight, &canglezoom, &sanglezoom);
+	rotozoomSurfaceSizeTrig(rz_src->w, rz_src->h, angle, zoomx, &dstwidth, &dstheight, &canglezoom, &sanglezoom);
 
 	/*
 	 * Calculate target factors from sin/cos and zoom 
@@ -777,7 +777,7 @@ SDL_Surface *rotozoomSurfaceXY(SDL_Surface * src, double angle, double zoomx, do
 	    /*
 	     * Call the 8bit transformation routine to do the zooming 
 	     */
-	    zoomSurfaceY(rz_src, rz_dst, flipx, flipy);
+	    zoomSurfaceY(rz_src, rz_dst);
 	    SDL_SetColorKey(rz_dst, SDL_SRCCOLORKEY | SDL_RLEACCEL, rz_src->format->colorkey);
 	}
 	/*
@@ -923,7 +923,7 @@ SDL_Surface *zoomSurface(SDL_Surface * src, double zoomx, double zoomy, int smoo
 	/*
 	 * Call the 8bit transformation routine to do the zooming 
 	 */
-	zoomSurfaceY(rz_src, rz_dst, flipx, flipy);
+	zoomSurfaceY(rz_src, rz_dst);
 	SDL_SetColorKey(rz_dst, SDL_SRCCOLORKEY | SDL_RLEACCEL, rz_src->format->colorkey);
     }
     /*
