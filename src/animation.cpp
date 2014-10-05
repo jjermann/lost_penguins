@@ -32,7 +32,7 @@ Frame EmptyAnimation::getBaseFrame() const {
     return base_frame;
 }
 bool EmptyAnimation::isValid() const {
-    if (fallback) return (*fallback)->isValid();
+    if (fallback and *fallback) return (*fallback)->isValid();
     else return false;
 }
 bool EmptyAnimation::isRunning() const {
