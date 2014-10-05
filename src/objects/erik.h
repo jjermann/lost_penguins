@@ -22,6 +22,8 @@ class Erik : public Player {
         virtual void in_sp1();
         /// \brief Erik runs
         virtual void in_sp2();
+        virtual void in_up(Uint16);
+        virtual void in_down(Uint16);
         virtual void in_left(Uint16);
         virtual void in_right(Uint16);
         virtual void crash(Uint16 dir);

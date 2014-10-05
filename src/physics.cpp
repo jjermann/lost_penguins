@@ -82,6 +82,18 @@ inline void PhysicHandler::updateGame() {
         if (input->keyPressed(KEY_RIGHT))  scenario->player->in_right();
         if (input->keyPressed(KEY_UP))     scenario->player->in_up();
         if (input->keyPressed(KEY_DOWN))   scenario->player->in_down();
+        if (input->keyState(KEY_UP)) {
+            scenario->player->unsetState(STATE_MDOWN);
+            scenario->player->setState(STATE_MUP);
+        } else {
+            scenario->player->unsetState(STATE_MUP);
+        }
+        if (input->keyState(KEY_DOWN)) {
+            scenario->player->unsetState(STATE_MUP);
+            scenario->player->setState(STATE_MDOWN);
+        } else {
+            scenario->player->unsetState(STATE_MDOWN);
+        }
         if (input->keyState(KEY_LEFT)) {
             scenario->player->unsetState(STATE_MRIGHT);
             scenario->player->setState(STATE_MLEFT);
@@ -106,6 +118,8 @@ inline void PhysicHandler::updateGame() {
     } else if (scenario->player!=NULL) {
         scenario->player->unsetState(STATE_MLEFT);
         scenario->player->unsetState(STATE_MRIGHT);
+        scenario->player->unsetState(STATE_MUP);
+        scenario->player->unsetState(STATE_MDOWN);
     }
     //run end scenario->player effects
     character_iterator cit=scenario->pool->characterspool.begin();

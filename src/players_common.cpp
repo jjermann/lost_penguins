@@ -346,6 +346,8 @@ void Player::clearStates(bool reset) {
     }
     unsetState(STATE_MLEFT);
     unsetState(STATE_MRIGHT);
+    unsetState(STATE_MUP);
+    unsetState(STATE_MDOWN);
 }
 
 Uint16 Player::hit(Uint16 direction, Weapon& weap) {

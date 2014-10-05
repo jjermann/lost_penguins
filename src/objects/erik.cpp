@@ -47,12 +47,20 @@ void Erik::updateAnimState() {
         if (state&STATE_LEFT) {
             if (state&STATE_MLEFT) {
                 setAnim(anim_erik_swim_left);
+            } else if (state&STATE_MUP) {
+                setAnim(anim_erik_swim_up_left);
+            //} else if (state&STATE_MDOWN) {
+            //    setAnim(anim_erik_swim_down_left);
             } else {
                 setAnim(anim_erik_swim_left);
             }
         } else {
             if (state&STATE_MRIGHT) {
                 setAnim(anim_erik_swim_right);
+            } else if (state&STATE_MUP) {
+                setAnim(anim_erik_swim_up_right);
+            //} else if (state&STATE_MDOWN) {
+            //    setAnim(anim_erik_swim_down_right);
             } else {
                 setAnim(anim_erik_swim_right);
             }
@@ -101,6 +109,20 @@ void Erik::in_sp1() {
 
 void Erik::in_sp2() {
     //TODO: check STATE_WATER
+}
+
+void Erik::in_up(Uint16 dt) {
+    if (state&STATE_WATER) {
+        speed=-maxspeedy;
+    }
+    Player::in_up(dt);
+}
+
+void Erik::in_down(Uint16 dt) {
+    if (state&STATE_WATER) {
+        speed=maxspeedy;
+    }
+    Player::in_down(dt);
 }
 
 void Erik::in_left(Uint16 dt) {

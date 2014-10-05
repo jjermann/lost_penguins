@@ -9,8 +9,8 @@
 //movement (while up/down/left/right key is pressed)
 #define STATE_MLEFT     0x00000400
 #define STATE_MRIGHT    0x00000800
-#define STATE_MUP       0x00001000
-#define STATE_MDOWN     0x00002000
+#define STATE_MUP       0x20000000
+#define STATE_MDOWN     0x40000000
 
 /** \brief Interactively controlled characters
 
