@@ -39,10 +39,10 @@ anim_erik_start_run_left=   name=erik_start_run_left:     scale=lvl:  bp_type=ri
 anim_erik_start_run_right=  name=erik_start_run_right:    scale=lvl:  bp_type=leftdown:     type=once    
 anim_erik_run_left=         name=erik_run_left:           scale=lvl:  bp_type=rightdown:    type=once
 anim_erik_run_right=        name=erik_run_right:          scale=lvl:  bp_type=leftdown:     type=once    
-anim_erik_swim_left=        name=erik_swim_left:          scale=lvl:  bp_type=rightdown:    type=once         
-anim_erik_swim_right=       name=erik_swim_right:         scale=lvl:  bp_type=leftdown:     type=once    
-anim_erik_swim_up_left=     name=erik_swim_up_left:       scale=lvl:  bp_type=rightdown:    type=once
-anim_erik_swim_up_right=    name=erik_swim_up_right:      scale=lvl:  bp_type=leftdown:     type=once     
+anim_erik_swim_left=        name=erik_swim_left:          scale=lvl:  bp_type=rightdown:
+anim_erik_swim_right=       name=erik_swim_right:         scale=lvl:  bp_type=leftdown:
+anim_erik_swim_up_left=     name=erik_swim_up_left:       scale=lvl:  bp_type=rightdown:
+anim_erik_swim_up_right=    name=erik_swim_up_right:      scale=lvl:  bp_type=leftdown:
 anim_erik_hit_water_left=   name=erik_hit_water_left:     scale=lvl:  bp_type=rightdown:    type=once       
 anim_erik_hit_water_right=  name=erik_hit_water_right:    scale=lvl:  bp_type=leftdown:     type=once
 
