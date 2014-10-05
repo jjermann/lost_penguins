@@ -1,5 +1,4 @@
 #ENDHEADER
 
-newmap
-map1
-map2
+level1
+level2
